@@ -1,0 +1,210 @@
+{
+    "fleder": {
+        "title": "Fleder",
+        "subtitle": "App Design & Development",
+        "image": "fleder.jpg",
+        "link": "https://kremisi.com/assets/documents/fleder_screens.pdf",
+        "customer": "",
+        "tags": ["app", "benessere", "farmaceutica"],
+        "color": "#FF5733",
+        "disabled": true
+    },
+    "glapix": {
+        "title": "Glapix",
+        "subtitle": "Web Development",
+        "image": "glapix.png",
+        "link": "https://glapixsa.com",
+        "customer": "makuda",
+        "tags": ["comunicazione", "sito"]
+    },
+    "allavelli": {
+        "title": "Allavelli",
+        "subtitle": "Web Development",
+        "image": "allavelli.png",
+        "link": "https://allavellilegal.com/it/",
+        "customer": "makuda",
+        "tags": ["finanza", "comunicazione", "sito"],
+        "disabled": false
+    },
+    "vecchi360": {
+        "title": "Vecchi360",
+        "subtitle": "Web Design & Development",
+        "image": "vecchi360.png",
+        "link": "https://vecchi360immobiliare.it/",
+        "customer": "makuda",
+        "tags": ["immobiliare", "sito"],
+        "disabled": false
+    },
+    "makuda": {
+        "title": "Makuda",
+        "subtitle": "Web Development",
+        "image": "makuda.png",
+        "link": "https://makuda.black",
+        "customer": "",
+        "tags": ["comunicazione", "sito"]
+    },
+    "gamelia": {
+        "title": "Gamelia",
+        "subtitle": "Web Design & Development",
+        "image": "gamelia.png",
+        "link": "https://gameliaassistenza.com",
+        "customer": "makuda",
+        "tags": ["benessere", "sito"]
+    },
+    "godo": {
+        "title": "Godo Castellanza",
+        "subtitle": "Web Development",
+        "image": "godo.png",
+        "link": "https://godocastellanza.it",
+        "customer": "makuda",
+        "tags": ["ristorazione", "sito"],
+        "disabled": true
+    },
+    "e2l": {
+        "title": "Easy2Learn",
+        "subtitle": "App Design & Development",
+        "image": "e2l-2.png",
+        "link": "https://play.google.com/store/apps/details?id=it.il_cubo.easy2learn&hl=it",
+        "customer": "il-cubo",
+        "tags": ["istruzione", "app"],
+        "disabled": true
+    },
+    "jester": {
+        "title": "Jester",
+        "subtitle": "Web Design & Development",
+        "image": "jester-2.png",
+        "link": "https://www.jester.school",
+        "customer": "makuda",
+        "tags": ["istruzione", "sito"]
+    },
+    "narai": {
+        "title": "Narai Thai Massages",
+        "subtitle": "Web Development",
+        "image": "narai.png",
+        "link": "https://naraithaimassage.com",
+        "customer": "makuda",
+        "tags": ["benessere", "sito"]
+    },
+    "crystal-beauty": {
+        "title": "Crystal Beauty",
+        "subtitle": "Web Design & Development",
+        "image": "crystal.png",
+        "link": "https://www.saleterapia.it",
+        "customer": "",
+        "tags": ["benessere", "sito"]
+    },
+    "beyond-reiki": {
+        "title": "Beyond Reiki",
+        "subtitle": "Web Design & Development",
+        "image": "beyond-reiki.png",
+        "link": "https://www.beyond-reiki.com",
+        "customer": "",
+        "tags": ["benessere", "sito"]
+    },
+    "obm": {
+        "title": "OBM Associati",
+        "subtitle": "Web Development",
+        "image": "obm.png",
+        "link": "https://obmassociati.com",
+        "customer": "makuda",
+        "tags": ["finanza", "sito"]
+    },
+    "ims": {
+        "title": "IMS Agency",
+        "subtitle": "Web Design & Development",
+        "image": "ims-2.png",
+        "link": "https://www.imsagency.it",
+        "customer": "",
+        "tags": ["comunicazione", "sito"]
+    },
+    "progetto-commercio": {
+        "title": "Progetto Commercio",
+        "subtitle": "App Design & Development",
+        "image": "pc.png",
+        "link": "https://play.google.com/store/apps/details?id=com.progettocommercio&hl=it",
+        "customer": "il-cubo",
+        "tags": ["finanza", "app"],
+        "disabled": true
+    },
+    "bioli": {
+        "title": "Bioli",
+        "subtitle": "Web Design & Development",
+        "image": "bioli.png",
+        "link": "https://simonebioli.com",
+        "customer": "",
+        "tags": ["comunicazione", "sito"],
+        "disabled": true
+    },
+    "sgs": {
+        "title": "SGS Capital",
+        "subtitle": "Web Design & Development",
+        "image": "sgs-2.png",
+        "link": "https://www.sgscapital.ch",
+        "customer": "makuda",
+        "tags": ["finanza", "sito"]
+    },
+    "naturalia": {
+        "title": "Naturalia",
+        "subtitle": "Web Design & Development",
+        "image": "naturalia.png",
+        "link": "https://naturalia.kremisi.com",
+        "customer": "makuda",
+        "tags": ["finanza", "sito"]
+    },
+    "studylux": {
+        "title": "StudyLux",
+        "subtitle": "Web Design & Development",
+        "image": "studylux.png",
+        "link": "https://studylux.it",
+        "customer": "il-cubo",
+        "tags": ["istruzione", "sito"]
+    },
+    "C.COM": {
+        "title": "C.COM",
+        "subtitle": "Web Design & Development",
+        "image": "ccom.png",
+        "link": "https://www.c-com.it/",
+        "customer": "makuda",
+        "tags": ["comunicazione", "sito"]
+    },
+    "sportsalutebellezza": {
+        "title": "Sport Salute Bellezza",
+        "subtitle": "Web Design & Development",
+        "image": "ssb.png",
+        "link": "https://sportsalutebellezza.com/",
+        "customer": "makuda",
+        "tags": ["benessere", "sito"]
+    },
+    "theorica": {
+        "title": "Theorica Holdings",
+        "subtitle": "Web Design & Development",
+        "image": "theorica.png",
+        "link": "https://theoricaholdings.com",
+        "customer": "makuda",
+        "tags": ["finanza", "sito"]
+    },
+    "chora": {
+        "title": "Residenza Chora",
+        "subtitle": "Web Development",
+        "image": "chora-full.png",
+        "link": "https://residenzachora.koshomesolution.com/",
+        "customer": "makuda",
+        "tags": ["finanza", "immobiliare", "sito"]
+    },
+    "hydra": {
+        "title": "Residenza Hydra",
+        "subtitle": "Web Development",
+        "image": "hydra.png",
+        "link": "https://residenzahydra.koshomesolution.com/",
+        "customer": "makuda",
+        "tags": ["finanza", "immobiliare", "sito"]
+    },
+    "echinadi": {
+        "title": "Residenza Echinadi",
+        "subtitle": "Web Development",
+        "image": "echinadi.png",
+        "link": "https://residenzaechinadi.koshomesolution.com/",
+        "customer": "makuda",
+        "tags": ["finanza", "immobiliare", "sito"]
+    }
+}
