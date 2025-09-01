@@ -19,10 +19,10 @@ export default function MainSlider() {
             className={styles.slider}
             style={{
                 top: `${
-                    ((projectsDataArray.length - 1) * scalingOffset) / 2
+                    (projectsDataArray.length - 1) * scalingOffset * 0.3
                 }vh`,
                 right: `${
-                    ((projectsDataArray.length - 1) * scalingOffset) / 2
+                    (projectsDataArray.length - 1) * scalingOffset * 0.5
                 }vh`,
             }}
         >
@@ -33,7 +33,7 @@ export default function MainSlider() {
                         image={slideData.image}
                         title={slideData.id}
                         style={{
-                            top: `${-index * scalingOffset}vh`,
+                            top: `${-index * scalingOffset * 0.5}vh`,
                             right: `${-index * scalingOffset}vh`,
                             zIndex: projectsDataArray.length - index,
                             position: index === 0 ? "relative" : "absolute",
