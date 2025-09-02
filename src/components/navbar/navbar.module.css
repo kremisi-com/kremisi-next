@@ -36,18 +36,6 @@
     left: unset;
 }
 
-.buttons button {
-    cursor: pointer;
-    font: inherit;
-    font-size: 11pt;
-
-    padding: 5px 15px 7px 15px;
-    border: none;
-    border-radius: 15px;
-    background-color: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-}
-
-.buttons button:hover {
-    background: rgba(255, 255, 255, 0.1);
+.buttons .language {
+    padding: 4px 5px 1px 5px;
 }
