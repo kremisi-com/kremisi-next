@@ -1,6 +1,7 @@
 :root {
     --background: #ffffff;
     --foreground: #171717;
+    --primary: #dc143c;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -38,6 +39,11 @@ body {
 a {
     color: inherit;
     text-decoration: none;
+    transition: color 0.2s ease;
+}
+
+.color-primary {
+    color: var(--primary);
 }
 
 @media (prefers-color-scheme: dark) {
