@@ -1,13 +1,34 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./slide.module.css";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
-export default function Slide({ data, style, width, height }) {
+export default function Slide({ data, style }) {
+    //lo slope dipende dal ratio dello schermo, anche la grandezza delle immagini e la rotazione
+    const [slope, setSlope] = useState(1);
+
+    function calcSizeSloped(size) {
+        return size / (slope * 1.3);
+    }
+
+    useEffect(() => {
+        function updateSlope() {
+            setSlope(window.innerHeight / window.innerWidth);
+        }
+        updateSlope();
+        window.addEventListener("resize", updateSlope);
+        return () => window.removeEventListener("resize", updateSlope);
+    }, []);
+
     const titleRef = useRef(null);
     const scaleFactor = 1;
 
-    const imageWidth = Math.round(width * scaleFactor);
-    const imageHeight = Math.round(height * scaleFactor);
+    const width = 450;
+    const height = 275;
+
+    const imageWidth = calcSizeSloped(Math.round(width * scaleFactor));
+    const imageHeight = calcSizeSloped(Math.round(height * scaleFactor));
 
     function handleMouseEnter() {
         titleRef.current.style.opacity = 1;
