@@ -32,7 +32,5 @@
 .title {
     position: fixed;
     z-index: 1000;
-    pointer-events: none; /* così non blocca il mouse */
-    opacity: 0.3;
-    filter: brightness(2);
+    pointer-events: none;
 }

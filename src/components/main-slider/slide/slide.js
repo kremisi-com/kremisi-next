@@ -3,6 +3,7 @@
 import Image from "next/image";
 import styles from "./slide.module.css";
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 export default function Slide({ data, style }) {
     //lo slope dipende dal ratio dello schermo, anche la grandezza delle immagini e la rotazione
@@ -55,30 +56,32 @@ export default function Slide({ data, style }) {
 
     return (
         <>
-            <div
-                className={`${styles.ortho} ${styles.slide}`}
-                style={{
-                    ...style,
-                    width: `${imageWidth}px`,
-                    height: `${imageHeight}px`,
-                }}
-                onMouseEnter={handleMouseEnter}
-                onMouseLeave={handleMouseLeave}
-                onMouseMove={handleMouseMove}
-            >
-                <Image
-                    src={data.image}
-                    width={imageWidth}
-                    height={imageHeight}
-                    alt={data.title}
-                    style={{ "--image-width": `${imageWidth}px` }}
-                />
-            </div>
+            <Link href={data.link}>
+                <div
+                    className={`${styles.ortho} ${styles.slide}`}
+                    style={{
+                        ...style,
+                        width: `${imageWidth}px`,
+                        height: `${imageHeight}px`,
+                    }}
+                    onMouseEnter={handleMouseEnter}
+                    onMouseLeave={handleMouseLeave}
+                    onMouseMove={handleMouseMove}
+                >
+                    <Image
+                        src={data.image}
+                        width={imageWidth}
+                        height={imageHeight}
+                        alt={data.title}
+                        style={{ "--image-width": `${imageWidth}px` }}
+                    />
+                </div>
+            </Link>
             <label
                 className={styles.title}
                 ref={titleRef}
                 style={{
-                    opacity: 0,
+                    opacity: 1,
                     color: data.blackText ? "black" : "white",
                 }}
             >

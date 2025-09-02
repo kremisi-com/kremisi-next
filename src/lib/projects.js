@@ -8,6 +8,7 @@ function getProjectsArray() {
             id: key,
             color: v.color || "#FFFFFF",
             images: v.images ? v.images : ["main.png"],
+            link: `/projects/${key}`,
         }));
 }
 
