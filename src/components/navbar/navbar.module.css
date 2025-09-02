@@ -37,5 +37,8 @@
 }
 
 .buttons .language {
-    padding: 4px 5px 1px 5px;
+    padding: unset;
+    width: 32px;
+    height: 29px;
+    padding-top: 2px;
 }
