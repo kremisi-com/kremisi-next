@@ -16,7 +16,8 @@
         "customer": "makuda",
         "tags": ["finanza", "comunicazione", "sito"],
         "color": "#1c3b8a",
-        "disabled": false
+        "disabled": false,
+        "images": ["header-2-en.png", "about.png", "text-en.png"]
     },
     "glapix": {
         "title": "Glapix",
@@ -25,7 +26,8 @@
         "link": "https://glapixsa.com",
         "customer": "makuda",
         "tags": ["comunicazione", "sito"],
-        "disabled": false
+        "disabled": false,
+        "images": ["header.png", "limitless.png", "draw.png", "hotel.png"]
     },
     "vecchi360": {
         "title": "Vecchi360",
@@ -35,7 +37,8 @@
         "customer": "makuda",
         "tags": ["immobiliare", "sito"],
         "disabled": false,
-        "color": "#F4BE44"
+        "color": "#F4BE44",
+        "images": ["main.png", "ricerca.png"]
     },
     "makuda": {
         "title": "Makuda",
@@ -44,7 +47,8 @@
         "link": "https://makuda.black",
         "customer": "",
         "tags": ["comunicazione", "sito"],
-        "color": "#FAC100"
+        "color": "#FAC100",
+        "images": ["main.png", "smurfs.png", "tear.png"]
     },
     "gamelia": {
         "title": "Gamelia",
@@ -53,7 +57,8 @@
         "link": "https://gameliaassistenza.com",
         "customer": "makuda",
         "tags": ["benessere", "sito"],
-        "color": "#6F2283"
+        "color": "#6F2283",
+        "images": ["main-3.png", "main-2.png"]
     },
     "e2l": {
         "title": "Easy2Learn",
@@ -72,7 +77,8 @@
         "customer": "makuda",
         "tags": ["istruzione", "sito"],
         "color": "#0034A1",
-        "blackText": true
+        "blackText": true,
+        "images": ["main.png", "main-7.png", "main-4.png"]
     },
     "narai": {
         "title": "Narai Thai Massages",

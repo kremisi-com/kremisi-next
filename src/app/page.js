@@ -1,14 +1,27 @@
 import styles from "./page.module.css";
 import MainSlider from "@/components/main-slider/main-slider";
-import getProjects from "@/lib/projects";
+import {
+    getProjectsArray,
+    getOrganizedProjects,
+    getSortedProjects,
+} from "@/lib/projects";
 import { useMemo } from "react";
 
 export default function Home() {
-    const projectsDataArray = useMemo(() => getProjects(), []);
+    const projectsDataArray = useMemo(() => getProjectsArray(), []);
+    const organizedProjects = useMemo(
+        () => getOrganizedProjects(projectsDataArray),
+        [projectsDataArray]
+    );
+    const sortedProjects = useMemo(
+        () => getSortedProjects(organizedProjects),
+        [organizedProjects]
+    );
 
+    console.log(organizedProjects);
     return (
         <div className={styles.page}>
-            <MainSlider projectsData={projectsDataArray} />
+            <MainSlider projectsData={sortedProjects} />
         </div>
     );
 }

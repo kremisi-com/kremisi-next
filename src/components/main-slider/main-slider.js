@@ -9,13 +9,19 @@ export default function MainSlider({ projectsData }) {
     const scalingOffset = 15;
 
     function handleScroll(e) {
-        const speed = 2;
+        const speed = 3;
         const shift = e.deltaY > 0 ? -speed : speed;
         setScrollPosition((prev) => prev + shift);
     }
 
     return (
-        <div className={styles.slider} onWheel={handleScroll}>
+        <div
+            className={styles.slider}
+            onWheel={handleScroll}
+            style={{
+                transform: `translate(${-scrollPosition}vh, ${scrollPosition}vh)`,
+            }}
+        >
             {projectsData.map((slideData, index) => (
                 <Slide
                     key={slideData.id}
@@ -23,13 +29,11 @@ export default function MainSlider({ projectsData }) {
                     style={{
                         top: `${
                             (projectsData.length - 1) * scalingOffset -
-                            index * scalingOffset +
-                            scrollPosition
+                            index * scalingOffset
                         }vh`,
                         right: `${
                             (projectsData.length - 1) * scalingOffset -
-                            index * scalingOffset +
-                            scrollPosition
+                            index * scalingOffset
                         }vh`,
                         zIndex: projectsData.length - index,
                     }}
