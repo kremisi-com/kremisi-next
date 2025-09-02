@@ -18,7 +18,6 @@ export default function Home() {
         [organizedProjects]
     );
 
-    console.log(organizedProjects);
     return (
         <div className={styles.page}>
             <MainSlider projectsData={sortedProjects} />

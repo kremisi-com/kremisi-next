@@ -5,7 +5,9 @@ import styles from "./main-slider.module.css";
 import Slide from "./slide/slide";
 
 export default function MainSlider({ projectsData }) {
-    const [scrollPosition, setScrollPosition] = useState(0);
+    const [scrollPosition, setScrollPosition] = useState(
+        -(400 / 31) * (projectsData.length / 2)
+    );
     const scalingOffset = 15;
 
     function handleScroll(e) {
