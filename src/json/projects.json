@@ -6,7 +6,6 @@
         "link": "https://kremisi.com/assets/documents/fleder_screens.pdf",
         "customer": "",
         "tags": ["app", "benessere", "farmaceutica"],
-        "color": "#FF5733",
         "disabled": true
     },
     "allavelli": {
@@ -16,6 +15,7 @@
         "link": "https://allavellilegal.com/it/",
         "customer": "makuda",
         "tags": ["finanza", "comunicazione", "sito"],
+        "color": "#1c3b8a",
         "disabled": false
     },
     "glapix": {
@@ -34,7 +34,8 @@
         "link": "https://vecchi360immobiliare.it/",
         "customer": "makuda",
         "tags": ["immobiliare", "sito"],
-        "disabled": false
+        "disabled": false,
+        "color": "#F4BE44"
     },
     "makuda": {
         "title": "Makuda",
@@ -42,7 +43,8 @@
         "image": "makuda.png",
         "link": "https://makuda.black",
         "customer": "",
-        "tags": ["comunicazione", "sito"]
+        "tags": ["comunicazione", "sito"],
+        "color": "#FAC100"
     },
     "gamelia": {
         "title": "Gamelia",
@@ -50,16 +52,8 @@
         "image": "gamelia.png",
         "link": "https://gameliaassistenza.com",
         "customer": "makuda",
-        "tags": ["benessere", "sito"]
-    },
-    "godo": {
-        "title": "Godo Castellanza",
-        "subtitle": "Web Development",
-        "image": "godo.png",
-        "link": "https://godocastellanza.it",
-        "customer": "makuda",
-        "tags": ["ristorazione", "sito"],
-        "disabled": true
+        "tags": ["benessere", "sito"],
+        "color": "#6F2283"
     },
     "e2l": {
         "title": "Easy2Learn",
@@ -76,7 +70,9 @@
         "image": "jester-2.png",
         "link": "https://www.jester.school",
         "customer": "makuda",
-        "tags": ["istruzione", "sito"]
+        "tags": ["istruzione", "sito"],
+        "color": "#0034A1",
+        "blackText": true
     },
     "narai": {
         "title": "Narai Thai Massages",
@@ -116,7 +112,8 @@
         "image": "ims-2.png",
         "link": "https://www.imsagency.it",
         "customer": "",
-        "tags": ["comunicazione", "sito"]
+        "tags": ["comunicazione", "sito"],
+        "blackText": true
     },
     "progetto-commercio": {
         "title": "Progetto Commercio",
@@ -158,7 +155,8 @@
         "image": "studylux.png",
         "link": "https://studylux.it",
         "customer": "il-cubo",
-        "tags": ["istruzione", "sito"]
+        "tags": ["istruzione", "sito"],
+        "blackText": true
     },
     "C.COM": {
         "title": "C.COM",

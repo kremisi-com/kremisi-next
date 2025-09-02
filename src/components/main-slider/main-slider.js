@@ -34,8 +34,7 @@ export default function MainSlider({ projectsData }) {
             {projectsData.map((slideData, index) => (
                 <Slide
                     key={slideData.id}
-                    image={slideData.image}
-                    title={slideData.id}
+                    data={slideData}
                     width={calcSizeSloped(450)}
                     height={calcSizeSloped(275)}
                     style={{

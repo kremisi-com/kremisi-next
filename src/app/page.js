@@ -13,6 +13,7 @@ export default function Home() {
                 ...v,
                 id: key,
                 image: `/projects/${key}/main.png`,
+                color: v.color || "#FFFFFF",
             }));
     }
 
