@@ -1,3 +1,7 @@
 .slider {
     position: relative;
+    width: 100svw;
+    height: 100svh;
+    top: 0;
+    left: 0;
 }

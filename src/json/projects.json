@@ -9,14 +9,6 @@
         "color": "#FF5733",
         "disabled": true
     },
-    "glapix": {
-        "title": "Glapix",
-        "subtitle": "Web Development",
-        "image": "glapix.png",
-        "link": "https://glapixsa.com",
-        "customer": "makuda",
-        "tags": ["comunicazione", "sito"]
-    },
     "allavelli": {
         "title": "Allavelli",
         "subtitle": "Web Development",
@@ -24,6 +16,15 @@
         "link": "https://allavellilegal.com/it/",
         "customer": "makuda",
         "tags": ["finanza", "comunicazione", "sito"],
+        "disabled": false
+    },
+    "glapix": {
+        "title": "Glapix",
+        "subtitle": "Web Development",
+        "image": "glapix.png",
+        "link": "https://glapixsa.com",
+        "customer": "makuda",
+        "tags": ["comunicazione", "sito"],
         "disabled": false
     },
     "vecchi360": {

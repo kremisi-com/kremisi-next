@@ -1,11 +1,18 @@
 import Image from "next/image";
 import styles from "./slide.module.css";
 
-export default function Slide({ image, title, description, style }) {
+export default function Slide({
+    image,
+    title,
+    description,
+    style,
+    width,
+    height,
+}) {
     const scaleFactor = 1;
 
-    const imageWidth = Math.round(450 * scaleFactor);
-    const imageHeight = Math.round(275 * scaleFactor);
+    const imageWidth = Math.round(width * scaleFactor);
+    const imageHeight = Math.round(height * scaleFactor);
     return (
         <div
             className={`${styles.ortho} ${styles.slide}`}
@@ -20,7 +27,7 @@ export default function Slide({ image, title, description, style }) {
                 width={imageWidth}
                 height={imageHeight}
                 alt={title}
-                style={{ "--image-width": `${imageWidth / 2}px` }}
+                style={{ "--image-width": `${imageWidth}px` }}
             />
         </div>
     );

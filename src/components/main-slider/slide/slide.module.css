@@ -2,6 +2,7 @@
     position: absolute;
     transition: all 0.5s ease;
     cursor: pointer;
+    overflow: visible;
 }
 
 .slide img {
@@ -10,12 +11,10 @@
     position: relative;
     transition: all 0.5s ease;
 
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.35), 0 8px 24px rgba(0, 0, 0, 0.25),
-        0 1px 0 rgba(255, 255, 255, 0.15) inset;
-    border-radius: 8px;
+    box-shadow: 1px -1px 0px rgba(255, 255, 255, 0.35);
 }
 .slide:hover img {
-    transform: translateX(var(--image-width));
+    transform: translateX(calc(var(--image-width) * 0.7));
 }
 
 .ortho {

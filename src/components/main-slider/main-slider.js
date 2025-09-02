@@ -1,46 +1,58 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import styles from "./main-slider.module.css";
 import Slide from "./slide/slide";
 
-import projectsData from "@/json/projects.json";
-
-export default function MainSlider() {
+export default function MainSlider({ projectsData }) {
+    const [scrollPosition, setScrollPosition] = useState(0);
+    //lo slope dipende dal ratio dello schermo, anche la grandezza delle immagini e la rotazione
+    const [slope, setSlope] = useState(1);
     const scalingOffset = 15;
 
-    for (var key in projectsData) {
-        projectsData[key].id = key;
-        projectsData[key].image = `/projects/${key}/main.png`;
-        if (projectsData[key].disabled) delete projectsData[key];
+    useEffect(() => {
+        function updateSlope() {
+            setSlope(window.innerHeight / window.innerWidth);
+        }
+        updateSlope();
+        window.addEventListener("resize", updateSlope);
+        return () => window.removeEventListener("resize", updateSlope);
+    }, []);
+
+    function handleScroll(e) {
+        const speed = 2;
+        const shift = e.deltaY > 0 ? -speed : speed;
+        setScrollPosition((prev) => prev + shift);
     }
 
-    const projectsDataArray = Object.values(projectsData);
+    function calcSizeSloped(size) {
+        return size / (slope * 1.3);
+    }
 
     return (
-        <div
-            className={styles.slider}
-            style={{
-                top: `${
-                    (projectsDataArray.length - 1) * scalingOffset * 0.3
-                }vh`,
-                right: `${
-                    (projectsDataArray.length - 1) * scalingOffset * 0.5
-                }vh`,
-            }}
-        >
-            {projectsDataArray.map((slideData, index) => {
-                return (
-                    <Slide
-                        key={slideData.id}
-                        image={slideData.image}
-                        title={slideData.id}
-                        style={{
-                            top: `${-index * scalingOffset * 0.5}vh`,
-                            right: `${-index * scalingOffset}vh`,
-                            zIndex: projectsDataArray.length - index,
-                            position: index === 0 ? "relative" : "absolute",
-                        }}
-                    />
-                );
-            })}
+        <div className={styles.slider} onWheel={handleScroll}>
+            {projectsData.map((slideData, index) => (
+                <Slide
+                    key={slideData.id}
+                    image={slideData.image}
+                    title={slideData.id}
+                    width={calcSizeSloped(450)}
+                    height={calcSizeSloped(275)}
+                    style={{
+                        top: `${
+                            (projectsData.length - 1) * scalingOffset -
+                            index * scalingOffset +
+                            scrollPosition
+                        }vh`,
+                        right: `${
+                            (projectsData.length - 1) * scalingOffset -
+                            index * scalingOffset +
+                            scrollPosition
+                        }vh`,
+                        zIndex: projectsData.length - index,
+                    }}
+                />
+            ))}
         </div>
     );
 }
