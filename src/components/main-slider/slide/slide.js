@@ -27,8 +27,17 @@ export default function Slide({ data, style }) {
     const width = 450;
     const height = 275;
 
-    const imageWidth = calcSizeSloped(Math.round(width * scaleFactor));
-    const imageHeight = calcSizeSloped(Math.round(height * scaleFactor));
+    const minWidth = width * 0.8;
+    const minHeight = height * 0.8;
+
+    const imageWidth = Math.max(
+        calcSizeSloped(Math.round(width * scaleFactor)),
+        minWidth
+    );
+    const imageHeight = Math.max(
+        calcSizeSloped(Math.round(height * scaleFactor)),
+        minHeight
+    );
 
     function handleMouseEnter() {
         titleRef.current.style.opacity = 1;
