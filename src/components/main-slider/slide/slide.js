@@ -5,7 +5,7 @@ import styles from "./slide.module.css";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 
-export default function Slide({ data, style }) {
+export default function Slide({ data, style, updateTitleData }) {
     //lo slope dipende dal ratio dello schermo, anche la grandezza delle immagini e la rotazione
     const [slope, setSlope] = useState(1);
 
@@ -22,7 +22,6 @@ export default function Slide({ data, style }) {
         return () => window.removeEventListener("resize", updateSlope);
     }, []);
 
-    const titleRef = useRef(null);
     const scaleFactor = 1;
 
     const width = 450;
@@ -41,17 +40,7 @@ export default function Slide({ data, style }) {
     );
 
     function handleMouseEnter() {
-        titleRef.current.style.opacity = 1;
-    }
-    function handleMouseLeave() {
-        titleRef.current.style.opacity = 0;
-    }
-    function handleMouseMove(e) {
-        const x = e.clientX + 15;
-        const y = e.clientY + 2;
-
-        titleRef.current.style.top = `${y}px`;
-        titleRef.current.style.left = `${x}px`;
+        updateTitleData(data.title, data.blackText);
     }
 
     return (
@@ -65,8 +54,6 @@ export default function Slide({ data, style }) {
                         height: `${imageHeight}px`,
                     }}
                     onMouseEnter={handleMouseEnter}
-                    onMouseLeave={handleMouseLeave}
-                    onMouseMove={handleMouseMove}
                 >
                     <Image
                         src={data.image}
@@ -77,16 +64,6 @@ export default function Slide({ data, style }) {
                     />
                 </div>
             </Link>
-            <label
-                className={styles.title}
-                ref={titleRef}
-                style={{
-                    opacity: 1,
-                    color: data.blackText ? "black" : "white",
-                }}
-            >
-                {data.title}
-            </label>
         </>
     );
 }

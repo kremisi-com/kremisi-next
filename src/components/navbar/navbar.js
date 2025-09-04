@@ -21,7 +21,7 @@ export default function Navbar() {
                 />
             </Link>
             <div className={`${styles.buttons} ${styles.right}`}>
-                <Button>Contact</Button>
+                <Button>Contacts</Button>
                 <Button className={styles.language} animation={false}>
                     <Image
                         src="/images/icons/language.png"

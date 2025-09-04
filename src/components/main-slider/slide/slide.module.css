@@ -28,9 +28,3 @@
     --rz: 0deg;
     transform: rotateX(var(--rx)) rotateY(var(--ry)) rotateZ(var(--rz));
 }
-
-.title {
-    position: fixed;
-    z-index: 1000;
-    pointer-events: none;
-}

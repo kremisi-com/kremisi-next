@@ -7,3 +7,13 @@
     transition: all 0.3s ease-out;
     will-change: transform;
 }
+
+.title {
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none;
+    color: white;
+    font-size: 12pt;
+    top: 0;
+    left: 0;
+}

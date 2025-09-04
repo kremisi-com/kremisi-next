@@ -31,31 +31,62 @@ export default function MainSlider({ projectsData }) {
         }
     }
 
+    const titleRef = useRef(null);
+    const [darkText, setDarkText] = useState(false);
+    const [title, setTitle] = useState("");
+    const [translation, setTranslation] = useState("translate(-50%, -50%)");
+
+    function updateTitleData(newTitle, isDarkText) {
+        setTitle(newTitle);
+        setDarkText(isDarkText);
+    }
+
+    function handleMouseMove(e) {
+        const x = e.clientX + 15;
+        const y = e.clientY + 2;
+
+        setTranslation(`translate(${x}px, ${y}px)`);
+    }
+
     return (
-        <div
-            className={styles.slider}
-            onWheel={handleScroll}
-            style={{
-                transform: `translate(${-scrollPosition}vh, ${scrollPosition}vh)`,
-            }}
-        >
-            {projectsData.map((slideData, index) => (
-                <Slide
-                    key={slideData.id}
-                    data={slideData}
-                    style={{
-                        top: `${
-                            (projectsData.length - 1) * scalingOffset -
-                            index * scalingOffset
-                        }vh`,
-                        right: `${
-                            (projectsData.length - 1) * scalingOffset -
-                            index * scalingOffset
-                        }vh`,
-                        zIndex: projectsData.length - index,
-                    }}
-                />
-            ))}
-        </div>
+        <>
+            <div
+                className={styles.slider}
+                onWheel={handleScroll}
+                style={{
+                    transform: `translate(${-scrollPosition}vh, ${scrollPosition}vh)`,
+                }}
+                onMouseMove={handleMouseMove}
+            >
+                {projectsData.map((slideData, index) => (
+                    <Slide
+                        key={slideData.id}
+                        data={slideData}
+                        style={{
+                            top: `${
+                                (projectsData.length - 1) * scalingOffset -
+                                index * scalingOffset
+                            }vh`,
+                            right: `${
+                                (projectsData.length - 1) * scalingOffset -
+                                index * scalingOffset
+                            }vh`,
+                            zIndex: projectsData.length - index,
+                        }}
+                        updateTitleData={updateTitleData}
+                    />
+                ))}
+            </div>
+            <label
+                className={styles.title}
+                ref={titleRef}
+                style={{
+                    color: darkText ? "black" : "white",
+                    transform: translation,
+                }}
+            >
+                {title}
+            </label>
+        </>
     );
 }
