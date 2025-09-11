@@ -5,13 +5,23 @@ import styles from "./main-slider.module.css";
 import Slide from "./slide/slide";
 
 export default function MainSlider({ projectsData }) {
-    const [scrollPosition, setScrollPosition] = useState(
-        -(400 / 31) * (projectsData.length / 2)
+    const sliderCenter = -(400 / 31) * (projectsData.length / 2);
+    const [scrollPosition, setScrollPosition] = useState(sliderCenter * 3);
+    const animationDurationInitial = 2000;
+    const [animationDuration, setAnimationDuration] = useState(
+        `${animationDurationInitial}ms`
     );
 
     const scalingOffset = 15;
     const scrollRef = useRef(scrollPosition);
     const ticking = useRef(false);
+
+    useEffect(() => {
+        setScrollPosition(sliderCenter);
+        setTimeout(() => {
+            setAnimationDuration(".2s");
+        }, animationDurationInitial);
+    }, []);
 
     useEffect(() => {
         scrollRef.current = scrollPosition;
@@ -64,6 +74,7 @@ export default function MainSlider({ projectsData }) {
                 onWheel={handleScroll}
                 style={{
                     transform: `translate(${-scrollPosition}vh, ${scrollPosition}vh)`,
+                    "--animation-duration": animationDuration,
                 }}
                 onMouseMove={handleMouseMove}
             >

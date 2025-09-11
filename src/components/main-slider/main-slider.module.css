@@ -4,7 +4,7 @@
     height: 100svh;
     top: 0;
     left: 0;
-    transition: all 0.3s ease-out;
+    transition: all var(--animation-duration) cubic-bezier(0, 0, 0.2, 1);
     will-change: transform;
 }
 
