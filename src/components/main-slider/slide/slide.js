@@ -4,8 +4,10 @@ import Image from "next/image";
 import styles from "./slide.module.css";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import React from "react";
 
-export default function Slide({ data, style, updateTitleData }) {
+let n = 0;
+export default React.memo(function Slide({ data, style, updateTitleData }) {
     //lo slope dipende dal ratio dello schermo, anche la grandezza delle immagini e la rotazione
     const [slope, setSlope] = useState(1);
 
@@ -43,6 +45,8 @@ export default function Slide({ data, style, updateTitleData }) {
         updateTitleData(data.title, data.blackText);
     }
 
+    console.log("render slide", data.title, n++);
+
     return (
         <>
             <Link href={data.link}>
@@ -66,4 +70,4 @@ export default function Slide({ data, style, updateTitleData }) {
             </Link>
         </>
     );
-}
+});

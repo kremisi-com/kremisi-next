@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback, useMemo } from "react";
 import styles from "./main-slider.module.css";
 import Slide from "./slide/slide";
 
@@ -36,10 +36,10 @@ export default function MainSlider({ projectsData }) {
     const [title, setTitle] = useState("");
     const [translation, setTranslation] = useState("translate(-50%, -50%)");
 
-    function updateTitleData(newTitle, isDarkText) {
+    const updateTitleData = useCallback((newTitle, isDarkText) => {
         setTitle(newTitle);
         setDarkText(isDarkText);
-    }
+    }, []);
 
     function handleMouseMove(e) {
         const x = e.clientX + 15;
@@ -47,6 +47,15 @@ export default function MainSlider({ projectsData }) {
 
         setTranslation(`translate(${x}px, ${y}px)`);
     }
+
+    const slideStyles = useMemo(() => {
+        const maxIdx = projectsData.length - 1;
+        return projectsData.map((_, index) => ({
+            top: `${maxIdx * scalingOffset - index * scalingOffset}vh`,
+            right: `${maxIdx * scalingOffset - index * scalingOffset}vh`,
+            zIndex: projectsData.length - index,
+        }));
+    }, [projectsData, scalingOffset]);
 
     return (
         <>
@@ -62,17 +71,7 @@ export default function MainSlider({ projectsData }) {
                     <Slide
                         key={slideData.id}
                         data={slideData}
-                        style={{
-                            top: `${
-                                (projectsData.length - 1) * scalingOffset -
-                                index * scalingOffset
-                            }vh`,
-                            right: `${
-                                (projectsData.length - 1) * scalingOffset -
-                                index * scalingOffset
-                            }vh`,
-                            zIndex: projectsData.length - index,
-                        }}
+                        style={slideStyles[index]}
                         updateTitleData={updateTitleData}
                     />
                 ))}
