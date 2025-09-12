@@ -7,7 +7,7 @@ import Slide from "./slide/slide";
 export default function MainSlider({ projectsData }) {
     const sliderCenter = -(400 / 31) * (projectsData.length / 2);
     const [scrollPosition, setScrollPosition] = useState(sliderCenter * 3);
-    const animationDurationInitial = 2000;
+    const animationDurationInitial = 1700;
     const [animationDuration, setAnimationDuration] = useState(
         `${animationDurationInitial}ms`
     );
@@ -73,7 +73,9 @@ export default function MainSlider({ projectsData }) {
                 className={styles.slider}
                 onWheel={handleScroll}
                 style={{
-                    transform: `translate(${-scrollPosition}vh, ${scrollPosition}vh)`,
+                    transform: `translate(${
+                        -scrollPosition - 20
+                    }vh, ${scrollPosition}vh)`,
                     "--animation-duration": animationDuration,
                 }}
                 onMouseMove={handleMouseMove}

@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-    title: "Kremisi",
+    title: "Kremisi - Web Design & Development",
     description: "Expand your digital presence with Kremisi",
 };
 
