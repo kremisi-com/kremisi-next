@@ -11,6 +11,7 @@ import styles from "./main-slider.module.css";
 import Slide from "./slide/slide";
 import Loader from "@/components/loader/loader";
 import slide from "./slide/slide";
+import throttle from "lodash/throttle";
 
 export default function MainSlider({ projectsData }) {
     // projectsData = React.useMemo(
@@ -41,10 +42,6 @@ export default function MainSlider({ projectsData }) {
         const chunkNumber = Math.floor(mod / relativeChunkSize);
         return chunkNumber;
     }
-    // const actualChunk = useMemo(
-    //     () => findActualChunk(scrollPosition),
-    //     [scrollPosition]
-    // );
 
     const animationTargetScroll = 0;
     let [actualChunk, setActualChunk] = useState(
@@ -73,19 +70,22 @@ export default function MainSlider({ projectsData }) {
         scrollRef.current = scrollPosition;
     }, [scrollPosition]);
 
-    function handleScroll(e) {
-        const speed = 4;
-        const shift = e.deltaY > 0 ? -speed : speed;
-        scrollRef.current += shift;
+    const speed = 4;
+    const handleScroll = useCallback(
+        throttle((e) => {
+            const shift = e.deltaY > 0 ? -speed : speed;
+            scrollRef.current += shift;
 
-        if (!ticking.current) {
-            window.requestAnimationFrame(() => {
-                setScrollPosition(scrollRef.current);
-                ticking.current = false;
-            });
-            ticking.current = true;
-        }
-    }
+            if (!ticking.current) {
+                window.requestAnimationFrame(() => {
+                    setScrollPosition(scrollRef.current);
+                    ticking.current = false;
+                });
+                ticking.current = true;
+            }
+        }, 50), // massimo una volta ogni 50ms
+        []
+    );
 
     const titleRef = useRef(null);
     const [darkText, setDarkText] = useState(false);
