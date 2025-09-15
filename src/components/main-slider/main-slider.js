@@ -1,133 +1,212 @@
 "use client";
 
-import { useState, useRef, useEffect, useCallback, useMemo } from "react";
+import React, {
+    useState,
+    useRef,
+    useEffect,
+    useCallback,
+    useMemo,
+} from "react";
 import styles from "./main-slider.module.css";
 import Slide from "./slide/slide";
 import Loader from "@/components/loader/loader";
+import slide from "./slide/slide";
 
 export default function MainSlider({ projectsData }) {
-  const chunksNumber = 3;
-  const relativeChunkSize = 1 / chunksNumber;
-  const chunks = Array.from(
-    { length: chunksNumber },
-    (_, i) => relativeChunkSize * (i + 1)
-  );
-  const chunksIndexes = chunks.map((chunk) =>
-    Math.floor(chunk * (projectsData.length - 1))
-  );
-  const slideSize = 400 / 31;
-  const sliderSize = slideSize * projectsData.length;
-  function findActualChunk(scroll) {
-    const mod = ((scroll % sliderSize) + sliderSize) % sliderSize;
-  }
+    // projectsData = React.useMemo(
+    //     () => [...projectsData, ...projectsData],
+    //     [projectsData]
+    // );
 
-  const sliderCenter = -slideSize * (projectsData.length / 2);
-  const [scrollPosition, setScrollPosition] = useState(sliderCenter * 4);
-  const animationDurationInitial = 1700;
-  const [animationDuration, setAnimationDuration] = useState(
-    `${animationDurationInitial}ms`
-  );
+    const [animationEnded, setAnimationEnded] = useState(false);
 
-  const scalingOffset = 15;
-  const scrollRef = useRef(scrollPosition);
-  const ticking = useRef(false);
+    const chunksNumber = 5;
+    const relativeChunkSize = 1 / chunksNumber;
+    const chunks = Array.from({ length: chunksNumber }, (_, i) =>
+        Math.round(relativeChunkSize * (i + 1) * projectsData.length)
+    );
+    chunks.unshift(0);
 
-  function runAnimation() {
-    setScrollPosition(sliderCenter);
-    setTimeout(() => {
-      setAnimationDuration(".2s");
-    }, animationDurationInitial);
-  }
+    const slideSize = 15;
+    const sliderSize = slideSize * projectsData.length;
+    const sliderCenter = -slideSize * (projectsData.length / 2);
+    const [scrollPosition, setScrollPosition] = useState(sliderCenter * 4);
+    const animationDurationInitial = 1700;
+    const [animationDuration, setAnimationDuration] = useState(
+        `${animationDurationInitial}ms`
+    );
 
-  useEffect(() => {
-    scrollRef.current = scrollPosition;
-  }, [scrollPosition]);
+    function findActualChunk(scroll) {
+        const mod = Math.abs(sliderCenter + scroll) / sliderSize;
+        const chunkNumber = Math.floor(mod / relativeChunkSize);
+        return chunkNumber;
+    }
+    // const actualChunk = useMemo(
+    //     () => findActualChunk(scrollPosition),
+    //     [scrollPosition]
+    // );
 
-  function handleScroll(e) {
-    const speed = 4;
-    const shift = e.deltaY > 0 ? -speed : speed;
-    scrollRef.current += shift;
+    const animationTargetScroll = 0;
+    let [actualChunk, setActualChunk] = useState(
+        findActualChunk(animationTargetScroll)
+    );
+    useEffect(() => {
+        if (!animationEnded) return;
+        const newChunk = findActualChunk(scrollPosition);
+        console.log("scroll", scrollPosition, "chunk", newChunk);
+        if (newChunk !== actualChunk) onChunkChange(actualChunk, newChunk);
+    }, [scrollPosition]);
 
-    if (!ticking.current) {
-      window.requestAnimationFrame(() => {
-        setScrollPosition(scrollRef.current);
-        ticking.current = false;
-      });
-      ticking.current = true;
+    const scalingOffset = 15;
+    const scrollRef = useRef(scrollPosition);
+    const ticking = useRef(false);
+
+    function runAnimation() {
+        setScrollPosition(animationTargetScroll);
+        setTimeout(() => {
+            setAnimationEnded(true);
+            setAnimationDuration(".2s");
+        }, animationDurationInitial);
     }
 
-    console.log(scrollRef.current % sliderSize);
-  }
+    useEffect(() => {
+        scrollRef.current = scrollPosition;
+    }, [scrollPosition]);
 
-  const titleRef = useRef(null);
-  const [darkText, setDarkText] = useState(false);
-  const [title, setTitle] = useState("");
-  const [translation, setTranslation] = useState("translate(-50%, -50%)");
+    function handleScroll(e) {
+        const speed = 4;
+        const shift = e.deltaY > 0 ? -speed : speed;
+        scrollRef.current += shift;
 
-  const updateTitleData = useCallback((newTitle, isDarkText) => {
-    setTitle(newTitle);
-    setDarkText(isDarkText);
-  }, []);
+        if (!ticking.current) {
+            window.requestAnimationFrame(() => {
+                setScrollPosition(scrollRef.current);
+                ticking.current = false;
+            });
+            ticking.current = true;
+        }
+    }
 
-  function handleMouseMove(e) {
-    const x = e.clientX + 15;
-    const y = e.clientY + 2;
+    const titleRef = useRef(null);
+    const [darkText, setDarkText] = useState(false);
+    const [title, setTitle] = useState("");
+    const [translation, setTranslation] = useState("translate(-50%, -50%)");
 
-    setTranslation(`translate(${x}px, ${y}px)`);
-  }
+    const updateTitleData = useCallback((newTitle, isDarkText) => {
+        setTitle(newTitle);
+        setDarkText(isDarkText);
+    }, []);
 
-  const slideStyles = useMemo(() => {
-    const maxIdx = projectsData.length - 1;
-    return projectsData.map((_, index) => ({
-      top: `${maxIdx * scalingOffset - index * scalingOffset}vh`,
-      right: `${maxIdx * scalingOffset - index * scalingOffset}vh`,
-      zIndex: projectsData.length - index,
-    }));
-  }, [projectsData, scalingOffset]);
+    function handleMouseMove(e) {
+        const x = e.clientX + 15;
+        const y = e.clientY + 2;
 
-  const [percentageLoaded, setPercentageLoaded] = useState(0);
-  const onImageLoad = useCallback(() => {
-    setPercentageLoaded((prev) => {
-      const newValue = prev + (1 / projectsData.length / 2) * 100;
-      if (newValue > 99) runAnimation();
-      return newValue;
-    });
-  }, [projectsData.length]);
+        setTranslation(`translate(${x}px, ${y}px)`);
+    }
 
-  return (
-    <>
-      {percentageLoaded < 99 && <Loader percentage={percentageLoaded} />}
-      <div
-        className={styles.slider}
-        onWheel={handleScroll}
-        style={{
-          transform: `translate(${
-            -scrollPosition - 20
-          }vh, ${scrollPosition}vh)`,
-          "--animation-duration": animationDuration,
-        }}
-        onMouseMove={handleMouseMove}
-      >
-        {projectsData.map((slideData, index) => (
-          <Slide
-            key={slideData.id + index}
-            data={slideData}
-            style={slideStyles[index]}
-            updateTitleData={updateTitleData}
-            onImageLoad={onImageLoad}
-          />
-        ))}
-      </div>
-      <label
-        className={styles.title}
-        ref={titleRef}
-        style={{
-          color: darkText ? "black" : "white",
-          transform: translation,
-        }}
-      >
-        {title}
-      </label>
-    </>
-  );
+    const [slidesPositions, setSlidesPositions] = useState(
+        projectsData.map(
+            (_, index) =>
+                (projectsData.length - 1) * scalingOffset -
+                index * scalingOffset
+        )
+    );
+    const [areSlidesDisplayed, setAreSlidesDisplayed] = useState(
+        projectsData.map((_, index) => true)
+    );
+
+    const slideStyles = useMemo(() => {
+        return projectsData.map((_, index) => ({
+            top: `${slidesPositions[index]}vh`,
+            right: `${slidesPositions[index]}vh`,
+            zIndex: slidesPositions[index],
+            display: areSlidesDisplayed[index] ? "block" : "none",
+        }));
+    }, [projectsData, scalingOffset, slidesPositions]);
+
+    const [percentageLoaded, setPercentageLoaded] = useState(0);
+    const onImageLoad = useCallback(() => {
+        setPercentageLoaded((prev) => {
+            const newValue = prev + (1 / projectsData.length / 2) * 100;
+            if (newValue > 99) runAnimation();
+            return newValue;
+        });
+    }, [projectsData.length]);
+
+    function onChunkChange(oldChunk, chunk) {
+        console.log("chunk change", oldChunk, "->", chunk);
+        setActualChunk(chunk);
+        const direction = chunk > oldChunk ? 1 : -1;
+        const chunkToMove = (chunk + 3 * -direction) % chunksNumber;
+        let indexesToMove = [];
+        for (let i = chunks[chunkToMove]; i < chunks[chunkToMove + 1]; i++)
+            indexesToMove.push(i);
+        indexesToMove = indexesToMove.map((i) => projectsData.length - 1 - i);
+
+        setAreSlidesDisplayed((prev) => {
+            const newDisplay = [...prev];
+            for (let i = 0; i < newDisplay.length; i++) newDisplay[i] = true;
+
+            indexesToMove.forEach((i) => {
+                newDisplay[i] = false;
+            });
+            return newDisplay;
+        });
+
+        console.log("move slides", indexesToMove);
+        setSlidesPositions((prev) => {
+            const newPositions = [...prev];
+            const oldStartPosition = newPositions[indexesToMove[0]];
+            const deltas = indexesToMove.map(
+                (i) => newPositions[i] - oldStartPosition
+            );
+            let newStartPosition = 0;
+            if (direction === 1)
+                newStartPosition = Math.max(...newPositions) + scalingOffset;
+            else newStartPosition = Math.min(...newPositions) - scalingOffset;
+            console.log("new start position", newStartPosition);
+            indexesToMove.forEach((i, idx) => {
+                newPositions[i] = newStartPosition + deltas[idx] * direction;
+            });
+            // console.log("new positions", newPositions);
+            return newPositions;
+        });
+    }
+
+    return (
+        <>
+            {percentageLoaded < 99 && <Loader percentage={percentageLoaded} />}
+            <div
+                className={styles.slider}
+                onWheel={handleScroll}
+                style={{
+                    transform: `translate(${
+                        -scrollPosition + sliderSize / 2 - 20
+                    }vh, ${scrollPosition - sliderSize / 2}vh)`,
+                    "--animation-duration": animationDuration,
+                }}
+                onMouseMove={handleMouseMove}
+            >
+                {projectsData.map((slideData, index) => (
+                    <Slide
+                        key={slideData.id + index}
+                        data={slideData}
+                        style={slideStyles[index]}
+                        updateTitleData={updateTitleData}
+                        onImageLoad={onImageLoad}
+                    />
+                ))}
+            </div>
+            <label
+                className={styles.title}
+                ref={titleRef}
+                style={{
+                    color: darkText ? "black" : "white",
+                    transform: translation,
+                }}
+            >
+                {title}
+            </label>
+        </>
+    );
 }
