@@ -120,6 +120,7 @@ export default function MainSlider({ projectsData }) {
             top: `${slidesPositions[index]}vh`,
             right: `${slidesPositions[index]}vh`,
             zIndex: slidesPositions[index],
+            transition: areSlidesDisplayed[index] ? "all .2s ease" : "0s",
             display: areSlidesDisplayed[index] ? "block" : "none",
         }));
     }, [projectsData, scalingOffset, slidesPositions]);
