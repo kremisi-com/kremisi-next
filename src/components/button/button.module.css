@@ -1,3 +1,6 @@
+.link {
+    display: contents;
+}
 .button {
     cursor: pointer;
     font: inherit;

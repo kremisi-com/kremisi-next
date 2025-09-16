@@ -1,3 +1,4 @@
+import Link from "next/link";
 import styles from "./button.module.css";
 
 export default function Button({
@@ -5,8 +6,9 @@ export default function Button({
     onClick,
     className,
     animation = true,
+    href = "",
 }) {
-    return animation ? (
+    const button = animation ? (
         <button className={`${styles.button} ${className}`} onClick={onClick}>
             <span className={`${styles.text} ${styles.top}`}>{children}</span>
             <span className={`${styles.text} ${styles.bottom}`}>
@@ -17,5 +19,12 @@ export default function Button({
         <button className={`${styles.button} ${className}`} onClick={onClick}>
             {children}
         </button>
+    );
+    return href !== "" ? (
+        <Link href={href} className={styles.link} onClick={onClick}>
+            {button}
+        </Link>
+    ) : (
+        button
     );
 }

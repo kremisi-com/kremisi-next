@@ -9,9 +9,9 @@ export default function Navbar() {
     return (
         <nav className={styles.navbar}>
             <div className={styles.buttons}>
-                <Button>Home</Button>
-                <Button>About</Button>
-                <Button>Projects</Button>
+                <Button href="/">Home</Button>
+                <Button href="/about">About</Button>
+                <Button href="/projects">Projects</Button>
             </div>
             <Link href="/">
                 <Image
