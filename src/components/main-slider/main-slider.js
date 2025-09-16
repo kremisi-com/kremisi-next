@@ -42,6 +42,7 @@ export default function MainSlider({ projectsData }) {
         findActualChunk(animationTargetScroll)
     );
     useEffect(() => {
+        console.log("scroll", scrollPosition);
         if (!animationEnded) return;
         const newChunk = findActualChunk(scrollPosition);
         // console.log("scroll", scrollPosition, "chunk", newChunk);
@@ -109,16 +110,6 @@ export default function MainSlider({ projectsData }) {
         projectsData.map((_, index) => true)
     );
 
-    const slideStyles = useMemo(() => {
-        return projectsData.map((_, index) => ({
-            top: `${slidesPositions[index]}vh`,
-            right: `${slidesPositions[index]}vh`,
-            zIndex: slidesPositions[index],
-            transition: areSlidesDisplayed[index] ? "all .2s ease" : "0s",
-            display: areSlidesDisplayed[index] ? "block" : "none",
-        }));
-    }, [projectsData, scalingOffset, slidesPositions]);
-
     const [percentageLoaded, setPercentageLoaded] = useState(0);
     const onImageLoad = useCallback(() => {
         setPercentageLoaded((prev) => {
@@ -184,6 +175,52 @@ export default function MainSlider({ projectsData }) {
         });
     }
 
+    // ------------------- SLIDES SIZES ------------------------- //
+    //lo slope dipende dal ratio dello schermo, anche la grandezza delle immagini e la rotazione
+    const [slope, setSlope] = useState(1);
+
+    function calcSizeSloped(size) {
+        return size / (slope * 1.3);
+    }
+
+    useEffect(() => {
+        function updateSlope() {
+            setSlope(window.innerHeight / window.innerWidth);
+        }
+        updateSlope();
+        window.addEventListener("resize", updateSlope);
+        return () => window.removeEventListener("resize", updateSlope);
+    }, []);
+
+    const scaleFactor = 1;
+
+    const width = 450;
+    const height = 275;
+
+    const minWidth = width * 0.8;
+    const minHeight = height * 0.8;
+
+    const imageWidth = Math.max(
+        calcSizeSloped(Math.round(width * scaleFactor)),
+        minWidth
+    );
+    const imageHeight = Math.max(
+        calcSizeSloped(Math.round(height * scaleFactor)),
+        minHeight
+    );
+
+    // --------------------- SLIDES STYLES ------------------------ //
+
+    const slideStyles = useMemo(() => {
+        return projectsData.map((_, index) => ({
+            top: `${slidesPositions[index]}vh`,
+            right: `${slidesPositions[index]}vh`,
+            zIndex: slidesPositions[index],
+            transition: areSlidesDisplayed[index] ? "all .2s ease" : "0s",
+            display: areSlidesDisplayed[index] ? "block" : "none",
+        }));
+    }, [projectsData, scalingOffset, slidesPositions]);
+
     return (
         <div onWheel={handleScroll}>
             {percentageLoaded < 99 && <Loader percentage={percentageLoaded} />}
@@ -204,6 +241,8 @@ export default function MainSlider({ projectsData }) {
                         style={slideStyles[index]}
                         updateTitleData={updateTitleData}
                         onImageLoad={onImageLoad}
+                        width={imageWidth}
+                        height={imageHeight}
                     />
                 ))}
             </div>
