@@ -84,6 +84,7 @@ export default function MainSlider({ projectsData }) {
         []
     );
 
+    // ------------------- LABEL MANAGEMENT ------------------------- //
     const titleRef = useRef(null);
     const [darkText, setDarkText] = useState(false);
     const [title, setTitle] = useState("");
@@ -101,17 +102,6 @@ export default function MainSlider({ projectsData }) {
         setTranslation(`translate(${x}px, ${y}px)`);
     }
 
-    const [slidesPositions, setSlidesPositions] = useState(
-        projectsData.map(
-            (_, index) =>
-                (projectsData.length - 1) * scalingOffset -
-                index * scalingOffset
-        )
-    );
-    const [areSlidesDisplayed, setAreSlidesDisplayed] = useState(
-        projectsData.map((_, index) => true)
-    );
-
     // ------------------- IMAGE LOADING ------------------------- //
     const [percentageLoaded, setPercentageLoaded] = useState(0);
     const onImageLoad = useCallback(() => {
@@ -127,6 +117,18 @@ export default function MainSlider({ projectsData }) {
             return newValue;
         });
     }, [projectsData.length, runAnimation]);
+
+    // ------------------- SLIDES POSITIONS ------------------------- //
+    const [slidesPositions, setSlidesPositions] = useState(
+        projectsData.map(
+            (_, index) =>
+                (projectsData.length - 1) * scalingOffset -
+                index * scalingOffset
+        )
+    );
+    const [areSlidesDisplayed, setAreSlidesDisplayed] = useState(
+        projectsData.map((_, index) => true)
+    );
 
     // ------------------- CHUNK CHANGE ------------------------- //
     function onChunkChange(oldChunk, chunk) {
@@ -230,7 +232,7 @@ export default function MainSlider({ projectsData }) {
     }, [projectsData, scalingOffset, slidesPositions]);
 
     return (
-        <div onWheel={handleScroll}>
+        <div onWheel={handleScroll} onMouseMove={handleMouseMove}>
             {percentageLoaded < 99.9 && (
                 <Loader percentage={percentageLoaded} />
             )}
@@ -242,7 +244,6 @@ export default function MainSlider({ projectsData }) {
                     }vh, ${scrollPosition - sliderSize / 2}vh)`,
                     "--animation-duration": animationDuration,
                 }}
-                onMouseMove={handleMouseMove}
             >
                 {projectsData.map((slideData, index) => (
                     <Slide
