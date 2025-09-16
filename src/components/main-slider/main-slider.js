@@ -52,14 +52,17 @@ export default function MainSlider({ projectsData }) {
     const scalingOffset = 15;
     const scrollRef = useRef(scrollPosition);
     const ticking = useRef(false);
+    const animationStartedRef = useRef(false);
 
-    function runAnimation() {
+    const runAnimation = useCallback(() => {
+        if (animationStartedRef.current) return;
+        animationStartedRef.current = true;
         setScrollPosition(animationTargetScroll);
         setTimeout(() => {
             setAnimationEnded(true);
             setAnimationDuration(".2s");
         }, animationDurationInitial);
-    }
+    }, [animationDurationInitial, animationTargetScroll]);
 
     useEffect(() => {
         scrollRef.current = scrollPosition;
@@ -112,12 +115,15 @@ export default function MainSlider({ projectsData }) {
 
     const [percentageLoaded, setPercentageLoaded] = useState(0);
     const onImageLoad = useCallback(() => {
+        if (animationStartedRef.current) return;
         setPercentageLoaded((prev) => {
-            const newValue = prev + (1 / projectsData.length / 2) * 100;
-            if (newValue > 99) runAnimation();
+            if (animationStartedRef.current) return prev;
+            const increment = (1 / projectsData.length) * 100;
+            const newValue = Math.min(prev + increment, 100);
+            if (newValue >= 100) runAnimation();
             return newValue;
         });
-    }, [projectsData.length]);
+    }, [projectsData.length, runAnimation]);
 
     function onChunkChange(oldChunk, chunk) {
         setActualChunk(chunk);
