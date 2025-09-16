@@ -12,7 +12,7 @@
     height: 200px;
     bottom: 0;
     position: absolute;
-    background: linear-gradient(to top, rgba(0, 0, 0, 1), transparent);
+    background: linear-gradient(to top, var(--background), transparent);
 }
 
 .footer .info {

@@ -2,8 +2,8 @@ import Image from "next/image";
 import styles from "./navbar.module.css";
 import Button from "@/components/button/button";
 import Link from "next/link";
-import { ModeToggle } from "../dark-mode/ModeToggle";
 import { Globe, Sun } from "lucide-react";
+import ThemeToggle from "./theme-toggler";
 
 export default function Navbar() {
     return (
@@ -28,9 +28,7 @@ export default function Navbar() {
                 <Button className={styles.icon} animation={false}>
                     <Globe size={20} />
                 </Button>
-                <Button className={styles.icon} animation={false}>
-                    <Sun size={20} />
-                </Button>
+                <ThemeToggle styles={styles} />
             </div>
         </nav>
     );
