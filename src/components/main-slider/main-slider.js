@@ -152,17 +152,33 @@ export default function MainSlider({ projectsData }) {
 
         setSlidesPositions((prev) => {
             const newPositions = [...prev];
-            const oldStartPosition = newPositions[indexesToMove[0]];
-            const deltas = indexesToMove.map(
-                (i) => newPositions[i] - oldStartPosition
+            const chunkPositions = indexesToMove.map((i) => newPositions[i]);
+            const chunkMin = Math.min(...chunkPositions);
+            const chunkMax = Math.max(...chunkPositions);
+            const chunkSpan = chunkMax - chunkMin;
+            const offsets = chunkPositions.map((pos) => pos - chunkMin);
+
+            const indexesSet = new Set(indexesToMove);
+            const remainingPositions = newPositions.filter(
+                (_, idx) => !indexesSet.has(idx)
             );
+            const globalMax =
+                remainingPositions.length > 0
+                    ? Math.max(...remainingPositions)
+                    : chunkMax;
+            const globalMin =
+                remainingPositions.length > 0
+                    ? Math.min(...remainingPositions)
+                    : chunkMin;
+
             let newStartPosition = 0;
-            if (direction === 1)
-                newStartPosition = Math.max(...newPositions) + scalingOffset;
-            else newStartPosition = Math.min(...newPositions) - scalingOffset;
-            console.log("new start position", newStartPosition);
+            if (direction === 1) {
+                newStartPosition = globalMax + scalingOffset;
+            } else {
+                newStartPosition = globalMin - scalingOffset - chunkSpan;
+            }
             indexesToMove.forEach((i, idx) => {
-                newPositions[i] = newStartPosition + deltas[idx] * direction;
+                newPositions[i] = newStartPosition + offsets[idx];
             });
             return newPositions;
         });
