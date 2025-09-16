@@ -54,6 +54,7 @@ export default function MainSlider({ projectsData }) {
 
     const runAnimation = useCallback(() => {
         if (animationStartedRef.current) return;
+        setPercentageLoaded(100);
         animationStartedRef.current = true;
         setScrollPosition(animationTargetScroll);
         setTimeout(() => {
@@ -111,6 +112,7 @@ export default function MainSlider({ projectsData }) {
         projectsData.map((_, index) => true)
     );
 
+    // ------------------- IMAGE LOADING ------------------------- //
     const [percentageLoaded, setPercentageLoaded] = useState(0);
     const onImageLoad = useCallback(() => {
         if (animationStartedRef.current) return;
@@ -118,11 +120,15 @@ export default function MainSlider({ projectsData }) {
             if (animationStartedRef.current) return prev;
             const increment = (1 / projectsData.length) * 100;
             const newValue = Math.min(prev + increment, 100);
-            if (newValue >= 100) runAnimation();
+            if (newValue >= 100) {
+                setTimeout(runAnimation, 100);
+                return 99;
+            }
             return newValue;
         });
     }, [projectsData.length, runAnimation]);
 
+    // ------------------- CHUNK CHANGE ------------------------- //
     function onChunkChange(oldChunk, chunk) {
         setActualChunk(chunk);
         const direction = chunk > oldChunk ? 1 : -1;
@@ -225,7 +231,9 @@ export default function MainSlider({ projectsData }) {
 
     return (
         <div onWheel={handleScroll}>
-            {percentageLoaded < 99 && <Loader percentage={percentageLoaded} />}
+            {percentageLoaded < 99.9 && (
+                <Loader percentage={percentageLoaded} />
+            )}
             <div
                 className={styles.slider}
                 style={{
