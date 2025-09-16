@@ -10,15 +10,9 @@ import React, {
 import styles from "./main-slider.module.css";
 import Slide from "./slide/slide";
 import Loader from "@/components/loader/loader";
-import slide from "./slide/slide";
 import throttle from "lodash/throttle";
 
 export default function MainSlider({ projectsData }) {
-    // projectsData = React.useMemo(
-    //     () => [...projectsData, ...projectsData],
-    //     [projectsData]
-    // );
-
     const [animationEnded, setAnimationEnded] = useState(false);
 
     const chunksNumber = 5;
@@ -38,7 +32,7 @@ export default function MainSlider({ projectsData }) {
     );
 
     function findActualChunk(scroll) {
-        const mod = Math.abs(sliderCenter + scroll) / sliderSize;
+        const mod = -(sliderCenter + scroll) / sliderSize;
         const chunkNumber = Math.floor(mod / relativeChunkSize);
         return chunkNumber;
     }
@@ -50,7 +44,7 @@ export default function MainSlider({ projectsData }) {
     useEffect(() => {
         if (!animationEnded) return;
         const newChunk = findActualChunk(scrollPosition);
-        console.log("scroll", scrollPosition, "chunk", newChunk);
+        // console.log("scroll", scrollPosition, "chunk", newChunk);
         if (newChunk !== actualChunk) onChunkChange(actualChunk, newChunk);
     }, [scrollPosition]);
 
@@ -135,14 +129,16 @@ export default function MainSlider({ projectsData }) {
     }, [projectsData.length]);
 
     function onChunkChange(oldChunk, chunk) {
-        console.log("chunk change", oldChunk, "->", chunk);
         setActualChunk(chunk);
         const direction = chunk > oldChunk ? 1 : -1;
-        const chunkToMove = (chunk + 3 * -direction) % chunksNumber;
+        let chunkToMove = (chunk + 3 * -direction) % chunksNumber;
+        if (chunkToMove < 0) chunkToMove = chunksNumber + chunkToMove;
         let indexesToMove = [];
         for (let i = chunks[chunkToMove]; i < chunks[chunkToMove + 1]; i++)
             indexesToMove.push(i);
         indexesToMove = indexesToMove.map((i) => projectsData.length - 1 - i);
+        console.log("chunk change", oldChunk, "->", chunk, direction);
+        console.log("indexes to move", indexesToMove);
 
         setAreSlidesDisplayed((prev) => {
             const newDisplay = [...prev];
@@ -154,7 +150,6 @@ export default function MainSlider({ projectsData }) {
             return newDisplay;
         });
 
-        console.log("move slides", indexesToMove);
         setSlidesPositions((prev) => {
             const newPositions = [...prev];
             const oldStartPosition = newPositions[indexesToMove[0]];
@@ -169,17 +164,15 @@ export default function MainSlider({ projectsData }) {
             indexesToMove.forEach((i, idx) => {
                 newPositions[i] = newStartPosition + deltas[idx] * direction;
             });
-            // console.log("new positions", newPositions);
             return newPositions;
         });
     }
 
     return (
-        <>
+        <div onWheel={handleScroll}>
             {percentageLoaded < 99 && <Loader percentage={percentageLoaded} />}
             <div
                 className={styles.slider}
-                onWheel={handleScroll}
                 style={{
                     transform: `translate(${
                         -scrollPosition + sliderSize / 2 - 20
@@ -208,6 +201,6 @@ export default function MainSlider({ projectsData }) {
             >
                 {title}
             </label>
-        </>
+        </div>
     );
 }
