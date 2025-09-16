@@ -42,10 +42,8 @@ export default function MainSlider({ projectsData }) {
         findActualChunk(animationTargetScroll)
     );
     useEffect(() => {
-        console.log("scroll", scrollPosition);
         if (!animationEnded) return;
         const newChunk = findActualChunk(scrollPosition);
-        // console.log("scroll", scrollPosition, "chunk", newChunk);
         if (newChunk !== actualChunk) onChunkChange(actualChunk, newChunk);
     }, [scrollPosition]);
 
@@ -134,8 +132,6 @@ export default function MainSlider({ projectsData }) {
         for (let i = chunks[chunkToMove]; i < chunks[chunkToMove + 1]; i++)
             indexesToMove.push(i);
         indexesToMove = indexesToMove.map((i) => projectsData.length - 1 - i);
-        console.log("chunk change", oldChunk, "->", chunk, direction);
-        console.log("indexes to move", indexesToMove);
 
         setAreSlidesDisplayed((prev) => {
             const newDisplay = [...prev];
