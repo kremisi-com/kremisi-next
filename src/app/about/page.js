@@ -3,40 +3,85 @@
 import { useEffect } from "react";
 import gsap from "gsap";
 import ScrollTrigger from "gsap/ScrollTrigger";
+import SplitType from "split-type";
+import styles from "./about.module.css";
 
 export default function AboutPage() {
     useEffect(() => {
-        // registra il plugin una sola volta
         gsap.registerPlugin(ScrollTrigger);
 
-        // seleziona tutti gli elementi con classe .word
-        gsap.utils.toArray(".word").forEach((el) => {
-            gsap.fromTo(
-                el,
-                { color: "#555" }, // colore iniziale
-                {
-                    color: "#fff", // colore finale
+        // 1) Split del testo in parole
+        const split = new SplitType(`.${styles.text}`, { types: "words" });
+
+        // 2) Per ogni parola, clono il testo in un overlay bianco con width:0
+        split.words.forEach((word) => {
+            // base parola grigia (gestita via CSS globale :global(.word))
+            const overlay = document.createElement("span");
+            overlay.className = styles.reveal; // classe hashata del modulo
+            overlay.textContent = word.textContent; // stesso testo
+            word.appendChild(overlay); // overlay sopra alla parola
+        });
+
+        // 3) Entrata delle parole (dal basso verso l'alto, con leggero stagger)
+        const enterTl = gsap.from(split.words, {
+            yPercent: 100,
+            opacity: 0,
+            duration: 0.7,
+            ease: "power3.out",
+            stagger: 0.03,
+            scrollTrigger: {
+                trigger: `.${styles.section}`,
+                start: "top 80%",
+            },
+        });
+
+        // 4) Reveal da sinistra verso destra: aumento width dell'overlay bianco
+        const revealer = [];
+        split.words.forEach((word) => {
+            const overlay = word.querySelector(`.${styles.reveal}`);
+            if (!overlay) return;
+
+            revealer.push(
+                gsap.to(overlay, {
+                    width: "100%",
+                    ease: "none",
                     scrollTrigger: {
-                        trigger: el,
-                        start: "top 80%", // quando entra nell'80% viewport
-                        end: "top 20%", // fino al 20%
-                        scrub: true, // l'animazione segue lo scroll
+                        trigger: word,
+                        start: "top 90%",
+                        end: "top 30%",
+                        scrub: true,
                     },
-                }
+                })
             );
         });
+
+        // Cleanup su unmount: kill triggers e ripristina DOM
+        return () => {
+            revealer.forEach((a) => a.kill());
+            enterTl?.kill();
+            ScrollTrigger.getAll().forEach((t) => t.kill());
+            split.revert();
+        };
     }, []);
 
     return (
-        <main className="px-10 py-20 bg-black text-gray-500">
-            <section className="h-screen flex items-center justify-center">
-                <p className="word text-4xl font-bold">
-                    Questo testo diventa bianco mentre scrolli
+        <main className={styles.main}>
+            <section className={styles.section}>
+                <p className={styles.text}>
+                    Lorem ipsum dolor sit amet, consectetur adipisci elit, sed
+                    eiusmod tempor incidunt ut labore et dolore magna aliqua. Ut
+                    enim ad minim veniam, quis nostrum exercitationem ullam
+                    corporis suscipit laboriosam, nisi ut aliquid ex ea commodi
+                    consequatur. Quis aute iure reprehenderit in voluptate velit
+                    esse cillum dolore eu fugiat nulla pariatur. Excepteur sint
+                    obcaecat cupiditat non proident, sunt in culpa qui officia
+                    deserunt mollit anim id est laborum.
                 </p>
             </section>
-            <section className="h-screen flex items-center justify-center">
-                <p className="word text-4xl font-bold">
-                    Anche questo cambia colore gradualmente
+            <section className={styles.section}>
+                <p className={styles.text}>
+                    Anche questo blocco ha lo stesso effetto elegante e
+                    progressivo.
                 </p>
             </section>
         </main>
