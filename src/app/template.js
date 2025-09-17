@@ -1,3 +1,6 @@
+// app/template.js
+import PageTransition from "@/components/page-transition/page-transition";
+
 export default function Template({ children }) {
-    return <div>{children}</div>;
+    return <PageTransition>{children}</PageTransition>;
 }

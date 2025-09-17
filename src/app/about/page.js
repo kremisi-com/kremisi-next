@@ -50,7 +50,7 @@ export default function AboutPage() {
     }, []);
 
     return (
-        <main className={styles.main}>
+        <main className={`${styles.main} page-content`}>
             <section ref={sectionRef} className={styles.section}>
                 <p
                     ref={textRef}
@@ -81,4 +81,3 @@ export default function AboutPage() {
         </main>
     );
 }
-
