@@ -1,9 +1,13 @@
 "use client";
 import Image from "next/image";
+import { useRouter } from "next/navigation"; // ✅
 import style from "./colored-table.module.css";
 import React from "react";
 
-export default function ColoredTable({ items, images }) {
+export default function ColoredTable({ items, images, links }) {
+    const tableRef = React.useRef(null);
+    const router = useRouter(); // ✅
+
     const [imageIndexShown, setImageIndexShown] = React.useState(null);
     const [translate, setTranslate] = React.useState({ x: 0, y: 0 });
 
@@ -13,33 +17,48 @@ export default function ColoredTable({ items, images }) {
     function handleMouseEnter(index) {
         setImageIndexShown(index);
     }
-    function handleMouseLeave(index) {
+    function handleMouseLeave() {
         setImageIndexShown(null);
     }
     function handleMouseMove(event) {
-        const rect = event.currentTarget.getBoundingClientRect();
+        const rect = tableRef.current.getBoundingClientRect();
         const x = event.clientX - rect.left + 50;
-        const y = event.clientY - rect.top - imageHeight;
-        setTranslate({ x: x, y: y });
+        const y = event.clientY - rect.top - imageHeight / 2;
+        setTranslate({ x, y });
     }
+
     return (
         <div
-            style={{ position: "relative" }}
+            className={style.container}
             onMouseLeave={handleMouseLeave}
             onMouseMove={handleMouseMove}
+            ref={tableRef}
         >
             <table className={style.coloredTable}>
                 <tbody>
                     {items.map((item, index) => (
                         <tr
                             key={index}
-                            onMouseEnter={handleMouseEnter.bind(this, index)}
+                            onMouseEnter={() => handleMouseEnter(index)}
+                            onClick={() => {
+                                if (links && links.length > index) {
+                                    router.push(links[index]); // ✅ navigazione client-side
+                                }
+                            }}
+                            style={{
+                                cursor:
+                                    links && links.length > index
+                                        ? "pointer"
+                                        : "default",
+                            }}
                         >
                             {item.map((cell, cellIndex) => (
                                 <td
                                     key={cellIndex}
-                                    dangerouslySetInnerHTML={{ __html: cell }}
-                                ></td>
+                                    dangerouslySetInnerHTML={{
+                                        __html: cell,
+                                    }}
+                                />
                             ))}
                         </tr>
                     ))}

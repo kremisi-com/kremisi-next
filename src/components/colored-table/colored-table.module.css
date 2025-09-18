@@ -1,6 +1,11 @@
+.container {
+    position: relative;
+    width: 100%;
+}
 .coloredTable {
     width: 100%;
     border-collapse: collapse;
+    position: relative;
 }
 
 .coloredTable tr {
@@ -52,4 +57,6 @@
 .imageContainer {
     position: absolute;
     z-index: 100;
+    top: 0;
+    left: 0;
 }

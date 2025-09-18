@@ -6,7 +6,8 @@
         "link": "https://kremisi.com/assets/documents/fleder_screens.pdf",
         "customer": "",
         "tags": ["app", "benessere", "farmaceutica"],
-        "disabled": true
+        "disabled": true,
+        "year": 2021
     },
     "allavelli": {
         "title": "Allavelli",
@@ -17,7 +18,8 @@
         "tags": ["finanza", "comunicazione", "sito"],
         "color": "#1c3b8a",
         "disabled": false,
-        "images": ["header-2-en.png", "about.png", "text-en.png"]
+        "images": ["header-2-en.png", "about.png", "text-en.png"],
+        "year": 2023
     },
     "glapix": {
         "title": "Glapix",
@@ -27,7 +29,8 @@
         "customer": "makuda",
         "tags": ["comunicazione", "sito"],
         "disabled": false,
-        "images": ["header.png", "limitless.png", "draw.png", "hotel.png"]
+        "images": ["header.png", "limitless.png", "draw.png", "hotel.png"],
+        "year": 2021
     },
     "vecchi360": {
         "title": "Vecchi360",
@@ -38,7 +41,8 @@
         "tags": ["immobiliare", "sito"],
         "disabled": false,
         "color": "#F4BE44",
-        "images": ["main.png", "ricerca.png"]
+        "images": ["main.png", "ricerca.png"],
+        "year": 2023
     },
     "makuda": {
         "title": "Makuda",
@@ -48,7 +52,8 @@
         "customer": "",
         "tags": ["comunicazione", "sito"],
         "color": "#FAC100",
-        "images": ["main.png", "smurfs.png", "tear.png"]
+        "images": ["main.png", "smurfs.png", "tear.png"],
+        "year": 2021
     },
     "gamelia": {
         "title": "Gamelia",
@@ -58,7 +63,8 @@
         "customer": "makuda",
         "tags": ["benessere", "sito"],
         "color": "#6F2283",
-        "images": ["main-3.png", "main-2.png"]
+        "images": ["main-3.png", "main-2.png"],
+        "year": 2022
     },
     "e2l": {
         "title": "Easy2Learn",
@@ -67,7 +73,8 @@
         "link": "https://play.google.com/store/apps/details?id=it.il_cubo.easy2learn&hl=it",
         "customer": "il-cubo",
         "tags": ["istruzione", "app"],
-        "disabled": true
+        "disabled": true,
+        "year": 2020
     },
     "jester": {
         "title": "Jester",
@@ -78,7 +85,8 @@
         "tags": ["istruzione", "sito"],
         "color": "#0034A1",
         "blackText": true,
-        "images": ["main.png", "main-7.png", "main-4.png"]
+        "images": ["main.png", "main-7.png", "main-4.png"],
+        "year": 2021
     },
     "narai": {
         "title": "Narai Thai Massages",
@@ -86,7 +94,8 @@
         "image": "narai.png",
         "link": "https://naraithaimassage.com",
         "customer": "makuda",
-        "tags": ["benessere", "sito"]
+        "tags": ["benessere", "sito"],
+        "year": 2021
     },
     "crystal-beauty": {
         "title": "Crystal Beauty",
@@ -94,7 +103,8 @@
         "image": "crystal.png",
         "link": "https://www.saleterapia.it",
         "customer": "",
-        "tags": ["benessere", "sito"]
+        "tags": ["benessere", "sito"],
+        "year": 2020
     },
     "beyond-reiki": {
         "title": "Beyond Reiki",
@@ -102,7 +112,8 @@
         "image": "beyond-reiki.png",
         "link": "https://www.beyond-reiki.com",
         "customer": "",
-        "tags": ["benessere", "sito"]
+        "tags": ["benessere", "sito"],
+        "year": 2023
     },
     "obm": {
         "title": "OBM Associati",
@@ -110,7 +121,8 @@
         "image": "obm.png",
         "link": "https://obmassociati.com",
         "customer": "makuda",
-        "tags": ["finanza", "sito"]
+        "tags": ["finanza", "sito"],
+        "year": 2022
     },
     "ims": {
         "title": "IMS Agency",
@@ -119,7 +131,8 @@
         "link": "https://www.imsagency.it",
         "customer": "",
         "tags": ["comunicazione", "sito"],
-        "blackText": true
+        "blackText": true,
+        "year": 2022
     },
     "progetto-commercio": {
         "title": "Progetto Commercio",
@@ -128,7 +141,8 @@
         "link": "https://play.google.com/store/apps/details?id=com.progettocommercio&hl=it",
         "customer": "il-cubo",
         "tags": ["finanza", "app"],
-        "disabled": true
+        "disabled": true,
+        "year": 2019
     },
     "bioli": {
         "title": "Bioli",
@@ -145,7 +159,8 @@
         "image": "sgs-2.png",
         "link": "https://www.sgscapital.ch",
         "customer": "makuda",
-        "tags": ["finanza", "sito"]
+        "tags": ["finanza", "sito"],
+        "year": 2021
     },
     "naturalia": {
         "title": "Naturalia",
@@ -153,7 +168,8 @@
         "image": "naturalia.png",
         "link": "https://naturalia.kremisi.com",
         "customer": "makuda",
-        "tags": ["finanza", "sito"]
+        "tags": ["finanza", "sito"],
+        "year": 2021
     },
     "studylux": {
         "title": "StudyLux",
@@ -162,7 +178,8 @@
         "link": "https://studylux.it",
         "customer": "il-cubo",
         "tags": ["istruzione", "sito"],
-        "blackText": true
+        "blackText": true,
+        "year": 2019
     },
     "C.COM": {
         "title": "C.COM",
@@ -170,7 +187,8 @@
         "image": "ccom.png",
         "link": "https://www.c-com.it/",
         "customer": "makuda",
-        "tags": ["comunicazione", "sito"]
+        "tags": ["comunicazione", "sito"],
+        "year": 2022
     },
     "sportsalutebellezza": {
         "title": "Sport Salute Bellezza",
@@ -178,7 +196,8 @@
         "image": "ssb.png",
         "link": "https://sportsalutebellezza.com/",
         "customer": "makuda",
-        "tags": ["benessere", "sito"]
+        "tags": ["benessere", "sito"],
+        "year": 2023
     },
     "theorica": {
         "title": "Theorica Holdings",
@@ -186,7 +205,8 @@
         "image": "theorica.png",
         "link": "https://theoricaholdings.com",
         "customer": "makuda",
-        "tags": ["finanza", "sito"]
+        "tags": ["finanza", "sito"],
+        "year": 2022
     },
     "chora": {
         "title": "Residenza Chora",
@@ -194,7 +214,8 @@
         "image": "chora-full.png",
         "link": "https://residenzachora.koshomesolution.com/",
         "customer": "makuda",
-        "tags": ["finanza", "immobiliare", "sito"]
+        "tags": ["finanza", "immobiliare", "sito"],
+        "year": 2023
     },
     "hydra": {
         "title": "Residenza Hydra",
@@ -202,7 +223,8 @@
         "image": "hydra.png",
         "link": "https://residenzahydra.koshomesolution.com/",
         "customer": "makuda",
-        "tags": ["finanza", "immobiliare", "sito"]
+        "tags": ["finanza", "immobiliare", "sito"],
+        "year": 2023
     },
     "echinadi": {
         "title": "Residenza Echinadi",
@@ -210,6 +232,7 @@
         "image": "echinadi.png",
         "link": "https://residenzaechinadi.koshomesolution.com/",
         "customer": "makuda",
-        "tags": ["finanza", "immobiliare", "sito"]
+        "tags": ["finanza", "immobiliare", "sito"],
+        "year": 2024
     }
 }
