@@ -4,7 +4,7 @@ import styles from "./button.module.css";
 export default function Button({
     children,
     onClick,
-    className,
+    className = "",
     animation = true,
     href = "",
 }) {

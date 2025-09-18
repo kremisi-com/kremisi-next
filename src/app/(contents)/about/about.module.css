@@ -1,5 +1,8 @@
 .section {
     margin-bottom: 100px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .text {
@@ -44,11 +47,12 @@
     align-items: center;
     justify-content: center;
     /* box-shadow: 0 0 8px var(--foreground); */
+    transition: background-color 0.3s, color 0.3s;
 }
-.servicesList li:hover {
+.servicesList li:not(.rainbowContainer):hover,
+.servicesList .rainbowContainer:hover .rainbowContent {
     background-color: var(--foreground);
     color: var(--background);
-    transition: background-color 0.3s, color 0.3s;
 }
 
 .silver {
@@ -109,6 +113,7 @@
     /* to allow pseudo-elements to be absolutely
      positioned with reference to this element: */
     position: relative;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .rainbowContent::before {

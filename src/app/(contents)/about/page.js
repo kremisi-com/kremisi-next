@@ -1,13 +1,15 @@
 import RevelatingText from "@/components/revelating-text/revelating-text";
 import styles from "./about.module.css";
 import ColoredTable from "@/components/colored-table/colored-table";
+import Button from "@/components/button/button";
+import GitButton from "@/components/git-button/git-button";
 
 // import auratImage from "/images/recognitions/aurat.png";
 // import microsoftImage from "/images/recognitions/microsoft.png";
 
 export default function AboutPage() {
     return (
-        <main className={`${styles.main}`}>
+        <main className="page-content">
             <section className={styles.section}>
                 <RevelatingText>
                     My name is Andrea and I am a web developer based in Italy
@@ -122,6 +124,9 @@ export default function AboutPage() {
                         "/images/recognitions/microsoft.png",
                     ]}
                 />
+            </section>
+            <section className={`${styles.section} flex-center`}>
+                <GitButton />
             </section>
         </main>
     );

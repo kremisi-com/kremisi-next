@@ -13,6 +13,7 @@
     backdrop-filter: blur(10px);
     transition: background 0.2s ease;
     box-sizing: content-box;
+    height: 20px;
 }
 
 .button:hover {

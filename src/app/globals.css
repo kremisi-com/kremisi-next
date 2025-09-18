@@ -57,6 +57,12 @@ h2 {
     padding-bottom: 150px;
 }
 
+.flex-center {
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
 * {
     box-sizing: border-box;
     padding: 0;

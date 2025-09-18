@@ -28,7 +28,7 @@ export default function RevelatingText({ children }) {
                     opacity: 1,
                     duration: 0.35,
                     ease: "power3.out",
-                    stagger: 0.02,
+                    stagger: 0.03,
                     scrollTrigger: {
                         trigger: sectionRef.current || el,
                         start: "top 80%",
