@@ -5,9 +5,10 @@
 
 .coloredTable tr {
     position: relative;
-    border: 1px solid var(--foreground);
-    border-left: 0px;
-    border-right: 0px;
+    border-bottom: 1px solid var(--foreground);
+}
+.coloredTable tr:last-child {
+    border-bottom: none;
 }
 
 .coloredTable td {

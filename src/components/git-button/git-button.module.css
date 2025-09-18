@@ -37,7 +37,7 @@
     left: 50%;
     transform: translateX(-50%);
     white-space: nowrap;
-    color: var(--foreground);
+    color: var(--white);
 }
 
 .button .text.top {
@@ -62,7 +62,8 @@
 
 .container {
     position: relative;
-    filter: url("#goo"); /* qui si applica l’effetto */
+    filter: url("#goo");
+    margin-top: 50px;
 }
 
 .arrow {
@@ -77,6 +78,7 @@
     right: -35px;
     top: 50%;
     transform: translateY(-50%);
+    color: var(--white);
 }
 .right.arrow {
     right: -35px;
