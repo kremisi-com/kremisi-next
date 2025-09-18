@@ -1,0 +1,54 @@
+.coloredTable {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.coloredTable tr {
+    position: relative;
+    border: 1px solid var(--foreground);
+    border-left: 0px;
+    border-right: 0px;
+}
+
+.coloredTable td {
+    padding: 16px 15px;
+    text-align: left;
+    font-weight: 300;
+    font-size: 14pt;
+}
+
+.coloredTable td:first-child {
+    font-weight: 500;
+}
+.coloredTable td:last-child {
+    text-align: right;
+}
+
+.coloredTable tr::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    max-height: 0;
+    width: 100%;
+    background: var(--primary);
+    z-index: -1;
+    transition: all 0.2s; /* lasciamo che sia gsap a controllare */
+    will-change: max-height;
+}
+.coloredTable tr:hover {
+    color: var(--background);
+}
+.coloredTable tr:hover::before {
+    max-height: 100%;
+}
+
+.coloredTable :global(a) {
+    text-decoration: underline;
+}
+
+.imageContainer {
+    position: absolute;
+    z-index: 100;
+}

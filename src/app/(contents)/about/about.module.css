@@ -1,3 +1,7 @@
+.section {
+    margin-bottom: 100px;
+}
+
 .text {
     font-size: 3rem;
     font-weight: 800;
@@ -27,18 +31,19 @@
     flex-wrap: wrap;
 }
 .servicesList li {
-    color: var(--white);
-    background-color: var(--primary);
+    color: var(--black);
+    background-color: var(--white);
     border-radius: 22px;
     padding: 8px 16px;
     text-transform: uppercase;
     letter-spacing: 0.1em;
-    font-size: 15pt;
+    font-size: 14pt;
     font-weight: 300;
     cursor: default;
     display: flex;
     align-items: center;
     justify-content: center;
+    /* box-shadow: 0 0 8px var(--foreground); */
 }
 .servicesList li:hover {
     background-color: var(--foreground);
@@ -46,13 +51,12 @@
     transition: background-color 0.3s, color 0.3s;
 }
 
-.textSection {
-    margin-bottom: 150px;
+.silver {
+    border: 2px solid var(--primary);
 }
-
-/* .bronze {
-    border: 2px solid var(--bronze);
-} */
+.bronze {
+    border: 2px solid var(--primary);
+}
 
 /* RAINBOW */
 
@@ -66,7 +70,7 @@
 
 /* CSS custom-properties: */
 :root {
-    --animation: spin 5s infinite linear;
+    --animation: spin 2s infinite linear;
     --rainbow: conic-gradient(
         #fd004c,
         #fe9000,
