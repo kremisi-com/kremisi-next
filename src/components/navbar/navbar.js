@@ -25,9 +25,11 @@ export default function Navbar() {
             </Link>
             <div className={`${styles.buttons} ${styles.right}`}>
                 <Button>Contacts</Button>
-                <Button className={styles.icon} animation={false}>
-                    <Globe size={20} />
-                </Button>
+                <Link href="/" locale="it">
+                    <Button className={styles.icon} animation={false}>
+                        <Globe size={20} />
+                    </Button>
+                </Link>
                 <ThemeToggle styles={styles} />
             </div>
         </nav>

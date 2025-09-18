@@ -22,9 +22,9 @@ export const metadata = {
     description: "Expand your digital presence with Kremisi",
 };
 
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html suppressHydrationWarning>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
                 <CursorTrailCanvas />
                 <ThemeProvider
