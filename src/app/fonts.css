@@ -1,0 +1,257 @@
+/* ============================
+   FK Grotesk Mono Trial
+============================ */
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-Thin.otf") format("opentype");
+    font-weight: 100;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-ThinItalic.otf")
+        format("opentype");
+    font-weight: 100;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-Light.otf") format("opentype");
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-LightItalic.otf")
+        format("opentype");
+    font-weight: 300;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-Regular.otf")
+        format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-Italic.otf")
+        format("opentype");
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-Medium.otf")
+        format("opentype");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-MediumItalic.otf")
+        format("opentype");
+    font-weight: 500;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-Bold.otf") format("opentype");
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-BoldItalic.otf")
+        format("opentype");
+    font-weight: 700;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-Black.otf") format("opentype");
+    font-weight: 900;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Mono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskMonoTrial-BlackItalic.otf")
+        format("opentype");
+    font-weight: 900;
+    font-style: italic;
+}
+
+/* ============================
+   FK Grotesk SemiMono Trial
+============================ */
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-Thin.otf")
+        format("opentype");
+    font-weight: 100;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-ThinItalic.otf")
+        format("opentype");
+    font-weight: 100;
+    font-style: italic;
+}
+/* ... stessa logica per Light, Regular, Medium, Bold, Black (con relative italic) ... */
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-Light.otf")
+        format("opentype");
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-LightItalic.otf")
+        format("opentype");
+    font-weight: 300;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-Regular.otf")
+        format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-Italic.otf")
+        format("opentype");
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-Medium.otf")
+        format("opentype");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-MediumItalic.otf")
+        format("opentype");
+    font-weight: 500;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-Bold.otf")
+        format("opentype");
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-BoldItalic.otf")
+        format("opentype");
+    font-weight: 700;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-Black.otf")
+        format("opentype");
+    font-weight: 900;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk SemiMono Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskSemiMonoTrial-BlackItalic.otf")
+        format("opentype");
+    font-weight: 900;
+    font-style: italic;
+}
+/* ============================
+   FK Grotesk Trial
+============================ */
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-Thin.otf") format("opentype");
+    font-weight: 100;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-ThinItalic.otf")
+        format("opentype");
+    font-weight: 100;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-Light.otf") format("opentype");
+    font-weight: 300;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-LightItalic.otf")
+        format("opentype");
+    font-weight: 300;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-Regular.otf") format("opentype");
+    font-weight: 400;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-Italic.otf") format("opentype");
+    font-weight: 400;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-Medium.otf") format("opentype");
+    font-weight: 500;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-MediumItalic.otf")
+        format("opentype");
+    font-weight: 500;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-Bold.otf") format("opentype");
+    font-weight: 700;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-BoldItalic.otf")
+        format("opentype");
+    font-weight: 700;
+    font-style: italic;
+}
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-Black.otf") format("opentype");
+    font-weight: 900;
+    font-style: normal;
+}
+@font-face {
+    font-family: "FK Grotesk Trial";
+    src: url("/fonts/FKGrotesk/FKGroteskTrial-BlackItalic.otf")
+        format("opentype");
+    font-weight: 900;
+    font-style: italic;
+}
+
+@font-face {
+    font-family: "FKDisplay";
+    src: url("/fonts/FKDisplay-Regular.ttf");
+}

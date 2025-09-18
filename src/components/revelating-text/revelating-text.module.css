@@ -1,0 +1,24 @@
+.text {
+    font-size: 3rem;
+    line-height: 1.2;
+    opacity: 0; /* verrà sbloccata da gsap.set */
+    font-weight: 500;
+}
+
+.hideUntilAnimated {
+    visibility: hidden;
+}
+
+.highlight {
+    color: var(--foreground);
+    transition: color 0.2s ease;
+}
+
+/* SplitType genera classi GLOBALI (.word) */
+:global(.word) {
+    display: inline-block;
+    overflow: hidden;
+    margin-right: 0.25em;
+    will-change: transform, opacity;
+    opacity: 0; /* nascosto all'inizio */
+}

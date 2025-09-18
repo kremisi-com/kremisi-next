@@ -1,5 +1,8 @@
 :root {
     --white: #ffffff;
+    --black: #000000;
+    --bronze: #cd7f32;
+    --silver: #c0c0c0;
 }
 .dark {
     --background: #070707;
@@ -12,11 +15,6 @@
     --foreground: #070707;
     --primary: #dc143c;
     --box-bg: rgba(0, 0, 0, 0.1);
-}
-
-@font-face {
-    font-family: "FKDisplay";
-    src: url("/fonts/FKDisplay-Regular.ttf");
 }
 
 html,
@@ -32,9 +30,30 @@ body {
 
 body,
 label {
-    font-family: FKDisplay, Arial, Helvetica, sans-serif;
+    font-family: "FK Grotesk Trial", Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+}
+
+h2 {
+    font-family: "FK Grotesk Trial", Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+}
+
+.page-content {
+    min-height: 100vh;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    max-width: 1200px;
+    margin: auto;
+    padding-top: 150px;
+    padding-bottom: 150px;
 }
 
 * {
@@ -51,21 +70,4 @@ a {
 
 .color-primary {
     color: var(--primary);
-}
-
-.page-content {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
-    position: relative;
-    z-index: 1;
-}
-
-@media (prefers-color-scheme: dark) {
-    html {
-        color-scheme: dark;
-    }
 }
