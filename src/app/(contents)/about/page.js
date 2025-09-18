@@ -4,15 +4,12 @@ import ColoredTable from "@/components/colored-table/colored-table";
 import Button from "@/components/button/button";
 import GitButton from "@/components/git-button/git-button";
 
-// import auratImage from "/images/recognitions/aurat.png";
-// import microsoftImage from "/images/recognitions/microsoft.png";
-
 export default function AboutPage() {
     return (
         <main className="page-content">
             <section className={styles.section}>
                 <RevelatingText>
-                    My name is Andrea and I am a web developer based in Italy //
+                    My name is Andrea and I am a web developer based in Italy
                     with 8+ years of experience in web and app development.
                     <br />
                     <br />
