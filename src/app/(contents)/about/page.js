@@ -12,8 +12,8 @@ export default function AboutPage() {
         <main className="page-content">
             <section className={styles.section}>
                 <RevelatingText>
-                    My name is Andrea and I am a web developer based in Italy
-                    with 8+ years of experience in web and app development.{" "}
+                    My name is Andrea and I am a web developer based in Italy //
+                    with 8+ years of experience in web and app development.
                     <br />
                     <br />
                     <span className={"highlight"}>Kremisi</span> is my personal

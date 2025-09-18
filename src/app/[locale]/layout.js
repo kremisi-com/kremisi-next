@@ -6,7 +6,8 @@ import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import CursorTrailCanvas from "@/components/CursorTrailCanvas";
 import { ThemeProvider } from "next-themes";
-import { NextIntlClientProvider } from "next-intl";
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { routing } from "@/i18n/routing";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -23,7 +24,14 @@ export const metadata = {
     description: "Expand your digital presence with Kremisi",
 };
 
-export default async function RootLayout({ children }) {
+export function generateStaticParams() {
+    return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function RootLayout({ children, params }) {
+    const { locale } = await params;
+
+    if (!hasLocale(routing.locales, locale)) notFound();
     return (
         <html suppressHydrationWarning>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>

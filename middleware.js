@@ -1,12 +1,9 @@
 import createMiddleware from "next-intl/middleware";
-import { locales, defaultLocale } from "./next-intl.config";
+import { routing } from "./src/i18n/routing";
 
-export default createMiddleware({
-    locales,
-    defaultLocale,
-});
+export default createMiddleware(routing);
 
 export const config = {
-    // Applica il middleware a tutte le route (eccetto _next e asset statici)
-    matcher: ["/((?!_next|.*\\..*).*)"],
+    // intercetta tutto tranne file statici e API
+    matcher: ["/((?!api|_next|.*\\..*).*)"],
 };

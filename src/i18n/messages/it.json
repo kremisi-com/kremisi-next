@@ -1,6 +1,6 @@
 {
-    "Index": {
-        "title": "Benvenuto nel mio portfolio",
-        "description": "Creo applicazioni web con creatività."
+    "Navbar": {
+        "about": "Chi Sono",
+        "projects": "Progetti"
     }
 }

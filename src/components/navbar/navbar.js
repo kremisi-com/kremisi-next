@@ -4,14 +4,16 @@ import Button from "@/components/button/button";
 import Link from "next/link";
 import { Globe, Sun } from "lucide-react";
 import ThemeToggle from "./theme-toggler";
+import { useTranslations } from "next-intl";
 
 export default function Navbar() {
+    const t = useTranslations("Navbar");
     return (
         <nav className={styles.navbar}>
             <div className={styles.buttons}>
                 <Button href="/">Home</Button>
-                <Button href="/about">About</Button>
-                <Button href="/projects">Projects</Button>
+                <Button href="/about">{t("about")}</Button>
+                <Button href="/projects">{t("projects")}</Button>
             </div>
             <Link href="/">
                 <Image
