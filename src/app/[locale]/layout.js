@@ -6,6 +6,7 @@ import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import CursorTrailCanvas from "@/components/CursorTrailCanvas";
 import { ThemeProvider } from "next-themes";
+import { NextIntlClientProvider } from "next-intl";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -27,16 +28,18 @@ export default async function RootLayout({ children }) {
         <html suppressHydrationWarning>
             <body className={`${geistSans.variable} ${geistMono.variable}`}>
                 <CursorTrailCanvas />
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="dark"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <Navbar />
-                    {children}
-                    <Footer />
-                </ThemeProvider>
+                <NextIntlClientProvider>
+                    <ThemeProvider
+                        attribute="class"
+                        defaultTheme="dark"
+                        enableSystem
+                        disableTransitionOnChange
+                    >
+                        <Navbar />
+                        {children}
+                        <Footer />
+                    </ThemeProvider>
+                </NextIntlClientProvider>
             </body>
         </html>
     );
