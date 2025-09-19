@@ -51,7 +51,13 @@ export default function MainSlider({ projectsData }) {
         if (!animationEnded) return;
         const newChunk = findActualChunk(scrollPosition);
         if (newChunk !== actualChunk) onChunkChange(actualChunk, newChunk);
-    }, [scrollPosition]);
+    }, [
+        scrollPosition,
+        animationEnded,
+        actualChunk,
+        findActualChunk,
+        onChunkChange,
+    ]);
 
     const scalingOffset = 15;
     const scrollRef = useRef(scrollPosition);
@@ -235,7 +241,7 @@ export default function MainSlider({ projectsData }) {
             transition: areSlidesDisplayed[index] ? "all .2s ease" : "0s",
             display: areSlidesDisplayed[index] ? "block" : "none",
         }));
-    }, [projectsData, scalingOffset, slidesPositions]);
+    }, [projectsData, scalingOffset, slidesPositions, areSlidesDisplayed]);
 
     return (
         <div onWheel={handleScroll} onMouseMove={handleMouseMove}>
