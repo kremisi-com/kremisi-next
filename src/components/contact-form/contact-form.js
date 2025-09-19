@@ -3,11 +3,28 @@
 import RadioOptions from "@/components/radio-options/radio-options";
 import styles from "./contact-form.module.css";
 import { submitContact } from "@/lib/actions";
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import GitButton from "../git-button/git-button";
+import toast from "react-hot-toast";
 
 export default function ContactForm({}) {
-    const [state, formAction, pending] = useActionState(submitContact, false);
+    const [state, formAction, pending] = useActionState(submitContact, {
+        success: null,
+        error: null,
+    });
+
+    const serviceRef = useRef();
+    const budgetRef = useRef();
+    const deliveryRef = useRef();
+
+    useEffect(() => {
+        if (state && state.success) toast.success("Message sent successfully!");
+        if (state && state.error && !state.success) toast.error(state.error);
+
+        serviceRef.current.reset();
+        budgetRef.current.reset();
+        deliveryRef.current.reset();
+    }, [state]);
 
     return (
         <form className={styles.form} action={formAction}>
@@ -15,6 +32,7 @@ export default function ContactForm({}) {
                 <div className="col">
                     <h3>What you need</h3>
                     <RadioOptions
+                        ref={serviceRef}
                         options={[
                             { value: "development", label: "Development" },
                             {
@@ -30,6 +48,7 @@ export default function ContactForm({}) {
                 <div className="col">
                     <h3>Project Budget</h3>
                     <RadioOptions
+                        ref={budgetRef}
                         options={[
                             { value: "low", label: "€3-8k" },
                             { value: "medium", label: "€8-12k" },
@@ -42,6 +61,7 @@ export default function ContactForm({}) {
                 <div className="col">
                     <h3>Delivery Date</h3>
                     <RadioOptions
+                        ref={deliveryRef}
                         options={[
                             { value: "1-2", label: "1-2 months" },
                             { value: "2-4", label: "2-4 months" },

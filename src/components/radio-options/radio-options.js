@@ -1,13 +1,19 @@
 "use client";
 import styles from "./radio-options.module.css";
-import React from "react";
+import React, { useState, useImperativeHandle, forwardRef } from "react";
 
-export default function RadioOptions({ options, name }) {
-    const [selectedOption, setSelectedOption] = React.useState(null);
+const RadioOptions = forwardRef(function RadioOptions({ options, name }, ref) {
+    const [selectedOption, setSelectedOption] = useState(null);
 
     const onOptionChange = (e) => {
         setSelectedOption(e.target.value);
     };
+
+    // Espongo le funzioni al padre
+    useImperativeHandle(ref, () => ({
+        reset: () => setSelectedOption(null),
+        getValue: () => selectedOption,
+    }));
 
     return (
         <div className={styles.options}>
@@ -32,4 +38,6 @@ export default function RadioOptions({ options, name }) {
             ))}
         </div>
     );
-}
+});
+
+export default RadioOptions;

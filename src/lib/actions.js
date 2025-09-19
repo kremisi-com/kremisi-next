@@ -1,12 +1,12 @@
 "use server";
 
-export async function submitContact(formData) {
+export async function submitContact(prevState, formData) {
     // Costruisci il payload con i valori del form
     // Estrai e normalizza i valori
     const getVal = (key) => (formData.get(key) ?? "").toString().trim();
 
     const service = getVal("service");
-    const budgetRaw = getVal("budget");
+    const budget = getVal("budget");
     const delivery = getVal("delivery");
     const details = getVal("details");
     const name = getVal("name");
@@ -19,12 +19,8 @@ export async function submitContact(formData) {
         return { success: false, error: "Select a service." };
     }
 
-    if (!budgetRaw) {
+    if (!budget) {
         return { success: false, error: "Enter a budget." };
-    }
-    const budget = parseFloat(budgetRaw.replace(",", "."));
-    if (Number.isNaN(budget) || budget < 0) {
-        return { success: false, error: "Invalid budget." };
     }
 
     if (!delivery) {
@@ -34,10 +30,10 @@ export async function submitContact(formData) {
         };
     }
 
-    if (!details || details.length < 10) {
+    if (!details || details.length < 5) {
         return {
             success: false,
-            error: "Details too short (minimum 10 characters).",
+            error: "Details too short (minimum 5 characters).",
         };
     }
 
@@ -64,7 +60,7 @@ export async function submitContact(formData) {
     // Se tutto ok, costruisci il payload (stringhe)
     const payload = {
         service,
-        budget: String(budget),
+        budget,
         delivery,
         details,
         name,
@@ -82,10 +78,6 @@ export async function submitContact(formData) {
                 "Content-Type": "application/x-www-form-urlencoded",
             },
         });
-
-        if (!response.ok) {
-            throw new Error(`HTTP Error ${response.status}`);
-        }
 
         const result = await response.json();
         console.log("Risposta da PHP:", result);
