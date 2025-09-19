@@ -10,6 +10,7 @@
         "i18n:extract": "i18next --config i18next-parser.config.js 'src/**/*.{js,jsx,ts,tsx}'"
     },
     "dependencies": {
+        "@vercel/speed-insights": "^1.2.0",
         "framer-motion": "^12.23.13",
         "gsap": "^3.13.0",
         "lodash": "^4.17.21",
