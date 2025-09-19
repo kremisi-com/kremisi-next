@@ -1,30 +1,30 @@
 .slider {
-  position: relative;
-  width: 100svw;
-  height: 100svh;
-  top: 0;
-  left: 0;
-  transition: all var(--animation-duration) cubic-bezier(0, 0, 0.2, 1);
-  will-change: transform;
+    position: relative;
+    width: 100svw;
+    height: 100svh;
+    top: 0;
+    left: 0;
+    transition: all var(--animation-duration);
+    will-change: transform;
 }
 
 .title {
-  position: fixed;
-  z-index: 1000;
-  pointer-events: none;
-  color: white;
-  font-size: 12pt;
-  top: 0;
-  left: 0;
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none;
+    color: white;
+    font-size: 12pt;
+    top: 0;
+    left: 0;
 }
 
 .loading {
-  position: fixed;
-  z-index: 1000;
-  pointer-events: none;
-  color: rgb(0, 0, 0);
-  font-size: 100pt;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    position: fixed;
+    z-index: 1000;
+    pointer-events: none;
+    color: rgb(0, 0, 0);
+    font-size: 100pt;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }

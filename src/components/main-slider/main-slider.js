@@ -13,7 +13,19 @@ import Loader from "@/components/loader/loader";
 import throttle from "lodash/throttle";
 
 export default function MainSlider({ projectsData }) {
+    projectsData = useMemo(
+        () => [...projectsData, ...projectsData],
+        [projectsData]
+    );
     const [animationEnded, setAnimationEnded] = useState(false);
+
+    const animationDurationInitial = 2000;
+    const animationTargetScroll = 0;
+
+    const slideSize = 15;
+    const sliderSize = slideSize * projectsData.length;
+    const sliderCenter = -slideSize * (projectsData.length / 2);
+    const [scrollPosition, setScrollPosition] = useState(sliderCenter * 4);
 
     const chunksNumber = 5;
     const relativeChunkSize = 1 / chunksNumber;
@@ -22,11 +34,6 @@ export default function MainSlider({ projectsData }) {
     );
     chunks.unshift(0);
 
-    const slideSize = 15;
-    const sliderSize = slideSize * projectsData.length;
-    const sliderCenter = -slideSize * (projectsData.length / 2);
-    const [scrollPosition, setScrollPosition] = useState(sliderCenter * 4);
-    const animationDurationInitial = 1700;
     const [animationDuration, setAnimationDuration] = useState(
         `${animationDurationInitial}ms`
     );
@@ -37,7 +44,6 @@ export default function MainSlider({ projectsData }) {
         return chunkNumber;
     }
 
-    const animationTargetScroll = 0;
     let [actualChunk, setActualChunk] = useState(
         findActualChunk(animationTargetScroll)
     );
