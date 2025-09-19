@@ -4,6 +4,11 @@ import ColoredTable from "@/components/colored-table/colored-table";
 import Button from "@/components/button/button";
 import GitButton from "@/components/git-button/git-button";
 
+export const metadata = {
+    title: "About - Kremisi",
+    description: "Learn more about Kremisi and the services offered.",
+};
+
 export default function AboutPage() {
     return (
         <main className="page-content">

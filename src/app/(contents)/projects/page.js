@@ -4,6 +4,12 @@ import ColoredTable from "@/components/colored-table/colored-table";
 import { getProjectsArray } from "@/lib/projects";
 import { useMemo } from "react";
 
+export const metadata = {
+    title: "Projects - Kremisi",
+    description:
+        "Explore Kremisi's portfolio of web and app development projects.",
+};
+
 export default function ProjectsPage() {
     const items = [];
     const images = [];

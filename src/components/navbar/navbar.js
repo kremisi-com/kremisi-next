@@ -24,7 +24,7 @@ export default function Navbar() {
                 />
             </Link>
             <div className={`${styles.buttons} ${styles.right}`}>
-                <Button>Contacts</Button>
+                <Button href="/contacts">Contacts</Button>
                 {/* <Link href="/" locale="it">
                     <Button className={styles.icon} animation={false}>
                         <Globe size={20} />

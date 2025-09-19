@@ -1,0 +1,21 @@
+.options {
+    display: flex;
+    gap: 8px;
+}
+
+.options label {
+    cursor: pointer;
+    padding: 20px 10px;
+    border-radius: 20px;
+    background-color: var(--box-bg);
+    transition: background 0.2s;
+    backdrop-filter: blur(10px);
+    padding: 8px 20px;
+    font-size: 10pt;
+}
+
+.options input {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+}
