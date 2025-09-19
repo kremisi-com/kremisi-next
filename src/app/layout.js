@@ -22,10 +22,6 @@ export const metadata = {
     description: "Expand your digital presence with Kremisi",
 };
 
-export function generateStaticParams() {
-    return routing.locales.map((locale) => ({ locale }));
-}
-
 export default async function RootLayout({ children }) {
     return (
         <html suppressHydrationWarning>
