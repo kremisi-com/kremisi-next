@@ -6,6 +6,7 @@ import Footer from "@/components/footer/footer";
 import CursorTrailCanvas from "@/components/cursor-trail-canvas";
 import { ThemeProvider } from "next-themes";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { Toaster } from "react-hot-toast";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -36,6 +37,7 @@ export default async function RootLayout({ children }) {
                     <Navbar />
                     {children}
                     <Footer />
+                    <Toaster />
                 </ThemeProvider>
             </body>
         </html>

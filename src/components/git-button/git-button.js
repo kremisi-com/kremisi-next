@@ -1,20 +1,30 @@
-import Link from "next/link";
 import styles from "./git-button.module.css";
 import { LucideArrowRight, LucideArrowUpRight } from "lucide-react";
 
-export default function GitButton() {
+export default function GitButton({
+    isSubmit = false,
+    text = "Get in touch",
+    disabled = false,
+}) {
     return (
-        <Link href={""} className={styles.link}>
-            <div className={styles.container}>
+        <>
+            <div
+                className={`${styles.container} ${
+                    disabled ? styles.disabled : ""
+                }`}
+            >
                 <div className={`${styles.left} ${styles.arrow}`}>
                     <LucideArrowRight />
                 </div>
-                <button className={`${styles.button}`}>
+                <button
+                    className={`${styles.button}`}
+                    type={isSubmit ? "submit" : "button"}
+                >
                     <span className={`${styles.text} ${styles.top}`}>
-                        Get in touch
+                        {isSubmit ? "Submit" : text}
                     </span>
                     <span className={`${styles.text} ${styles.bottom}`}>
-                        Get in touch
+                        {isSubmit ? "Submit" : text}
                     </span>
                 </button>
                 <div className={`${styles.right} ${styles.arrow}`}>
@@ -44,6 +54,6 @@ export default function GitButton() {
                     </filter>
                 </defs>
             </svg>
-        </Link>
+        </>
     );
 }

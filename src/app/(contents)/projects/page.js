@@ -1,5 +1,4 @@
 import ColoredTable from "@/components/colored-table/colored-table";
-// import styles from "./page.module.css";
 
 import { getProjectsArray } from "@/lib/projects";
 import { useMemo } from "react";
@@ -49,7 +48,6 @@ export default function ProjectsPage() {
         links.push(project.link);
     });
 
-    console.log(items, images, links);
     return (
         <main className="page-content">
             <ColoredTable items={items} images={images} links={links} />

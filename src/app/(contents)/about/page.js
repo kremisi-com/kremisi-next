@@ -3,6 +3,7 @@ import styles from "./about.module.css";
 import ColoredTable from "@/components/colored-table/colored-table";
 import Button from "@/components/button/button";
 import GitButton from "@/components/git-button/git-button";
+import Link from "next/link";
 
 export const metadata = {
     title: "About - Kremisi",
@@ -128,7 +129,9 @@ export default function AboutPage() {
                 />
             </section>
             <section className={`${styles.section} flex-center`}>
-                <GitButton />
+                <Link href={"/contacts"}>
+                    <GitButton />
+                </Link>
             </section>
         </main>
     );
