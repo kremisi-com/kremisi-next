@@ -3,7 +3,7 @@ import "./fonts.css";
 import "./globals.css";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
-import CursorTrailCanvas from "@/components/CursorTrailCanvas";
+import CursorTrailCanvas from "@/components/cursor-trail-canvas";
 import { ThemeProvider } from "next-themes";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 

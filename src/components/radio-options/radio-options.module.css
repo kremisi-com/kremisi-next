@@ -19,3 +19,8 @@
     -webkit-appearance: none;
     -moz-appearance: none;
 }
+
+.options .optionSelected {
+    background-color: var(--primary);
+    color: var(--white);
+}
