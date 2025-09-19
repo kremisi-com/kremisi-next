@@ -5,7 +5,7 @@ import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import CursorTrailCanvas from "@/components/CursorTrailCanvas";
 import { ThemeProvider } from "next-themes";
-import { routing } from "@/i18n/routing";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
