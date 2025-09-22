@@ -67,6 +67,17 @@ export default async function ProjectPage({ params }) {
                     </div>
                 </div>
             </div>
+            {/* <div className={style.carousel}>
+                {projectData.carousel.map((video, index) => (
+                    <video key={index} controls>
+                        <source
+                            src={`/projects/${id}/carousel/${video}`}
+                            type="video/mp4"
+                        />
+                        Your browser does not support the video tag.
+                    </video>
+                ))}
+            </div> */}
         </>
     );
 }

@@ -30,6 +30,15 @@
         "tags": ["comunicazione", "sito"],
         "disabled": false,
         "images": ["slab.png", "limitless.png", "draw.png", "hotel.png"],
+        "carousel": [
+            "Opening.mp4",
+            "Playing.mp4",
+            "Slabs-Animation.mp4",
+            "Galaxy.mp4",
+            "Features.mp4",
+            "Water.mp4",
+            "Last.mp4"
+        ],
         "year": 2021,
         "slogan": "The new element.<br>Unique, eternal, unchangeable.",
         "description": "Redefining surfaces through innovation and design.<br />Glapix merges art, technology, and sustainability to create next-generation materials that are unique, durable, and eco-friendly.<br /><br />From immersive interiors to limitless textures, every detail transforms imagination into tangible excellence."

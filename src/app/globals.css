@@ -37,6 +37,7 @@ body {
 body {
     color: var(--foreground);
     background: var(--background);
+    font-size: 2rem;
 }
 
 body,
@@ -45,7 +46,6 @@ div {
     font-family: "FK Grotesk Trial", Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-size: 2rem;
 }
 
 h1 {
