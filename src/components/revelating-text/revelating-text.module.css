@@ -1,5 +1,5 @@
 .text {
-    font-size: 3rem;
+    font-size: 5.7rem;
     line-height: 1.2;
     opacity: 0; /* verrà sbloccata da gsap.set */
     font-weight: 500;

@@ -1,0 +1,58 @@
+.header {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+.header img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    z-index: -1;
+    /* filter: brightness(0.5); */
+    opacity: 0.2;
+}
+
+.client {
+    margin: 50px 0;
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+.clientYear {
+    text-align: right;
+    margin-left: auto;
+}
+
+.overview {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 0px 75px;
+}
+
+.overview h3 {
+    margin-bottom: 0px;
+}
+.overview p {
+    font-size: 2.8rem;
+    letter-spacing: 0.5px;
+}
+
+.link {
+    margin-top: 30px;
+    display: inline-block;
+    text-decoration: none;
+}

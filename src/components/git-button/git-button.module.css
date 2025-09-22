@@ -63,7 +63,6 @@
 .container {
     position: relative;
     filter: url("#goo");
-    margin-top: 50px;
     width: fit-content;
 }
 

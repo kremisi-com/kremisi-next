@@ -60,4 +60,13 @@ function getSortedProjects(projectsDict) {
     // ];
 }
 
-export { getProjectsArray, getOrganizedProjects, getSortedProjects };
+function getProjectData(id) {
+    return projectsData[id] || null;
+}
+
+export {
+    getProjectsArray,
+    getOrganizedProjects,
+    getSortedProjects,
+    getProjectData,
+};

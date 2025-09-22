@@ -30,6 +30,8 @@ html,
 body {
     max-width: 100vw;
     overflow-x: hidden;
+    /* Defining 1 rem*/
+    font-size: calc(-0.17499999999999993rem + 0.6666666666666666vw);
 }
 
 body {
@@ -38,22 +40,30 @@ body {
 }
 
 body,
-label {
+label,
+div {
     font-family: "FK Grotesk Trial", Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-size: 2rem;
 }
 
+h1 {
+    font-family: "FK Grotesk Trial", Arial, Helvetica, sans-serif;
+    font-weight: 400;
+    font-size: 6.6rem;
+    margin-bottom: 30px;
+}
 h2 {
     font-family: "FK Grotesk Trial", Arial, Helvetica, sans-serif;
     font-weight: 400;
-    font-size: 2.5rem;
+    font-size: 4.8rem;
     margin-bottom: 20px;
 }
 h3 {
     font-family: "FK Grotesk Trial", Arial, Helvetica, sans-serif;
     font-weight: 400;
-    font-size: 2.2rem;
+    font-size: 4.2rem;
     margin-bottom: 10px;
 }
 
@@ -120,11 +130,25 @@ textarea {
     padding-top: 150px;
     padding-bottom: 150px;
 }
+.page-content-simple {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    max-width: 1200px;
+    margin: auto;
+    padding: 0px 50px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+}
 
 .row {
     display: flex;
     flex-wrap: wrap;
     margin: 0 -15px;
+    width: 100%;
 }
 .col {
     box-sizing: border-box;
@@ -133,12 +157,32 @@ textarea {
     padding: 0 15px;
     margin-bottom: 50px;
 }
-.row > .col:only-child {
+.row > .col:only-child,
+.row > .col-1-3:only-child {
     flex: 1; /* occupa tutto lo spazio disponibile */
     max-width: 100%;
 }
 
+.col-1-3 {
+    box-sizing: border-box;
+    flex: 0 0 40%;
+    max-width: 40%;
+    padding: 0 15px;
+    margin-bottom: 50px;
+}
+.col-2-3 {
+    box-sizing: border-box;
+    flex: 0 0 60%;
+    max-width: 60%;
+    padding: 0 15px;
+    margin-bottom: 50px;
+}
+
 /* ------- UTILITIES ------- */
+.mb-0 {
+    margin-bottom: 0 !important;
+}
+
 .flex-center {
     align-items: center;
     text-align: center;
@@ -180,5 +224,22 @@ textarea {
     .col {
         flex: 0 0 100%;
         max-width: 100%;
+    }
+}
+
+/* ------- RESPONSIVE FONT SIZING ------- */
+@media screen and (max-width: 1920px) {
+    html {
+        font-size: calc(-0.17499999999999993rem + 0.6666666666666666vw);
+    }
+}
+@media screen and (max-width: 1620px) {
+    html {
+        font-size: calc(0.44366197183098594rem + 0.11737089201877934vw);
+    }
+}
+@media screen and (max-width: 768px) {
+    html {
+        font-size: calc(0.4998370273794003rem + 0.2607561929595828vw);
     }
 }
