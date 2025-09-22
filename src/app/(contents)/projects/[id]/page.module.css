@@ -56,3 +56,49 @@
     display: inline-block;
     text-decoration: none;
 }
+
+.carousel {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    padding: 0px 50px;
+    margin: 100px -15px;
+}
+.carousel .carouselItem {
+    flex: 0 0 50%;
+    max-width: 50%;
+    border-radius: 10px;
+    overflow: hidden;
+    box-sizing: border-box;
+    border-radius: 0px;
+    padding: 30px 15px;
+}
+.carousel .carouselItem:nth-child(3n - 2) {
+    max-width: 100%;
+    flex: 0 0 100%;
+    height: auto;
+}
+.carousel .carouselItem img,
+.carousel .carouselItem video {
+    width: 100%;
+    height: auto;
+    display: block;
+}
+
+@media (max-width: 768px) {
+    .carousel {
+        padding: 0px 15px;
+        margin: 50px -15px;
+    }
+    .carousel .carouselItem {
+        flex: 0 0 100%;
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+@media (min-width: 1620px) {
+    .carousel {
+        padding: 0 250px;
+    }
+}
