@@ -61,7 +61,24 @@ function getSortedProjects(projectsDict) {
 }
 
 function getProjectData(id) {
-    return projectsData[id] || null;
+    let ret = projectsData[id];
+    const firstId = Object.keys(projectsData)[0];
+    ret.nextProject = { ...projectsData[firstId], id: firstId };
+    let nextProject = null;
+    for (const key of Object.keys(projectsData)) {
+        if (projectsData[key].disabled) continue;
+        if (key === id) {
+            nextProject = true;
+            continue;
+        }
+        if (nextProject) {
+            ret.nextProject = { ...projectsData[key], id: key };
+            break;
+        }
+    }
+    // console.log("Next project:", ret.nextProject);
+
+    return ret;
 }
 
 export {

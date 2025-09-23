@@ -5,9 +5,10 @@ export default function GitButton({
     isSubmit = false,
     text = "Get in touch",
     disabled = false,
+    leftShift = 0,
 }) {
     return (
-        <>
+        <div style={{ marginLeft: leftShift }}>
             <div
                 className={`${styles.container} ${
                     disabled ? styles.disabled : ""
@@ -54,6 +55,6 @@ export default function GitButton({
                     </filter>
                 </defs>
             </svg>
-        </>
+        </div>
     );
 }

@@ -1,4 +1,5 @@
-.header {
+.header,
+.nextProject {
     width: 100vw;
     height: 100vh;
     display: flex;
@@ -10,7 +11,8 @@
     text-transform: uppercase;
 }
 
-.header img {
+.header img,
+.nextProject img {
     position: absolute;
     top: 0;
     left: 0;
@@ -19,7 +21,7 @@
     object-fit: cover;
     z-index: -1;
     /* filter: brightness(0.5); */
-    opacity: 0.2;
+    opacity: 0.4;
 }
 
 .client {
@@ -83,6 +85,28 @@
     width: 100%;
     height: auto;
     display: block;
+}
+
+.moreProjects {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0px 75px;
+    margin-bottom: 150px;
+}
+
+.nextProject {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+.nextProject h4 {
+    opacity: 0.5;
+    text-transform: none;
+    margin-bottom: 30px;
 }
 
 @media (max-width: 768px) {

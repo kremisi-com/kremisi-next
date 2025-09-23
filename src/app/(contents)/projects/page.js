@@ -17,12 +17,7 @@ export default function ProjectsPage() {
     const projectsDataArray = useMemo(() => getProjectsArray(), []);
 
     projectsDataArray.forEach((project) => {
-        let tmpImage = "";
-        if (project.images && project.images.length > 0) {
-            tmpImage = `/projects/${project.id}/${project.images[0]}`;
-        } else {
-            tmpImage = `/projects/${project.id}/main.png`;
-        }
+        let tmpImage = `/projects/${project.id}/${project.image}`;
 
         let tmpCustomer = project.customer;
         if (tmpCustomer === undefined || tmpCustomer === "")

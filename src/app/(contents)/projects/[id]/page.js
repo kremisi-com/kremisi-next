@@ -14,9 +14,12 @@ export async function generateStaticParams() {
 }
 
 export default async function ProjectPage({ params }) {
-    const { id } = params;
+    params = await params; // {locale: "id"}
+    const id = await params.id;
 
     const projectData = getProjectData(id);
+
+    console.log(projectData.nextProject);
 
     if (!projectData) notFound();
 
@@ -24,7 +27,7 @@ export default async function ProjectPage({ params }) {
         <>
             <div className={style.header}>
                 <Image
-                    src={`/projects/${id}/${projectData.images[0]}`}
+                    src={`/projects/${id}/${projectData.headerImage}`}
                     alt={projectData.title}
                     fill
                 />
@@ -79,6 +82,30 @@ export default async function ProjectPage({ params }) {
                         </video>
                     </div>
                 ))}
+            </div>
+            <div className={style.moreProjects}>
+                <Link className={style.link} href={"/projects"} target="_blank">
+                    <GitButton text="More Projects" />
+                </Link>
+            </div>
+            <div className={style.nextProject}>
+                <Image
+                    src={`/projects/${projectData.nextProject?.id}/${projectData.nextProject?.headerImage}`}
+                    alt={projectData.nextProject?.title}
+                    fill
+                />
+                <h4>Next Project</h4>
+                <h1
+                    dangerouslySetInnerHTML={{
+                        __html: projectData.nextProject?.slogan,
+                    }}
+                />
+                <Link
+                    className={style.link}
+                    href={`/projects/${projectData.nextProject?.id}`}
+                >
+                    <GitButton text="Next Project" leftShift={-20} />
+                </Link>
             </div>
         </>
     );
