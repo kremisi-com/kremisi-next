@@ -6,7 +6,9 @@ import GitButton from "@/components/git-button/git-button";
 import Link from "next/link";
 
 export async function generateStaticParams() {
-    const projects = Object.keys((await import("@/lib/projects.json")).default);
+    let projects = Object.keys((await import("@/lib/projects.json")).default);
+
+    projects = projects.filter((id) => !getProjectData(id)?.disabled);
 
     return projects.map((id) => ({
         id,
@@ -18,8 +20,6 @@ export default async function ProjectPage({ params }) {
     const id = await params.id;
 
     const projectData = getProjectData(id);
-
-    console.log(projectData.nextProject);
 
     if (!projectData) notFound();
 
@@ -84,7 +84,7 @@ export default async function ProjectPage({ params }) {
                 ))}
             </div>
             <div className={style.moreProjects}>
-                <Link className={style.link} href={"/projects"} target="_blank">
+                <Link className={style.link} href={"/projects"}>
                     <GitButton text="More Projects" />
                 </Link>
             </div>
