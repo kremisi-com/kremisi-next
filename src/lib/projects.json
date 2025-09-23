@@ -16,7 +16,14 @@
             "about.png",
             "text-en.png"
         ],
-        "carousel": [],
+        "carousel": [
+            "Opening.mp4",
+            "First-Scroll.mp4",
+            "Animated-Text.mp4",
+            "About-Full.mp4",
+            "Blog.mp4",
+            "Blog-Single.mp4"
+        ],
         "year": 2023,
         "description": "Delivering legal excellence with clarity and precision.<br />Allavelli Legal assists clients across corporate, tax, and international law with tailored strategies and trusted expertise.<br /><br />From complex transactions to cross-border matters, every case is guided by insight and integrity.",
         "slogan": "Your vision,<br>our legal strength."
@@ -65,7 +72,7 @@
         "disabled": false,
         "color": "#F4BE44",
         "images": ["property.jpg", "ricerca.png", "main.png"],
-        "carousel": [],
+        "carousel": ["Vendita.mp4", "Home.mp4", "Chi-Siamo.mp4"],
         "year": 2023,
         "slogan": "Turning visions into reality,<br>where elegance meets home.",
         "description": "Transforming the way you live and dream.<br />Every property is more than a place—it’s a story of elegance, trust, and possibility.<br /><br />From urban skylines to coastal horizons, we craft experiences that inspire and endure."
@@ -80,7 +87,14 @@
         "tags": ["comunicazione", "sito"],
         "color": "#FAC100",
         "images": ["dark.png", "main.png", "smurfs.png", "tear.png"],
-        "carousel": [],
+        "carousel": [
+            "Header.mp4",
+            "About.mp4",
+            "Home.mp4",
+            "Smurfs.mp4",
+            "Tears.mp4",
+            "Dsquared.mp4"
+        ],
         "year": 2021,
         "description": "Igniting creativity through bold visuals and fearless storytelling.<br />Makuda shapes brand identities, film & 3D experiences that break boundaries and linger in memory.<br /><br />From cinematic spots to immersive VFX, every frame pulses with emotion and craftsmanship.",
         "slogan": "Ideas that move you,<br>stories that stay."
