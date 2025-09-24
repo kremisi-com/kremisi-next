@@ -202,6 +202,21 @@ textarea {
     color: var(--primary);
 }
 
+.tag {
+    padding: 7px 15px 5px 15px;
+    border-radius: 15px;
+    background-color: var(--primary);
+    font-weight: 100;
+    font-size: 1.7rem;
+    letter-spacing: 0.2rem;
+    transition: all 0.3s;
+}
+.tag:hover {
+    background-color: var(--foreground);
+    color: var(--background);
+    cursor: default;
+}
+
 /* ------- MEDIA QUERIES ------- */
 @media (max-width: 768px) {
     h2 {

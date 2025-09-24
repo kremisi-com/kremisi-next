@@ -6,9 +6,13 @@ export default function GitButton({
     text = "Get in touch",
     disabled = false,
     leftShift = 0,
+    revertColor = false,
 }) {
     return (
-        <div style={{ marginLeft: leftShift }}>
+        <div
+            style={{ marginLeft: leftShift }}
+            className={revertColor ? styles.revert : ""}
+        >
             <div
                 className={`${styles.container} ${
                     disabled ? styles.disabled : ""

@@ -117,3 +117,20 @@
     user-select: none;
     filter: grayscale(1) url("#goo");
 }
+
+.revert .button,
+.revert .arrow {
+    background-color: var(--foreground);
+}
+.revert .button .text,
+.revert .arrow {
+    color: var(--background);
+}
+.revert .container:hover .button,
+.revert .container:hover .arrow {
+    background-color: var(--primary);
+}
+.revert .container:hover .text,
+.revert .container:hover .arrow {
+    color: var(--white);
+}

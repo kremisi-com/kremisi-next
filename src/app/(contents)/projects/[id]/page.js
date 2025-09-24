@@ -16,7 +16,7 @@ export async function generateStaticParams() {
 }
 
 export default async function ProjectPage({ params }) {
-    params = await params; // {locale: "id"}
+    params = await params;
     const id = await params.id;
 
     const projectData = getProjectData(id);
@@ -32,6 +32,10 @@ export default async function ProjectPage({ params }) {
                     fill
                 />
                 <h1 dangerouslySetInnerHTML={{ __html: projectData.slogan }} />
+                <p className={style.disclaimer}>
+                    All rights to the images are retained by the respective
+                    owner
+                </p>
             </div>
             <div className={`${style.overview}`}>
                 <div className="row">
@@ -67,6 +71,13 @@ export default async function ProjectPage({ params }) {
                                 __html: projectData.description,
                             }}
                         ></p>
+                        <div className={style.tags}>
+                            {projectData.tasks.map((tag, index) => (
+                                <div key={index} className="tag">
+                                    {tag}
+                                </div>
+                            ))}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -85,7 +96,7 @@ export default async function ProjectPage({ params }) {
             </div>
             <div className={style.moreProjects}>
                 <Link className={style.link} href={"/projects"}>
-                    <GitButton text="More Projects" />
+                    <GitButton text="More Projects" revertColor={true} />
                 </Link>
             </div>
             <div className={style.nextProject}>

@@ -24,6 +24,15 @@
     opacity: 0.4;
 }
 
+.header .disclaimer {
+    text-transform: none;
+    font: 1.2rem sans-serif;
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
 .client {
     margin: 50px 0;
     display: flex;
@@ -51,6 +60,12 @@
 .overview p {
     font-size: 2.8rem;
     letter-spacing: 0.5px;
+}
+
+.overview .tags {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
 }
 
 .link {
