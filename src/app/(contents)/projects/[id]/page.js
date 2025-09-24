@@ -81,18 +81,29 @@ export default async function ProjectPage({ params }) {
                     </div>
                 </div>
             </div>
-            <div className={style.carousel}>
-                {projectData.carousel.map((video, index) => (
-                    <div key={index} className={style.carouselItem}>
-                        <video autoPlay loop muted playsInline>
-                            <source
-                                src={`/projects/${id}/carousel/${video}`}
-                                type="video/mp4"
-                            />
-                            Your browser does not support the video tag.
-                        </video>
-                    </div>
-                ))}
+            <div className={`${style.carousel} ${style.imagesCarousel}`}>
+                {!projectData.imagesCarousel
+                    ? projectData.carousel.map((video, index) => (
+                          <div key={index} className={style.carouselItem}>
+                              <video autoPlay loop muted playsInline>
+                                  <source
+                                      src={`/projects/${id}/carousel/${video}`}
+                                      type="video/mp4"
+                                  />
+                                  Your browser does not support the video tag.
+                              </video>
+                          </div>
+                      ))
+                    : projectData.carousel.map((image, index) => (
+                          <div key={index} className={style.carouselItem}>
+                              <Image
+                                  src={`/projects/${id}/carousel/${image}`}
+                                  alt={projectData.title}
+                                  width={360}
+                                  height={764}
+                              />
+                          </div>
+                      ))}
             </div>
             <div className={style.moreProjects}>
                 <Link className={style.link} href={"/projects"}>

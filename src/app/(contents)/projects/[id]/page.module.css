@@ -89,17 +89,39 @@
     box-sizing: border-box;
     border-radius: 0px;
     padding: 30px 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .carousel .carouselItem:nth-child(3n - 2) {
     max-width: 100%;
     flex: 0 0 100%;
     height: auto;
 }
-.carousel .carouselItem img,
+
+.carousel.imagesCarousel {
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+    align-items: center;
+}
+.carousel.imagesCarousel .carouselItem {
+    flex: 1;
+    max-width: 33%;
+    padding: 0;
+    min-width: 360px;
+}
+
 .carousel .carouselItem video {
     width: 100%;
     height: auto;
     display: block;
+}
+.carousel .carouselItem img {
+    width: 360px;
+    height: 764px;
+    display: block;
+    object-fit: cover;
 }
 
 .moreProjects {
