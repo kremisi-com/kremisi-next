@@ -31,7 +31,7 @@
     },
     "fleder": {
         "title": "Fleder",
-        "subtitle": "App Design & Development",
+        "subtitle": "App Development",
         "image": "concat_3_2.jpg",
         "headerImage": "mockup.jpg",
         "images": ["infermieri.png", "mockup.jpg", "concat.jpg"],
@@ -140,13 +140,29 @@
     "e2l": {
         "title": "Easy2Learn",
         "subtitle": "App Design & Development",
-        "image": "e2l-2.png",
+        "image": "mockup-login.png",
+        "images": ["mockup.png", "mockup-2.png"],
+        "carousel": [
+            "nuovo-1.png",
+            "nuovo-2.png",
+            "nuovo-3.png",
+            "nuovo-4.png",
+            "nuovo-5.png",
+            "nuovo-6.png",
+            "quiz-4.jpg",
+            "quiz-2.jpg",
+            "quiz-3.jpg"
+        ],
+        "imagesCarousel": true,
+        "headerImage": "mockup-3.png",
         "link": "https://play.google.com/store/apps/details?id=it.il_cubo.easy2learn&hl=it",
         "customer": "il-cubo",
         "tags": ["istruzione", "app"],
         "tasks": ["DEV", "DESIGN"],
-        "disabled": true,
-        "year": 2020
+        "disabled": false,
+        "year": 2020,
+        "description": "Reinventing study through smart interactivity and insight.<br />Easy2Learn turns exams into opportunities with quizzes, analytics, and adaptive content built for growth and confidence.<br /><br />From topic mastery to exam readiness, every feature elevates your learning journey.",
+        "slogan": "Learn smarter,<br>ace every test."
     },
     "jester": {
         "title": "Jester",
@@ -173,6 +189,32 @@
         "description": "Launching your aviation career through precision and passion.<br />Jester crafts elite training, from flight dispatch to security, with expert instructors and global standards.<br /><br />Every lesson lifts you higher—ready to dispatch flights, master communication, and command safety.",
         "slogan": "Fly beyond limits,<br>train for excellence."
     },
+    "bpmn2petrinet": {
+        "title": "BPMN2Petri",
+        "subtitle": "Web Design & Development",
+        "image": "home.png",
+        "headerImage": "conversion-2.png",
+        "images": ["home.png", "conversion-2.png"],
+        "carousel": ["Usage.mp4"],
+        "link": "https://bpmn2petrinet.com",
+        "tags": ["comunicazione", "sito"],
+        "tasks": ["DEV", "DESIGN"],
+        "year": 2025,
+        "description": "Bridging the gap between business processes and formal analysis.<br />BPMN2Petri transforms BPMN diagrams into Petri nets, enabling precise modeling, verification, and optimization.<br /><br />From seamless conversion to insightful analysis, every feature empowers clarity and efficiency in process management.",
+        "slogan": "From process to precision,<br>model with confidence."
+    },
+    "progetto-commercio": {
+        "title": "Progetto Commercio",
+        "subtitle": "App Design & Development",
+        "image": "pc.png",
+        "link": "https://play.google.com/store/apps/details?id=com.progettocommercio&hl=it",
+        "customer": "il-cubo",
+        "tags": ["finanza", "app"],
+        "tasks": ["DEV", "DESIGN"],
+        "carousel": [],
+        "disabled": false,
+        "year": 2019
+    },
     "itaca": {
         "title": "Itaca Engineering",
         "subtitle": "Web Design & Development",
@@ -188,33 +230,6 @@
         "description": "Building the future with innovation and integrity.<br />Itaca Engineering delivers cutting-edge solutions in civil engineering, energy, and environmental consulting, driving sustainable progress.<br /><br />From visionary projects to meticulous execution, every endeavor is shaped by expertise and commitment.",
         "slogan": "Engineering tomorrow,<br>building with purpose."
     },
-    "saramartelli": {
-        "title": "Sara Martelli",
-        "subtitle": "Web Design & Development",
-        "image": "main.png",
-        "headerImage": "sara-62-min.jpg",
-        "link": "https://www.saramartelli.com",
-        "tags": ["benessere", "sito"],
-        "tasks": ["DEV", "DESIGN"],
-        "carousel": ["Home.mp4"],
-        "year": 2025,
-        "description": "Guiding you to inner peace and holistic well-being.<br />Sara Martelli blends yoga, mindfulness, and energy healing to nurture balance, strength, and serenity.<br /><br />From personalized sessions to transformative retreats, every practice is a journey toward harmony and self-discovery.",
-        "slogan": "Healing starts from<br>a personal choice."
-    },
-    "bpmn2petrinet": {
-        "title": "BPMN2Petri",
-        "subtitle": "Web Design & Development",
-        "image": "home.png",
-        "headerImage": "conversion-2.png",
-        "images": ["home.png", "conversion-2.png"],
-        "carousel": ["Usage.mp4"],
-        "link": "https://bpmn2petrinet.com",
-        "tags": ["comunicazione", "sito"],
-        "tasks": ["DEV", "DESIGN"],
-        "year": 2025,
-        "description": "Bridging the gap between business processes and formal analysis.<br />BPMN2Petri transforms BPMN diagrams into Petri nets, enabling precise modeling, verification, and optimization.<br /><br />From seamless conversion to insightful analysis, every feature empowers clarity and efficiency in process management.",
-        "slogan": "From process to precision,<br>model with confidence."
-    },
     "cybest": {
         "title": "Cybest",
         "subtitle": "Development",
@@ -228,6 +243,19 @@
         "year": 2024,
         "description": "Securing your digital world with expertise and innovation.<br />Cybest offers comprehensive cybersecurity solutions, from risk assessment to incident response, protecting businesses in an evolving threat landscape.<br /><br />Every strategy is tailored to safeguard data, ensure compliance, and foster resilience.",
         "slogan": "The Social Engineering<br>Antidote."
+    },
+    "saramartelli": {
+        "title": "Sara Martelli",
+        "subtitle": "Web Design & Development",
+        "image": "main.png",
+        "headerImage": "sara-62-min.jpg",
+        "link": "https://www.saramartelli.com",
+        "tags": ["benessere", "sito"],
+        "tasks": ["DEV", "DESIGN"],
+        "carousel": ["Home.mp4"],
+        "year": 2025,
+        "description": "Guiding you to inner peace and holistic well-being.<br />Sara Martelli blends yoga, mindfulness, and energy healing to nurture balance, strength, and serenity.<br /><br />From personalized sessions to transformative retreats, every practice is a journey toward harmony and self-discovery.",
+        "slogan": "Healing starts from<br>a personal choice."
     },
     "narai": {
         "title": "Narai Thai Massages",
@@ -285,18 +313,6 @@
         "year": 2022,
         "description": "Guiding businesses with expertise, integrity, and vision.<br />OBM & Associati unites certified professionals in tax, finance, and labor consultancy to empower growth and resilience.<br /><br />From international tax to corporate restructuring, every solution is crafted with precision and trust.",
         "slogan": "Expertise that protects,<br>strategy that drives."
-    },
-    "progetto-commercio": {
-        "title": "Progetto Commercio",
-        "subtitle": "App Design & Development",
-        "image": "pc.png",
-        "link": "https://play.google.com/store/apps/details?id=com.progettocommercio&hl=it",
-        "customer": "il-cubo",
-        "tags": ["finanza", "app"],
-        "tasks": ["DEV", "DESIGN"],
-        "carousel": [],
-        "disabled": true,
-        "year": 2019
     },
     "bioli": {
         "title": "Bioli",
