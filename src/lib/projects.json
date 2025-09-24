@@ -206,14 +206,19 @@
     "progetto-commercio": {
         "title": "Progetto Commercio",
         "subtitle": "App Design & Development",
-        "image": "pc.png",
-        "link": "https://play.google.com/store/apps/details?id=com.progettocommercio&hl=it",
+        "image": "mockup-rev.png",
+        "headerImage": "mockup.png",
+        "link": "https://www.prolocolimbiate.org/progetto-commercio.html",
         "customer": "il-cubo",
         "tags": ["finanza", "app"],
         "tasks": ["DEV", "DESIGN"],
-        "carousel": [],
+        "imagesCarousel": true,
+        "images": ["mockup.png"],
+        "carousel": ["login.png", "screen-1.png", "screen-2.png"],
         "disabled": false,
-        "year": 2019
+        "year": 2019,
+        "description": "Reviving local commerce with innovation and unity.<br />Progetto Commercio connects Limbiate’s shops and professionals through a dynamic app with offers, e-commerce, and home deliveries.<br /><br />Every feature supports community growth, bringing neighbors and businesses closer together.",
+        "slogan": "Stronger together,<br>commerce reimagined."
     },
     "itaca": {
         "title": "Itaca Engineering",
