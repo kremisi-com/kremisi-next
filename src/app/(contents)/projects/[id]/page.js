@@ -81,7 +81,11 @@ export default async function ProjectPage({ params }) {
                     </div>
                 </div>
             </div>
-            <div className={`${style.carousel} ${style.imagesCarousel}`}>
+            <div
+                className={`${style.carousel} ${
+                    projectData.imagesCarousel ? style.imagesCarousel : ""
+                }`}
+            >
                 {!projectData.imagesCarousel
                     ? projectData.carousel.map((video, index) => (
                           <div key={index} className={style.carouselItem}>
