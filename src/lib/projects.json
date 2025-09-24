@@ -92,7 +92,7 @@
         "tasks": ["DEV", "DESIGN"],
         "disabled": false,
         "color": "#F4BE44",
-        "images": ["property.jpg", "ricerca.png", "main.png"],
+        "images": ["main.png", "ricerca.png", "main.png"],
         "carousel": ["Vendita.mp4", "Home.mp4", "Chi-Siamo.mp4"],
         "year": 2023,
         "slogan": "Turning visions into reality,<br>where elegance meets home.",
