@@ -1,11 +1,15 @@
+"use client";
+
 import Image from "next/image";
 import styles from "./navbar.module.css";
 import Button from "@/components/button/button";
 import Link from "next/link";
-// import { Globe, Sun } from "lucide-react";
 import ThemeToggle from "./theme-toggler";
+import React from "react";
 
 export default function Navbar() {
+    const [menuOpen, setMenuOpen] = React.useState(false);
+
     return (
         <>
             <nav className={`${styles.navbar} onlyDesktop`}>
@@ -30,11 +34,15 @@ export default function Navbar() {
                 </div>
             </nav>
 
-            <nav className={`${styles.navbar} onlyMobile`}>
+            <nav
+                className={`${styles.navbar} onlyMobile ${
+                    menuOpen ? styles.open : ""
+                }`}
+            >
                 <div className={`${styles.buttons} ${styles.themeToggle}`}>
                     <ThemeToggle styles={styles} />
                 </div>
-                <Link href="/">
+                <Link href="/" onClick={() => setMenuOpen(false)}>
                     <Image
                         src="/images/logo/icona-dark.png"
                         alt="Logo"
@@ -44,13 +52,42 @@ export default function Navbar() {
                         priority={true}
                     />
                 </Link>
-                <div className={`${styles.buttons} ${styles.right}`}>
+                <div
+                    className={`${styles.buttons} ${styles.right}`}
+                    onClick={() => setMenuOpen(!menuOpen)}
+                >
                     <button className={styles.menuIcon}>
                         <div className={styles.bar}></div>
                         <div className={styles.bar}></div>
                     </button>
                 </div>
             </nav>
+            <div
+                className={`${styles.mobileMenu} onlyMobile ${
+                    menuOpen ? styles.open : ""
+                }`}
+            >
+                <ul>
+                    <li>
+                        <Link href="/" onClick={() => setMenuOpen(false)}>
+                            Home
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            href="/projects"
+                            onClick={() => setMenuOpen(false)}
+                        >
+                            Projects
+                        </Link>
+                    </li>
+                    <li>
+                        <Link href="/about" onClick={() => setMenuOpen(false)}>
+                            About
+                        </Link>
+                    </li>
+                </ul>
+            </div>
         </>
     );
 }

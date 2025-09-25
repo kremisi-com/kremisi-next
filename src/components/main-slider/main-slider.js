@@ -305,7 +305,7 @@ export default function MainSlider({ projectsData }) {
         }));
     }, [slope, projectsData, slideSize, slidesPositions, areSlidesDisplayed]);
 
-    const horizontalShift = (slope - 1.5) * 350;
+    const horizontalShift = (slope - 1.2) * 350;
     return (
         <div
             onWheel={handleScroll}
