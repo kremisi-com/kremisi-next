@@ -86,6 +86,14 @@ export default function Navbar() {
                             About
                         </Link>
                     </li>
+                    <li>
+                        <Link
+                            href="/contacts"
+                            onClick={() => setMenuOpen(false)}
+                        >
+                            Contacts
+                        </Link>
+                    </li>
                 </ul>
             </div>
         </>
