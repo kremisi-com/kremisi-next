@@ -1,4 +1,6 @@
+import { MessageCircleMore, MessageCircleQuestionMark } from "lucide-react";
 import styles from "./footer.module.css";
+import Button from "../button/button";
 
 export default function Footer() {
     return (
@@ -17,6 +19,14 @@ export default function Footer() {
                 <address className={styles.info}>
                     <a href="mailto:info@kremisi.com">info@kremisi.com</a>
                 </address>
+                <div className={`${styles.buttons} ${styles.right}`}>
+                    <Button
+                        className={styles.whatsappButton}
+                        href="https://wa.me/393490708572?text=Can%20I%20have%20more%20informations%3F"
+                    >
+                        <MessageCircleMore />
+                    </Button>
+                </div>
             </footer>
         </>
     );

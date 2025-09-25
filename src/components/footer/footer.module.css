@@ -35,6 +35,17 @@
 .footer a:hover {
     color: var(--primary);
 }
+
+.whatsappButton {
+    background-color: #25d366;
+    border-color: #25d366;
+    padding: 10px 6px 6px 6px;
+    border-radius: 50%;
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+}
+
 @media screen and (max-width: 768px) {
     .footer::before {
         height: 200px;
