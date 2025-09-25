@@ -37,7 +37,10 @@ export default function AboutPage() {
                 </RevelatingText>
             </section>
             <section className={styles.section}>
-                <h2>Services / Tech Stack</h2>
+                <h2>
+                    Services /
+                    <br className="onlyMobile" /> Tech Stack
+                </h2>
                 <ul className={styles.servicesList}>
                     <li className={styles.rainbowContainer}>
                         <div className={styles.rainbowContent}>HTML</div>

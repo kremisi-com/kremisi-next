@@ -22,3 +22,10 @@
     will-change: transform, opacity;
     opacity: 0; /* nascosto all'inizio */
 }
+
+@media (max-width: 768px) {
+    .text {
+        font-size: 5rem;
+        line-height: 1;
+    }
+}

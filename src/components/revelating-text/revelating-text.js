@@ -44,7 +44,7 @@ export default function RevelatingText({ children }) {
             words.forEach((w) => {
                 ScrollTrigger.create({
                     trigger: w,
-                    start: "top 66%",
+                    start: "top 80%",
                     onEnter: () => {
                         const isHighlight = !!w.closest(`.highlight`);
                         const color = isHighlight

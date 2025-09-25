@@ -239,13 +239,13 @@ textarea {
 
 /* ------- MEDIA QUERIES ------- */
 @media (max-width: 768px) {
-    h2 {
+    /* h2 {
         font-size: 1.8rem;
     }
 
     h3 {
         font-size: 1.5rem;
-    }
+    } */
 
     body {
         font-size: 14px;
@@ -259,8 +259,7 @@ textarea {
     }
 
     .page-content {
-        padding-top: 80px;
-        padding-bottom: 80px;
+        padding: 130px 15px;
     }
     .row {
         margin-bottom: 30px;

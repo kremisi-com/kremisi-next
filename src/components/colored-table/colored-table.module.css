@@ -70,9 +70,9 @@
 }
 
 @media (max-width: 768px) {
-    .coloredTable {
+    /* .coloredTable {
         margin: 50px 0;
-    }
+    } */
     .desktopRows {
         display: none;
     }
