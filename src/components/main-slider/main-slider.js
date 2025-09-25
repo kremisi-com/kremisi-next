@@ -62,6 +62,11 @@ export default function MainSlider({ projectsData }) {
 
     const scrollRef = useRef(scrollPosition);
     const ticking = useRef(false);
+    const touchStateRef = useRef({
+        active: false,
+        pointerId: null,
+        lastY: 0,
+    });
     const animationStartedRef = useRef(false);
 
     const runAnimation = useCallback(() => {
@@ -81,8 +86,8 @@ export default function MainSlider({ projectsData }) {
         scrollRef.current = scrollPosition;
     }, [scrollPosition]);
 
-    const handleScroll = useCallback((e) => {
-        const shift = e.deltaY > 0 ? -speed : speed;
+    const applyScrollShift = useCallback((shift) => {
+        if (shift === 0) return;
         scrollRef.current += shift;
 
         if (!ticking.current) {
@@ -93,6 +98,68 @@ export default function MainSlider({ projectsData }) {
             ticking.current = true;
         }
     }, []);
+
+    const handleScroll = useCallback(
+        (e) => {
+            const shift = e.deltaY > 0 ? -speed : speed;
+            applyScrollShift(shift);
+        },
+        [applyScrollShift]
+    );
+
+    const touchMultiplier = 1.2;
+
+    const handlePointerDown = useCallback((e) => {
+        if (e.pointerType !== "touch") return;
+        touchStateRef.current = {
+            active: true,
+            pointerId: e.pointerId,
+            lastY: e.clientY,
+        };
+        try {
+            e.currentTarget.setPointerCapture(e.pointerId);
+        } catch (_) {
+            // Some browsers might not support setPointerCapture on this element.
+        }
+    }, []);
+
+    const handlePointerMove = useCallback(
+        (e) => {
+            const state = touchStateRef.current;
+            if (!state.active || state.pointerId !== e.pointerId) return;
+            e.preventDefault();
+            const deltaY = e.clientY - state.lastY;
+            state.lastY = e.clientY;
+            applyScrollShift(-deltaY * touchMultiplier);
+        },
+        [applyScrollShift]
+    );
+
+    const endTouch = useCallback((pointerId, currentTarget) => {
+        const state = touchStateRef.current;
+        if (!state.active || state.pointerId !== pointerId) return;
+        state.active = false;
+        state.pointerId = null;
+        try {
+            currentTarget.releasePointerCapture(pointerId);
+        } catch (_) {
+            // Ignore if release is not supported.
+        }
+    }, []);
+
+    const handlePointerUp = useCallback(
+        (e) => {
+            endTouch(e.pointerId, e.currentTarget);
+        },
+        [endTouch]
+    );
+
+    const handlePointerCancel = useCallback(
+        (e) => {
+            endTouch(e.pointerId, e.currentTarget);
+        },
+        [endTouch]
+    );
 
     // ------------------- LABEL MANAGEMENT ------------------------- //
     const titleRef = useRef(null);
@@ -240,7 +307,15 @@ export default function MainSlider({ projectsData }) {
 
     const horizontalShift = (slope - 1.5) * 350;
     return (
-        <div onWheel={handleScroll} onMouseMove={handleMouseMove}>
+        <div
+            onWheel={handleScroll}
+            onMouseMove={handleMouseMove}
+            onPointerDown={handlePointerDown}
+            onPointerMove={handlePointerMove}
+            onPointerUp={handlePointerUp}
+            onPointerCancel={handlePointerCancel}
+            style={{ touchAction: "none" }}
+        >
             {percentageLoaded < 99.9 && (
                 <Loader percentage={percentageLoaded} />
             )}
