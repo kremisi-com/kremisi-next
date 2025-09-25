@@ -188,6 +188,22 @@ textarea {
 }
 
 /* ------- UTILITIES ------- */
+.onlyDesktop {
+    display: block;
+}
+
+.onlyMobile {
+    display: none;
+}
+@media (max-width: 768px) {
+    .onlyDesktop {
+        display: none;
+    }
+    .onlyMobile {
+        display: block;
+    }
+}
+
 .mb-0 {
     margin-bottom: 0 !important;
 }

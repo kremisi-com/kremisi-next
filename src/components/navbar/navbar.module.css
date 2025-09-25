@@ -49,3 +49,52 @@
 .buttons .icon:hover {
     color: var(--white);
 }
+
+.menuIcon {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    width: 35px;
+    height: 30px;
+    cursor: pointer;
+    border: 0;
+    background: none;
+}
+
+.menuIcon .bar {
+    background-color: var(--foreground);
+    width: 35px;
+    height: 3px;
+}
+.menuIcon .bar:nth-child(2) {
+    width: 25px;
+    margin-top: 8px;
+}
+.themeToggle {
+    left: 30px;
+}
+
+@media screen and (max-width: 768px) {
+    :global(.light) .logo {
+        content: url("/images/logo/icona-light.png");
+    }
+    .navbar::before {
+        height: 200px;
+        /* Mantieni il colore pieno per la maggior parte dell'altezza, poi sfuma rapidamente alla fine */
+        background: linear-gradient(
+            to bottom,
+            var(--background) 0%,
+            var(--background) 25%,
+            transparent 100%
+        );
+    }
+    .buttons,
+    .logo {
+        top: 20px;
+    }
+    .buttons {
+        margin-top: 5px;
+    }
+}
