@@ -49,12 +49,5 @@
 @media screen and (max-width: 768px) {
     .footer::before {
         height: 200px;
-        /* Mantieni il colore pieno per la maggior parte dell'altezza, poi sfuma rapidamente alla fine */
-        background: linear-gradient(
-            to top,
-            var(--background) 0%,
-            var(--background) 25%,
-            transparent 100%
-        );
     }
 }
