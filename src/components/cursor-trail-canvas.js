@@ -40,7 +40,7 @@ export default function CursorTrailCanvas() {
                 ctx.arc(p.x, p.y, radius, 0, Math.PI * 2);
                 ctx.fillStyle = `rgba(255, 0, 0, ${alpha})`;
                 ctx.shadowBlur = 5;
-                ctx.shadowColor = "red";
+                ctx.shadowColor = "var(--primary";
                 ctx.fill();
             });
 
