@@ -229,18 +229,16 @@ export default function MainSlider({ projectsData }) {
     // --------------------- SLIDES STYLES ------------------------ //
 
     const slideStyles = useMemo(() => {
-        const multiplier = 1 / slope;
-        const addend = 2000 - window.innerWidth * 2;
         return projectsData.map((_, index) => ({
-            top: `${slidesPositions[index] * multiplier + addend}px`,
+            top: `${slidesPositions[index]}px`,
             right: `${slidesPositions[index]}px`,
             zIndex: slidesPositions[index],
             transition: areSlidesDisplayed[index] ? "all .2s ease" : "0s",
             display: areSlidesDisplayed[index] ? "block" : "none",
         }));
     }, [slope, projectsData, slideSize, slidesPositions, areSlidesDisplayed]);
-    console.log(slope);
-    const horizontalShift = (slope - 1.5) * 300;
+
+    const horizontalShift = (slope - 1.5) * 350;
     return (
         <div onWheel={handleScroll} onMouseMove={handleMouseMove}>
             {percentageLoaded < 99.9 && (
