@@ -35,14 +35,14 @@ export default function ColoredTable({ items, images, links }) {
             ref={tableRef}
         >
             <table className={style.coloredTable}>
-                <tbody>
+                <tbody className={style.desktopRows}>
                     {items.map((item, index) => (
                         <tr
                             key={index}
                             onMouseEnter={() => handleMouseEnter(index)}
                             onClick={() => {
                                 if (links && links.length > index) {
-                                    router.push(links[index]); // ✅ navigazione client-side
+                                    router.push(links[index]);
                                 }
                             }}
                             style={{
@@ -63,10 +63,46 @@ export default function ColoredTable({ items, images, links }) {
                         </tr>
                     ))}
                 </tbody>
+                <tbody className={style.mobileRows}>
+                    {items.map((item, index) => (
+                        <tr
+                            key={`mobile-${index}`}
+                            onMouseEnter={() => handleMouseEnter(index)}
+                            onClick={() => {
+                                if (links && links.length > index) {
+                                    router.push(links[index]);
+                                }
+                            }}
+                            style={{
+                                cursor:
+                                    links && links.length > index
+                                        ? "pointer"
+                                        : "default",
+                            }}
+                        >
+                            <td>
+                                {item.map((cell, cellIndex) => (
+                                    <p
+                                        key={cellIndex}
+                                        dangerouslySetInnerHTML={{
+                                            __html: cell,
+                                        }}
+                                        className={
+                                            cellIndex < item.length - 1
+                                                ? ""
+                                                : "d-none"
+                                        }
+                                    />
+                                ))}
+                            </td>
+                            <td>{item[item.length - 1]}</td>
+                        </tr>
+                    ))}
+                </tbody>
             </table>
             {imageIndexShown != null && images && images.length > 0 && (
                 <div
-                    className={style.imageContainer}
+                    className={`${style.imageContainer} onlyDesktop`}
                     style={{
                         transform: `translate(${translate.x}px, ${translate.y}px)`,
                     }}
