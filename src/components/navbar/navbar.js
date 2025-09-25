@@ -63,7 +63,7 @@ export default function Navbar() {
                 </div>
             </nav>
             <div
-                className={`${styles.mobileMenu} onlyMobile ${
+                className={`${styles.mobileMenu} onlyMobileFlex ${
                     menuOpen ? styles.open : ""
                 }`}
             >

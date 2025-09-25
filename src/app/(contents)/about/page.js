@@ -16,7 +16,8 @@ export default function AboutPage() {
             <section className={styles.section}>
                 <RevelatingText>
                     My name is Andrea and I am a web developer based in Italy
-                    with 8+ years of experience in web and app development.
+                    with <span className={"highlight"}>8+ years</span> of
+                    experience in web and app development.
                     <br />
                     <br />
                     <span className={"highlight"}>Kremisi</span> is my personal
@@ -29,8 +30,7 @@ export default function AboutPage() {
                     <span className={"highlight"}>backend</span>, with a strong
                     focus on aesthetics and usability.
                     <br />
-                    <br /> <span className={"highlight"}>Kremisi</span> was
-                    created with the goal of developing{" "}
+                    <br /> Kremisi was created with the goal of developing{" "}
                     <span className={"highlight"}>limitless</span> solutions,
                     giving space to ideas and complex projects in every
                     direction.

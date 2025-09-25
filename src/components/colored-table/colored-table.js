@@ -81,19 +81,19 @@ export default function ColoredTable({ items, images, links }) {
                             }}
                         >
                             <td>
-                                {item.map((cell, cellIndex) => (
-                                    <p
-                                        key={cellIndex}
-                                        dangerouslySetInnerHTML={{
-                                            __html: cell,
-                                        }}
-                                        className={
+                                {item
+                                    .filter(
+                                        (cell, cellIndex) =>
                                             cellIndex < item.length - 1
-                                                ? ""
-                                                : "d-none"
-                                        }
-                                    />
-                                ))}
+                                    )
+                                    .map((cell, cellIndex) => (
+                                        <p
+                                            key={cellIndex}
+                                            dangerouslySetInnerHTML={{
+                                                __html: cell,
+                                            }}
+                                        />
+                                    ))}
                             </td>
                             <td>{item[item.length - 1]}</td>
                         </tr>

@@ -127,12 +127,12 @@
         content: url("/images/logo/icona-light.png");
     }
     .navbar::before {
-        height: 200px;
+        height: 150px;
         /* Mantieni il colore pieno per la maggior parte dell'altezza, poi sfuma rapidamente alla fine */
         background: linear-gradient(
             to bottom,
             var(--background) 0%,
-            var(--background) 25%,
+            var(--background) 35%,
             transparent 100%
         );
     }

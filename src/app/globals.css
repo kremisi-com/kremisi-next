@@ -187,12 +187,17 @@ textarea {
     margin-bottom: 50px;
 }
 
-/* ------- UTILITIES ------- */
+/* ------- DISPLAY CLASSES ------- */
 .onlyDesktop {
     display: block !important;
 }
-
 .onlyMobile {
+    display: none !important;
+}
+.onlyDesktopFlex {
+    display: flex !important;
+}
+.onlyMobileFlex {
     display: none !important;
 }
 @media (max-width: 768px) {
@@ -202,8 +207,15 @@ textarea {
     .onlyMobile {
         display: block !important;
     }
+    .onlyDesktopFlex {
+        display: none !important;
+    }
+    .onlyMobileFlex {
+        display: flex !important;
+    }
 }
 
+/* ------- UTILITIES ------- */
 .mb-0 {
     margin-bottom: 0 !important;
 }
@@ -247,7 +259,7 @@ textarea {
     } */
 
     h3 {
-        font-size: 3rem;
+        font-size: 2.9rem;
     }
 
     body {
@@ -262,10 +274,11 @@ textarea {
     }
 
     .page-content {
-        padding: 130px 15px;
+        padding: 130px 20px;
     }
     .row {
         margin-bottom: 30px;
+        gap: 30px;
     }
     .col:not(.no-wrap),
     .col-1-3:not(.no-wrap),

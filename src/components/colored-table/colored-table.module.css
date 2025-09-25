@@ -28,6 +28,7 @@
     text-align: left;
     font-weight: 300;
     font-size: 2rem;
+    letter-spacing: 0.05rem;
 }
 
 .coloredTable :global(.onlyDesktop) td:first-child,
@@ -70,9 +71,6 @@
 }
 
 @media (max-width: 768px) {
-    /* .coloredTable {
-        margin: 50px 0;
-    } */
     .desktopRows {
         display: none;
     }
@@ -80,13 +78,19 @@
         display: table-row-group;
     }
     .coloredTable td {
-        font-weight: 400;
         font-size: 1.7rem;
     }
     .coloredTable td:first-child p {
         opacity: 0.6;
+        margin-bottom: 13px;
+    }
+    .coloredTable td:first-child p:last-child {
+        margin-bottom: 0;
+        opacity: 0.8;
     }
     .coloredTable td:first-child p:first-child {
         opacity: 1;
+        margin-bottom: 8px;
+        font-weight: 500;
     }
 }
