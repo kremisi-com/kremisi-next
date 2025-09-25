@@ -36,6 +36,10 @@
     color: var(--primary);
 }
 
+.footer:global(.onlyMobile) address {
+    left: 25px;
+}
+
 .whatsappButton {
     background-color: #25d366;
     border-color: #25d366;
