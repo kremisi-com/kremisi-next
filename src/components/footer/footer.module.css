@@ -45,9 +45,3 @@
     bottom: 25px;
     right: 25px;
 }
-
-@media screen and (max-width: 768px) {
-    .footer::before {
-        height: 200px;
-    }
-}
