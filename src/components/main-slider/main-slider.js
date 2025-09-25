@@ -130,7 +130,7 @@ export default function MainSlider({ projectsData }) {
             e.preventDefault();
             const deltaY = e.clientY - state.lastY;
             state.lastY = e.clientY;
-            applyScrollShift(-deltaY * touchMultiplier);
+            applyScrollShift(deltaY * touchMultiplier);
         },
         [applyScrollShift]
     );
