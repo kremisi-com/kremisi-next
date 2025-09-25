@@ -189,18 +189,18 @@ textarea {
 
 /* ------- UTILITIES ------- */
 .onlyDesktop {
-    display: block;
+    display: block !important;
 }
 
 .onlyMobile {
-    display: none;
+    display: none !important;
 }
 @media (max-width: 768px) {
     .onlyDesktop {
-        display: none;
+        display: none !important;
     }
     .onlyMobile {
-        display: block;
+        display: block !important;
     }
 }
 
@@ -239,13 +239,16 @@ textarea {
 
 /* ------- MEDIA QUERIES ------- */
 @media (max-width: 768px) {
+    h1 {
+        font-size: 5.4rem;
+    }
     /* h2 {
         font-size: 1.8rem;
-    }
+    } */
 
     h3 {
-        font-size: 1.5rem;
-    } */
+        font-size: 3rem;
+    }
 
     body {
         font-size: 14px;
@@ -264,9 +267,16 @@ textarea {
     .row {
         margin-bottom: 30px;
     }
-    .col {
+    .col:not(.no-wrap),
+    .col-1-3:not(.no-wrap),
+    .col-2-3:not(.no-wrap) {
         flex: 0 0 100%;
         max-width: 100%;
+    }
+    .col,
+    .col-1-3,
+    .col-2-3 {
+        margin-bottom: 20px;
     }
 }
 

@@ -1,6 +1,6 @@
 .header,
 .nextProject {
-    width: 100vw;
+    width: 100%;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -59,7 +59,14 @@
 }
 .overview p {
     font-size: 2.8rem;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.05rem;
+}
+
+.overviewFooter {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .overview .tags {
@@ -79,7 +86,7 @@
     flex-wrap: wrap;
     width: 100%;
     padding: 0px 50px;
-    margin: 100px -15px;
+    margin: 100px 0px;
 }
 .carousel .carouselItem {
     flex: 0 0 50%;
@@ -147,9 +154,18 @@
 }
 
 @media (max-width: 768px) {
+    .client {
+        margin: 50px 0 0px 0;
+    }
+    .overview {
+        padding: 0px 20px;
+    }
+    .overview p {
+        font-size: 2.2rem;
+    }
     .carousel {
         padding: 0px 15px;
-        margin: 50px -15px;
+        margin: 50px 0px;
     }
     .carousel .carouselItem {
         flex: 0 0 100%;

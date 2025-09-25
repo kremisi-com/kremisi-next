@@ -39,14 +39,14 @@ export default async function ProjectPage({ params }) {
             </div>
             <div className={`${style.overview}`}>
                 <div className="row">
-                    <div className="col mb-0">
+                    <div className="col mb-0 no-wrap">
                         <div className={style.client}>
                             <div className={style.clientName}>
                                 Client: {projectData.title}
                             </div>
                         </div>
                     </div>
-                    <div className="col mb-0">
+                    <div className="col mb-0 no-wrap">
                         <div className={style.client}>
                             <div className={style.clientYear}>
                                 Year: {projectData.year}
@@ -56,9 +56,11 @@ export default async function ProjectPage({ params }) {
                 </div>
                 <div className="row">
                     <div className="col-1-3">
-                        <h3>Project Overview</h3>
+                        <h3 style={{ textTransform: "uppercase" }}>
+                            Project Overview
+                        </h3>
                         <Link
-                            className={style.link}
+                            className={`${style.link} onlyDesktop`}
                             href={projectData.link}
                             target="_blank"
                         >
@@ -71,12 +73,22 @@ export default async function ProjectPage({ params }) {
                                 __html: projectData.description,
                             }}
                         ></p>
-                        <div className={style.tags}>
-                            {projectData.tasks.map((tag, index) => (
-                                <div key={index} className="tag">
-                                    {tag}
-                                </div>
-                            ))}
+                        <div className={style.overviewFooter}>
+                            <div className={style.tags}>
+                                {projectData.tasks.map((tag, index) => (
+                                    <div key={index} className="tag">
+                                        {tag}
+                                    </div>
+                                ))}
+                            </div>
+
+                            <Link
+                                className={`${style.link} onlyMobile`}
+                                href={projectData.link}
+                                target="_blank"
+                            >
+                                <GitButton text="Live Demo" />
+                            </Link>
                         </div>
                     </div>
                 </div>
@@ -111,7 +123,11 @@ export default async function ProjectPage({ params }) {
             </div>
             <div className={style.moreProjects}>
                 <Link className={style.link} href={"/projects"}>
-                    <GitButton text="More Projects" revertColor={true} />
+                    <GitButton
+                        text="More Projects"
+                        revertColor={true}
+                        leftShift={-35}
+                    />
                 </Link>
             </div>
             <div className={style.nextProject}>
