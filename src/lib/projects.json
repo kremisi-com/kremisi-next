@@ -199,6 +199,7 @@
         "link": "https://bpmn2petrinet.com",
         "tags": ["comunicazione", "sito"],
         "tasks": ["DEV", "DESIGN"],
+        "blackText": true,
         "year": 2025,
         "description": "Bridging the gap between business processes and formal analysis.<br />BPMN2Petri transforms BPMN diagrams into Petri nets, enabling precise modeling, verification, and optimization.<br /><br />From seamless conversion to insightful analysis, every feature empowers clarity and efficiency in process management.",
         "slogan": "From process to precision,<br>model with confidence."

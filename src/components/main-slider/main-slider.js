@@ -76,26 +76,23 @@ export default function MainSlider({ projectsData }) {
     }, [animationDurationInitial, animationTargetScroll]);
 
     // ------------------- SCROLL MANAGEMENT ------------------------- //
-    const speed = 40;
+    const speed = 30;
     useEffect(() => {
         scrollRef.current = scrollPosition;
     }, [scrollPosition]);
 
-    const handleScroll = useCallback(
-        throttle((e) => {
-            const shift = e.deltaY > 0 ? -speed : speed;
-            scrollRef.current += shift;
+    const handleScroll = useCallback((e) => {
+        const shift = e.deltaY > 0 ? -speed : speed;
+        scrollRef.current += shift;
 
-            if (!ticking.current) {
-                window.requestAnimationFrame(() => {
-                    setScrollPosition(scrollRef.current);
-                    ticking.current = false;
-                });
-                ticking.current = true;
-            }
-        }, 50), // massimo una volta ogni 50ms
-        []
-    );
+        if (!ticking.current) {
+            window.requestAnimationFrame(() => {
+                setScrollPosition(scrollRef.current);
+                ticking.current = false;
+            });
+            ticking.current = true;
+        }
+    }, []);
 
     // ------------------- LABEL MANAGEMENT ------------------------- //
     const titleRef = useRef(null);
@@ -123,7 +120,7 @@ export default function MainSlider({ projectsData }) {
             if (animationStartedRef.current) return prev;
             const increment = (1 / projectsData.length) * 100;
             const newValue = Math.min(prev + increment, 100);
-            if (newValue >= 100) {
+            if (newValue >= 99.99) {
                 setTimeout(runAnimation, 100);
                 return 99;
             }
@@ -143,7 +140,6 @@ export default function MainSlider({ projectsData }) {
     );
 
     // ------------------- CHUNK CHANGE ------------------------- //
-
     const [isPending, startTransition] = useTransition();
 
     function onChunkChange(oldChunk, chunk) {
@@ -157,7 +153,6 @@ export default function MainSlider({ projectsData }) {
             indexesToMove.push(i);
         indexesToMove = indexesToMove.map((i) => projectsData.length - 1 - i);
 
-        // ✅ ricrea l'array con la lunghezza giusta
         const newDisplay = Array(projectsData.length).fill(true);
         indexesToMove.forEach((i) => (newDisplay[i] = false));
 
@@ -191,7 +186,6 @@ export default function MainSlider({ projectsData }) {
             newPositions[i] = newStartPosition + offsets[idx];
         });
 
-        // ✅ batching asincrono
         startTransition(() => {
             setAreSlidesDisplayed(newDisplay);
             setSlidesPositions(newPositions);
@@ -235,15 +229,18 @@ export default function MainSlider({ projectsData }) {
     // --------------------- SLIDES STYLES ------------------------ //
 
     const slideStyles = useMemo(() => {
+        const multiplier = 1 / slope;
+        const addend = 2000 - window.innerWidth * 2;
         return projectsData.map((_, index) => ({
-            top: `${slidesPositions[index]}px`,
+            top: `${slidesPositions[index] * multiplier + addend}px`,
             right: `${slidesPositions[index]}px`,
             zIndex: slidesPositions[index],
             transition: areSlidesDisplayed[index] ? "all .2s ease" : "0s",
             display: areSlidesDisplayed[index] ? "block" : "none",
         }));
-    }, [projectsData, slideSize, slidesPositions, areSlidesDisplayed]);
-
+    }, [slope, projectsData, slideSize, slidesPositions, areSlidesDisplayed]);
+    console.log(slope);
+    const horizontalShift = (slope - 1.5) * 300;
     return (
         <div onWheel={handleScroll} onMouseMove={handleMouseMove}>
             {percentageLoaded < 99.9 && (
@@ -253,7 +250,7 @@ export default function MainSlider({ projectsData }) {
                 className={styles.slider}
                 style={{
                     transform: `translate(${
-                        -scrollPosition + sliderSize / 2
+                        -scrollPosition + sliderSize / 2 + horizontalShift
                     }px, ${scrollPosition - sliderSize / 2}px)`,
                     "--animation-duration": animationDuration,
                 }}
