@@ -1,102 +1,89 @@
 .list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    gap: 5px 5px;
-    flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 5px 5px;
+  flex-wrap: wrap;
 }
 .list li {
-    color: var(--black);
-    background-color: var(--white);
-    border-radius: 22px;
-    padding: 8px 16px;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 14pt;
-    font-weight: 300;
-    cursor: default;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    /* box-shadow: 0 0 8px var(--foreground); */
-    transition: background-color 0.3s, color 0.3s;
+  color: var(--black);
+  background-color: var(--white);
+  border-radius: 22px;
+  padding: 8px 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 14pt;
+  font-weight: 300;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* box-shadow: 0 0 8px var(--foreground); */
+  transition: background-color 0.3s, color 0.3s;
 }
 .list li:not(.rainbowContainer):hover,
 .list .rainbowContainer:hover .rainbowContent {
-    background-color: var(--foreground);
-    color: var(--background);
-}
-
-.silver {
-    border: 2px solid var(--primary);
-}
-.bronze {
-    border: 2px solid var(--primary);
-}
-
-/* RAINBOW */
-/* the defined animation; this is my personal preference to
-   have @keyframes specified at the beginning of the file: */
-@keyframes spin {
-    100% {
-        transform: rotate(-360deg);
-    }
-}
-
-/* CSS custom-properties: */
-:root {
-    --animation: spin 2s infinite linear;
-    --rainbow: conic-gradient(
-        #fd004c,
-        #fe9000,
-        #fff020,
-        #3edf4b,
-        #3363ff,
-        #b102b7,
-        #fd004c
-    );
+  background-color: var(--foreground);
+  color: var(--background);
 }
 
 .rainbowContainer {
-    border: 0px solid currentColor;
-    /* inline-size: clamp(10rem, 50vw, 1200px); */
-    /* used to create a new stacking context, in order to
-     prevent any descendant elements with z-index from
-     escaping "behind" the <main> element(s): */
-    isolation: isolate;
-    /* margin-block: 2px; */
-    /* margin-inline: auto; */
-    padding: 3px !important;
-    /* hiding any elements that overflow the <main>
-     element(s): */
-    overflow: hidden;
-    border-radius: 22px;
+  border: 2px solid var(--primary);
+}
+.silver {
+  border: 2px solid var(--primary);
+}
+.bronze {
+  border: 2px solid var(--primary);
 }
 
-.rainbowContent {
-    background-color: var(--white);
-    color: var(--black);
-    border-radius: 22px;
-    /* CSS logical property, equivalent to width in
-     English-language sites: */
-    /* min-inline-size: 10rem; */
-    padding: 8px 12px;
-    /* to allow pseudo-elements to be absolutely
-     positioned with reference to this element: */
-    position: relative;
-    transition: background-color 0.3s, color 0.3s;
+/* RAINBOW */
+@keyframes spin {
+  100% {
+    transform: rotate(-360deg);
+  }
+}
+/* Non Su Safari */
+:root {
+  --animation: spin 2s infinite linear;
+  --rainbow: conic-gradient(
+    #fd004c,
+    #fe9000,
+    #fff020,
+    #3edf4b,
+    #3363ff,
+    #b102b7,
+    #fd004c
+  );
 }
 
-.rainbowContent::before {
-    /* linking to the animation: */
-    animation: var(--animation);
-    /* defining the background-image: */
-    background-image: var(--rainbow);
-    /* required for the pseudo-element
+.notMac .rainbowContainer {
+  border: 0px solid currentColor;
+  isolation: isolate;
+  padding: 3px !important;
+  overflow: hidden;
+  border-radius: 22px;
+}
+
+.notMac .rainbowContent {
+  background-color: var(--white);
+  color: var(--black);
+  border-radius: 22px;
+  padding: 8px 12px;
+  position: relative;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.notMac .rainbowContent::before {
+  /* linking to the animation: */
+  animation: var(--animation);
+  /* defining the background-image: */
+  background-image: var(--rainbow);
+  /* required for the pseudo-element
      to show up:*/
-    content: "";
-    /* this is something of a magic number;
+  content: "";
+  /* this is something of a magic number;
      too small and the corner of this
      pseudo-element will be visible as
      the element rotates; this positions
@@ -104,8 +91,8 @@
      at the specified length from the
      edges of the ancestor against which
      it's positioned: */
-    inset: -200em;
-    position: absolute;
-    /* to move the element behind it's parent: */
-    z-index: -1;
+  inset: -200em;
+  position: absolute;
+  /* to move the element behind it's parent: */
+  z-index: -1;
 }
