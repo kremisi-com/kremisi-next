@@ -299,6 +299,9 @@ div[class*="iubenda-cs-brand-badge"] {
     .page-content {
         padding: 130px 20px;
     }
+    .page-content-simple {
+        padding: 130px 20px;
+    }
     .row {
         margin-bottom: 30px;
         gap: 30px 0;

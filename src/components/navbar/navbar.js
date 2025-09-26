@@ -10,6 +10,7 @@ import AnimatedLink from "@/components/animated-link/animated-link";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
+    const animationDelay = 300;
 
     return (
         <>
@@ -70,36 +71,56 @@ export default function Navbar() {
             >
                 <ul>
                     <li>
-                        <AnimatedLink
+                        <Link
                             href="/"
-                            onClick={() => setMenuOpen(false)}
+                            onClick={() =>
+                                setTimeout(
+                                    () => setMenuOpen(false),
+                                    animationDelay
+                                )
+                            }
                         >
                             Home
-                        </AnimatedLink>
+                        </Link>
                     </li>
                     <li>
-                        <AnimatedLink
+                        <Link
                             href="/projects"
-                            onClick={() => setMenuOpen(false)}
+                            onClick={() =>
+                                setTimeout(
+                                    () => setMenuOpen(false),
+                                    animationDelay
+                                )
+                            }
                         >
                             Projects
-                        </AnimatedLink>
+                        </Link>
                     </li>
                     <li>
-                        <AnimatedLink
+                        <Link
                             href="/about"
-                            onClick={() => setMenuOpen(false)}
+                            onClick={() =>
+                                setTimeout(
+                                    () => setMenuOpen(false),
+                                    animationDelay
+                                )
+                            }
                         >
                             About
-                        </AnimatedLink>
+                        </Link>
                     </li>
                     <li>
-                        <AnimatedLink
+                        <Link
                             href="/contacts"
-                            onClick={() => setMenuOpen(false)}
+                            onClick={() =>
+                                setTimeout(
+                                    () => setMenuOpen(false),
+                                    animationDelay
+                                )
+                            }
                         >
                             Contacts
-                        </AnimatedLink>
+                        </Link>
                     </li>
                 </ul>
             </div>

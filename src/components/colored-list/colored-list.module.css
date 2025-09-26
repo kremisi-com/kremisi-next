@@ -1,89 +1,95 @@
 .list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  gap: 5px 5px;
-  flex-wrap: wrap;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    gap: 5px 5px;
+    flex-wrap: wrap;
 }
 .list li {
-  color: var(--black);
-  background-color: var(--white);
-  border-radius: 22px;
-  padding: 8px 16px;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-  font-size: 14pt;
-  font-weight: 300;
-  cursor: default;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  /* box-shadow: 0 0 8px var(--foreground); */
-  transition: background-color 0.3s, color 0.3s;
+    color: var(--black);
+    background-color: var(--white);
+    border-radius: 22px;
+    padding: 8px 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 2rem;
+    font-weight: 300;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* box-shadow: 0 0 8px var(--foreground); */
+    transition: background-color 0.3s, color 0.3s;
 }
 .list li:not(.rainbowContainer):hover,
 .list .rainbowContainer:hover .rainbowContent {
-  background-color: var(--foreground);
-  color: var(--background);
+    background-color: var(--foreground);
+    color: var(--background);
 }
 
 .rainbowContainer {
-  border: 2px solid var(--primary);
+    border: 2px solid var(--primary);
 }
 .silver {
-  border: 2px solid var(--primary);
+    border: 2px solid var(--primary);
 }
 .bronze {
-  border: 2px solid var(--primary);
+    border: 2px solid var(--primary);
+}
+
+@media (max-width: 768px) {
+    .list li {
+        font-size: 1.7rem;
+    }
 }
 
 /* RAINBOW */
 @keyframes spin {
-  100% {
-    transform: rotate(-360deg);
-  }
+    100% {
+        transform: rotate(-360deg);
+    }
 }
 /* Non Su Safari */
 :root {
-  --animation: spin 2s infinite linear;
-  --rainbow: conic-gradient(
-    #fd004c,
-    #fe9000,
-    #fff020,
-    #3edf4b,
-    #3363ff,
-    #b102b7,
-    #fd004c
-  );
+    --animation: spin 2s infinite linear;
+    --rainbow: conic-gradient(
+        #fd004c,
+        #fe9000,
+        #fff020,
+        #3edf4b,
+        #3363ff,
+        #b102b7,
+        #fd004c
+    );
 }
 
 .notMac .rainbowContainer {
-  border: 0px solid currentColor;
-  isolation: isolate;
-  padding: 3px !important;
-  overflow: hidden;
-  border-radius: 22px;
+    border: 0px solid currentColor;
+    isolation: isolate;
+    padding: 3px !important;
+    overflow: hidden;
+    border-radius: 22px;
 }
 
 .notMac .rainbowContent {
-  background-color: var(--white);
-  color: var(--black);
-  border-radius: 22px;
-  padding: 8px 12px;
-  position: relative;
-  transition: background-color 0.3s, color 0.3s;
+    background-color: var(--white);
+    color: var(--black);
+    border-radius: 22px;
+    padding: 8px 12px;
+    position: relative;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .notMac .rainbowContent::before {
-  /* linking to the animation: */
-  animation: var(--animation);
-  /* defining the background-image: */
-  background-image: var(--rainbow);
-  /* required for the pseudo-element
+    /* linking to the animation: */
+    animation: var(--animation);
+    /* defining the background-image: */
+    background-image: var(--rainbow);
+    /* required for the pseudo-element
      to show up:*/
-  content: "";
-  /* this is something of a magic number;
+    content: "";
+    /* this is something of a magic number;
      too small and the corner of this
      pseudo-element will be visible as
      the element rotates; this positions
@@ -91,8 +97,8 @@
      at the specified length from the
      edges of the ancestor against which
      it's positioned: */
-  inset: -200em;
-  position: absolute;
-  /* to move the element behind it's parent: */
-  z-index: -1;
+    inset: -200em;
+    position: absolute;
+    /* to move the element behind it's parent: */
+    z-index: -1;
 }
