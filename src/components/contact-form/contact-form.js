@@ -8,6 +8,7 @@ import GitButton from "../git-button/git-button";
 import toast from "react-hot-toast";
 import { RecaptchaWrapper } from "./recaptcha-wrapper";
 import PrivacyLinks from "./privacy-links";
+import Script from "next/script";
 
 export default function ContactForm({}) {
     const [state, formAction, pending] = useActionState(submitContact, {
@@ -124,7 +125,10 @@ export default function ContactForm({}) {
                         >
                             Privacy Policy
                         </a>
-                        .
+                        <Script
+                            strategy="lazyOnload"
+                            src="https://cdn.iubenda.com/iubenda.js"
+                        />
                     </label>
                 </div>
             </div>

@@ -22,6 +22,32 @@ const geistMono = Geist_Mono({
 export const metadata = {
     title: "Kremisi - Web Design & Development",
     description: "Expand your digital presence with Kremisi",
+    metadataBase: new URL("https://kremisi.com"), // dominio base del sito
+    openGraph: {
+        title: "Kremisi - Web Design & Development",
+        description: "Expand your digital presence with Kremisi",
+        url: "https://kremisi.com",
+        siteName: "Kremisi",
+        images: [
+            {
+                url: "/og-image.jpg", // mettila in /public
+                width: 1500,
+                height: 750,
+                alt: "Kremisi preview",
+            },
+        ],
+        locale: "it_IT",
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Kremisi - Web Design & Development",
+        description: "Expand your digital presence with Kremisi",
+        images: ["/og-image.jpg"],
+    },
+    icons: {
+        icon: "/favicon.ico", // per la favicon
+    },
 };
 
 export default async function RootLayout({ children }) {
