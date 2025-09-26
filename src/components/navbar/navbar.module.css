@@ -93,12 +93,12 @@
     padding: 15px 0;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 99;
-    transform: translateY(100dvh);
+    transform: translateY(max(100dvh, 100lvh));
     transition: transform 0.3s ease-in-out;
 
-    overflow-y: auto; /* abilita scroll interno */
-    -webkit-overflow-scrolling: touch; /* per scroll fluido su iOS */
-    overscroll-behavior: contain; /* blocca il "pass through" */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
 }
 
 :global(.light) .mobileMenu {
