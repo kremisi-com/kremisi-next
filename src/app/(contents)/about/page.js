@@ -27,10 +27,19 @@ export default function AboutPage() {
         { name: "Next.js", level: "silver" },
         { name: "C", level: "silver" },
         { name: "Angular", level: "silver" },
-        { name: "Android Studio", level: "silver" },
         { name: "Unity", level: "silver" },
         { name: "Xamarin", level: "silver" },
 
+        { name: "ACF Fields", level: "silver" },
+        { name: "RESTful APIs", level: "silver" },
+        { name: "UI / UX Design", level: "silver" },
+        { name: "Responsive Design", level: "silver" },
+        { name: "SEO Practices", level: "silver" },
+        { name: "GIT", level: "silver" },
+        { name: "Performance", level: "silver" },
+        { name: "Cross-Browser Compatibility", level: "silver" },
+
+        { name: "Android Studio", level: "bronze" },
         { name: "C#", level: "bronze" },
         { name: "Lua", level: "bronze" },
         { name: "TypeScript", level: "bronze" },
@@ -43,7 +52,7 @@ export default function AboutPage() {
     ];
 
     return (
-        <main className="page-content">
+        <main className="page-content-simple">
             <section className={styles.section}>
                 <RevelatingText>
                     My name is Andrea and I am a web developer based in Italy
