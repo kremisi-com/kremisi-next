@@ -71,7 +71,7 @@ export async function submitContact(prevState, formData) {
 
     try {
         // Invia la richiesta al tuo server PHP
-        const response = await fetch("https://kremisi.com/next/send-mail.php", {
+        const response = await fetch("https://api.kremisi.com/send-mail.php", {
             method: "POST",
             body: new URLSearchParams(payload), // invio come form-urlencoded
             headers: {

@@ -37,7 +37,7 @@ export default async function RootLayout({ children }) {
                     <Navbar />
                     {children}
                     <Footer />
-                    <Toaster />
+                    <Toaster position="bottom-center" reverseOrder={false} />
                 </ThemeProvider>
             </body>
         </html>
