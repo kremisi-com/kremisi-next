@@ -76,7 +76,7 @@ export default function MainSlider({ projectsData }) {
         setScrollPosition(animationTargetScroll);
         setTimeout(() => {
             setAnimationEnded(true);
-            setAnimationDuration(".2s");
+            setAnimationDuration(".1s");
         }, animationDurationInitial);
     }, [animationDurationInitial, animationTargetScroll]);
 

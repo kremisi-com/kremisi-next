@@ -6,6 +6,7 @@ import { submitContact } from "@/lib/actions";
 import { useActionState, useEffect, useRef } from "react";
 import GitButton from "../git-button/git-button";
 import toast from "react-hot-toast";
+import { RecaptchaWrapper } from "./recaptcha-wrapper";
 
 export default function ContactForm({}) {
     const [state, formAction, pending] = useActionState(submitContact, {
@@ -28,6 +29,7 @@ export default function ContactForm({}) {
 
     return (
         <form className={styles.form} action={formAction}>
+            <RecaptchaWrapper action={"contact_form"} />
             <div className="row">
                 <div className="col">
                     <h3>What you need</h3>
