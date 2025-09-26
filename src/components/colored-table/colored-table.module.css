@@ -1,96 +1,104 @@
 .container {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 }
 .coloredTable {
-    width: 100%;
-    border-collapse: collapse;
-    position: relative;
+  width: 100%;
+  border-collapse: collapse;
+  position: relative;
 }
 
 .coloredTable tr {
-    position: relative;
-    border-bottom: 1px solid var(--foreground);
+  border-bottom: 1px solid var(--foreground);
 }
 .coloredTable tr:last-child {
-    border-bottom: none;
+  border-bottom: none;
 }
 
 .desktopRows {
-    display: table-row-group;
+  display: table-row-group;
 }
 .mobileRows {
-    display: none;
+  display: none;
 }
 
 .coloredTable td {
-    padding: 16px 15px;
-    text-align: left;
-    font-weight: 300;
-    font-size: 2rem;
-    letter-spacing: 0.05rem;
+  position: relative; /* necessario per ::before */
+  padding: 16px 15px;
+  text-align: left;
+  font-weight: 300;
+  font-size: 2rem;
+  letter-spacing: 0.05rem;
+  overflow: hidden; /* evita che l’animazione esca fuori */
 }
 
 .coloredTable :global(.onlyDesktop) td:first-child,
 .coloredTable :global(.onlyMobile) td:first-child p:first-child {
-    font-weight: 500;
+  font-weight: 500;
 }
 .coloredTable td:last-child {
-    text-align: right;
+  text-align: right;
 }
 
-.coloredTable tr::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    background: var(--primary);
-    z-index: -1;
-    opacity: 0;
-    transform: scaleY(0);
-    transform-origin: top;
-    transition: transform 0.25s ease, opacity 0.1s ease;
+/* --- Effetto hover --- */
+.coloredTable td::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: var(--primary);
+  z-index: -1;
+  opacity: 0;
+  transform: scaleY(0);
+  transform-origin: top;
+  transition: transform 0.25s ease, opacity 0.1s ease;
+  will-change: transform, opacity;
 }
 
-.coloredTable tr:hover::before {
-    opacity: 1;
-    transform: scaleY(1);
+.coloredTable tr:hover td::before {
+  opacity: 1;
+  transform: scaleY(1);
 }
+
+.coloredTable tr:hover td {
+  color: var(--background);
+}
+/* --- fine effetto hover --- */
 
 .coloredTable :global(a) {
-    text-decoration: underline;
+  text-decoration: underline;
 }
 
 .imageContainer {
-    position: absolute;
-    z-index: 100;
-    top: 0;
-    left: 0;
+  position: absolute;
+  z-index: 100;
+  top: 0;
+  left: 0;
 }
 
 @media (max-width: 768px) {
-    .desktopRows {
-        display: none;
-    }
-    .mobileRows {
-        display: table-row-group;
-    }
-    .coloredTable td {
-        font-size: 1.7rem;
-    }
-    .coloredTable td:first-child p {
-        opacity: 0.6;
-        margin-bottom: 13px;
-    }
-    .coloredTable td:first-child p:last-child {
-        margin-bottom: 0;
-        opacity: 0.8;
-    }
-    .coloredTable td:first-child p:first-child {
-        opacity: 1;
-        margin-bottom: 8px;
-        font-weight: 500;
-    }
+  .desktopRows {
+    display: none;
+  }
+  .mobileRows {
+    display: table-row-group;
+  }
+  .coloredTable td {
+    font-size: 1.7rem;
+  }
+  .coloredTable td:first-child p {
+    opacity: 0.6;
+    margin-bottom: 13px;
+  }
+  .coloredTable td:first-child p:last-child {
+    margin-bottom: 0;
+    opacity: 0.8;
+  }
+  .coloredTable td:first-child p:first-child {
+    opacity: 1;
+    margin-bottom: 8px;
+    font-weight: 500;
+  }
 }

@@ -1,63 +1,74 @@
 .link {
-    display: contents;
+  display: contents;
 }
 .button {
-    cursor: pointer;
-    font: inherit;
-    font-size: 11pt;
+  cursor: pointer;
+  font: inherit;
+  font-size: 11pt;
 
-    padding: 5px 15px 7px 15px;
-    border: none;
-    border-radius: 15px;
-    background-color: var(--box-bg);
-    backdrop-filter: blur(10px);
-    transition: background 0.2s ease;
-    box-sizing: content-box;
-    height: 20px;
+  padding: 5px 15px 7px 15px;
+  border: none;
+  border-radius: 15px;
+  background-color: var(--box-bg);
+  backdrop-filter: blur(10px);
+  transition: background 0.2s ease;
+  box-sizing: content-box;
+  height: 20px;
 }
 
 .button:hover {
-    background: var(--primary);
+  background: var(--primary);
 }
 .button:hover .text {
-    color: var(--white);
+  color: var(--white);
 }
 
 .button {
-    position: relative;
-    overflow: hidden;
+  position: relative;
+  overflow: hidden;
 }
 
 .button .text:nth-child(1) {
-    position: relative;
+  position: relative;
 }
 
 .button .text {
-    display: block;
-    transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    white-space: nowrap;
-    color: var(--foreground);
+  display: block;
+  transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  color: var(--foreground);
 }
 
 .button .text.top {
-    top: 50%;
+  top: 50%;
+}
+/* Non su Safari */
+@supports not (-webkit-hyphens: none) {
+  .button .text.top {
     transform: translate(-50%, -50%);
+  }
 }
 
+/* Solo Safari */
+/* @supports (-webkit-hyphens: none) and (not (-ms-ime-align: auto)) {
+  .button .text.top {
+  }
+} */
+
 .button .text.bottom {
-    top: 50%; /* già centrato verticalmente */
-    transform: translate(-50%, 150%); /* lo tengo sotto col translate */
-    opacity: 0;
+  top: 50%; /* già centrato verticalmente */
+  transform: translate(-50%, 150%); /* lo tengo sotto col translate */
+  opacity: 0;
 }
 
 .button:hover .text.top {
-    transform: translate(-50%, -250%);
+  transform: translate(-50%, -250%);
 }
 
 .button:hover .text.bottom {
-    transform: translate(-50%, -50%); /* sale al centro */
-    opacity: 1;
+  transform: translate(-50%, -50%); /* sale al centro */
+  opacity: 1;
 }
