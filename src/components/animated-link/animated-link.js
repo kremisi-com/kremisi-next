@@ -4,12 +4,13 @@ import { useTransitionContext } from "@/context/transition-context/transition-co
 import { usePathname } from "next/navigation";
 
 export default function AnimatedLink({ href, children, ...props }) {
-    const { triggerAnimation } = useTransitionContext();
+    const { triggerAnimation, openLoader, closeLoader } =
+        useTransitionContext();
     const path = usePathname();
 
     const handleClick = () => {
         if (path === href) return;
-        triggerAnimation();
+        openLoader();
     };
 
     return (
