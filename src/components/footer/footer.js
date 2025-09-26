@@ -22,7 +22,7 @@ export default function Footer() {
                 <div className={`${styles.buttons} ${styles.right}`}>
                     <Button
                         className={styles.whatsappButton}
-                        href="https://wa.me/393490708572?text=Can%20I%20have%20more%20informations%3F"
+                        href="https://wa.me/393517444749?text=Can%20I%20have%20more%20informations%3F"
                     >
                         <MessageCircleMore />
                     </Button>

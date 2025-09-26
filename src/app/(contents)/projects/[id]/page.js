@@ -30,6 +30,7 @@ export default async function ProjectPage({ params }) {
                     src={`/projects/${id}/${projectData.headerImage}`}
                     alt={projectData.title}
                     fill
+                    priority
                 />
                 <h1 dangerouslySetInnerHTML={{ __html: projectData.slogan }} />
                 <p className={style.disclaimer}>
