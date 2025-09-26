@@ -83,7 +83,7 @@
     top: 0;
     left: 0;
     width: 100dvw;
-    height: 100dvh;
+    height: max(100dvh, 100lvh);
     background-color: var(--primary);
     display: flex;
     flex-direction: column;
