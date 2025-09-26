@@ -1,7 +1,7 @@
 .slider {
     position: relative;
     width: 100svw;
-    height: 100svh;
+    height: 100ddvh;
     top: 0;
     left: 0;
     transition: all var(--animation-duration);

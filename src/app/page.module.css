@@ -10,7 +10,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    min-height: 100svh;
+    min-height: 100ddvh;
     font-family: var(--font-geist-sans);
     overflow: hidden;
 }
