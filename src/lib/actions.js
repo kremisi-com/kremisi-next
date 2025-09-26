@@ -25,7 +25,11 @@ export async function submitContact(prevState, formData) {
         recaptchaData?.tokenProperties?.valid !== true
     ) {
         console.log("Recaptcha failed", JSON.stringify(recaptchaData, null, 2));
-        return { success: false, error: "Recaptcha failed." };
+        return {
+            success: false,
+            error: "Recaptcha failed.",
+            message: JSON.stringify(recaptchaData, null, 2),
+        };
     }
 
     // Costruisci il payload con i valori del form

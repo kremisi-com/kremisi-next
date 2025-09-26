@@ -21,6 +21,7 @@ export default function ContactForm({}) {
     useEffect(() => {
         if (state && state.success) toast.success("Message sent successfully!");
         if (state && state.error && !state.success) toast.error(state.error);
+        if (state && state.message) console.log(state.message);
 
         serviceRef.current.reset();
         budgetRef.current.reset();
