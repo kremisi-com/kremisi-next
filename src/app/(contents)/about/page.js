@@ -4,6 +4,7 @@ import ColoredTable from "@/components/colored-table/colored-table";
 import Button from "@/components/button/button";
 import GitButton from "@/components/git-button/git-button";
 import Link from "next/link";
+import ColoredList from "@/components/colored-list/colored-list";
 
 export const metadata = {
     title: "About - Kremisi",
@@ -11,6 +12,36 @@ export const metadata = {
 };
 
 export default function AboutPage() {
+    const skills = [
+        { name: "HTML", level: "rainbow" },
+        { name: "CSS", level: "rainbow" },
+        { name: "JavaScript", level: "rainbow" },
+        { name: "React Native", level: "rainbow" },
+        { name: "React.js", level: "rainbow" },
+        { name: "jQuery", level: "rainbow" },
+        { name: "PHP", level: "rainbow" },
+        { name: "MySQL", level: "rainbow" },
+        { name: "WordPress", level: "rainbow" },
+
+        { name: "Python", level: "silver" },
+        { name: "Next.js", level: "silver" },
+        { name: "C", level: "silver" },
+        { name: "Angular", level: "silver" },
+        { name: "Android Studio", level: "silver" },
+        { name: "Unity", level: "silver" },
+        { name: "Xamarin", level: "silver" },
+
+        { name: "C#", level: "bronze" },
+        { name: "Lua", level: "bronze" },
+        { name: "TypeScript", level: "bronze" },
+        { name: "Java", level: "bronze" },
+        { name: "Lisp", level: "bronze" },
+        { name: "Prolog", level: "bronze" },
+        { name: "R", level: "bronze" },
+        { name: "Assembly", level: "bronze" },
+        { name: "Node.js", level: "bronze" },
+    ];
+
     return (
         <main className="page-content">
             <section className={styles.section}>
@@ -41,55 +72,7 @@ export default function AboutPage() {
                     Services /
                     <br className="onlyMobile" /> Tech Stack
                 </h2>
-                <ul className={styles.servicesList}>
-                    <li className={styles.rainbowContainer}>
-                        <div className={styles.rainbowContent}>HTML</div>
-                    </li>
-                    <li className={styles.rainbowContainer}>
-                        <div className={styles.rainbowContent}>CSS</div>
-                    </li>
-                    <li className={styles.rainbowContainer}>
-                        <div className={styles.rainbowContent}>JavaScript</div>
-                    </li>
-                    <li className={styles.rainbowContainer}>
-                        <div className={styles.rainbowContent}>
-                            React Native
-                        </div>
-                    </li>
-                    <li className={styles.rainbowContainer}>
-                        <div className={styles.rainbowContent}>React.js</div>
-                    </li>
-                    <li className={styles.rainbowContainer}>
-                        <div className={styles.rainbowContent}>jQuery</div>
-                    </li>
-                    <li className={styles.rainbowContainer}>
-                        <div className={styles.rainbowContent}>PHP</div>
-                    </li>
-                    <li className={styles.rainbowContainer}>
-                        <div className={styles.rainbowContent}>MySQL</div>
-                    </li>
-                    <li className={styles.rainbowContainer}>
-                        <div className={styles.rainbowContent}>WordPress</div>
-                    </li>
-
-                    <li className={styles.silver}>Python</li>
-                    <li className={styles.silver}>Next.js</li>
-                    <li className={styles.silver}>C</li>
-                    <li className={styles.silver}>Angular</li>
-                    <li className={styles.silver}>Android Studio</li>
-                    <li className={styles.silver}>Unity</li>
-                    <li className={styles.silver}>Xamarin</li>
-
-                    <li className={styles.bronze}>C#</li>
-                    <li className={styles.bronze}>Lua</li>
-                    <li className={styles.bronze}>TypeScript</li>
-                    <li className={styles.bronze}>Java</li>
-                    <li className={styles.bronze}>Lisp</li>
-                    <li className={styles.bronze}>Prolog</li>
-                    <li className={styles.bronze}>R</li>
-                    <li className={styles.bronze}>Assembly</li>
-                    <li className={styles.bronze}>Node.js</li>
-                </ul>
+                <ColoredList items={skills} />
             </section>
             <section className={styles.section}>
                 <h2>Experience</h2>
