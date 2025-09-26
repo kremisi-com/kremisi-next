@@ -44,7 +44,7 @@ export default function ProjectsPage() {
     });
 
     return (
-        <main className="page-content-simple" style={{ marginTop: 70 }}>
+        <main className="page-content-simple">
             <ColoredTable items={items} images={images} links={links} />
         </main>
     );
