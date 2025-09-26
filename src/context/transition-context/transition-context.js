@@ -8,7 +8,6 @@ export function TransitionProvider({ children }) {
     const [isAnimating, setIsAnimating] = useState(false);
 
     function triggerAnimation() {
-        console.log("Animation triggered");
         setIsAnimating(true);
         setTimeout(() => setIsAnimating(false), 600); // durata animazione
     }

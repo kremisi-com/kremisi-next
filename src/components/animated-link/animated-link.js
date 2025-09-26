@@ -8,8 +8,6 @@ export default function AnimatedLink({ href, children, ...props }) {
     const path = usePathname();
 
     const handleClick = () => {
-        console.log("Current path:", path);
-        console.log("Link href:", href);
         if (path === href) return;
         triggerAnimation();
     };

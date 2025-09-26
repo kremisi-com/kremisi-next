@@ -32,8 +32,8 @@ export const metadata = {
         images: [
             {
                 url: "/og-image-square.jpg",
-                width: 1500,
-                height: 750,
+                width: 500,
+                height: 500,
                 alt: "Kremisi preview",
             },
         ],
