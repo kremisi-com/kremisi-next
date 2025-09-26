@@ -5,6 +5,7 @@ import Button from "@/components/button/button";
 import GitButton from "@/components/git-button/git-button";
 import Link from "next/link";
 import ColoredList from "@/components/colored-list/colored-list";
+import AnimatedLink from "@/components/animated-link/animated-link";
 
 export const metadata = {
     title: "About - Kremisi",
@@ -124,9 +125,9 @@ export default function AboutPage() {
                 />
             </section>
             <section className={`${styles.section} flex-center`}>
-                <Link href={"/contacts"}>
+                <AnimatedLink href={"/contacts"}>
                     <GitButton />
-                </Link>
+                </AnimatedLink>
             </section>
         </main>
     );

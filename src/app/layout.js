@@ -8,6 +8,7 @@ import { ThemeProvider } from "next-themes";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "react-hot-toast";
 import Scripts from "@/components/scripts/scripts";
+import { TransitionProvider } from "@/context/transition-context/transition-context";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -58,11 +59,16 @@ export default async function RootLayout({ children }) {
                     enableSystem
                     disableTransitionOnChange
                 >
-                    <Navbar />
-                    {children}
-                    <Footer />
-                    <Toaster position="bottom-center" reverseOrder={false} />
-                    <Scripts />
+                    <TransitionProvider>
+                        <Navbar />
+                        {children}
+                        <Footer />
+                        <Toaster
+                            position="bottom-center"
+                            reverseOrder={false}
+                        />
+                        <Scripts />
+                    </TransitionProvider>
                 </ThemeProvider>
             </body>
         </html>

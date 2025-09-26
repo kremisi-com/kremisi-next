@@ -6,6 +6,7 @@ import Button from "@/components/button/button";
 import Link from "next/link";
 import ThemeToggle from "./theme-toggler";
 import React from "react";
+import AnimatedLink from "@/components/animated-link/animated-link";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
@@ -18,7 +19,7 @@ export default function Navbar() {
                     <Button href="/about">About</Button>
                     <Button href="/projects">Projects</Button>
                 </div>
-                <Link href="/">
+                <AnimatedLink href="/">
                     <Image
                         src="/images/logo/logo-dark.png"
                         alt="Logo"
@@ -27,7 +28,7 @@ export default function Navbar() {
                         className={styles.logo}
                         priority={true}
                     />
-                </Link>
+                </AnimatedLink>
                 <div className={`${styles.buttons} ${styles.right}`}>
                     <Button href="/contacts">Contacts</Button>
                     <ThemeToggle styles={styles} />
@@ -42,7 +43,7 @@ export default function Navbar() {
                 <div className={`${styles.buttons} ${styles.themeToggle}`}>
                     <ThemeToggle styles={styles} />
                 </div>
-                <Link href="/" onClick={() => setMenuOpen(false)}>
+                <AnimatedLink href="/" onClick={() => setMenuOpen(false)}>
                     <Image
                         src="/images/logo/icona-dark.png"
                         alt="Logo"
@@ -51,7 +52,7 @@ export default function Navbar() {
                         className={styles.logo}
                         priority={true}
                     />
-                </Link>
+                </AnimatedLink>
                 <div
                     className={`${styles.buttons} ${styles.right}`}
                     onClick={() => setMenuOpen(!menuOpen)}
@@ -69,30 +70,36 @@ export default function Navbar() {
             >
                 <ul>
                     <li>
-                        <Link href="/" onClick={() => setMenuOpen(false)}>
+                        <AnimatedLink
+                            href="/"
+                            onClick={() => setMenuOpen(false)}
+                        >
                             Home
-                        </Link>
+                        </AnimatedLink>
                     </li>
                     <li>
-                        <Link
+                        <AnimatedLink
                             href="/projects"
                             onClick={() => setMenuOpen(false)}
                         >
                             Projects
-                        </Link>
+                        </AnimatedLink>
                     </li>
                     <li>
-                        <Link href="/about" onClick={() => setMenuOpen(false)}>
+                        <AnimatedLink
+                            href="/about"
+                            onClick={() => setMenuOpen(false)}
+                        >
                             About
-                        </Link>
+                        </AnimatedLink>
                     </li>
                     <li>
-                        <Link
+                        <AnimatedLink
                             href="/contacts"
                             onClick={() => setMenuOpen(false)}
                         >
                             Contacts
-                        </Link>
+                        </AnimatedLink>
                     </li>
                 </ul>
             </div>

@@ -5,6 +5,7 @@ import styles from "./slide.module.css";
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import React from "react";
+import AnimatedLink from "@/components/animated-link/animated-link";
 
 let n = 0;
 export default React.memo(function Slide({
@@ -23,7 +24,7 @@ export default React.memo(function Slide({
 
     return (
         <>
-            <Link href={data.link}>
+            <AnimatedLink href={data.link}>
                 <div
                     className={`${styles.ortho} ${styles.slide}`}
                     style={{
@@ -43,7 +44,7 @@ export default React.memo(function Slide({
                         onLoad={onImageLoad}
                     />
                 </div>
-            </Link>
+            </AnimatedLink>
         </>
     );
 });
