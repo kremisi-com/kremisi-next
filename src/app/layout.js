@@ -45,9 +45,6 @@ export const metadata = {
         description: "Expand your digital presence with Kremisi",
         images: ["/og-image.jpg"],
     },
-    icons: {
-        icon: "/favicon.ico", // per la favicon
-    },
 };
 
 export default async function RootLayout({ children }) {
