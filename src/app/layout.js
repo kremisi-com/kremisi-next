@@ -22,7 +22,7 @@ const geistMono = Geist_Mono({
 export const metadata = {
     title: "Kremisi - Web Design & Development",
     description: "Expand your digital presence with Kremisi",
-    metadataBase: new URL("https://kremisi.com"), // dominio base del sito
+    metadataBase: new URL("https://kremisi.com"),
     openGraph: {
         title: "Kremisi - Web Design & Development",
         description: "Expand your digital presence with Kremisi",
@@ -30,7 +30,7 @@ export const metadata = {
         siteName: "Kremisi",
         images: [
             {
-                url: "/og-image.jpg", // mettila in /public
+                url: "/og-image-square.jpg",
                 width: 1500,
                 height: 750,
                 alt: "Kremisi preview",
