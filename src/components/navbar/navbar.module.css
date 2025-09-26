@@ -93,7 +93,7 @@
     padding: 15px 0;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     z-index: 99;
-    transform: translateY(100%);
+    transform: translateY(100dvh);
     transition: transform 0.3s ease-in-out;
 
     overflow-y: auto; /* abilita scroll interno */
