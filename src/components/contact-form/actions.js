@@ -1,37 +1,6 @@
 "use server";
 
 export async function submitContact(prevState, formData) {
-    const rawFormData = Object.fromEntries(formData);
-    const recaptchaResponse = await fetch(
-        `https://recaptchaenterprise.googleapis.com/v1/projects/kremisi-projects/assessments?key=${String(
-            process.env.GOOGLE_API_KEY
-        )}`,
-        {
-            method: "POST",
-            body: JSON.stringify({
-                event: {
-                    token: rawFormData.recaptchaToken,
-                    expectedAction: "contact_form",
-                    siteKey: "6LfIhdUrAAAAAPaGq52hPAQeAfWLtHGVeb3M9mQc",
-                },
-            }),
-        }
-    );
-    const recaptchaData = await recaptchaResponse.json();
-    console.log("Recaptcha data", JSON.stringify(recaptchaData, null, 2));
-
-    if (
-        !recaptchaData?.riskAnalysis?.score ||
-        recaptchaData?.tokenProperties?.valid !== true
-    ) {
-        console.log("Recaptcha failed", JSON.stringify(recaptchaData, null, 2));
-        return {
-            success: false,
-            error: "Recaptcha failed.",
-            message: JSON.stringify(recaptchaData, null, 2),
-        };
-    }
-
     // Costruisci il payload con i valori del form
     // Estrai e normalizza i valori
     const getVal = (key) => (formData.get(key) ?? "").toString().trim();
@@ -44,6 +13,11 @@ export async function submitContact(prevState, formData) {
     const company = getVal("company");
     const email = getVal("email");
     const phone = getVal("phone");
+    const privacy = getVal("privacy") === "on";
+
+    if (!privacy) {
+        return { success: false, error: "You must accept the privacy policy." };
+    }
 
     // Validazioni
     if (!service) {
@@ -86,6 +60,37 @@ export async function submitContact(prevState, formData) {
         if (!phoneRe.test(phone)) {
             return { success: false, error: "Invalid phone number." };
         }
+    }
+
+    const rawFormData = Object.fromEntries(formData);
+    const recaptchaResponse = await fetch(
+        `https://recaptchaenterprise.googleapis.com/v1/projects/kremisi-projects/assessments?key=${String(
+            process.env.GOOGLE_API_KEY
+        )}`,
+        {
+            method: "POST",
+            body: JSON.stringify({
+                event: {
+                    token: rawFormData.recaptchaToken,
+                    expectedAction: "contact_form",
+                    siteKey: "6LfIhdUrAAAAAPaGq52hPAQeAfWLtHGVeb3M9mQc",
+                },
+            }),
+        }
+    );
+    const recaptchaData = await recaptchaResponse.json();
+    console.log("Recaptcha data", JSON.stringify(recaptchaData, null, 2));
+
+    if (
+        !recaptchaData?.riskAnalysis?.score ||
+        recaptchaData?.tokenProperties?.valid !== true
+    ) {
+        console.log("Recaptcha failed", JSON.stringify(recaptchaData, null, 2));
+        return {
+            success: false,
+            error: "Recaptcha failed.",
+            message: JSON.stringify(recaptchaData, null, 2),
+        };
     }
 
     // Se tutto ok, costruisci il payload (stringhe)

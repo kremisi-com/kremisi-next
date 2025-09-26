@@ -7,6 +7,7 @@ import CursorTrailCanvas from "@/components/cursor-trail-canvas";
 import { ThemeProvider } from "next-themes";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "react-hot-toast";
+import Script from "next/script";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -39,6 +40,10 @@ export default async function RootLayout({ children }) {
                     <Footer />
                     <Toaster position="bottom-center" reverseOrder={false} />
                 </ThemeProvider>
+                <Script
+                    src="https://embeds.iubenda.com/widgets/03bd57a9-6e05-46b7-878a-e3bbf4c2ca7f.js"
+                    strategy="beforeInteractive"
+                />
             </body>
         </html>
     );

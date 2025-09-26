@@ -2,11 +2,12 @@
 
 import RadioOptions from "@/components/radio-options/radio-options";
 import styles from "./contact-form.module.css";
-import { submitContact } from "@/lib/actions";
+import { submitContact } from "@/components/contact-form/actions";
 import { useActionState, useEffect, useRef } from "react";
 import GitButton from "../git-button/git-button";
 import toast from "react-hot-toast";
 import { RecaptchaWrapper } from "./recaptcha-wrapper";
+import PrivacyLinks from "./privacy-links";
 
 export default function ContactForm({}) {
     const [state, formAction, pending] = useActionState(submitContact, {
@@ -53,9 +54,9 @@ export default function ContactForm({}) {
                     <RadioOptions
                         ref={budgetRef}
                         options={[
-                            { value: "low", label: "€3-8k" },
-                            { value: "medium", label: "€8-12k" },
-                            { value: "high", label: "€12-16k" },
+                            { value: "low", label: "€2-6k" },
+                            { value: "medium", label: "€6-10k" },
+                            { value: "high", label: "€10-16k" },
                             { value: "very-high", label: "€16k+" },
                         ]}
                         name="budget"
@@ -100,6 +101,31 @@ export default function ContactForm({}) {
                 </div>
                 <div className="col">
                     <input type="tel" placeholder="Phone" name="phone" />
+                </div>
+            </div>
+            <div className="row">
+                <div className="col">
+                    <label
+                        className="privacy-consent"
+                        style={{ fontSize: "14px" }}
+                    >
+                        <input
+                            type="checkbox"
+                            required
+                            style={{ marginRight: "8px" }}
+                        />
+                        I have read and accept the{" "}
+                        <a
+                            href="https://www.iubenda.com/privacy-policy/87027585"
+                            className="iubenda-white iubenda-noiframe iubenda-embed"
+                            title="Privacy Policy"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                        >
+                            Privacy Policy
+                        </a>
+                        .
+                    </label>
                 </div>
             </div>
             <div className="row">
