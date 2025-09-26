@@ -7,6 +7,7 @@ export default function Button({
     className = "",
     animation = true,
     href = "",
+    target = "_self",
 }) {
     const button = animation ? (
         <button className={`${styles.button} ${className}`} onClick={onClick}>
@@ -21,7 +22,12 @@ export default function Button({
         </button>
     );
     return href !== "" ? (
-        <Link href={href} className={styles.link} onClick={onClick}>
+        <Link
+            href={href}
+            className={styles.link}
+            onClick={onClick}
+            target={target}
+        >
             {button}
         </Link>
     ) : (

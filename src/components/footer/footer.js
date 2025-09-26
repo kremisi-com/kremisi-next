@@ -23,6 +23,7 @@ export default function Footer() {
                     <Button
                         className={styles.whatsappButton}
                         href="https://wa.me/393517444749?text=Can%20I%20have%20more%20informations%3F"
+                        target="_blank"
                     >
                         <MessageCircleMore />
                     </Button>
