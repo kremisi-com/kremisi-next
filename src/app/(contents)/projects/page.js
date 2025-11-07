@@ -6,7 +6,7 @@ import { useMemo } from "react";
 export const metadata = {
     title: "Projects - Kremisi",
     description:
-        "Explore Kremisi's portfolio of web and app development projects.",
+        "Explore our portfolio of web applications and platforms, designed for performance, usability, and cutting-edge digital experiences.",
 };
 
 export default function ProjectsPage() {

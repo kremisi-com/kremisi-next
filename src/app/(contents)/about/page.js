@@ -9,7 +9,8 @@ import AnimatedLink from "@/components/animated-link/animated-link";
 
 export const metadata = {
     title: "About - Kremisi",
-    description: "Learn more about Kremisi and the services offered.",
+    description:
+        "A forward-thinking software company focused on building scalable, high-quality web solutions with innovation and precision.",
 };
 
 export default function AboutPage() {

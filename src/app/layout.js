@@ -22,11 +22,13 @@ const geistMono = Geist_Mono({
 
 export const metadata = {
     title: "Kremisi - Web Design & Development",
-    description: "Expand your digital presence with Kremisi",
+    description:
+        "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
     metadataBase: new URL("https://kremisi.com"),
     openGraph: {
         title: "Kremisi - Web Design & Development",
-        description: "Expand your digital presence with Kremisi",
+        description:
+            "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
         url: "https://kremisi.com",
         siteName: "Kremisi",
         images: [
@@ -43,7 +45,8 @@ export const metadata = {
     twitter: {
         card: "summary_large_image",
         title: "Kremisi - Web Design & Development",
-        description: "Expand your digital presence with Kremisi",
+        description:
+            "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
         images: ["/og-image.jpg"],
     },
 };
