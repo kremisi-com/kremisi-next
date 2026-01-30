@@ -64,18 +64,18 @@ export default async function RootLayout({ children }) {
                     disableTransitionOnChange
                 >
                     <TransitionProvider>
-                        <Analytics>
-                            <Navbar />
-                            {children}
-                            <Footer />
-                            <Toaster
-                                position="bottom-center"
-                                reverseOrder={false}
-                            />
-                            <Scripts />
-                        </Analytics>
+                        <Navbar />
+                        {children}
+                        <Footer />
+                        <Toaster
+                            position="bottom-center"
+                            reverseOrder={false}
+                        />
+                        <Scripts />
                     </TransitionProvider>
                 </ThemeProvider>
+                <Analytics />
+                <SpeedInsights />
             </body>
         </html>
     );
