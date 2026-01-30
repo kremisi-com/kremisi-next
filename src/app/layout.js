@@ -9,6 +9,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "react-hot-toast";
 import Scripts from "@/components/scripts/scripts";
 import { TransitionProvider } from "@/context/transition-context/transition-context";
+import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
     variable: "--font-geist-sans",
@@ -63,14 +64,16 @@ export default async function RootLayout({ children }) {
                     disableTransitionOnChange
                 >
                     <TransitionProvider>
-                        <Navbar />
-                        {children}
-                        <Footer />
-                        <Toaster
-                            position="bottom-center"
-                            reverseOrder={false}
-                        />
-                        <Scripts />
+                        <Analytics>
+                            <Navbar />
+                            {children}
+                            <Footer />
+                            <Toaster
+                                position="bottom-center"
+                                reverseOrder={false}
+                            />
+                            <Scripts />
+                        </Analytics>
                     </TransitionProvider>
                 </ThemeProvider>
             </body>
