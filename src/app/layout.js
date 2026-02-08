@@ -12,71 +12,70 @@ import { TransitionProvider } from "@/context/transition-context/transition-cont
 import { Analytics } from "@vercel/analytics/next";
 
 const geistSans = Geist({
-    variable: "--font-geist-sans",
-    subsets: ["latin"],
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
 });
 
 const geistMono = Geist_Mono({
-    variable: "--font-geist-mono",
-    subsets: ["latin"],
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
 });
 
 export const metadata = {
+  title: "Kremisi - Web Design & Development",
+  description:
+    "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
+  metadataBase: new URL("https://kremisi.com"),
+  openGraph: {
     title: "Kremisi - Web Design & Development",
     description:
-        "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
-    metadataBase: new URL("https://kremisi.com"),
-    openGraph: {
-        title: "Kremisi - Web Design & Development",
-        description:
-            "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
-        url: "https://kremisi.com",
-        siteName: "Kremisi",
-        images: [
-            {
-                url: "/og-image-square.jpg",
-                width: 500,
-                height: 500,
-                alt: "Kremisi preview",
-            },
-        ],
-        locale: "it_IT",
-        type: "website",
-    },
-    twitter: {
-        card: "summary_large_image",
-        title: "Kremisi - Web Design & Development",
-        description:
-            "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
-        images: ["/og-image.jpg"],
-    },
+      "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
+    url: "https://kremisi.com",
+    siteName: "Kremisi",
+    images: [
+      {
+        url: "/og-image-square.jpg",
+        width: 500,
+        height: 500,
+        alt: "Kremisi preview",
+      },
+    ],
+    locale: "it_IT",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Kremisi - Web Design & Development",
+    description:
+      "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
+    images: ["/og-image.jpg"],
+  },
 };
 
-export default async function RootLayout({ children }) {
-    return (
-        <html suppressHydrationWarning>
-            <body className={`${geistSans.variable} ${geistMono.variable}`}>
-                <CursorTrailCanvas />
-                <ThemeProvider
-                    attribute="class"
-                    defaultTheme="dark"
-                    enableSystem
-                    disableTransitionOnChange
-                >
-                    <TransitionProvider>
-                        <Analytics>
-                            <Navbar />
-                            {children}
-                            <Footer />
-                            <Toaster
-                                position="bottom-center"
-                                reverseOrder={false}
-                            />
-                            <Scripts />
-                        </Analytics>
-                    </TransitionProvider>
-                </ThemeProvider>
-            </body>
-        </html>
-    );
+export default function RootLayout({ children }) {
+  return (
+    <html suppressHydrationWarning>
+      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+        <CursorTrailCanvas />
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <TransitionProvider>
+            <Navbar />
+            {children}
+            <Footer />
+            <Toaster position="bottom-center" reverseOrder={false} />
+            <Scripts />
+          </TransitionProvider>
+        </ThemeProvider>
+
+        {/* questi NON wrappano nulla */}
+        <Analytics />
+        <SpeedInsights />
+      </body>
+    </html>
+  );
 }
