@@ -72,7 +72,6 @@ export default function RootLayout({ children }) {
           </TransitionProvider>
         </ThemeProvider>
 
-        {/* questi NON wrappano nulla */}
         <Analytics />
         <SpeedInsights />
       </body>
