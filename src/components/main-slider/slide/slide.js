@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import React from "react";
 import AnimatedLink from "@/components/animated-link/animated-link";
+import { trackSelectItem } from "@/lib/analytics";
 
 let n = 0;
 export default React.memo(function Slide({
@@ -24,7 +25,10 @@ export default React.memo(function Slide({
 
     return (
         <>
-            <AnimatedLink href={data.link}>
+            <AnimatedLink
+                href={data.link}
+                onClick={() => trackSelectItem(data.title, data.id)}
+            >
                 <div
                     className={`${styles.ortho} ${styles.slide}`}
                     style={{

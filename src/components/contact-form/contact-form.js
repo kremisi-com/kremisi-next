@@ -9,6 +9,11 @@ import toast from "react-hot-toast";
 import { RecaptchaWrapper } from "./recaptcha-wrapper";
 import PrivacyLinks from "./privacy-links";
 import Script from "next/script";
+import {
+    trackViewContactForm,
+    trackContactFormStart,
+    trackLead,
+} from "@/lib/analytics";
 
 export default function ContactForm({}) {
     const [state, formAction, pending] = useActionState(submitContact, {
@@ -28,8 +33,17 @@ export default function ContactForm({}) {
     const deliveryRef = useRef();
 
     useEffect(() => {
+        trackViewContactForm();
+    }, []);
+
+    useEffect(() => {
         if (state?.success) {
             toast.success("Message sent successfully!");
+            trackLead({
+                service: serviceRef.current?.getValue?.() || "unknown",
+                budget: budgetRef.current?.getValue?.() || "unknown",
+                delivery: deliveryRef.current?.getValue?.() || "unknown",
+            });
             // reset radio options
             serviceRef.current.reset();
             budgetRef.current.reset();
@@ -136,6 +150,7 @@ export default function ContactForm({}) {
                         placeholder="Email*"
                         name="email"
                         value={email}
+                        onFocus={() => trackContactFormStart()}
                         onChange={(e) => setEmail(e.target.value)}
                         required
                     />

@@ -8,7 +8,8 @@ export default function AnimatedLink({ href, children, ...props }) {
         useTransitionContext();
     const path = usePathname();
 
-    const handleClick = () => {
+    const handleClick = (e) => {
+        if (props.onClick) props.onClick(e);
         if (path === href) return;
         openLoader();
     };

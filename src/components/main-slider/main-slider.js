@@ -12,6 +12,7 @@ import Slide from "./slide/slide";
 import Loader from "@/components/loader/loader";
 import throttle from "lodash/throttle";
 import { useTransition } from "react";
+import { trackViewItemList } from "@/lib/analytics";
 
 export default function MainSlider({ projectsData }) {
     projectsData = useMemo(
@@ -48,6 +49,10 @@ export default function MainSlider({ projectsData }) {
     let [actualChunk, setActualChunk] = useState(
         findActualChunk(animationTargetScroll)
     );
+    useEffect(() => {
+        trackViewItemList("Project Slider");
+    }, []);
+
     useEffect(() => {
         if (!animationEnded) return;
         const newChunk = findActualChunk(scrollPosition);

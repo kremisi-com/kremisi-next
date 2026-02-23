@@ -33,8 +33,8 @@ export default function Scripts() {
                 }}
             /> */}
 
-            {/* Google Analytics - Bloccato da Iubenda finché non c’è consenso */}
-            <Script
+            {/* Google Analytics - Gestito ora tramite @next/third-parties/google in layout.js */}
+            {/* <Script
                 id="ga-src"
                 type="text/plain"
                 data-type="application/javascript"
@@ -55,7 +55,7 @@ export default function Scripts() {
                         gtag('js', new Date());
                         gtag('config', 'G-TK345YVSSJ');
                     `}
-            </Script>
+            </Script> */}
         </>
     );
 }
