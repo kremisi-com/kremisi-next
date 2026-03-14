@@ -7,7 +7,7 @@ function getProjectsArray() {
             ...v,
             id: key,
             color: v.color || "#FFFFFF",
-            images: v.images ? v.images : ["main.png"],
+            images: v.images ? v.images : ["main.webp"],
             link: `/projects/${key}`,
         }));
 }

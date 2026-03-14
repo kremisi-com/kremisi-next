@@ -1,0 +1,4 @@
+interface:
+  display_name: "Media Optimizer"
+  short_description: "Optimize website media assets"
+  default_prompt: "Use $media-optimizer to compress, convert, and resize website media assets for the web."
