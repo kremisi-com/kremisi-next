@@ -102,3 +102,18 @@
     /* to move the element behind it's parent: */
     z-index: -1;
 }
+
+/* Safari/macOS fallback: no animated conic fill, keep a clean solid chip */
+.mac .rainbowContainer {
+    border: 2px solid var(--primary);
+    border-radius: 22px;
+    padding: 0;
+}
+
+.mac .rainbowContent {
+    background-color: var(--white);
+    color: var(--black);
+    border-radius: 22px;
+    padding: 8px 16px;
+    transition: background-color 0.3s, color 0.3s;
+}

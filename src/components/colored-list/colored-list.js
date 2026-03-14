@@ -8,11 +8,11 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function ColoredList({ items }) {
   const listRef = useRef(null);
-  const [isNonMac, setIsNonMac] = useState(false);
+  const [isMac, setIsMac] = useState(null);
 
   useEffect(() => {
     if (typeof navigator === "undefined") return;
-    setIsNonMac(!navigator.userAgent.includes("Mac OS X"));
+    setIsMac(navigator.userAgent.includes("Mac OS X"));
   }, []);
 
   useEffect(() => {
@@ -43,7 +43,12 @@ export default function ColoredList({ items }) {
   }, []);
 
   return (
-    <ul ref={listRef} className={`${styles.list} ${isNonMac ? styles.notMac : ""}`}>
+    <ul
+      ref={listRef}
+      className={`${styles.list} ${
+        isMac === null ? "" : isMac ? styles.mac : styles.notMac
+      }`}
+    >
       {items.map((item, index) =>
         item.level === "rainbow" ? (
           <li key={index} className={styles.rainbowContainer}>

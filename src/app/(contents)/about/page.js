@@ -15,42 +15,41 @@ export const metadata = {
 
 export default function AboutPage() {
     const skills = [
-        { name: "HTML", level: "rainbow" },
-        { name: "CSS", level: "rainbow" },
-        { name: "JavaScript", level: "rainbow" },
-        { name: "React Native", level: "rainbow" },
+        { name: "Next.js", level: "rainbow" },
+        { name: "TypeScript", level: "rainbow" },
         { name: "React.js", level: "rainbow" },
-        { name: "jQuery", level: "rainbow" },
-        { name: "PHP", level: "rainbow" },
-        { name: "MySQL", level: "rainbow" },
-        { name: "WordPress", level: "rainbow" },
+        { name: "Drizzle ORM", level: "rainbow" },
+        { name: "Zod", level: "rainbow" },
+        { name: "Zustand", level: "rainbow" },
+        { name: "Web Development", level: "rainbow" },
+        { name: "SEO Optimization", level: "rainbow" },
+
+        { name: "Data Analysis", level: "silver" },
+        { name: "Business Intelligence", level: "silver" },
+        { name: "Forecasting", level: "silver" },
+        { name: "Recommender Systems", level: "silver" },
+        { name: "Predictive Analytics", level: "silver" },
+        { name: "Time Series Analysis", level: "silver" },
+        { name: "Machine Learning", level: "silver" },
+        { name: "Statistical Modeling", level: "silver" },
 
         { name: "Python", level: "silver" },
-        { name: "Next.js", level: "silver" },
-        { name: "C", level: "silver" },
-        { name: "Angular", level: "silver" },
-        { name: "Unity", level: "silver" },
-        { name: "Xamarin", level: "silver" },
+        { name: "SQL", level: "silver" },
+        { name: "Data Visualization", level: "silver" },
+        { name: "KPI Dashboards", level: "silver" },
+        { name: "ETL Pipelines", level: "silver" },
+        { name: "A/B Testing", level: "silver" },
+        { name: "Product Analytics", level: "silver" },
+        { name: "Data-Driven Strategy", level: "silver" },
 
-        { name: "ACF Fields", level: "silver" },
-        { name: "RESTful APIs", level: "silver" },
-        { name: "UI / UX Design", level: "silver" },
-        { name: "Responsive Design", level: "silver" },
-        { name: "SEO Practices", level: "silver" },
-        { name: "GIT", level: "silver" },
-        { name: "Performance", level: "silver" },
-        { name: "Cross-Browser Compatibility", level: "silver" },
-
-        { name: "Android Studio", level: "bronze" },
-        { name: "C#", level: "bronze" },
-        { name: "Lua", level: "bronze" },
-        { name: "TypeScript", level: "bronze" },
-        { name: "Java", level: "bronze" },
-        { name: "Lisp", level: "bronze" },
-        { name: "Prolog", level: "bronze" },
-        { name: "R", level: "bronze" },
-        { name: "Assembly", level: "bronze" },
         { name: "Node.js", level: "bronze" },
+        { name: "RESTful APIs", level: "bronze" },
+        { name: "PostgreSQL", level: "bronze" },
+        { name: "UI / UX Design", level: "bronze" },
+        { name: "Responsive Design", level: "bronze" },
+        { name: "Web Performance", level: "bronze" },
+        { name: "Technical SEO", level: "bronze" },
+        { name: "GIT", level: "bronze" },
     ];
 
     return (
@@ -86,42 +85,44 @@ export default function AboutPage() {
                 <ColoredList items={skills} />
             </section>
             <section className={styles.section}>
-                <h2>Experience</h2>
+                <h2>Meet The Team</h2>
                 <ColoredTable
                     items={[
                         [
-                            "Kremisi",
-                            "Founder & Developer",
-                            "Apr. 2022 - Present",
-                        ],
-                        ["Makuda", "Web Developer", "Jan. 2021 - Dec. 2024"],
-                        ["Fleder", "App Developer", "Oct. 2021 - Jan. 2023"],
-                        [
-                            "Il-Cubo",
-                            "Web & App Developer",
-                            "Jan. 2019 - Jan. 2021",
-                        ],
-                    ]}
-                />
-            </section>
-            <section className={styles.section}>
-                <h2>Recognitions</h2>
-                <ColoredTable
-                    items={[
-                        [
-                            "First Place - National RoboCup Competition",
-                            "<a target='_blank' href='https://www.varesenews.it/2018/04/facchinetti-vince-la-romecup-un-ballo-uomo-robot/711029/'>Read the Article</a>",
-                            "April 2018, Rome, Italy",
+                            "Andrea Napolitano",
+                            "Founder",
+                            "Strategia Digitale - Business Development",
                         ],
                         [
-                            "Second Place - Microsoft Hackathon",
-                            "<a target='_blank' href='https://startupitalia.eu/education/scuola/tutti-i-vincitori-dellhackathon-microsoft-connected-ability/#:~:text=Pi%C3%B9%20visionaria%20e,non%20pu%C3%B2%20vederle.'>Read the Article</a>",
-                            "Dec. 2017, Milan, Italy",
+                            "Alessandro Pignanelli",
+                            "Co-Founder",
+                            "Operations - Project Coordination",
                         ],
-                    ]}
-                    images={[
-                        "/images/recognitions/aurat.png",
-                        "/images/recognitions/microsoft.png",
+                        [
+                            "Giovanni Caiazzo",
+                            "Chief Technology Officer",
+                            "Software Architecture - Engineering Leadership",
+                        ],
+                        [
+                            "Alessia Napolitano",
+                            "Chief Product Officer",
+                            "Product Strategy, UX - Roadmap",
+                        ],
+                        [
+                            "Antonio Caiazzo",
+                            "Director Of Infrastructure",
+                            "Cloud Infrastructure, DevOps - Security",
+                        ],
+                        [
+                            "Cristian Stortoni",
+                            "Chief Sales Officer",
+                            "Sales Strategy, Partnerships - Growth",
+                        ],
+                        [
+                            "Muhammad Umer",
+                            "Chief Data Officer",
+                            "Data Strategy, Analytics - AI/ML",
+                        ],
                     ]}
                 />
             </section>
