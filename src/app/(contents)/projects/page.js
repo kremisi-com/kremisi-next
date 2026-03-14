@@ -4,9 +4,26 @@ import { getProjectsArray } from "@/lib/projects";
 import { useMemo } from "react";
 
 export const metadata = {
-    title: "Projects - Kremisi",
+    title: "Projects",
     description:
-        "Explore our portfolio of web applications and platforms, designed for performance, usability, and cutting-edge digital experiences.",
+        "Explore Kremisi projects in web design and web development, including websites, apps, and digital platforms built for performance.",
+    alternates: {
+        canonical: "/projects",
+    },
+    openGraph: {
+        title: "Projects",
+        description:
+            "Explore Kremisi projects in web design and web development, including websites, apps, and digital platforms built for performance.",
+        url: "/projects",
+        images: ["/og-image.jpg"],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Projects",
+        description:
+            "Explore Kremisi projects in web design and web development, including websites, apps, and digital platforms built for performance.",
+        images: ["/og-image.jpg"],
+    },
 };
 
 export default function ProjectsPage() {

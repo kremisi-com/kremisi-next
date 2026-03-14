@@ -1,8 +1,88 @@
 .section {
-    margin-bottom: 100px;
+    margin-bottom: 90px;
     width: 100%;
     display: flex;
     flex-direction: column;
+}
+
+.hero {
+    width: 100%;
+    margin-bottom: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding-top: 2vh;
+}
+
+.heroContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 1000px;
+}
+
+.kicker {
+    text-transform: uppercase;
+    letter-spacing: 0.3rem;
+    font-size: 1.1rem;
+    color: var(--primary);
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+.pageTitle {
+    margin: 0;
+    max-width: 16ch;
+    line-height: 0.95;
+    letter-spacing: -0.08rem;
+    text-wrap: balance;
+    font-size: clamp(4rem, 8vw, 7.5rem);
+    animation: headingIn 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 320ms;
+    will-change: transform, opacity;
+}
+
+.accent {
+    color: var(--primary);
+    font-style: italic;
+    font-weight: inherit;
+}
+
+.subtitle {
+    margin-top: 26px;
+    font-size: clamp(1.2rem, 2vw, 1.6rem);
+    line-height: 1.6;
+    color: var(--foreground);
+    max-width: 56ch;
+    text-wrap: balance;
+    font-weight: 400;
+}
+
+@keyframes headingIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pageTitle {
+        animation: none;
+    }
+}
+
+.subtitleHighlight {
+    color: var(--foreground);
+    font-weight: 600;
+}
+
+.nowrap {
+    white-space: nowrap;
 }
 
 .text {
@@ -23,4 +103,29 @@
 .highlight {
     color: var(--foreground);
     font-weight: bold;
+}
+
+@media (max-width: 768px) {
+    .hero {
+        margin-bottom: 26px;
+        padding-top: 0;
+    }
+
+    .kicker {
+        font-size: 1rem;
+        letter-spacing: 0.2rem;
+        margin-bottom: 16px;
+    }
+
+    .pageTitle {
+        max-width: 100%;
+        line-height: 1;
+        font-size: clamp(3.5rem, 12vw, 4.5rem);
+    }
+
+    .subtitle {
+        margin-top: 18px;
+        font-size: 1.2rem;
+        line-height: 1.5;
+    }
 }

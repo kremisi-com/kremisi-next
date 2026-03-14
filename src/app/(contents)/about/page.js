@@ -1,16 +1,31 @@
 import RevelatingText from "@/components/revelating-text/revelating-text";
 import styles from "./about.module.css";
 import ColoredTable from "@/components/colored-table/colored-table";
-import Button from "@/components/button/button";
 import GitButton from "@/components/git-button/git-button";
-import Link from "next/link";
 import ColoredList from "@/components/colored-list/colored-list";
 import AnimatedLink from "@/components/animated-link/animated-link";
 
 export const metadata = {
-    title: "About - Kremisi",
+    title: "About",
     description:
-        "A forward-thinking software company focused on building scalable, high-quality web solutions with innovation and precision.",
+        "Learn more about Kremisi, our team, and our approach to web design, web development, and digital product delivery.",
+    alternates: {
+        canonical: "/about",
+    },
+    openGraph: {
+        title: "About",
+        description:
+            "Learn more about Kremisi, our team, and our approach to web design, web development, and digital product delivery.",
+        url: "/about",
+        images: ["/og-image.jpg"],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "About",
+        description:
+            "Learn more about Kremisi, our team, and our approach to web design, web development, and digital product delivery.",
+        images: ["/og-image.jpg"],
+    },
 };
 
 export default function AboutPage() {
@@ -54,20 +69,39 @@ export default function AboutPage() {
 
     return (
         <main className="page-content-simple">
+            <section className={styles.hero}>
+                <div className={styles.heroContent}>
+                    <p className={styles.kicker}>About Kremisi</p>
+                    <h1 className={styles.pageTitle}>
+                        We Build{" "}
+                        <span className={styles.accent}>Limitless</span> Digital
+                        Products
+                    </h1>
+                    <p className={styles.subtitle}>
+                        <span className={styles.subtitleHighlight}>
+                            Kremisi
+                        </span>{" "}
+                        is a software company based in Italy with{" "}
+                        <span
+                            className={`${styles.subtitleHighlight} ${styles.nowrap}`}
+                        >
+                            8+ years
+                        </span>{" "}
+                        of experience in web and app development.
+                    </p>
+                </div>
+            </section>
             <section className={styles.section}>
                 <RevelatingText>
-                    <span className={"highlight"}>Kremisi</span> is a software
-                    company based in Italy with{" "}
-                    <span className={"highlight"}>8+ years</span> of experience
-                    in web and app development.
+                    From concept to launch, we combine{" "}
+                    <span className={"highlight"}>strategy</span>,{" "}
+                    <span className={"highlight"}>design</span>, and{" "}
+                    <span className={"highlight"}>development</span> for
+                    ambitious brands.
                     <br />
                     <br />
-                    We build digital products that combine web design,
-                    development, and strategy to help businesses grow online.
-                    <br />
-                    <br />We create engaging and functional digital
-                    experiences, working on both{" "}
-                    <span className={"highlight"}>frontend</span> and{" "}
+                    We create engaging and functional digital experiences, working
+                    on both <span className={"highlight"}>frontend</span> and{" "}
                     <span className={"highlight"}>backend</span>, with a strong
                     focus on aesthetics and usability.
                     <br />

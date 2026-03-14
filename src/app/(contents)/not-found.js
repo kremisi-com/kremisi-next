@@ -1,3 +1,11 @@
+export const metadata = {
+    title: "Not Found",
+    robots: {
+        index: false,
+        follow: false,
+    },
+};
+
 export default function NotFound() {
     return (
         <main className="page-content">

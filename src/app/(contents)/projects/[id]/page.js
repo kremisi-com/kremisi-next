@@ -3,8 +3,20 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import style from "./page.module.css";
 import GitButton from "@/components/git-button/git-button";
-import Link from "next/link";
 import AnimatedLink from "@/components/animated-link/animated-link";
+
+function stripHtml(text = "") {
+    return text.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
+}
+
+function getProjectMetaDescription(projectData) {
+    const fallback =
+        "Explore this web design and web development project by Kremisi.";
+    const cleaned = stripHtml(projectData?.description || "");
+    if (!cleaned) return fallback;
+    if (cleaned.length <= 160) return cleaned;
+    return `${cleaned.slice(0, 157).trimEnd()}...`;
+}
 
 export async function generateStaticParams() {
     let projects = Object.keys((await import("@/lib/projects.json")).default);
@@ -14,6 +26,60 @@ export async function generateStaticParams() {
     return projects.map((id) => ({
         id,
     }));
+}
+
+export async function generateMetadata({ params }) {
+    params = await params;
+    const id = params.id;
+    const projectData = getProjectData(id);
+
+    if (!projectData || projectData.disabled) {
+        return {
+            title: "Project",
+            description:
+                "Explore our web design and web development projects.",
+            robots: {
+                index: false,
+                follow: false,
+            },
+        };
+    }
+
+    const projectTitle = projectData.title || "Project";
+    const subtitle = projectData.subtitle ? ` - ${projectData.subtitle}` : "";
+    const year = projectData.year ? ` (${projectData.year})` : "";
+    const title = `${projectTitle}${subtitle}${year}`;
+    const description = getProjectMetaDescription(projectData);
+    const canonical = `/projects/${id}`;
+    const image = projectData.headerImage
+        ? `/projects/${id}/${projectData.headerImage}`
+        : "/og-image.jpg";
+
+    return {
+        title,
+        description,
+        alternates: {
+            canonical,
+        },
+        openGraph: {
+            title,
+            description,
+            url: canonical,
+            type: "article",
+            images: [
+                {
+                    url: image,
+                    alt: `${projectTitle} project cover`,
+                },
+            ],
+        },
+        twitter: {
+            card: "summary_large_image",
+            title,
+            description,
+            images: [image],
+        },
+    };
 }
 
 export default async function ProjectPage({ params }) {

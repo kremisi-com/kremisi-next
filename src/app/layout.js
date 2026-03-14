@@ -23,21 +23,25 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Kremisi - Web Design & Development",
+  title: {
+    default: "Web Design & Development Agency in Italy",
+    template: "%s | Kremisi",
+  },
   description:
-    "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
+    "Kremisi is an Italy-based web design and web development agency building fast, scalable websites and digital products for growing businesses.",
   metadataBase: new URL("https://kremisi.com"),
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
-    title: "Kremisi - Web Design & Development",
+    title: "Web Design & Development Agency in Italy",
     description:
-      "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
-    url: "https://kremisi.com",
+      "Kremisi is an Italy-based web design and web development agency building fast, scalable websites and digital products for growing businesses.",
+    url: "/",
     siteName: "Kremisi",
     images: [
       {
-        url: "/og-image-square.jpg",
-        width: 500,
-        height: 500,
+        url: "/og-image.jpg",
         alt: "Kremisi preview",
       },
     ],
@@ -46,9 +50,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Kremisi - Web Design & Development",
+    title: "Web Design & Development Agency in Italy",
     description:
-      "We create innovative digital solutions that blend creativity and technology to deliver modern, high-performing web experiences.",
+      "Kremisi is an Italy-based web design and web development agency building fast, scalable websites and digital products for growing businesses.",
     images: ["/og-image.jpg"],
   },
 };

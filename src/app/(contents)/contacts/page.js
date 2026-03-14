@@ -1,9 +1,26 @@
 import ContactForm from "@/components/contact-form/contact-form";
 
 export const metadata = {
-    title: "Contacts - Kremisi",
+    title: "Contact",
     description:
-        "Contact us to discuss your project or request a custom solution. We turn your ideas into powerful, efficient digital products.",
+        "Contact Kremisi to discuss your web design or web development project and get a tailored proposal for your business goals.",
+    alternates: {
+        canonical: "/contacts",
+    },
+    openGraph: {
+        title: "Contact",
+        description:
+            "Contact Kremisi to discuss your web design or web development project and get a tailored proposal for your business goals.",
+        url: "/contacts",
+        images: ["/og-image.jpg"],
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "Contact",
+        description:
+            "Contact Kremisi to discuss your web design or web development project and get a tailored proposal for your business goals.",
+        images: ["/og-image.jpg"],
+    },
 };
 
 export default function ContactsPage() {
