@@ -57,16 +57,16 @@ export default function AboutPage() {
         <main className="page-content-simple">
             <section className={styles.section}>
                 <RevelatingText>
-                    My name is Andrea and I am a web developer based in Italy
-                    with <span className={"highlight"}>8+ years</span> of
-                    experience in web and app development.
+                    <span className={"highlight"}>Kremisi</span> is a software
+                    company based in Italy with{" "}
+                    <span className={"highlight"}>8+ years</span> of experience
+                    in web and app development.
                     <br />
                     <br />
-                    <span className={"highlight"}>Kremisi</span> is my personal
-                    project, born from my passion for web design and
-                    programming.
+                    We build digital products that combine web design,
+                    development, and strategy to help businesses grow online.
                     <br />
-                    <br />I love creating engaging and functional digital
+                    <br />We create engaging and functional digital
                     experiences, working on both{" "}
                     <span className={"highlight"}>frontend</span> and{" "}
                     <span className={"highlight"}>backend</span>, with a strong

@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import styles from "./colored-list.module.css";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -8,11 +8,15 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function ColoredList({ items }) {
   const listRef = useRef(null);
-  const isMac =
-    typeof navigator !== "undefined" &&
-    navigator.userAgent.includes("Mac OS X");
+  const [isNonMac, setIsNonMac] = useState(false);
 
   useEffect(() => {
+    if (typeof navigator === "undefined") return;
+    setIsNonMac(!navigator.userAgent.includes("Mac OS X"));
+  }, []);
+
+  useEffect(() => {
+    if (!listRef.current) return;
     const elements = listRef.current.querySelectorAll("li");
 
     gsap.fromTo(
@@ -39,10 +43,7 @@ export default function ColoredList({ items }) {
   }, []);
 
   return (
-    <ul
-      ref={listRef}
-      className={`${styles.list} ${isMac ? styles.notMac : ""}`}
-    >
+    <ul ref={listRef} className={`${styles.list} ${isNonMac ? styles.notMac : ""}`}>
       {items.map((item, index) =>
         item.level === "rainbow" ? (
           <li key={index} className={styles.rainbowContainer}>
