@@ -200,7 +200,8 @@ export default async function ProjectPage({ params }) {
             </div>
             <div className={style.nextProject}>
                 <h4>Next Project</h4>
-                <h1
+                <h2
+                    className={style.nextProjectTitle}
                     dangerouslySetInnerHTML={{
                         __html: projectData.nextProject?.slogan,
                     }}

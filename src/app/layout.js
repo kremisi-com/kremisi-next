@@ -22,6 +22,23 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: "Kremisi",
+  url: "https://kremisi.com",
+  logo: "https://kremisi.com/images/logo/logo-dark.png",
+  email: "info@kremisi.com",
+  contactPoint: [
+    {
+      "@type": "ContactPoint",
+      contactType: "customer support",
+      email: "info@kremisi.com",
+      availableLanguage: ["English", "Italian"],
+    },
+  ],
+};
+
 export const metadata = {
   title: {
     default: "Web Design & Development Agency in Italy",
@@ -80,6 +97,10 @@ export default function RootLayout({ children }) {
         <Analytics />
         <SpeedInsights />
         <GoogleAnalytics gaId="G-TK345YVSSJ" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+        />
       </body>
     </html>
   );

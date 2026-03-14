@@ -23,7 +23,7 @@ export default function Navbar() {
                 <AnimatedLink href="/">
                     <Image
                         src="/images/logo/logo-dark.png"
-                        alt="Logo"
+                        alt="Kremisi logo"
                         width={172}
                         height={31}
                         className={styles.logo}
@@ -47,7 +47,7 @@ export default function Navbar() {
                 <AnimatedLink href="/" onClick={() => setMenuOpen(false)}>
                     <Image
                         src="/images/logo/icona-dark.png"
-                        alt="Logo"
+                        alt="Kremisi logo"
                         width={40}
                         height={40}
                         className={styles.logo}

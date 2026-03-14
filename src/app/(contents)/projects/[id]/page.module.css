@@ -157,6 +157,11 @@
     margin-bottom: 30px;
 }
 
+.nextProjectTitle {
+    font-size: 6.6rem;
+    margin-bottom: 30px;
+}
+
 @media (max-width: 768px) {
     .client {
         margin: 50px 0 0px 0;
