@@ -11,13 +11,14 @@ Optimize media for the web without breaking quality expectations or losing the o
 
 1. Scan the relevant media folders and identify large or oversized assets.
 2. Classify each asset by type before changing anything.
-3. Prefer the bundled bulk script `scripts/optimize_all_projects.py` when the task covers the whole `public/projects` tree.
-4. Use `scripts/optimize_images.py` as the low-level converter for single folders or targeted reruns.
-5. Choose the output format and dimensions based on the asset's role on the page.
-6. Generate optimized outputs with the same basename as the source whenever possible, changing only the extension to `.webp`.
-7. Keep originals unless the user explicitly asks to replace them.
-8. When the user wants the optimized assets live on the site, update imports, component props, and source references automatically after conversion.
-9. Report before/after file sizes, dimensions, and any code references changed.
+3. Prefer the bundled bulk script `scripts/optimize_all_projects.py` when the task covers image optimization across the whole `public/projects` tree.
+4. Use `scripts/optimize_images.py` as the low-level converter for single folders or targeted image reruns.
+5. Use `scripts/optimize_videos.py` for video transcoding because the bulk script currently handles raster images only.
+6. Choose the output format and dimensions based on the asset's role on the page.
+7. Generate optimized outputs with the same basename as the source whenever possible, changing only the extension to `.webp` for images and using a stable suffix such as `-optimized` for transcoded videos unless replacement in place is explicitly requested.
+8. Keep originals unless the user explicitly asks to replace them.
+9. When the user wants the optimized assets live on the site, update imports, component props, and source references automatically after conversion.
+10. Report before/after file sizes, dimensions, and any code references changed.
 
 ## Format Rules
 
@@ -68,7 +69,7 @@ Optimize media for the web without breaking quality expectations or losing the o
 
 ## Script
 
-Use `scripts/optimize_all_projects.py` as the default entrypoint for global project optimization.
+Use `scripts/optimize_all_projects.py` as the default entrypoint for global raster-image optimization.
 
 Example:
 
@@ -88,6 +89,29 @@ Behavior:
 - Rewrite `image`, `headerImage`, `images`, and `carousel` when `imagesCarousel` is `true`.
 - Remove stale legacy files such as `*-optimized.webp` after canonical outputs are ready.
 - Keep original raster files on disk.
+
+Use `scripts/optimize_videos.py` for repeatable video transcoding when carousel clips or showcase videos are too large for web delivery.
+
+Example:
+
+```bash
+python3 skills/media-optimizer/scripts/optimize_videos.py \
+  public/projects/lucrezia-curto/carousel/home.mp4 \
+  --format mp4 \
+  --crf 24 \
+  --preset slow \
+  --suffix=-optimized
+```
+
+Behavior:
+
+- Accept `.mp4`, `.mov`, `.m4v`, and `.webm` as inputs.
+- Write a web-optimized `.mp4` or `.webm` beside the source file without overwriting the original.
+- Default to an `-optimized` suffix because the output usually keeps the same container as the source.
+- Add `+faststart` for `.mp4` outputs so browser playback can start sooner.
+- Optionally resize oversized inputs with `--max-width`.
+- Support conservative batch runs with thresholds such as `--min-size-mb`, `--min-bitrate-kbps`, and `--min-reduction-percent`.
+- Support `--dry-run` and `--skip-existing`.
 
 Use `scripts/optimize_images.py` for repeatable image conversion on a smaller scope.
 
@@ -126,6 +150,24 @@ Behavior:
 
 - Rewrite `image`, `headerImage`, and `images` entries from `.png/.jpg/.jpeg` to `.webp`.
 - Rewrite `carousel` entries too when `imagesCarousel` is `true`.
+- Support either one project id or `--all`.
+- Support `--dry-run` before writing.
+
+Use `scripts/update_project_video_references.py` when the site should start using generated `-optimized.mp4` or `-optimized.webm` carousel clips.
+
+Example:
+
+```bash
+python3 skills/media-optimizer/scripts/update_project_video_references.py \
+  public/projects \
+  src/lib/projects.json \
+  --all
+```
+
+Behavior:
+
+- Rewrite `carousel` entries only when the optimized video file already exists on disk.
+- Leave untouched any entries without a matching optimized file.
 - Support either one project id or `--all`.
 - Support `--dry-run` before writing.
 

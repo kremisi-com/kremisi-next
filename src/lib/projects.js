@@ -1,15 +1,92 @@
 import projectsData from "@/lib/projects.json";
 
+function normalizeProjectSlug(value = "") {
+    const normalized = value
+        .normalize("NFKD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+    return normalized || "project";
+}
+
+function getProjectSlug(projectId, projectData = projectsData[projectId]) {
+    if (!projectData) return null;
+
+    return normalizeProjectSlug(projectData.slug || projectId);
+}
+
+function getProjectPath(projectId, projectData = projectsData[projectId]) {
+    const slug = getProjectSlug(projectId, projectData);
+
+    return slug ? `/projects/${slug}` : null;
+}
+
+function getEnabledProjectEntries() {
+    return Object.entries(projectsData).filter(
+        ([, project]) => project.disabled !== true
+    );
+}
+
+function resolveProjectKey(projectIdentifier) {
+    if (!projectIdentifier) return null;
+    if (projectsData[projectIdentifier]) return projectIdentifier;
+
+    const projectSlug = normalizeProjectSlug(projectIdentifier);
+    const match = getEnabledProjectEntries().find(
+        ([projectId, project]) => getProjectSlug(projectId, project) === projectSlug
+    );
+
+    return match?.[0] || null;
+}
+
+function getProjectHeaderImageAlt(projectData) {
+    if (projectData?.headerImageAlt) return projectData.headerImageAlt;
+
+    const subtitle = projectData?.subtitle ? ` ${projectData.subtitle}` : "";
+    return `${projectData?.title || "Project"}${subtitle} hero image`;
+}
+
+function getProjectCarouselImageAlt(projectData, filename, index) {
+    if (projectData?.carouselImageAlts?.[filename]) {
+        return projectData.carouselImageAlts[filename];
+    }
+
+    return `${projectData?.title || "Project"} showcase image ${index + 1}`;
+}
+
+function getProjectPreviewImageAlt(projectData) {
+    if (projectData?.previewImageAlt) return projectData.previewImageAlt;
+
+    return `${projectData?.title || "Project"} project preview`;
+}
+
+function withProjectSeoData(projectId, projectData) {
+    if (!projectData) return null;
+
+    const images = projectData.images ? projectData.images : ["main.webp"];
+    const slug = getProjectSlug(projectId, projectData);
+    const path = getProjectPath(projectId, projectData);
+
+    return {
+        ...projectData,
+        id: projectId,
+        slug,
+        path,
+        color: projectData.color || "#FFFFFF",
+        images,
+        previewImageAlt: getProjectPreviewImageAlt(projectData),
+        headerImageAlt: getProjectHeaderImageAlt(projectData),
+    };
+}
+
 function getProjectsArray() {
-    return Object.entries(projectsData)
-        .filter(([_, v]) => v.disabled === undefined || v.disabled === false)
-        .map(([key, v]) => ({
-            ...v,
-            id: key,
-            color: v.color || "#FFFFFF",
-            images: v.images ? v.images : ["main.webp"],
-            link: `/projects/${key}`,
-        }));
+    return getEnabledProjectEntries().map(([projectId, project]) => ({
+        ...withProjectSeoData(projectId, project),
+        externalLink: project.link,
+        link: getProjectPath(projectId, project),
+    }));
 }
 
 function getOrganizedProjects(projectsArray) {
@@ -60,25 +137,26 @@ function getSortedProjects(projectsDict) {
     // ];
 }
 
-function getProjectData(id) {
-    let ret = projectsData[id];
-    const firstId = Object.keys(projectsData)[0];
-    ret.nextProject = { ...projectsData[firstId], id: firstId };
-    let nextProject = null;
-    for (const key of Object.keys(projectsData)) {
-        if (projectsData[key].disabled) continue;
-        if (key === id) {
-            nextProject = true;
-            continue;
-        }
-        if (nextProject) {
-            ret.nextProject = { ...projectsData[key], id: key };
-            break;
-        }
-    }
-    // console.log("Next project:", ret.nextProject);
+function getProjectData(projectIdentifier) {
+    const projectId = resolveProjectKey(projectIdentifier);
+    const project = projectId ? projectsData[projectId] : null;
 
-    return ret;
+    if (!project || project.disabled) return null;
+
+    const enabledProjects = getEnabledProjectEntries();
+    const projectIndex = enabledProjects.findIndex(([id]) => id === projectId);
+    const fallbackIndex = projectIndex >= 0 ? 0 : -1;
+    const nextProjectIndex =
+        projectIndex >= 0 ? (projectIndex + 1) % enabledProjects.length : fallbackIndex;
+    const nextProjectEntry =
+        nextProjectIndex >= 0 ? enabledProjects[nextProjectIndex] : null;
+
+    return {
+        ...withProjectSeoData(projectId, project),
+        nextProject: nextProjectEntry
+            ? withProjectSeoData(nextProjectEntry[0], nextProjectEntry[1])
+            : null,
+    };
 }
 
 export {
@@ -86,4 +164,11 @@ export {
     getOrganizedProjects,
     getSortedProjects,
     getProjectData,
+    getProjectSlug,
+    getProjectPath,
+    getProjectHeaderImageAlt,
+    getProjectCarouselImageAlt,
+    getProjectPreviewImageAlt,
+    normalizeProjectSlug,
+    resolveProjectKey,
 };

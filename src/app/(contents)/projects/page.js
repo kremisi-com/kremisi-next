@@ -30,6 +30,7 @@ export const metadata = {
 export default function ProjectsPage() {
   const items = [];
   const images = [];
+  const imageAlts = [];
   const links = [];
 
   const projectsDataArray = useMemo(() => getProjectsArray(), []);
@@ -53,7 +54,8 @@ export default function ProjectsPage() {
           .join("");
     items.push([project.title, project.subtitle, tmpCustomer, project.year]);
     images.push(tmpImage);
-    links.push(project.link);
+    imageAlts.push(project.previewImageAlt);
+    links.push(project.path);
   });
 
   return (
@@ -70,7 +72,12 @@ export default function ProjectsPage() {
           </p>
         </div>
       </section>
-      <ColoredTable items={items} images={images} links={links} />
+      <ColoredTable
+        items={items}
+        images={images}
+        imageAlts={imageAlts}
+        links={links}
+      />
     </main>
   );
 }

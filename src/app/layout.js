@@ -12,6 +12,11 @@ import { TransitionProvider } from "@/context/transition-context/transition-cont
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics } from "@next/third-parties/google";
 
+const BASE_URL = "https://kremisi.com";
+const ORGANIZATION_ID = `${BASE_URL}/#organization`;
+const WEBSITE_ID = `${BASE_URL}/#website`;
+const SERVICE_ID = `${BASE_URL}/#professional-service`;
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -24,17 +29,57 @@ const geistMono = Geist_Mono({
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "Kremisi",
-  url: "https://kremisi.com",
-  logo: "https://kremisi.com/images/logo/logo-dark.png",
-  email: "info@kremisi.com",
-  contactPoint: [
+  "@graph": [
     {
-      "@type": "ContactPoint",
-      contactType: "customer support",
+      "@type": "Organization",
+      "@id": ORGANIZATION_ID,
+      name: "Kremisi",
+      url: BASE_URL,
+      logo: `${BASE_URL}/images/logo/logo-dark.png`,
       email: "info@kremisi.com",
+      telephone: "+393517444749",
+      contactPoint: [
+        {
+          "@type": "ContactPoint",
+          contactType: "customer support",
+          email: "info@kremisi.com",
+          telephone: "+393517444749",
+          availableLanguage: ["English", "Italian"],
+        },
+      ],
+    },
+    {
+      "@type": "ProfessionalService",
+      "@id": SERVICE_ID,
+      name: "Kremisi",
+      url: BASE_URL,
+      image: `${BASE_URL}/og-image.jpg`,
+      email: "info@kremisi.com",
+      telephone: "+393517444749",
+      brand: {
+        "@id": ORGANIZATION_ID,
+      },
+      areaServed: {
+        "@type": "Country",
+        name: "Italy",
+      },
       availableLanguage: ["English", "Italian"],
+      serviceType: [
+        "Web Design",
+        "Web Development",
+        "App Development",
+        "SEO Optimization",
+      ],
+    },
+    {
+      "@type": "WebSite",
+      "@id": WEBSITE_ID,
+      name: "Kremisi",
+      url: BASE_URL,
+      inLanguage: "en",
+      publisher: {
+        "@id": ORGANIZATION_ID,
+      },
     },
   ],
 };
@@ -46,7 +91,7 @@ export const metadata = {
   },
   description:
     "Kremisi is an Italy-based web design and web development agency building fast, scalable websites and digital products for growing businesses.",
-  metadataBase: new URL("https://kremisi.com"),
+  metadataBase: new URL(BASE_URL),
   alternates: {
     canonical: "/",
   },
@@ -62,7 +107,7 @@ export const metadata = {
         alt: "Kremisi preview",
       },
     ],
-    locale: "it_IT",
+    locale: "en_US",
     type: "website",
   },
   twitter: {
@@ -76,7 +121,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <CursorTrailCanvas />
         <ThemeProvider

@@ -1,9 +1,12 @@
-import { getProjectData } from "@/lib/projects";
+import { getProjectCarouselImageAlt, getProjectData, getProjectsArray } from "@/lib/projects";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import style from "./page.module.css";
 import GitButton from "@/components/git-button/git-button";
 import AnimatedLink from "@/components/animated-link/animated-link";
+
+const BASE_URL = "https://kremisi.com";
+const ORGANIZATION_ID = `${BASE_URL}/#organization`;
 
 function stripHtml(text = "") {
     return text.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -19,13 +22,75 @@ function getProjectMetaDescription(projectData) {
 }
 
 export async function generateStaticParams() {
-    let projects = Object.keys((await import("@/lib/projects.json")).default);
-
-    projects = projects.filter((id) => !getProjectData(id)?.disabled);
-
-    return projects.map((id) => ({
-        id,
+    return getProjectsArray().map((project) => ({
+        id: project.slug,
     }));
+}
+
+function getProjectStructuredData(projectData) {
+    const canonicalUrl = new URL(projectData.path, BASE_URL).toString();
+    const imageUrl = projectData.headerImage
+        ? new URL(
+              `/projects/${projectData.id}/${projectData.headerImage}`,
+              BASE_URL
+          ).toString()
+        : `${BASE_URL}/og-image.jpg`;
+    const keywords = [...(projectData.tags || []), ...(projectData.tasks || [])];
+
+    return {
+        "@context": "https://schema.org",
+        "@graph": [
+            {
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                    {
+                        "@type": "ListItem",
+                        position: 1,
+                        name: "Home",
+                        item: BASE_URL,
+                    },
+                    {
+                        "@type": "ListItem",
+                        position: 2,
+                        name: "Projects",
+                        item: `${BASE_URL}/projects`,
+                    },
+                    {
+                        "@type": "ListItem",
+                        position: 3,
+                        name: projectData.title,
+                        item: canonicalUrl,
+                    },
+                ],
+            },
+            {
+                "@type": "CreativeWork",
+                "@id": `${canonicalUrl}#creative-work`,
+                headline: projectData.title,
+                name: projectData.title,
+                description: getProjectMetaDescription(projectData),
+                url: canonicalUrl,
+                mainEntityOfPage: canonicalUrl,
+                image: imageUrl,
+                inLanguage: "en",
+                author: {
+                    "@id": ORGANIZATION_ID,
+                },
+                publisher: {
+                    "@id": ORGANIZATION_ID,
+                },
+                isPartOf: `${BASE_URL}/projects`,
+                datePublished: projectData.year
+                    ? `${projectData.year}-01-01`
+                    : undefined,
+                dateCreated: projectData.year
+                    ? `${projectData.year}-01-01`
+                    : undefined,
+                keywords: keywords.length > 0 ? keywords.join(", ") : undefined,
+                sameAs: projectData.link || undefined,
+            },
+        ],
+    };
 }
 
 export async function generateMetadata({ params }) {
@@ -33,7 +98,7 @@ export async function generateMetadata({ params }) {
     const id = params.id;
     const projectData = getProjectData(id);
 
-    if (!projectData || projectData.disabled) {
+    if (!projectData) {
         return {
             title: "Project",
             description:
@@ -50,14 +115,15 @@ export async function generateMetadata({ params }) {
     const year = projectData.year ? ` (${projectData.year})` : "";
     const title = `${projectTitle}${subtitle}${year}`;
     const description = getProjectMetaDescription(projectData);
-    const canonical = `/projects/${id}`;
+    const canonical = projectData.path;
     const image = projectData.headerImage
-        ? `/projects/${id}/${projectData.headerImage}`
+        ? `/projects/${projectData.id}/${projectData.headerImage}`
         : "/og-image.jpg";
 
     return {
         title,
         description,
+        keywords: [...(projectData.tags || []), ...(projectData.tasks || [])],
         alternates: {
             canonical,
         },
@@ -69,7 +135,7 @@ export async function generateMetadata({ params }) {
             images: [
                 {
                     url: image,
-                    alt: `${projectTitle} project cover`,
+                    alt: projectData.headerImageAlt,
                 },
             ],
         },
@@ -90,12 +156,20 @@ export default async function ProjectPage({ params }) {
 
     if (!projectData) notFound();
 
+    const projectStructuredData = getProjectStructuredData(projectData);
+
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{
+                    __html: JSON.stringify(projectStructuredData),
+                }}
+            />
             <div className={style.header}>
                 <Image
-                    src={`/projects/${id}/${projectData.headerImage}`}
-                    alt={projectData.title}
+                    src={`/projects/${projectData.id}/${projectData.headerImage}`}
+                    alt={projectData.headerImageAlt}
                     fill
                     priority
                 />
@@ -171,7 +245,7 @@ export default async function ProjectPage({ params }) {
                           <div key={index} className={style.carouselItem}>
                               <video autoPlay loop muted playsInline>
                                   <source
-                                      src={`/projects/${id}/carousel/${video}`}
+                                      src={`/projects/${projectData.id}/carousel/${video}`}
                                       type="video/mp4"
                                   />
                                   Your browser does not support the video tag.
@@ -181,8 +255,12 @@ export default async function ProjectPage({ params }) {
                     : projectData.carousel.map((image, index) => (
                           <div key={index} className={style.carouselItem}>
                               <Image
-                                  src={`/projects/${id}/carousel/${image}`}
-                                  alt={projectData.title}
+                                  src={`/projects/${projectData.id}/carousel/${image}`}
+                                  alt={getProjectCarouselImageAlt(
+                                      projectData,
+                                      image,
+                                      index
+                                  )}
                                   width={360}
                                   height={764}
                               />
@@ -208,7 +286,7 @@ export default async function ProjectPage({ params }) {
                 />
                 <AnimatedLink
                     className={style.link}
-                    href={`/projects/${projectData.nextProject?.id}`}
+                    href={projectData.nextProject?.path || "/projects"}
                 >
                     <GitButton text="Next Project" leftShift={-20} />
                 </AnimatedLink>

@@ -42,7 +42,7 @@ export default React.memo(function Slide({
                         src={data.image}
                         width={width}
                         height={height}
-                        alt={data.title}
+                        alt={data.previewImageAlt || data.title}
                         style={{ "--image-width": `${height}px` }}
                         priority={true}
                         onLoad={onImageLoad}

@@ -2,46 +2,55 @@
   position: relative;
   width: 100%;
 }
-.coloredTable {
+
+.rowList {
   width: 100%;
-  border-collapse: collapse;
-  position: relative;
 }
 
-.coloredTable tr {
+.row {
+  position: relative;
+  display: block;
   border-bottom: 1px solid var(--foreground);
+  color: inherit;
+  text-decoration: none;
+  outline: none;
 }
-.coloredTable tr:last-child {
+
+.row:last-child {
   border-bottom: none;
 }
 
-.desktopRows {
-  display: table-row-group;
+.desktopCells {
+  display: grid;
+  grid-template-columns: repeat(var(--column-count, 4), minmax(0, 1fr));
 }
-.mobileRows {
+
+.mobileCells {
   display: none;
 }
 
-.coloredTable td {
-  position: relative; /* necessario per ::before */
+.cell,
+.mobileMainCell p {
+  position: relative;
   padding: 16px 15px;
   text-align: left;
   font-weight: 300;
   font-size: 2rem;
   letter-spacing: 0.05rem;
-  overflow: hidden; /* evita che l’animazione esca fuori */
+  overflow: hidden;
 }
 
-.coloredTable :global(.onlyDesktop) td:first-child,
-.coloredTable :global(.onlyMobile) td:first-child p:first-child {
+.desktopCells .cell:first-child,
+.mobileMainCell p:first-child {
   font-weight: 500;
 }
-.coloredTable td:last-child {
+
+.desktopCells .cell:last-child,
+.mobileYearCell {
   text-align: right;
 }
 
-/* --- Effetto hover --- */
-.coloredTable td::before {
+.row::before {
   content: "";
   position: absolute;
   top: 0;
@@ -57,18 +66,21 @@
   will-change: transform, opacity;
 }
 
-.coloredTable tr:hover td::before {
+.row:hover::before,
+.row:focus-visible::before,
+.row:focus-within::before {
   opacity: 1;
   transform: scaleY(1);
 }
 
-.coloredTable tr:hover td {
+.row:hover,
+.row:focus-visible,
+.row:focus-within {
   color: var(--background);
 }
-/* --- fine effetto hover --- */
 
-.coloredTable :global(a) {
-  text-decoration: underline;
+.linkRow {
+  cursor: pointer;
 }
 
 .imageContainer {
@@ -79,26 +91,43 @@
 }
 
 @media (max-width: 768px) {
-  .desktopRows {
+  .desktopCells {
     display: none;
   }
-  .mobileRows {
-    display: table-row-group;
+
+  .mobileCells {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 0 15px;
   }
-  .coloredTable td {
+
+  .mobileMainCell {
+    padding: 16px 15px;
+  }
+
+  .cell,
+  .mobileMainCell p {
     font-size: 1.7rem;
   }
-  .coloredTable td:first-child p {
+
+  .mobileMainCell p {
     opacity: 0.6;
     margin-bottom: 13px;
   }
-  .coloredTable td:first-child p:last-child {
+
+  .mobileMainCell p:last-child {
     margin-bottom: 0;
     opacity: 0.8;
   }
-  .coloredTable td:first-child p:first-child {
+
+  .mobileMainCell p:first-child {
     opacity: 1;
     margin-bottom: 8px;
     font-weight: 500;
+  }
+
+  .mobileYearCell {
+    align-self: center;
   }
 }
