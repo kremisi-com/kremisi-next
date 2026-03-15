@@ -12,6 +12,7 @@ export async function submitContact(prevState, formData) {
     const email = getVal("email");
     const phone = getVal("phone");
     const privacy = getVal("privacy") === "on";
+    const recaptchaToken = getVal("recaptchaToken");
     console.log("privacy", getVal("privacy"));
 
     if (!privacy) {
@@ -48,16 +49,25 @@ export async function submitContact(prevState, formData) {
         }
     }
 
-    const rawFormData = Object.fromEntries(formData);
+    if (!recaptchaToken) {
+        return {
+            success: false,
+            error: "reCAPTCHA token missing. Reload page and try again.",
+        };
+    }
+
     const recaptchaResponse = await fetch(
         `https://recaptchaenterprise.googleapis.com/v1/projects/kremisi-projects/assessments?key=${String(
             process.env.GOOGLE_API_KEY
         )}`,
         {
             method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
             body: JSON.stringify({
                 event: {
-                    token: rawFormData.recaptchaToken,
+                    token: recaptchaToken,
                     expectedAction: "contact_form",
                     siteKey: "6LfIhdUrAAAAAPaGq52hPAQeAfWLtHGVeb3M9mQc",
                 },
@@ -66,6 +76,14 @@ export async function submitContact(prevState, formData) {
     );
     const recaptchaData = await recaptchaResponse.json();
     console.log("Recaptcha data", JSON.stringify(recaptchaData, null, 2));
+
+    if (!recaptchaResponse.ok) {
+        return {
+            success: false,
+            error: "Recaptcha failed.",
+            message: JSON.stringify(recaptchaData, null, 2),
+        };
+    }
 
     if (
         !recaptchaData?.riskAnalysis?.score ||

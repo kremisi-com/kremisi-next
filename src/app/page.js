@@ -1,5 +1,6 @@
 import styles from "./page.module.css";
 import MainSlider from "@/components/main-slider/main-slider";
+import IntroSEO from "@/components/intro-seo/intro-seo";
 import {
     getProjectsArray,
     getOrganizedProjects,
@@ -21,6 +22,7 @@ export default function Home() {
     return (
         <div className={styles.page}>
             <MainSlider projectsData={sortedProjects} />
+            <IntroSEO />
         </div>
     );
 }

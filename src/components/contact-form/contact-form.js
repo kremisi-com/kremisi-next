@@ -20,6 +20,7 @@ export default function ContactForm({}) {
         success: null,
         error: null,
     });
+    const recaptchaSubmitRef = useRef(false);
 
     // valori controllati per i campi testuali
     const [name, setName] = useState("");
@@ -31,6 +32,45 @@ export default function ContactForm({}) {
     const serviceRef = useRef();
     const budgetRef = useRef();
     const deliveryRef = useRef();
+    const RECAPTCHA_SITE_KEY = "6LfIhdUrAAAAAPaGq52hPAQeAfWLtHGVeb3M9mQc";
+    const RECAPTCHA_ACTION = "contact_form";
+
+    const handleSubmit = async (event) => {
+        if (recaptchaSubmitRef.current) {
+            recaptchaSubmitRef.current = false;
+            return;
+        }
+
+        event.preventDefault();
+
+        if (typeof window === "undefined" || !window.grecaptcha?.enterprise) {
+            toast.error("reCAPTCHA unavailable. Disable blockers and try again.");
+            return;
+        }
+
+        try {
+            const token = await window.grecaptcha.enterprise.execute(
+                RECAPTCHA_SITE_KEY,
+                {
+                    action: RECAPTCHA_ACTION,
+                }
+            );
+            if (!token) {
+                toast.error("Unable to validate reCAPTCHA. Please try again.");
+                return;
+            }
+
+            const tokenInput = event.currentTarget.elements.namedItem(
+                "recaptchaToken"
+            );
+            if (tokenInput) tokenInput.value = token;
+            recaptchaSubmitRef.current = true;
+            event.currentTarget.requestSubmit();
+        } catch (error) {
+            console.error("reCAPTCHA submit error:", error);
+            toast.error("Unable to validate reCAPTCHA. Please try again.");
+        }
+    };
 
     useEffect(() => {
         trackViewContactForm();
@@ -66,8 +106,8 @@ export default function ContactForm({}) {
     }, [state]);
 
     return (
-        <form className={styles.form} action={formAction}>
-            <RecaptchaWrapper action={"contact_form"} />
+        <form className={styles.form} action={formAction} onSubmit={handleSubmit}>
+            <RecaptchaWrapper action={RECAPTCHA_ACTION} />
             <div className="row">
                 <div className="col">
                     <h3>What you need</h3>

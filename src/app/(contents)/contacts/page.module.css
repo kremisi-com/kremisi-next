@@ -242,6 +242,20 @@
     margin: 0 auto 32px auto;
   }
 
+  .contentSplit {
+    gap: 56px;
+  }
+
+  .infoLead {
+    align-items: center;
+    text-align: center;
+    gap: 32px;
+  }
+
+  .metaLabel {
+    justify-content: center;
+  }
+
   .metaValue {
     font-size: 1.15rem;
   }
@@ -253,6 +267,8 @@
 
   .metaItem {
     padding: 24px 0;
+    align-items: center;
+    text-align: center;
   }
 }
 
