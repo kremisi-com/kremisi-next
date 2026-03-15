@@ -22,10 +22,16 @@
     /* box-shadow: 0 0 8px var(--foreground); */
     transition: background-color 0.3s, color 0.3s;
 }
-.list li:not(.rainbowContainer):hover,
-.list .rainbowContainer:hover .rainbowContent {
+:global(.dark) .list li:not(.rainbowContainer):hover,
+:global(.dark) .list .rainbowContainer:hover .rainbowContent {
     background-color: var(--foreground);
     color: var(--background);
+}
+
+:global(.light) .list li:not(.rainbowContainer):hover,
+:global(.light) .list .rainbowContainer:hover .rainbowContent {
+    background-color: var(--white);
+    color: var(--primary);
 }
 
 .rainbowContainer {

@@ -64,7 +64,6 @@ export default function AboutPage() {
     { name: "Responsive Design", level: "bronze" },
     { name: "Web Performance", level: "bronze" },
     { name: "Technical SEO", level: "bronze" },
-    { name: "GIT", level: "bronze" },
   ];
 
   return (
