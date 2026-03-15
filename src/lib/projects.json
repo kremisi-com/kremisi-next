@@ -114,7 +114,7 @@
     "title": "Casa Palmi",
     "subtitle": "Web Design & Development",
     "image": "hero.webp",
-    "headerImage": "hero.webp",
+    "headerImage": "bg-1.webp",
     "headerImageAlt": "Casa Palmi villa booking experience hero section",
     "link": "https://casapalmi.it/",
     "customer": "",
@@ -129,12 +129,7 @@
       "payment.webp",
       "contacts.webp"
     ],
-    "carousel": [
-      "booking-start.mp4",
-      "2026-03-14 14-50-28.mp4",
-      "2026-03-14 14-53-02.mp4",
-      "booking-end.mp4"
-    ],
+    "carousel": ["booking-start.mp4", "email-ver.mp4", "booking-end.mp4"],
     "year": 2026,
     "description": "Designing a slower, more refined way to book a seaside escape.<br />Casa Palmi pairs a premium villa experience with a clear digital journey, showcasing a private pool, outdoor living, curated amenities, and the atmosphere of Triscina di Selinunte.<br /><br />From discovery to reservation, every page is shaped to turn hospitality into confidence, guiding guests through the location, the stay, and a direct booking flow with clarity and ease.",
     "slogan": "Where time slows,<br>and every stay feels curated."
