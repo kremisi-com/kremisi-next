@@ -123,7 +123,6 @@ input,
 textarea {
     transition: border-color 0.2s ease, background-color 0.2s ease;
 }
-.grecaptcha-badge,
 .iubenda-tp-btn,
 .iubenda-cs-brand-badge {
     visibility: hidden !important;

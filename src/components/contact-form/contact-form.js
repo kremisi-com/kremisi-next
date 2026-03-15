@@ -6,8 +6,6 @@ import { submitContact } from "@/components/contact-form/actions";
 import { useActionState, useEffect, useRef, useState } from "react";
 import GitButton from "../git-button/git-button";
 import toast from "react-hot-toast";
-import { RecaptchaWrapper } from "./recaptcha-wrapper";
-import PrivacyLinks from "./privacy-links";
 import Script from "next/script";
 import {
     trackViewContactForm,
@@ -20,7 +18,6 @@ export default function ContactForm({}) {
         success: null,
         error: null,
     });
-    const recaptchaSubmitRef = useRef(false);
 
     // valori controllati per i campi testuali
     const [name, setName] = useState("");
@@ -28,49 +25,11 @@ export default function ContactForm({}) {
     const [email, setEmail] = useState("");
     const [phone, setPhone] = useState("");
     const [details, setDetails] = useState("");
+    const [formStartedAt] = useState(() => Date.now().toString());
 
     const serviceRef = useRef();
     const budgetRef = useRef();
     const deliveryRef = useRef();
-    const RECAPTCHA_SITE_KEY = "6LfIhdUrAAAAAPaGq52hPAQeAfWLtHGVeb3M9mQc";
-    const RECAPTCHA_ACTION = "contact_form";
-
-    const handleSubmit = async (event) => {
-        if (recaptchaSubmitRef.current) {
-            recaptchaSubmitRef.current = false;
-            return;
-        }
-
-        event.preventDefault();
-
-        if (typeof window === "undefined" || !window.grecaptcha?.enterprise) {
-            toast.error("reCAPTCHA unavailable. Disable blockers and try again.");
-            return;
-        }
-
-        try {
-            const token = await window.grecaptcha.enterprise.execute(
-                RECAPTCHA_SITE_KEY,
-                {
-                    action: RECAPTCHA_ACTION,
-                }
-            );
-            if (!token) {
-                toast.error("Unable to validate reCAPTCHA. Please try again.");
-                return;
-            }
-
-            const tokenInput = event.currentTarget.elements.namedItem(
-                "recaptchaToken"
-            );
-            if (tokenInput) tokenInput.value = token;
-            recaptchaSubmitRef.current = true;
-            event.currentTarget.requestSubmit();
-        } catch (error) {
-            console.error("reCAPTCHA submit error:", error);
-            toast.error("Unable to validate reCAPTCHA. Please try again.");
-        }
-    };
 
     useEffect(() => {
         trackViewContactForm();
@@ -79,11 +38,13 @@ export default function ContactForm({}) {
     useEffect(() => {
         if (state?.success) {
             toast.success("Message sent successfully!");
-            trackLead({
-                service: serviceRef.current?.getValue?.() || "unknown",
-                budget: budgetRef.current?.getValue?.() || "unknown",
-                delivery: deliveryRef.current?.getValue?.() || "unknown",
-            });
+            if (!state?.silentDrop) {
+                trackLead({
+                    service: serviceRef.current?.getValue?.() || "unknown",
+                    budget: budgetRef.current?.getValue?.() || "unknown",
+                    delivery: deliveryRef.current?.getValue?.() || "unknown",
+                });
+            }
             // reset radio options
             serviceRef.current.reset();
             budgetRef.current.reset();
@@ -106,8 +67,21 @@ export default function ContactForm({}) {
     }, [state]);
 
     return (
-        <form className={styles.form} action={formAction} onSubmit={handleSubmit}>
-            <RecaptchaWrapper action={RECAPTCHA_ACTION} />
+        <form className={styles.form} action={formAction}>
+            <input type="hidden" name="formStartedAt" value={formStartedAt} />
+            <input
+                type="text"
+                name="website"
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{
+                    position: "absolute",
+                    left: "-9999px",
+                    opacity: 0,
+                    pointerEvents: "none",
+                }}
+            />
             <div className="row">
                 <div className="col">
                     <h3>What you need</h3>
