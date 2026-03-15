@@ -19,7 +19,7 @@ export default function Footer() {
                 <address className={styles.info}>
                     <a href="mailto:info@kremisi.com">info@kremisi.com</a>
                 </address>
-                <div className={`${styles.buttons} ${styles.right}`}>
+                <div className={`${styles.buttons} ${styles.right} whatsapp-floating-button`}>
                     <Button
                         className={styles.whatsappButton}
                         href="https://wa.me/393517444749?text=Can%20I%20have%20more%20informations%3F"

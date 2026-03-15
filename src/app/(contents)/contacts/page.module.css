@@ -1,0 +1,262 @@
+.page {
+  padding-bottom: 150px;
+}
+
+.hero,
+.section {
+  width: 100%;
+  max-width: 1200px;
+}
+
+.hero {
+  margin-bottom: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding-top: 2vh;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 1000px;
+  padding: 0 15px;
+}
+
+.kicker {
+  text-transform: uppercase;
+  letter-spacing: 0.3rem;
+  font-size: 1.1rem;
+  color: var(--primary);
+  margin-bottom: 24px;
+  font-weight: 600;
+}
+
+.pageTitle {
+  margin: 0;
+  max-width: 16ch;
+  line-height: 0.95;
+  letter-spacing: -0.08rem;
+  text-wrap: balance;
+  font-size: clamp(4rem, 8vw, 7.5rem);
+  animation: headingIn 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  animation-delay: 220ms;
+  will-change: transform, opacity;
+}
+
+.accent {
+  color: var(--primary);
+  font-style: italic;
+  font-weight: inherit;
+}
+
+.subtitle {
+  margin-top: 26px;
+  font-size: clamp(1.2rem, 2vw, 1.6rem);
+  line-height: 1.6;
+  color: var(--foreground);
+  max-width: 56ch;
+  text-wrap: balance;
+  font-weight: 400;
+}
+
+.section {
+  margin-bottom: 90px;
+}
+
+.sectionHeader {
+  max-width: 800px;
+  margin: 0 auto 48px auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.sectionTitle {
+  margin-bottom: 16px;
+  line-height: 1.1;
+}
+
+.sectionIntro {
+  font-size: clamp(1.25rem, 2vw, 1.45rem);
+  line-height: 1.6;
+  max-width: 50ch;
+  color: var(--foreground);
+  opacity: 0.8;
+}
+
+.contentSplit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 60px;
+  padding: 0;
+}
+
+.infoLead {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.leadText {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  line-height: 1.35;
+  max-width: 22ch;
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.cta {
+  display: inline-flex;
+  width: fit-content;
+}
+
+.metaList {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  justify-content: flex-start;
+}
+
+.metaItem {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--box-bg);
+  transition: transform 0.3s ease;
+}
+
+.metaItem:first-child {
+  padding-top: 0;
+}
+
+.metaItem:last-child {
+  border-bottom: none;
+}
+
+.metaItem:hover {
+  transform: translateY(-2px);
+}
+
+.metaItem:hover .metaValue {
+  color: var(--primary);
+}
+
+.metaLabel {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 0.95rem;
+  letter-spacing: 0.15rem;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0.6;
+  font-weight: 500;
+}
+
+.metaIcon {
+  opacity: 0.8;
+}
+
+.metaValue {
+  font-size: clamp(1.4rem, 2vw, 1.8rem);
+  line-height: 1.4;
+  transition: color 0.3s ease;
+}
+
+.metaValue a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.formWrap {
+  width: 100%;
+}
+
+@keyframes headingIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pageTitle {
+    animation: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .contentSplit {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .leadText,
+  .sectionIntro {
+    max-width: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding-bottom: 130px;
+  }
+
+  .hero {
+    margin-bottom: 26px;
+    padding-top: 0;
+  }
+
+  .kicker {
+    font-size: 1rem;
+    letter-spacing: 0.2rem;
+    margin-bottom: 16px;
+  }
+
+  .pageTitle {
+    max-width: 100%;
+    line-height: 1;
+    font-size: clamp(3.5rem, 12vw, 4.5rem);
+  }
+
+  .subtitle {
+    margin-top: 18px;
+    font-size: 1.2rem;
+    line-height: 1.5;
+  }
+
+  .section {
+    margin-bottom: 70px;
+  }
+
+  .sectionHeader {
+    margin: 0 auto 32px auto;
+  }
+
+  .metaValue {
+    font-size: 1.15rem;
+  }
+
+  .leadText {
+    font-size: 1.5rem;
+    line-height: 1.4;
+  }
+
+  .metaItem {
+    padding: 24px 0;
+  }
+}
+
+/* ------- PAGE-SPECIFIC GLOBAL OVERRIDES ------- */
+:global(.whatsapp-floating-button) {
+  display: none !important;
+}

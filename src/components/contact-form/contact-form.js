@@ -75,7 +75,14 @@ export default function ContactForm({}) {
                         ref={serviceRef}
                         options={[
                             { value: "development", label: "Development" },
-                            { value: "design", label: "Design & Development" },
+                            {
+                                value: "design-development",
+                                label: "Design & Development",
+                            },
+                            {
+                                value: "data-analytics",
+                                label: "Data & Analytics",
+                            },
                         ]}
                         name="service"
                     />
