@@ -59,16 +59,13 @@ const organizationJsonLd = {
       brand: {
         "@id": ORGANIZATION_ID,
       },
-      areaServed: {
-        "@type": "Country",
-        name: "Italy",
-      },
+      areaServed: "Worldwide",
       availableLanguage: ["English", "Italian"],
       serviceType: [
         "Web Design",
         "Web Development",
-        "App Development",
-        "SEO Optimization",
+        "Design & Development",
+        "Data & Analytics",
       ],
     },
     {
@@ -86,19 +83,19 @@ const organizationJsonLd = {
 
 export const metadata = {
   title: {
-    default: "Web Design & Development Agency in Italy",
+    default: "Kremisi | Web Design, Development & Data Analytics Agency",
     template: "%s | Kremisi",
   },
   description:
-    "Kremisi is an Italy-based web design and web development agency building fast, scalable websites and digital products for growing businesses.",
+    "Kremisi is a distributed agency building fast, scalable websites, digital products, and data & analytics solutions for SMEs and established companies worldwide.",
   metadataBase: new URL(BASE_URL),
   alternates: {
     canonical: "/",
   },
   openGraph: {
-    title: "Web Design & Development Agency in Italy",
+    title: "Kremisi | Web Design, Development & Data Analytics Agency",
     description:
-      "Kremisi is an Italy-based web design and web development agency building fast, scalable websites and digital products for growing businesses.",
+      "Kremisi is a distributed agency building fast, scalable websites, digital products, and data & analytics solutions for SMEs and established companies worldwide.",
     url: "/",
     siteName: "Kremisi",
     images: [
@@ -112,9 +109,9 @@ export const metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Web Design & Development Agency in Italy",
+    title: "Kremisi | Web Design, Development & Data Analytics Agency",
     description:
-      "Kremisi is an Italy-based web design and web development agency building fast, scalable websites and digital products for growing businesses.",
+      "Kremisi is a distributed agency building fast, scalable websites, digital products, and data & analytics solutions for SMEs and established companies worldwide.",
     images: ["/og-image.jpg"],
   },
 };
