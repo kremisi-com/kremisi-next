@@ -2,27 +2,27 @@ import styles from "./page.module.css";
 import MainSlider from "@/components/main-slider/main-slider";
 import IntroSEO from "@/components/intro-seo/intro-seo";
 import {
-    getProjectsArray,
-    getOrganizedProjects,
-    getSortedProjects,
+  getProjectsArray,
+  getOrganizedProjects,
+  getSortedProjects,
 } from "@/lib/projects";
 import { useMemo } from "react";
 
 export default function Home() {
-    const projectsDataArray = useMemo(() => getProjectsArray(), []);
-    const organizedProjects = useMemo(
-        () => getOrganizedProjects(projectsDataArray),
-        [projectsDataArray]
-    );
-    const sortedProjects = useMemo(
-        () => getSortedProjects(organizedProjects),
-        [organizedProjects]
-    );
+  const projectsDataArray = useMemo(() => getProjectsArray(), []);
+  const organizedProjects = useMemo(
+    () => getOrganizedProjects(projectsDataArray),
+    [projectsDataArray],
+  );
+  const sortedProjects = useMemo(
+    () => getSortedProjects(organizedProjects),
+    [organizedProjects],
+  );
 
-    return (
-        <div className={styles.page}>
-            <MainSlider projectsData={sortedProjects} />
-            <IntroSEO />
-        </div>
-    );
+  return (
+    <div className={styles.page}>
+      <MainSlider projectsData={sortedProjects} />
+      {/* <IntroSEO /> */}
+    </div>
+  );
 }

@@ -1,26 +1,27 @@
 .page {
-    --gray-rgb: 0, 0, 0;
-    --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
-    --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
+  --gray-rgb: 0, 0, 0;
+  --gray-alpha-200: rgba(var(--gray-rgb), 0.08);
+  --gray-alpha-100: rgba(var(--gray-rgb), 0.05);
 
-    --button-primary-hover: #383838;
-    --button-secondary-hover: #f2f2f2;
+  --button-primary-hover: #383838;
+  --button-secondary-hover: #f2f2f2;
 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: 100dvh;
-    font-family: var(--font-geist-sans);
-    overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100dvh;
+  justify-content: center;
+  font-family: var(--font-geist-sans);
+  overflow: hidden;
 }
 
 @media (prefers-color-scheme: dark) {
-    .page {
-        --gray-rgb: 255, 255, 255;
-        --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
-        --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
+  .page {
+    --gray-rgb: 255, 255, 255;
+    --gray-alpha-200: rgba(var(--gray-rgb), 0.145);
+    --gray-alpha-100: rgba(var(--gray-rgb), 0.06);
 
-        --button-primary-hover: #ccc;
-        --button-secondary-hover: #1a1a1a;
-    }
+    --button-primary-hover: #ccc;
+    --button-secondary-hover: #1a1a1a;
+  }
 }
