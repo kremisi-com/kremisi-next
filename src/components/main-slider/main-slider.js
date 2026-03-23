@@ -13,6 +13,7 @@ import Loader from "@/components/loader/loader";
 import throttle from "lodash/throttle";
 import { useTransition } from "react";
 import { trackViewItemList } from "@/lib/analytics";
+import { ArrowRight } from "lucide-react";
 
 export default function MainSlider({ projectsData, slideByScroll = true }) {
     projectsData = useMemo(
@@ -365,6 +366,10 @@ export default function MainSlider({ projectsData, slideByScroll = true }) {
             >
                 {title}
             </label>
+            <button className={styles.scrollIndicator} style={{opacity: animationEnded ? 1 : 0}}>
+                <p>Discover More</p>
+                <ArrowRight size={30} />
+            </button>
         </div>
     );
 }

@@ -2,7 +2,7 @@ import { MessageCircleMore, MessageCircleQuestionMark } from "lucide-react";
 import styles from "./footer.module.css";
 import Button from "../button/button";
 
-export default function Footer() {
+export default function Footer({hideVAT}) {
     return (
         <>
             <footer className={`${styles.footer} onlyDesktop`}>
@@ -10,7 +10,7 @@ export default function Footer() {
                     <a href="mailto:info@kremisi.com">info@kremisi.com</a>
                 </address>
                 <span className={styles.info}></span>
-                <span className={styles.info}>
+                <span className={`${styles.info} ${hideVAT ? "d-none" : ""}`}>
                     VAT IT03894640121 - © 2022{" "}
                     <span className="color-primary">Kremisi</span>
                 </span>

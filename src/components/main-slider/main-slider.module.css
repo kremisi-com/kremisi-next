@@ -28,3 +28,33 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.scrollIndicator {
+    position: fixed;
+    bottom: 50px;
+    right: 50px;
+    z-index: 1000;
+    color: var(--text);
+    font-size: 20pt;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: opacity .3s ease-in-out;
+}
+.scrollIndicator::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    right: 0;
+    max-width: 0;
+    width: 100%;
+    height: 2px;
+    background-color: var(--primary);
+    transition: max-width .3s ease-in-out;
+}
+.scrollIndicator:hover::after {
+    max-width: 100%;
+}

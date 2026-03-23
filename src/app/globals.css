@@ -45,7 +45,8 @@ body {
 
 body,
 label,
-div {
+div,
+p {
     font-family: "FK Grotesk Trial", Arial, Helvetica, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
