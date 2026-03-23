@@ -14,7 +14,7 @@ import throttle from "lodash/throttle";
 import { useTransition } from "react";
 import { trackViewItemList } from "@/lib/analytics";
 
-export default function MainSlider({ projectsData }) {
+export default function MainSlider({ projectsData, slideByScroll = true }) {
     projectsData = useMemo(
         () => [...projectsData, ...projectsData],
         [projectsData]
@@ -298,6 +298,16 @@ export default function MainSlider({ projectsData }) {
         minHeight
     );
 
+    // ------------------- AUTO SCROLL ------------------------- //
+    const autoScrollSpeed = 5;
+    useEffect(() => {
+        if (slideByScroll || !animationEnded) return;
+        const interval = setInterval(() => {
+            applyScrollShift(autoScrollSpeed);
+        }, 10);
+        return () => clearInterval(interval);
+    }, [slideByScroll, applyScrollShift, animationEnded]);
+    
     // --------------------- SLIDES STYLES ------------------------ //
 
     const slideStyles = useMemo(() => {
@@ -313,13 +323,13 @@ export default function MainSlider({ projectsData }) {
     const horizontalShift = (slope - 1.2) * 350;
     return (
         <div
-            onWheel={handleScroll}
-            onMouseMove={handleMouseMove}
-            onPointerDown={handlePointerDown}
-            onPointerMove={handlePointerMove}
-            onPointerUp={handlePointerUp}
-            onPointerCancel={handlePointerCancel}
-            style={{ touchAction: "none" }}
+            onWheel={slideByScroll ? handleScroll : undefined}
+            onMouseMove={slideByScroll ? handleMouseMove : undefined}
+            onPointerDown={slideByScroll ? handlePointerDown : undefined}
+            onPointerMove={slideByScroll ? handlePointerMove : undefined}
+            onPointerUp={slideByScroll ? handlePointerUp : undefined}
+            onPointerCancel={slideByScroll ? handlePointerCancel : undefined}
+            style={{ touchAction: "none", overflow: "hidden" }}
         >
             {percentageLoaded < 99.9 && (
                 <Loader percentage={percentageLoaded} />

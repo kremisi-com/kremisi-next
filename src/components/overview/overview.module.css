@@ -1,0 +1,6 @@
+.overview {
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

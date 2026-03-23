@@ -7,6 +7,7 @@ import Link from "next/link";
 import ThemeToggle from "./theme-toggler";
 import React from "react";
 import AnimatedLink from "@/components/animated-link/animated-link";
+import { GalleryVertical, GalleryVerticalEnd } from "lucide-react";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
@@ -16,6 +17,9 @@ export default function Navbar() {
         <>
             <nav className={`${styles.navbar} onlyDesktop`}>
                 <div className={styles.buttons}>
+                    <Button className={styles.icon} animation={false}>
+                        <GalleryVerticalEnd size={17} />
+                    </Button>
                     <Button href="/">Home</Button>
                     <Button href="/about">About</Button>
                     <Button href="/projects">Projects</Button>
