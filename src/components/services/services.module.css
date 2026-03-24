@@ -1,0 +1,243 @@
+.servicesSection {
+    position: relative;
+    padding: 100px 10vw;
+    background-color: var(--background);
+    color: var(--foreground);
+    z-index: 10;
+}
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 60px;
+    gap: 40px;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.headerLeft {
+    flex: 1;
+}
+
+.subtitle {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--foreground);
+    opacity: 0.8;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.subtitleLine {
+    display: inline-block;
+    width: 40px;
+    height: 1px;
+    background-color: var(--primary);
+}
+
+.title {
+    font-size: 5rem;
+    font-weight: 600;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.02em;
+}
+
+.highlight {
+    color: var(--primary);
+}
+
+.headerRight {
+    flex: 1;
+    max-width: 600px;
+    padding-bottom: 0.5rem;
+}
+
+.description {
+    font-size: 1.35rem;
+    line-height: 1.5;
+    opacity: 0.85;
+    margin: 0;
+    font-weight: 400;
+}
+
+.listContainer {
+    display: flex;
+    flex-direction: column;
+    max-width: 1400px;
+    margin-left: auto;
+    margin-right: auto;
+    border-top: 1px solid var(--box-bg);
+}
+
+.listItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 35px 0;
+    border-bottom: 1px solid var(--box-bg);
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    cursor: pointer;
+    position: relative;
+}
+
+.listItem::before {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0%;
+    height: 1px;
+    background-color: var(--primary);
+    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    z-index: 2;
+}
+
+.listItem:hover::before {
+    width: 100%;
+}
+
+.itemLeft {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.itemNumber {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--foreground);
+    opacity: 0.2;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    margin-top: 10px;
+}
+
+.serviceName {
+    font-size: 3rem;
+    font-weight: 400;
+    margin: 0;
+    color: var(--foreground);
+    opacity: 0.4;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    letter-spacing: -0.01em;
+}
+
+.serviceDot {
+    color: transparent;
+    transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.listItem:hover .itemLeft {
+    transform: translateX(30px);
+}
+
+.listItem:hover .serviceName {
+    opacity: 1;
+}
+
+.listItem:hover .itemNumber {
+    opacity: 1;
+    color: var(--primary);
+}
+
+.listItem:hover .serviceDot {
+    color: var(--primary);
+}
+
+.arrowIcon {
+    opacity: 0.3;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    color: var(--foreground);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.svgIcon {
+    width: 50px;
+    height: 50px;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.arrowCircle {
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.arrowPath {
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    stroke-width: 1px;
+}
+
+.listItem:hover .arrowIcon {
+    opacity: 1;
+    transform: translateX(-20px) rotate(-45deg);
+}
+
+.listItem:hover .arrowCircle {
+    fill: var(--primary);
+    stroke: var(--primary);
+}
+
+.listItem:hover .arrowPath {
+    stroke: var(--background);
+    stroke-width: 1.5px;
+}
+
+@media (max-width: 1024px) {
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        margin-bottom: 40px;
+    }
+    .title {
+        font-size: 3.5rem;
+    }
+    .serviceName {
+        font-size: 2.5rem;
+    }
+    .itemLeft {
+        gap: 20px;
+    }
+    .itemNumber {
+        margin-top: 6px;
+    }
+}
+
+@media (max-width: 768px) {
+    .servicesSection {
+        padding: 60px 5vw;
+    }
+    .title {
+        font-size: 2.8rem;
+    }
+    .serviceName {
+        font-size: 2rem;
+    }
+    .listItem {
+        padding: 25px 0;
+    }
+    .itemLeft {
+        gap: 15px;
+    }
+    .itemNumber {
+        font-size: 1rem;
+        margin-top: 4px;
+    }
+    .listItem:hover .itemLeft {
+        transform: translateX(15px);
+    }
+    .listItem:hover .arrowIcon {
+        transform: translateX(-10px) rotate(-45deg);
+    }
+    .svgIcon {
+        width: 38px;
+        height: 38px;
+    }
+}

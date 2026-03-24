@@ -26,6 +26,7 @@ export default function MainSlider({
   );
 
   const animationDurationInitial = 2000;
+  const animationStartDelayMs = 500;
   const leaveAnimationDuration = 3200;
   const animationTargetScroll = 0;
   const slideSize = 120;
@@ -105,6 +106,7 @@ export default function MainSlider({
     lastY: 0,
   });
   const animationStartedRef = useRef(false);
+  const animationStartTimeoutRef = useRef(null);
   const animationTimeoutRef = useRef(null);
   const leaveAnimationFrameRef = useRef(null);
   const reopenAnimationTimeoutRef = useRef(null);
@@ -294,6 +296,19 @@ export default function MainSlider({
     }, animationDurationInitial);
   }, [animationDurationInitial, animationTargetScroll, setScrollValue]);
 
+  const scheduleRunAnimation = useCallback(() => {
+    if (animationStartedRef.current) return;
+
+    if (animationStartTimeoutRef.current) {
+      window.clearTimeout(animationStartTimeoutRef.current);
+    }
+
+    animationStartTimeoutRef.current = window.setTimeout(() => {
+      animationStartTimeoutRef.current = null;
+      runAnimation();
+    }, animationStartDelayMs);
+  }, [animationStartDelayMs, runAnimation]);
+
   const applyScrollShift = useCallback(
     (shift) => {
       if (shift === 0) return;
@@ -417,13 +432,13 @@ export default function MainSlider({
       const nextValue = Math.min(prev + increment, 100);
 
       if (nextValue >= 99.99) {
-        window.setTimeout(runAnimation, 100);
+        scheduleRunAnimation();
         return 99;
       }
 
       return nextValue;
     });
-  }, [duplicatedProjectsData.length, runAnimation]);
+  }, [duplicatedProjectsData.length, scheduleRunAnimation]);
 
   const slideStyles = useMemo(
     () =>
@@ -548,10 +563,10 @@ export default function MainSlider({
     setIsHidden(false);
     reopenAnimationTimeoutRef.current = window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
-        runAnimation();
+        scheduleRunAnimation();
       });
     });
-  }, [isHidden, reopenSignal, runAnimation]);
+  }, [isHidden, reopenSignal, scheduleRunAnimation]);
 
   useEffect(() => {
     if (!isLeaving) return;
@@ -573,6 +588,9 @@ export default function MainSlider({
 
   useEffect(() => {
     return () => {
+      if (animationStartTimeoutRef.current) {
+        window.clearTimeout(animationStartTimeoutRef.current);
+      }
       if (animationTimeoutRef.current) {
         window.clearTimeout(animationTimeoutRef.current);
       }

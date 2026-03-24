@@ -15,10 +15,18 @@ export default function Navbar() {
     const animationDelay = 300;
     const pathname = usePathname();
 
-    const handleSliderButtonClick = React.useCallback(() => {
+    const reopenHomeSlider = React.useCallback(() => {
         if (pathname !== "/") return;
         window.dispatchEvent(new CustomEvent("home-slider-reopen"));
     }, [pathname]);
+
+    const handleSliderButtonClick = React.useCallback(() => {
+        reopenHomeSlider();
+    }, [reopenHomeSlider]);
+
+    const handleHomeClick = React.useCallback(() => {
+        reopenHomeSlider();
+    }, [reopenHomeSlider]);
 
     return (
         <>
@@ -32,7 +40,12 @@ export default function Navbar() {
                     >
                         <GalleryVerticalEnd size={17} />
                     </Button>
-                    <Button href="/">Home</Button>
+                    <Button
+                        onClick={handleHomeClick}
+                        href={pathname === "/" ? "" : "/"}
+                    >
+                        Home
+                    </Button>
                     <Button href="/about">About</Button>
                     <Button href="/projects">Projects</Button>
                 </div>

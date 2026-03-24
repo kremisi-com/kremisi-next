@@ -3,6 +3,7 @@
 import styles from "./page.module.css";
 import MainSlider from "@/components/main-slider/main-slider";
 import Overview from "@/components/overview/overview";
+import Services from "@/components/services/services";
 
 import {
   getProjectsArray,
@@ -12,6 +13,9 @@ import {
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 export default function Home() {
+  const overviewRevealAdvanceMs = 500;
+  const overviewFadeDurationMs = 1400;
+  const overviewTextRevealAdvanceMs = 500;
   const projectsDataArray = useMemo(() => getProjectsArray(), []);
   const organizedProjects = useMemo(
     () => getOrganizedProjects(projectsDataArray),
@@ -23,6 +27,7 @@ export default function Home() {
   );
   const discoverAnimationRef = useRef(false);
   const sequenceTimeoutsRef = useRef([]);
+  const initialPageStylesRef = useRef(null);
   const [isOverviewVisible, setIsOverviewVisible] = useState(false);
   const [shouldAnimateOverviewText, setShouldAnimateOverviewText] =
     useState(false);
@@ -31,7 +36,7 @@ export default function Home() {
   useEffect(() => {
     const html = document.documentElement;
     const body = document.body;
-    const previous = {
+    initialPageStylesRef.current = {
       htmlOverflow: html.style.overflow,
       htmlOverflowX: html.style.overflowX,
       htmlOverflowY: html.style.overflowY,
@@ -43,13 +48,11 @@ export default function Home() {
       overscrollBehavior: body.style.overscrollBehavior,
     };
 
-    html.style.overflow = "hidden";
-    body.style.overflow = "hidden";
-    html.style.height = "100dvh";
-    body.style.height = "100dvh";
-    body.style.overscrollBehavior = "none";
-
     return () => {
+      const previous = initialPageStylesRef.current;
+
+      if (!previous) return;
+
       html.style.overflow = previous.htmlOverflow;
       html.style.overflowX = previous.htmlOverflowX;
       html.style.overflowY = previous.htmlOverflowY;
@@ -61,6 +64,34 @@ export default function Home() {
       body.style.overscrollBehavior = previous.overscrollBehavior;
     };
   }, []);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+
+    if (isOverviewVisible) {
+      html.style.overflow = "auto";
+      html.style.overflowX = "hidden";
+      html.style.overflowY = "auto";
+      body.style.overflow = "auto";
+      body.style.overflowX = "hidden";
+      body.style.overflowY = "auto";
+      html.style.height = "auto";
+      body.style.height = "auto";
+      body.style.overscrollBehavior = "auto";
+      return;
+    }
+
+    html.style.overflow = "hidden";
+    html.style.overflowX = "hidden";
+    html.style.overflowY = "hidden";
+    body.style.overflow = "hidden";
+    body.style.overflowX = "hidden";
+    body.style.overflowY = "hidden";
+    html.style.height = "100dvh";
+    body.style.height = "100dvh";
+    body.style.overscrollBehavior = "none";
+  }, [isOverviewVisible]);
 
   useEffect(() => {
     return () => {
@@ -108,7 +139,6 @@ export default function Home() {
 
   const handleOverviewFadeComplete = useCallback(() => {
     discoverAnimationRef.current = false;
-    setShouldAnimateOverviewText(true);
   }, []);
 
   const handleDiscoverMoreClick = useCallback((duration = 2000) => {
@@ -117,7 +147,16 @@ export default function Home() {
     discoverAnimationRef.current = true;
     setShouldAnimateOverviewText(false);
 
-    const overviewRevealDelay = Math.round(duration * 0.62);
+    const overviewRevealDelay = Math.max(
+      0,
+      Math.round(duration * 0.62) - overviewRevealAdvanceMs,
+    );
+    const overviewTextRevealDelay = Math.max(
+      0,
+      overviewRevealDelay +
+        overviewFadeDurationMs -
+        overviewTextRevealAdvanceMs,
+    );
 
     sequenceTimeoutsRef.current.forEach((timeoutId) =>
       window.clearTimeout(timeoutId),
@@ -127,18 +166,47 @@ export default function Home() {
     const startOverviewFade = window.setTimeout(() => {
       setIsOverviewVisible(true);
     }, overviewRevealDelay);
+    const startOverviewTextAnimation = window.setTimeout(() => {
+      setShouldAnimateOverviewText(true);
+    }, overviewTextRevealDelay);
 
     sequenceTimeoutsRef.current.push(startOverviewFade);
-  }, []);
+    sequenceTimeoutsRef.current.push(startOverviewTextAnimation);
+  }, [
+    overviewFadeDurationMs,
+    overviewRevealAdvanceMs,
+    overviewTextRevealAdvanceMs,
+  ]);
 
   return (
-    <div className={styles.page}>
-      <div className={styles.overviewWrapper}>
+    <div
+      className={`${styles.page} ${
+        isOverviewVisible ? styles.pageOverviewVisible : ""
+      }`}
+    >
+      <div
+        className={`${styles.overviewWrapper} ${
+          isOverviewVisible ? styles.overviewWrapperVisible : ""
+        }`}
+        style={{
+          pointerEvents: isOverviewVisible ? "auto" : "none",
+        }}
+      >
         <Overview
           isVisible={isOverviewVisible}
           textShouldAnimate={shouldAnimateOverviewText}
           onFadeInComplete={handleOverviewFadeComplete}
         />
+        <div
+          style={{
+            opacity: isOverviewVisible ? 1 : 0,
+            transform: isOverviewVisible ? "translateY(0)" : "translateY(40px)",
+            transition:
+              "opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), transform 1.4s cubic-bezier(0.22, 1, 0.36, 1)",
+          }}
+        >
+          <Services />
+        </div>
       </div>
 
       <div className={styles.sliderWrapper}>
