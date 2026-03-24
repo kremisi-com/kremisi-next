@@ -54,23 +54,6 @@
     color: var(--primary);
 }
 
-.headerRight {
-    flex: 0 1 460px;
-    max-width: 460px;
-    align-self: center;
-    transform: translateY(28px);
-}
-
-.description {
-    font-size: clamp(1.125rem, 1.02rem + 0.42vw, 1.25rem);
-    line-height: 1.6;
-    color: color-mix(in srgb, var(--foreground) 72%, var(--background) 28%);
-    margin: 0;
-    font-weight: 400;
-    max-width: 28ch;
-    text-wrap: pretty;
-}
-
 .listContainer {
     display: flex;
     flex-direction: column;
@@ -204,14 +187,6 @@
     .title {
         font-size: 4rem;
     }
-    .headerRight {
-        flex-basis: auto;
-        max-width: 34rem;
-        transform: none;
-    }
-    .description {
-        max-width: 32ch;
-    }
     .serviceName {
         font-size: 3rem;
     }
@@ -234,11 +209,6 @@
     }
     .title {
         font-size: 3rem;
-    }
-    .description {
-        font-size: 1.1rem;
-        max-width: 100%;
-        color: var(--foreground);
     }
     .listItem {
         padding: 40px 0;

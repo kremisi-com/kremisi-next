@@ -42,11 +42,6 @@ export default function Services() {
                         That Actually Work
                     </h2>
                 </div>
-                <div className={styles.headerRight}>
-                    <p className={styles.description}>
-                        From product definition to scalable platforms, we design systems that support real business operations.
-                    </p>
-                </div>
             </div>
             
             <div className={styles.listContainer}>
