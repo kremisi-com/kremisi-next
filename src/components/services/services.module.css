@@ -123,8 +123,8 @@
 .titleRow {
     display: flex;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 15px;
+    gap: 24px;
+    margin-bottom: 24px;
 }
 
 .serviceName {
@@ -179,14 +179,14 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 15px;
+    gap: 32px;
 }
 
 .expandedContent.expanded .expandedInner {
     opacity: 1;
     transform: translateY(0);
-    padding-bottom: 25px;
-    padding-top: 5px;
+    padding-bottom: 40px;
+    padding-top: 15px;
 }
 
 .expandedTextContent {
@@ -196,23 +196,24 @@
 }
 
 .loremIntro {
-    font-size: 1.25rem;
-    line-height: 1.5;
+    font-size: 1.4rem;
+    line-height: 1.6;
     color: var(--foreground);
     margin: 0;
     font-weight: 500;
     opacity: 0.9;
     max-width: 750px;
+    margin-bottom: 12px;
 }
 
 .loremText {
-    font-size: 1.05rem;
-    line-height: 1.6;
+    font-size: 1.1rem;
+    line-height: 1.7;
     color: var(--foreground);
-    opacity: 0.6;
+    opacity: 0.5;
     margin: 0;
-    font-weight: 300;
-    max-width: 750px;
+    font-weight: 400;
+    max-width: 700px;
 }
 
 /* Dynamic Detailed Sections inside ExpandedArea */
@@ -225,8 +226,8 @@
 .detailBlock {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-bottom: 20px;
+    gap: 20px;
+    margin-bottom: 40px;
 }
 
 .detailBlock:last-child {
@@ -234,24 +235,24 @@
 }
 
 .detailIntro {
-    font-size: 2.2rem;
-    line-height: 1.3;
+    font-size: 2.4rem;
+    line-height: 1.2;
     color: var(--foreground);
     margin: 0;
     font-weight: 600;
     opacity: 1;
     max-width: 850px;
-    letter-spacing: -0.01em;
+    letter-spacing: -0.02em;
 }
 
 .detailSupporting {
-    font-size: 1.6rem;
-    line-height: 1.5;
+    font-size: 1.5rem;
+    line-height: 1.7;
     color: var(--foreground);
     margin: 0;
     font-weight: 400;
-    opacity: 0.6;
-    max-width: 850px;
+    opacity: 0.5;
+    max-width: 800px;
 }
 
 .detailList {
@@ -260,46 +261,47 @@
     list-style: none;
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    margin-bottom: 5px;
+    gap: 18px;
+    margin-bottom: 10px;
 }
 
 .detailList li {
-    font-size: 1.6rem;
-    line-height: 1.4;
+    font-size: 1.5rem;
+    line-height: 1.6;
     color: var(--foreground);
-    opacity: 0.8;
+    opacity: 0.7;
     font-weight: 400;
-    padding-left: 20px;
+    padding-left: 24px;
     position: relative;
     max-width: 850px;
 }
 
-/* .detailList li::before {
-    content: "•";
+.detailList li::before {
+    content: "";
     position: absolute;
     left: 0;
-    color: var(--foreground);
-    opacity: 0.7;
-    font-weight: 600;
-    font-size: 18px;
-    margin-top: -3px;
-} */
+    top: 0.7em;
+    width: 6px;
+    height: 1px;
+    background-color: var(--primary);
+    opacity: 0.8;
+}
 
 .serviceDescription {
     font-size: 1.25rem;
-    line-height: 1.6;
-    opacity: 0.7;
+    line-height: 1.7;
+    opacity: 0.5;
     margin: 0;
-    margin-bottom: 15px;
-    font-weight: 300;
-    max-width: 750px;
+    margin-bottom: 24px;
+    font-weight: 400;
+    max-width: 700px;
 }
 
 .keywordList {
+    margin-top: 16px;
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 10px;
 }
 
 .keywordTag {
