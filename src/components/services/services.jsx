@@ -1,11 +1,29 @@
+"use client";
+import { useState } from 'react';
 import styles from './services.module.css';
 
 export default function Services() {
+    const [activeIndex, setActiveIndex] = useState(null);
+
+    const toggleAccordion = (index) => {
+        setActiveIndex(activeIndex === index ? null : index);
+    };
+
     const servicesList = [
         {
             title: "Product & UX",
             description: "Product design, UX flows and interface definition based on real use cases and business goals.",
-            keywords: ["Product Strategy", "UX Flows", "Brand & UI Systems"]
+            keywords: ["Product Strategy", "UX Flows", "Brand & UI Systems"],
+            expandedDetails: {
+                intro: "We define how your product works before writing any code.",
+                supporting: "Starting from real use cases, we structure features, user flows and interfaces to remove complexity.",
+                bullets: [
+                    "Product structure and feature definition",
+                    "User flows and interaction logic",
+                    "Interface systems and design consistency",
+                    "Visual identity aligned with the product"
+                ]
+            }
         },
         {
             title: "Web Platform",
@@ -51,7 +69,11 @@ export default function Services() {
             
             <div className={styles.listContainer}>
                 {servicesList.map((service, index) => (
-                    <div key={index} className={styles.listItem}>
+                    <div 
+                        key={index} 
+                        className={`${styles.listItem} ${activeIndex === index ? styles.active : ''}`}
+                        onClick={() => toggleAccordion(index)}
+                    >
                         <div className={styles.itemNumber}>
                             {(index + 1).toString().padStart(2, '0')}
                         </div>
@@ -67,6 +89,46 @@ export default function Services() {
                             </div>
                             
                             <p className={styles.serviceDescription}>{service.description}</p>
+
+                            <div className={`${styles.expandedContent} ${activeIndex === index ? styles.expanded : ''}`}>
+                                <div className={styles.expandedInner}>
+                                    {service.expandedDetails ? (
+                                        <div className={styles.expandedSection}>
+                                            {service.expandedDetails.intro && (
+                                                <div className={styles.detailBlock}>
+                                                    <p className={styles.detailIntro}>
+                                                        {service.expandedDetails.intro}
+                                                    </p>
+                                                    {service.expandedDetails.supporting && (
+                                                        <p className={styles.detailSupporting}>
+                                                            {service.expandedDetails.supporting}
+                                                        </p>
+                                                    )}
+                                                </div>
+                                            )}
+                                            
+                                            {service.expandedDetails.bullets && (
+                                                <div className={styles.detailBlock}>
+                                                    <ul className={styles.detailList}>
+                                                        {service.expandedDetails.bullets.map((item, i) => (
+                                                            <li key={i}>{item}</li>
+                                                        ))}
+                                                    </ul>
+                                                </div>
+                                            )}
+                                        </div>
+                                    ) : (
+                                        <div className={styles.expandedTextContent}>
+                                            <p className={styles.loremIntro}>
+                                                A deep dive into how we solve complex problems with modern technology and user-centric design principles.
+                                            </p>
+                                            <p className={styles.loremText}>
+                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna. Ut enim ad minim veniam, quis nostrud exercitation ut labore et dolore.
+                                            </p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
                             
                             <div className={styles.keywordList}>
                                 {service.keywords.map((kw, i) => (
