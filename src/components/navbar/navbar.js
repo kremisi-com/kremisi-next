@@ -7,17 +7,25 @@ import Link from "next/link";
 import ThemeToggle from "./theme-toggler";
 import React from "react";
 import AnimatedLink from "@/components/animated-link/animated-link";
-import { GalleryVertical, GalleryVerticalEnd } from "lucide-react";
+import { GalleryVerticalEnd } from "lucide-react";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
     const animationDelay = 300;
 
+    const handleSliderButtonClick = React.useCallback(() => {
+        window.dispatchEvent(new CustomEvent("home-slider-reopen"));
+    }, []);
+
     return (
         <>
             <nav className={`${styles.navbar} onlyDesktop`}>
                 <div className={styles.buttons}>
-                    <Button className={styles.icon} animation={false}>
+                    <Button
+                        className={styles.icon}
+                        animation={false}
+                        onClick={handleSliderButtonClick}
+                    >
                         <GalleryVerticalEnd size={17} />
                     </Button>
                     <Button href="/">Home</Button>

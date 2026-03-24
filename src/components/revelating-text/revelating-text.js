@@ -6,9 +6,12 @@ import ScrollTrigger from "gsap/ScrollTrigger";
 import SplitType from "split-type";
 import styles from "./revelating-text.module.css";
 
-export default function RevelatingText({ children }) {
+export default function RevelatingText({ children, play }) {
     const sectionRef = useRef(null);
     const textRef = useRef(null);
+    const splitRef = useRef(null);
+    const cleanupRef = useRef(null);
+    const hasAnimatedRef = useRef(false);
 
     useEffect(() => {
         gsap.registerPlugin(ScrollTrigger);
@@ -17,62 +20,98 @@ export default function RevelatingText({ children }) {
         if (!el) return;
 
         const split = new SplitType(el, { types: "words" });
-        gsap.set(el, { autoAlpha: 1 });
+        splitRef.current = split;
 
-        const ctx = gsap.context(() => {
-            gsap.fromTo(
-                split.words,
-                { yPercent: 100, opacity: 0 },
-                {
-                    yPercent: 0,
-                    opacity: 1,
-                    duration: 0.35,
-                    ease: "power3.out",
-                    stagger: 0.03,
-                    scrollTrigger: {
-                        trigger: sectionRef.current || el,
+        gsap.set(el, { autoAlpha: play === undefined ? 1 : 0 });
+        gsap.set(split.words, { yPercent: 100, opacity: 0 });
+
+        if (play === undefined) {
+            const ctx = gsap.context(() => {
+                gsap.fromTo(
+                    split.words,
+                    { yPercent: 100, opacity: 0 },
+                    {
+                        yPercent: 0,
+                        opacity: 1,
+                        duration: 0.35,
+                        ease: "power3.out",
+                        stagger: 0.03,
+                        scrollTrigger: {
+                            trigger: sectionRef.current || el,
+                            start: "top 80%",
+                            once: true,
+                        },
+                    }
+                );
+            }, sectionRef);
+
+            ctx.add(() => {
+                const words = el.querySelectorAll(`.word`);
+
+                words.forEach((w) => {
+                    ScrollTrigger.create({
+                        trigger: w,
                         start: "top 80%",
-                        once: true,
-                    },
-                }
-            );
-        }, sectionRef);
-
-        ctx.add(() => {
-            const words = el.querySelectorAll(`.word`);
-
-            words.forEach((w) => {
-                ScrollTrigger.create({
-                    trigger: w,
-                    start: "top 80%",
-                    onEnter: () => {
-                        const isHighlight = !!w.closest(`.highlight`);
-                        const color = isHighlight
-                            ? "var(--primary)"
-                            : "var(--foreground)";
-                        gsap.to(w, { color, duration: 0.2 });
-                    },
-                    onEnterBack: () => {
-                        const isHighlight = !!w.closest(`.highlight`);
-                        const color = isHighlight
-                            ? "var(--primary)"
-                            : "var(--foreground)";
-                        gsap.to(w, { color, duration: 0.2 });
-                    },
-                    onLeave: () => gsap.set(w, { clearProps: "color" }),
-                    onLeaveBack: () => gsap.set(w, { clearProps: "color" }),
+                        onEnter: () => {
+                            const isHighlight = !!w.closest(`.highlight`);
+                            const color = isHighlight
+                                ? "var(--primary)"
+                                : "var(--foreground)";
+                            gsap.to(w, { color, duration: 0.2 });
+                        },
+                        onEnterBack: () => {
+                            const isHighlight = !!w.closest(`.highlight`);
+                            const color = isHighlight
+                                ? "var(--primary)"
+                                : "var(--foreground)";
+                            gsap.to(w, { color, duration: 0.2 });
+                        },
+                        onLeave: () => gsap.set(w, { clearProps: "color" }),
+                        onLeaveBack: () => gsap.set(w, { clearProps: "color" }),
+                    });
                 });
+
+                ScrollTrigger.refresh();
             });
 
-            ScrollTrigger.refresh();
-        });
+            cleanupRef.current = () => ctx.revert();
+        }
 
         return () => {
-            ctx.revert();
+            cleanupRef.current?.();
             gsap.set(el, { clearProps: "all" });
             split.revert();
+            splitRef.current = null;
+            cleanupRef.current = null;
+            hasAnimatedRef.current = false;
         };
-    }, []);
+    }, [play]);
+
+    useEffect(() => {
+        if (play === undefined || !play || hasAnimatedRef.current) return;
+
+        const el = textRef.current;
+        const split = splitRef.current;
+        if (!el || !split) return;
+
+        hasAnimatedRef.current = true;
+        gsap.set(el, { autoAlpha: 1 });
+
+        split.words.forEach((word) => {
+            const isHighlight = !!word.closest(`.highlight`);
+            gsap.set(word, {
+                color: isHighlight ? "var(--primary)" : "var(--foreground)",
+            });
+        });
+
+        gsap.to(split.words, {
+            yPercent: 0,
+            opacity: 1,
+            duration: 0.55,
+            ease: "power3.out",
+            stagger: 0.045,
+        });
+    }, [play]);
 
     return (
         <section ref={sectionRef} className={styles.section}>

@@ -18,6 +18,7 @@ export default function MainSlider({
   projectsData,
   onDiscoverMoreClick,
   slideByScroll = true,
+  reopenSignal = 0,
 }) {
   projectsData = useMemo(
     () => [...projectsData, ...projectsData],
@@ -25,8 +26,10 @@ export default function MainSlider({
   );
   const [animationEnded, setAnimationEnded] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
+  const [isHidden, setIsHidden] = useState(false);
 
   const animationDurationInitial = 2000;
+  const leaveAnimationDuration = 3200;
   const animationTargetScroll = 0;
 
   const slideSize = 120;
@@ -35,6 +38,17 @@ export default function MainSlider({
   const starterScrollPosition = sliderCenter * 4;
   const leaveTargetScroll = Math.abs(starterScrollPosition);
   const [scrollPosition, setScrollPosition] = useState(starterScrollPosition);
+  const initialSlidesPositions = useMemo(
+    () =>
+      projectsData.map(
+        (_, index) => (projectsData.length - 1) * slideSize - index * slideSize,
+      ),
+    [projectsData, slideSize],
+  );
+  const initialSlidesDisplayed = useMemo(
+    () => projectsData.map(() => true),
+    [projectsData],
+  );
 
   const chunksNumber = 5;
   const relativeChunkSize = 1 / chunksNumber;
@@ -72,6 +86,8 @@ export default function MainSlider({
   });
   const animationStartedRef = useRef(false);
   const leaveAnimationTimeoutRef = useRef(null);
+  const reopenAnimationTimeoutRef = useRef(null);
+  const handledReopenSignalRef = useRef(0);
 
   const runAnimation = useCallback(() => {
     if (animationStartedRef.current) return;
@@ -169,21 +185,39 @@ export default function MainSlider({
 
   // ------------------- LABEL MANAGEMENT ------------------------- //
   const titleRef = useRef(null);
+  const titlePointerRef = useRef({ x: -9999, y: -9999 });
+  const titleFrameRef = useRef(null);
   const [darkText, setDarkText] = useState(false);
   const [title, setTitle] = useState("");
-  const [translation, setTranslation] = useState("translate(-50%, -50%)");
 
   const updateTitleData = useCallback((newTitle, isDarkText) => {
     setTitle(newTitle);
     setDarkText(isDarkText);
   }, []);
 
-  function handleMouseMove(e) {
-    const x = e.clientX + 15;
-    const y = e.clientY + 2;
+  const flushTitlePosition = useCallback(() => {
+    titleFrameRef.current = null;
 
-    setTranslation(`translate(${x}px, ${y}px)`);
-  }
+    if (!titleRef.current) return;
+
+    const { x, y } = titlePointerRef.current;
+    titleRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  }, []);
+
+  const handleMouseMove = useCallback((e) => {
+    titlePointerRef.current = {
+      x: e.clientX + 15,
+      y: e.clientY + 2,
+    };
+
+    if (titleFrameRef.current) return;
+    titleFrameRef.current = window.requestAnimationFrame(flushTitlePosition);
+  }, [flushTitlePosition]);
+
+  useEffect(() => {
+    if (!titleRef.current) return;
+    titleRef.current.style.transform = "translate3d(-9999px, -9999px, 0)";
+  }, []);
 
   // ------------------- IMAGE LOADING ------------------------- //
   const [percentageLoaded, setPercentageLoaded] = useState(0);
@@ -202,13 +236,9 @@ export default function MainSlider({
   }, [projectsData.length, runAnimation]);
 
   // ------------------- SLIDES POSITIONS ------------------------- //
-  const [slidesPositions, setSlidesPositions] = useState(
-    projectsData.map(
-      (_, index) => (projectsData.length - 1) * slideSize - index * slideSize,
-    ),
-  );
+  const [slidesPositions, setSlidesPositions] = useState(initialSlidesPositions);
   const [areSlidesDisplayed, setAreSlidesDisplayed] = useState(
-    projectsData.map((_, index) => true),
+    initialSlidesDisplayed,
   );
 
   // ------------------- CHUNK CHANGE ------------------------- //
@@ -353,31 +383,88 @@ export default function MainSlider({
   // ------------------- DISCOVER MORE CLICK ------------------------- //
   const runLeaveAnimation = useCallback(() => {
     if (animationStartedRef.current || isLeaving || !animationEnded) return false;
-    setAnimationDuration(`${animationDurationInitial}ms`);
+    setAnimationDuration(`${leaveAnimationDuration}ms`);
     setIsLeaving(true);
     animationStartedRef.current = true;
     setScrollPosition(leaveTargetScroll);
     leaveAnimationTimeoutRef.current = window.setTimeout(() => {
       animationStartedRef.current = false;
-    }, animationDurationInitial);
+    }, leaveAnimationDuration);
     return true;
   }, [
-    animationDurationInitial,
     animationEnded,
     isLeaving,
+    leaveAnimationDuration,
     leaveTargetScroll,
   ]);
 
   const handleDiscoverMore = useCallback(() => {
     const hasStarted = runLeaveAnimation();
     if (!hasStarted) return;
-    onDiscoverMoreClick?.(animationDurationInitial);
-  }, [animationDurationInitial, onDiscoverMoreClick, runLeaveAnimation]);
+    onDiscoverMoreClick?.(leaveAnimationDuration);
+  }, [leaveAnimationDuration, onDiscoverMoreClick, runLeaveAnimation]);
+
+  const resetSliderState = useCallback(() => {
+    const initialChunk = findActualChunk(animationTargetScroll);
+    animationStartedRef.current = false;
+    setAnimationEnded(false);
+    setIsLeaving(false);
+    setAnimationDuration(`${animationDurationInitial}ms`);
+    setActualChunk(initialChunk);
+    setSlidesPositions(initialSlidesPositions);
+    setAreSlidesDisplayed(initialSlidesDisplayed);
+    scrollRef.current = starterScrollPosition;
+    setScrollPosition(starterScrollPosition);
+  }, [
+    animationDurationInitial,
+    animationTargetScroll,
+    findActualChunk,
+    initialSlidesDisplayed,
+    initialSlidesPositions,
+    starterScrollPosition,
+  ]);
+
+  useEffect(() => {
+    if (!reopenSignal || reopenSignal === handledReopenSignalRef.current) return;
+    if (!isHidden) return;
+
+    if (leaveAnimationTimeoutRef.current) {
+      window.clearTimeout(leaveAnimationTimeoutRef.current);
+    }
+    if (reopenAnimationTimeoutRef.current) {
+      window.clearTimeout(reopenAnimationTimeoutRef.current);
+    }
+
+    handledReopenSignalRef.current = reopenSignal;
+    setIsHidden(false);
+    reopenAnimationTimeoutRef.current = window.requestAnimationFrame(() => {
+      window.requestAnimationFrame(() => {
+        runAnimation();
+      });
+    });
+  }, [isHidden, reopenSignal, runAnimation]);
+
+  useEffect(() => {
+    if (!isLeaving) return;
+
+    const hideTimer = window.setTimeout(() => {
+      setIsHidden(true);
+      resetSliderState();
+    }, Math.round(leaveAnimationDuration * 0.82));
+
+    return () => window.clearTimeout(hideTimer);
+  }, [isLeaving, leaveAnimationDuration, resetSliderState]);
 
   useEffect(() => {
     return () => {
       if (leaveAnimationTimeoutRef.current) {
         window.clearTimeout(leaveAnimationTimeoutRef.current);
+      }
+      if (reopenAnimationTimeoutRef.current) {
+        window.cancelAnimationFrame(reopenAnimationTimeoutRef.current);
+      }
+      if (titleFrameRef.current) {
+        window.cancelAnimationFrame(titleFrameRef.current);
       }
     };
   }, []);
@@ -395,44 +482,51 @@ export default function MainSlider({
       style={{
         touchAction: slideByScroll && !isLeaving ? "none" : "auto",
         overflow: "hidden",
+        pointerEvents: isHidden ? "none" : "auto",
       }}
     >
       {percentageLoaded < 99.9 && <Loader percentage={percentageLoaded} />}
       <div
-        className={styles.slider}
-        style={{
-          transform: `translate(${computeTranslateX(
-            scrollPosition,
-          )}px, ${computeTranslateY(scrollPosition)}px)`,
-          "--animation-duration": animationDuration,
-          opacity: isLeaving ? 0 : 1,
-        }}
+        className={`${styles.sliderScene} ${isLeaving ? styles.sliderSceneLeaving : ""} ${isHidden ? styles.sliderSceneHidden : ""}`}
       >
-        {projectsData.map((slideData, index) => (
-          <Slide
-            key={slideData.id + index}
-            data={slideData}
-            style={slideStyles[index]}
-            updateTitleData={updateTitleData}
-            onImageLoad={onImageLoad}
-            width={imageWidth}
-            height={imageHeight}
-          />
-        ))}
+        <div
+          className={styles.slider}
+          style={{
+            transform: `translate(${computeTranslateX(
+              scrollPosition,
+            )}px, ${computeTranslateY(scrollPosition)}px)`,
+            "--animation-duration": animationDuration,
+            "--animation-easing": isLeaving
+              ? "cubic-bezier(0.22, 1, 0.36, 1)"
+              : "cubic-bezier(0.16, 1, 0.3, 1)",
+          }}
+        >
+          {projectsData.map((slideData, index) => (
+            <Slide
+              key={slideData.id + index}
+              data={slideData}
+              style={slideStyles[index]}
+              updateTitleData={updateTitleData}
+              onImageLoad={onImageLoad}
+              width={imageWidth}
+              height={imageHeight}
+            />
+          ))}
+        </div>
+        <div className={styles.cinematicVeil} />
       </div>
       <label
-        className={styles.title}
+        className={`${styles.title} ${isLeaving ? styles.titleLeaving : ""}`}
         ref={titleRef}
         style={{
           color: darkText ? "black" : "white",
-          transform: translation,
           opacity: animationEnded && !isLeaving ? 1 : 0,
         }}
       >
         {title}
       </label>
       <button
-        className={styles.scrollIndicator}
+        className={`${styles.scrollIndicator} ${isLeaving ? styles.scrollIndicatorLeaving : ""}`}
         style={{ opacity: animationEnded && !isLeaving ? 1 : 0 }}
         onClick={handleDiscoverMore}
         disabled={isLeaving}
