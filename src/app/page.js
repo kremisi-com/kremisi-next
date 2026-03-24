@@ -4,6 +4,7 @@ import styles from "./page.module.css";
 import MainSlider from "@/components/main-slider/main-slider";
 import Overview from "@/components/overview/overview";
 import Services from "@/components/services/services";
+import SocialProof from "@/components/social-proof/social-proof";
 
 import {
   getProjectsArray,
@@ -206,6 +207,7 @@ export default function Home() {
           }}
         >
           <Services />
+          <SocialProof />
         </div>
       </div>
 

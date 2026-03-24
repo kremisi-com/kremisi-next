@@ -16,7 +16,7 @@ export default function Services() {
             keywords: ["Product Strategy", "UX Flows", "Brand & UI Systems"],
             expandedDetails: {
                 intro: "We define how your product works before writing any code.",
-                supporting: "Starting from real use cases, we structure features, user flows and interfaces to remove complexity.",
+                supporting: "Starting from real use cases, we structure flows and interfaces to remove complexity.",
                 bullets: [
                     "Product structure and feature definition",
                     "User flows and interaction logic",
