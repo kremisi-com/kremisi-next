@@ -9,7 +9,7 @@ import {
   getOrganizedProjects,
   getSortedProjects,
 } from "@/lib/projects";
-import { useEffect, useMemo, useRef } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import gsap from "gsap";
 import { ScrollToPlugin } from "gsap/ScrollToPlugin";
 
@@ -23,16 +23,42 @@ export default function Home() {
     () => getSortedProjects(organizedProjects),
     [organizedProjects],
   );
+  const discoverAnimationRef = useRef(false);
+
+  useEffect(() => {
+    gsap.registerPlugin(ScrollToPlugin);
+  }, []);
+
+  const handleDiscoverMoreClick = useCallback((duration = 2000) => {
+    if (discoverAnimationRef.current) return;
+
+    const overviewElement = document.getElementById("overview");
+    if (!overviewElement) return;
+
+    discoverAnimationRef.current = true;
+    gsap.to(window, {
+      duration: duration / 1000,
+      ease: "power2.inOut",
+      scrollTo: {
+        y: overviewElement,
+        autoKill: false,
+      },
+      onComplete: () => {
+        discoverAnimationRef.current = false;
+      },
+      onInterrupt: () => {
+        discoverAnimationRef.current = false;
+      },
+    });
+  }, []);
 
   return (
     <div className={styles.page}>
-      <div className="slider-wrapper">
+      <div className={styles.sliderWrapper}>
         <MainSlider
           projectsData={sortedProjects}
           slideByScroll={true}
-          onDiscoverMoreClick={() => {
-            console.log("ciao");
-          }}
+          onDiscoverMoreClick={handleDiscoverMoreClick}
         />
       </div>
 

@@ -10,7 +10,6 @@ import React, {
 import styles from "./main-slider.module.css";
 import Slide from "./slide/slide";
 import Loader from "@/components/loader/loader";
-import throttle from "lodash/throttle";
 import { useTransition } from "react";
 import { trackViewItemList } from "@/lib/analytics";
 import { ArrowRight } from "lucide-react";
@@ -25,6 +24,7 @@ export default function MainSlider({
     [projectsData],
   );
   const [animationEnded, setAnimationEnded] = useState(false);
+  const [isLeaving, setIsLeaving] = useState(false);
 
   const animationDurationInitial = 2000;
   const animationTargetScroll = 0;
@@ -33,6 +33,7 @@ export default function MainSlider({
   const sliderSize = slideSize * projectsData.length;
   const sliderCenter = -slideSize * (projectsData.length / 2);
   const starterScrollPosition = sliderCenter * 4;
+  const leaveTargetScroll = Math.abs(starterScrollPosition);
   const [scrollPosition, setScrollPosition] = useState(starterScrollPosition);
 
   const chunksNumber = 5;
@@ -46,11 +47,14 @@ export default function MainSlider({
     `${animationDurationInitial}ms`,
   );
 
-  function findActualChunk(scroll) {
-    const mod = -(sliderCenter + scroll) / sliderSize;
-    const chunkNumber = Math.floor(mod / relativeChunkSize);
-    return chunkNumber;
-  }
+  const findActualChunk = useCallback(
+    (scroll) => {
+      const mod = -(sliderCenter + scroll) / sliderSize;
+      const chunkNumber = Math.floor(mod / relativeChunkSize);
+      return chunkNumber;
+    },
+    [relativeChunkSize, sliderCenter, sliderSize],
+  );
 
   let [actualChunk, setActualChunk] = useState(
     findActualChunk(animationTargetScroll),
@@ -58,18 +62,6 @@ export default function MainSlider({
   useEffect(() => {
     trackViewItemList("Project Slider");
   }, []);
-
-  useEffect(() => {
-    if (!animationEnded) return;
-    const newChunk = findActualChunk(scrollPosition);
-    if (newChunk !== actualChunk) onChunkChange(actualChunk, newChunk);
-  }, [
-    scrollPosition,
-    animationEnded,
-    actualChunk,
-    findActualChunk,
-    onChunkChange,
-  ]);
 
   const scrollRef = useRef(scrollPosition);
   const ticking = useRef(false);
@@ -79,11 +71,13 @@ export default function MainSlider({
     lastY: 0,
   });
   const animationStartedRef = useRef(false);
+  const leaveAnimationTimeoutRef = useRef(null);
 
   const runAnimation = useCallback(() => {
     if (animationStartedRef.current) return;
     setPercentageLoaded(100);
     animationStartedRef.current = true;
+    setIsLeaving(false);
     setScrollPosition(animationTargetScroll);
     setTimeout(() => {
       setAnimationEnded(true);
@@ -218,57 +212,72 @@ export default function MainSlider({
   );
 
   // ------------------- CHUNK CHANGE ------------------------- //
-  const [isPending, startTransition] = useTransition();
+  const [, startTransition] = useTransition();
 
-  function onChunkChange(oldChunk, chunk) {
-    setActualChunk(chunk);
-    const direction = chunk > oldChunk ? 1 : -1;
-    let chunkToMove = (chunk + 3 * -direction) % chunksNumber;
-    if (chunkToMove < 0) chunkToMove = chunksNumber + chunkToMove;
+  const onChunkChange = useCallback(
+    (oldChunk, chunk) => {
+      setActualChunk(chunk);
+      const direction = chunk > oldChunk ? 1 : -1;
+      let chunkToMove = (chunk + 3 * -direction) % chunksNumber;
+      if (chunkToMove < 0) chunkToMove = chunksNumber + chunkToMove;
 
-    let indexesToMove = [];
-    for (let i = chunks[chunkToMove]; i < chunks[chunkToMove + 1]; i++)
-      indexesToMove.push(i);
-    indexesToMove = indexesToMove.map((i) => projectsData.length - 1 - i);
+      let indexesToMove = [];
+      for (let i = chunks[chunkToMove]; i < chunks[chunkToMove + 1]; i++)
+        indexesToMove.push(i);
+      indexesToMove = indexesToMove.map((i) => projectsData.length - 1 - i);
 
-    const newDisplay = Array(projectsData.length).fill(true);
-    indexesToMove.forEach((i) => (newDisplay[i] = false));
+      const newDisplay = Array(projectsData.length).fill(true);
+      indexesToMove.forEach((i) => (newDisplay[i] = false));
 
-    const newPositions = [...slidesPositions];
-    const chunkPositions = indexesToMove.map((i) => newPositions[i]);
-    const chunkMin = Math.min(...chunkPositions);
-    const chunkMax = Math.max(...chunkPositions);
-    const chunkSpan = chunkMax - chunkMin;
-    const offsets = chunkPositions.map((pos) => pos - chunkMin);
+      const newPositions = [...slidesPositions];
+      const chunkPositions = indexesToMove.map((i) => newPositions[i]);
+      const chunkMin = Math.min(...chunkPositions);
+      const chunkMax = Math.max(...chunkPositions);
+      const chunkSpan = chunkMax - chunkMin;
+      const offsets = chunkPositions.map((pos) => pos - chunkMin);
 
-    const indexesSet = new Set(indexesToMove);
-    const remainingPositions = newPositions.filter(
-      (_, idx) => !indexesSet.has(idx),
-    );
-    const globalMax =
-      remainingPositions.length > 0
-        ? Math.max(...remainingPositions)
-        : chunkMax;
-    const globalMin =
-      remainingPositions.length > 0
-        ? Math.min(...remainingPositions)
-        : chunkMin;
+      const indexesSet = new Set(indexesToMove);
+      const remainingPositions = newPositions.filter(
+        (_, idx) => !indexesSet.has(idx),
+      );
+      const globalMax =
+        remainingPositions.length > 0
+          ? Math.max(...remainingPositions)
+          : chunkMax;
+      const globalMin =
+        remainingPositions.length > 0
+          ? Math.min(...remainingPositions)
+          : chunkMin;
 
-    let newStartPosition = 0;
-    if (direction === 1) {
-      newStartPosition = globalMax + slideSize;
-    } else {
-      newStartPosition = globalMin - slideSize - chunkSpan;
-    }
-    indexesToMove.forEach((i, idx) => {
-      newPositions[i] = newStartPosition + offsets[idx];
-    });
+      let newStartPosition = 0;
+      if (direction === 1) {
+        newStartPosition = globalMax + slideSize;
+      } else {
+        newStartPosition = globalMin - slideSize - chunkSpan;
+      }
+      indexesToMove.forEach((i, idx) => {
+        newPositions[i] = newStartPosition + offsets[idx];
+      });
 
-    startTransition(() => {
-      setAreSlidesDisplayed(newDisplay);
-      setSlidesPositions(newPositions);
-    });
-  }
+      startTransition(() => {
+        setAreSlidesDisplayed(newDisplay);
+        setSlidesPositions(newPositions);
+      });
+    },
+    [chunks, chunksNumber, projectsData.length, slideSize, slidesPositions],
+  );
+
+  useEffect(() => {
+    if (!animationEnded) return;
+    const newChunk = findActualChunk(scrollPosition);
+    if (newChunk !== actualChunk) onChunkChange(actualChunk, newChunk);
+  }, [
+    scrollPosition,
+    animationEnded,
+    actualChunk,
+    findActualChunk,
+    onChunkChange,
+  ]);
 
   // ------------------- SLIDES SIZES ------------------------- //
   //lo slope dipende dal ratio dello schermo, anche la grandezza delle immagini e la rotazione
@@ -324,7 +333,7 @@ export default function MainSlider({
       transition: areSlidesDisplayed[index] ? "all .2s ease" : "0s",
       display: areSlidesDisplayed[index] ? "block" : "none",
     }));
-  }, [slope, projectsData, slideSize, slidesPositions, areSlidesDisplayed]);
+  }, [projectsData, slidesPositions, areSlidesDisplayed]);
 
   const horizontalShift = (slope - 1.2) * 350;
 
@@ -343,32 +352,50 @@ export default function MainSlider({
 
   // ------------------- DISCOVER MORE CLICK ------------------------- //
   const runLeaveAnimation = useCallback(() => {
-    if (animationStartedRef.current) return;
-    setAnimationDuration(animationDurationInitial);
-    setAnimationEnded(false);
+    if (animationStartedRef.current || isLeaving || !animationEnded) return false;
+    setAnimationDuration(`${animationDurationInitial}ms`);
+    setIsLeaving(true);
     animationStartedRef.current = true;
-    setTimeout(() => {
-      setAnimationEnded(true);
-      applyScrollShift(1000);
-      //   setScrollPosition(scrollPosition);
-      //   setAnimationDuration(".1s");
+    setScrollPosition(leaveTargetScroll);
+    leaveAnimationTimeoutRef.current = window.setTimeout(() => {
+      animationStartedRef.current = false;
     }, animationDurationInitial);
-  }, [animationDurationInitial, animationTargetScroll]);
+    return true;
+  }, [
+    animationDurationInitial,
+    animationEnded,
+    isLeaving,
+    leaveTargetScroll,
+  ]);
 
   const handleDiscoverMore = useCallback(() => {
-    runLeaveAnimation();
-    onDiscoverMoreClick();
-  });
+    const hasStarted = runLeaveAnimation();
+    if (!hasStarted) return;
+    onDiscoverMoreClick?.(animationDurationInitial);
+  }, [animationDurationInitial, onDiscoverMoreClick, runLeaveAnimation]);
+
+  useEffect(() => {
+    return () => {
+      if (leaveAnimationTimeoutRef.current) {
+        window.clearTimeout(leaveAnimationTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <div
-      onWheel={slideByScroll ? handleScroll : undefined}
-      onMouseMove={slideByScroll ? handleMouseMove : undefined}
-      onPointerDown={slideByScroll ? handlePointerDown : undefined}
-      onPointerMove={slideByScroll ? handlePointerMove : undefined}
-      onPointerUp={slideByScroll ? handlePointerUp : undefined}
-      onPointerCancel={slideByScroll ? handlePointerCancel : undefined}
-      style={{ touchAction: "none", overflow: "hidden" }}
+      onWheel={slideByScroll && !isLeaving ? handleScroll : undefined}
+      onMouseMove={slideByScroll && !isLeaving ? handleMouseMove : undefined}
+      onPointerDown={slideByScroll && !isLeaving ? handlePointerDown : undefined}
+      onPointerMove={slideByScroll && !isLeaving ? handlePointerMove : undefined}
+      onPointerUp={slideByScroll && !isLeaving ? handlePointerUp : undefined}
+      onPointerCancel={
+        slideByScroll && !isLeaving ? handlePointerCancel : undefined
+      }
+      style={{
+        touchAction: slideByScroll && !isLeaving ? "none" : "auto",
+        overflow: "hidden",
+      }}
     >
       {percentageLoaded < 99.9 && <Loader percentage={percentageLoaded} />}
       <div
@@ -378,6 +405,7 @@ export default function MainSlider({
             scrollPosition,
           )}px, ${computeTranslateY(scrollPosition)}px)`,
           "--animation-duration": animationDuration,
+          opacity: isLeaving ? 0 : 1,
         }}
       >
         {projectsData.map((slideData, index) => (
@@ -398,14 +426,16 @@ export default function MainSlider({
         style={{
           color: darkText ? "black" : "white",
           transform: translation,
+          opacity: animationEnded && !isLeaving ? 1 : 0,
         }}
       >
         {title}
       </label>
       <button
         className={styles.scrollIndicator}
-        style={{ opacity: animationEnded ? 1 : 0 }}
+        style={{ opacity: animationEnded && !isLeaving ? 1 : 0 }}
         onClick={handleDiscoverMore}
+        disabled={isLeaving}
       >
         <p>Discover More</p>
         <ArrowRight size={30} />

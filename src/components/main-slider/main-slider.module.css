@@ -16,6 +16,7 @@
     font-size: 12pt;
     top: 0;
     left: 0;
+    transition: opacity 0.35s ease;
 }
 
 .loading {
@@ -43,6 +44,9 @@
     border: none;
     cursor: pointer;
     transition: opacity .3s ease-in-out;
+}
+.scrollIndicator:disabled {
+    cursor: default;
 }
 .scrollIndicator::after {
     content: "";
