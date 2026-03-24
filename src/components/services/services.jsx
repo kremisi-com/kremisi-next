@@ -5,7 +5,7 @@ export default function Services() {
         {
             title: "Product & UX",
             description: "Product design, UX flows and interface definition based on real use cases and business goals.",
-            keywords: ["Product Strategy", "UX Flows", "UI Systems"]
+            keywords: ["Product Strategy", "UX Flows", "Brand & UI Systems"]
         },
         {
             title: "Web Platform",
@@ -41,6 +41,11 @@ export default function Services() {
                         We Build <span className={styles.highlight}>Digital Products</span><br/>
                         That Actually Work
                     </h2>
+                </div>
+                <div className={styles.headerRight}>
+                    <p className={styles.headerDescription}>
+                        From idea to scalable platforms,<br/>we build systems that run your business.
+                    </p>
                 </div>
             </div>
             
