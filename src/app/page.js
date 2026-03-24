@@ -26,7 +26,15 @@ export default function Home() {
 
   return (
     <div className={styles.page}>
-      {/* <MainSlider projectsData={sortedProjects} slideByScroll={true} /> */}
+      <div className="slider-wrapper">
+        <MainSlider
+          projectsData={sortedProjects}
+          slideByScroll={true}
+          onDiscoverMoreClick={() => {
+            console.log("ciao");
+          }}
+        />
+      </div>
 
       <Overview />
     </div>
