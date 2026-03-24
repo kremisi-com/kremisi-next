@@ -36,7 +36,7 @@ export default function MainSlider({
   const sliderSize = slideSize * projectsData.length;
   const sliderCenter = -slideSize * (projectsData.length / 2);
   const starterScrollPosition = sliderCenter * 4;
-  const leaveTargetScroll = Math.abs(starterScrollPosition);
+  const leaveTargetScroll = Math.abs(starterScrollPosition) + sliderSize * 0.4;
   const [scrollPosition, setScrollPosition] = useState(starterScrollPosition);
   const initialSlidesPositions = useMemo(
     () =>
@@ -85,7 +85,7 @@ export default function MainSlider({
     lastY: 0,
   });
   const animationStartedRef = useRef(false);
-  const leaveAnimationTimeoutRef = useRef(null);
+  const leaveAnimationFrameRef = useRef(null);
   const reopenAnimationTimeoutRef = useRef(null);
   const handledReopenSignalRef = useRef(0);
 
@@ -204,15 +204,18 @@ export default function MainSlider({
     titleRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
   }, []);
 
-  const handleMouseMove = useCallback((e) => {
-    titlePointerRef.current = {
-      x: e.clientX + 15,
-      y: e.clientY + 2,
-    };
+  const handleMouseMove = useCallback(
+    (e) => {
+      titlePointerRef.current = {
+        x: e.clientX + 15,
+        y: e.clientY + 2,
+      };
 
-    if (titleFrameRef.current) return;
-    titleFrameRef.current = window.requestAnimationFrame(flushTitlePosition);
-  }, [flushTitlePosition]);
+      if (titleFrameRef.current) return;
+      titleFrameRef.current = window.requestAnimationFrame(flushTitlePosition);
+    },
+    [flushTitlePosition],
+  );
 
   useEffect(() => {
     if (!titleRef.current) return;
@@ -236,7 +239,9 @@ export default function MainSlider({
   }, [projectsData.length, runAnimation]);
 
   // ------------------- SLIDES POSITIONS ------------------------- //
-  const [slidesPositions, setSlidesPositions] = useState(initialSlidesPositions);
+  const [slidesPositions, setSlidesPositions] = useState(
+    initialSlidesPositions,
+  );
   const [areSlidesDisplayed, setAreSlidesDisplayed] = useState(
     initialSlidesDisplayed,
   );
@@ -244,11 +249,10 @@ export default function MainSlider({
   // ------------------- CHUNK CHANGE ------------------------- //
   const [, startTransition] = useTransition();
 
-  const onChunkChange = useCallback(
-    (oldChunk, chunk) => {
-      setActualChunk(chunk);
-      const direction = chunk > oldChunk ? 1 : -1;
-      let chunkToMove = (chunk + 3 * -direction) % chunksNumber;
+  const shiftChunkLayout = useCallback(
+    (fromChunk, direction, basePositions) => {
+      const nextChunk = (fromChunk + direction + chunksNumber) % chunksNumber;
+      let chunkToMove = (nextChunk + 3 * -direction) % chunksNumber;
       if (chunkToMove < 0) chunkToMove = chunksNumber + chunkToMove;
 
       let indexesToMove = [];
@@ -259,7 +263,7 @@ export default function MainSlider({
       const newDisplay = Array(projectsData.length).fill(true);
       indexesToMove.forEach((i) => (newDisplay[i] = false));
 
-      const newPositions = [...slidesPositions];
+      const newPositions = [...basePositions];
       const chunkPositions = indexesToMove.map((i) => newPositions[i]);
       const chunkMin = Math.min(...chunkPositions);
       const chunkMax = Math.max(...chunkPositions);
@@ -289,12 +293,49 @@ export default function MainSlider({
         newPositions[i] = newStartPosition + offsets[idx];
       });
 
+      return {
+        chunk: nextChunk,
+        display: newDisplay,
+        positions: newPositions,
+      };
+    },
+    [chunks, chunksNumber, projectsData.length, slideSize],
+  );
+
+  const onChunkChange = useCallback(
+    (oldChunk, chunk) => {
+      const forwardDistance = (chunk - oldChunk + chunksNumber) % chunksNumber;
+      const backwardDistance = (oldChunk - chunk + chunksNumber) % chunksNumber;
+
+      if (forwardDistance === 0) return;
+
+      const direction = forwardDistance <= backwardDistance ? 1 : -1;
+      const steps = Math.min(forwardDistance, backwardDistance);
+
+      let nextChunk = oldChunk;
+      let nextPositions = slidesPositions;
+      let nextDisplay = areSlidesDisplayed;
+
+      for (let step = 0; step < steps; step += 1) {
+        const layout = shiftChunkLayout(nextChunk, direction, nextPositions);
+        nextChunk = layout.chunk;
+        nextPositions = layout.positions;
+        nextDisplay = layout.display;
+      }
+
+      setActualChunk(nextChunk);
       startTransition(() => {
-        setAreSlidesDisplayed(newDisplay);
-        setSlidesPositions(newPositions);
+        setAreSlidesDisplayed(nextDisplay);
+        setSlidesPositions(nextPositions);
       });
     },
-    [chunks, chunksNumber, projectsData.length, slideSize, slidesPositions],
+    [
+      areSlidesDisplayed,
+      chunksNumber,
+      shiftChunkLayout,
+      slidesPositions,
+      startTransition,
+    ],
   );
 
   useEffect(() => {
@@ -380,19 +421,45 @@ export default function MainSlider({
     [sliderSize],
   );
 
+  const easeOutCubic = useCallback((value) => {
+    return 1 - Math.pow(1 - value, 3);
+  }, []);
+
   // ------------------- DISCOVER MORE CLICK ------------------------- //
   const runLeaveAnimation = useCallback(() => {
-    if (animationStartedRef.current || isLeaving || !animationEnded) return false;
-    setAnimationDuration(`${leaveAnimationDuration}ms`);
+    if (animationStartedRef.current || isLeaving || !animationEnded)
+      return false;
+    const startScroll = scrollRef.current;
+    setAnimationDuration("0s");
     setIsLeaving(true);
     animationStartedRef.current = true;
-    setScrollPosition(leaveTargetScroll);
-    leaveAnimationTimeoutRef.current = window.setTimeout(() => {
+
+    const startTime = performance.now();
+    const animateLeave = (timestamp) => {
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / leaveAnimationDuration, 1);
+      const easedProgress = easeOutCubic(progress);
+      const nextScroll =
+        startScroll + (leaveTargetScroll - startScroll) * easedProgress;
+
+      scrollRef.current = nextScroll;
+      setScrollPosition(nextScroll);
+
+      if (progress < 1) {
+        leaveAnimationFrameRef.current =
+          window.requestAnimationFrame(animateLeave);
+        return;
+      }
+
       animationStartedRef.current = false;
-    }, leaveAnimationDuration);
+      leaveAnimationFrameRef.current = null;
+    };
+
+    leaveAnimationFrameRef.current = window.requestAnimationFrame(animateLeave);
     return true;
   }, [
     animationEnded,
+    easeOutCubic,
     isLeaving,
     leaveAnimationDuration,
     leaveTargetScroll,
@@ -425,14 +492,15 @@ export default function MainSlider({
   ]);
 
   useEffect(() => {
-    if (!reopenSignal || reopenSignal === handledReopenSignalRef.current) return;
+    if (!reopenSignal || reopenSignal === handledReopenSignalRef.current)
+      return;
     if (!isHidden) return;
 
-    if (leaveAnimationTimeoutRef.current) {
-      window.clearTimeout(leaveAnimationTimeoutRef.current);
+    if (leaveAnimationFrameRef.current) {
+      window.cancelAnimationFrame(leaveAnimationFrameRef.current);
     }
     if (reopenAnimationTimeoutRef.current) {
-      window.clearTimeout(reopenAnimationTimeoutRef.current);
+      window.cancelAnimationFrame(reopenAnimationTimeoutRef.current);
     }
 
     handledReopenSignalRef.current = reopenSignal;
@@ -447,18 +515,25 @@ export default function MainSlider({
   useEffect(() => {
     if (!isLeaving) return;
 
-    const hideTimer = window.setTimeout(() => {
-      setIsHidden(true);
-      resetSliderState();
-    }, Math.round(leaveAnimationDuration * 0.82));
+    const hideTimer = window.setTimeout(
+      () => {
+        if (leaveAnimationFrameRef.current) {
+          window.cancelAnimationFrame(leaveAnimationFrameRef.current);
+          leaveAnimationFrameRef.current = null;
+        }
+        setIsHidden(true);
+        resetSliderState();
+      },
+      Math.round(leaveAnimationDuration * 0.82),
+    );
 
     return () => window.clearTimeout(hideTimer);
   }, [isLeaving, leaveAnimationDuration, resetSliderState]);
 
   useEffect(() => {
     return () => {
-      if (leaveAnimationTimeoutRef.current) {
-        window.clearTimeout(leaveAnimationTimeoutRef.current);
+      if (leaveAnimationFrameRef.current) {
+        window.cancelAnimationFrame(leaveAnimationFrameRef.current);
       }
       if (reopenAnimationTimeoutRef.current) {
         window.cancelAnimationFrame(reopenAnimationTimeoutRef.current);
@@ -473,8 +548,12 @@ export default function MainSlider({
     <div
       onWheel={slideByScroll && !isLeaving ? handleScroll : undefined}
       onMouseMove={slideByScroll && !isLeaving ? handleMouseMove : undefined}
-      onPointerDown={slideByScroll && !isLeaving ? handlePointerDown : undefined}
-      onPointerMove={slideByScroll && !isLeaving ? handlePointerMove : undefined}
+      onPointerDown={
+        slideByScroll && !isLeaving ? handlePointerDown : undefined
+      }
+      onPointerMove={
+        slideByScroll && !isLeaving ? handlePointerMove : undefined
+      }
       onPointerUp={slideByScroll && !isLeaving ? handlePointerUp : undefined}
       onPointerCancel={
         slideByScroll && !isLeaving ? handlePointerCancel : undefined
