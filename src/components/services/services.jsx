@@ -1,9 +1,33 @@
 "use client";
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { animate } from 'framer-motion';
 import styles from './services.module.css';
 
 export default function Services() {
     const [activeIndex, setActiveIndex] = useState(null);
+    const itemRefs = useRef([]);
+
+    useEffect(() => {
+        if (activeIndex !== null && itemRefs.current[activeIndex]) {
+            // Slight delay to allow the layout to settle and the expansion to start
+            const timeoutId = setTimeout(() => {
+                const element = itemRefs.current[activeIndex];
+                const rect = element.getBoundingClientRect();
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                
+                // Calculate position to center the element
+                const targetY = rect.top + scrollTop - (window.innerHeight / 2) + (rect.height / 2);
+
+                animate(scrollTop, targetY, {
+                    duration: 1.2,
+                    ease: [0.22, 1, 0.36, 1], // Smooth premium easing
+                    onUpdate: (latest) => window.scrollTo(0, latest)
+                });
+            }, 400);
+
+            return () => clearTimeout(timeoutId);
+        }
+    }, [activeIndex]);
 
     const toggleAccordion = (index) => {
         setActiveIndex(activeIndex === index ? null : index);
@@ -27,23 +51,59 @@ export default function Services() {
         },
         {
             title: "Web Platform",
-            description: "Development of high-performance web platforms (Next.js, APIs, databases) built to handle real operations.",
-            keywords: ["Next.js", "APIs", "Database", "Performance"]
+            description: "We build scalable web platforms designed to support real business operations.",
+            keywords: ["Architecture", "API & Backend", "Scalability"],
+            expandedDetails: {
+                intro: "From architecture to delivery, we turn complex requirements into reliable and high-performing systems.",
+                bullets: [
+                    "Platform architecture and system design",
+                    "API integration and backend logic",
+                    "Scalable frontend development",
+                    "Performance and maintainability optimization"
+                ]
+            }
         },
         {
             title: "Mobile Apps",
-            description: "Mobile applications connected to your platform, designed for daily usage and real users.",
-            keywords: ["React Native", "iOS", "Android"]
+            description: "We create mobile apps that feel fast, intuitive and native on every device.",
+            keywords: ["iOS & Android", "React Native", "Mobile UX"],
+            expandedDetails: {
+                intro: "From MVP to full product, we focus on usability, performance and long-term engagement.",
+                bullets: [
+                    "iOS and Android app development",
+                    "Cross-platform solutions (React Native)",
+                    "UX optimization for mobile contexts",
+                    "App performance and scalability"
+                ]
+            }
         },
         {
             title: "AI & Data",
-            description: "Integration of AI features and data analysis to automate workflows, track behavior and support decisions.",
-            keywords: ["Automation", "Tracking", "Analytics"]
+            description: "We use AI and data to automate processes and unlock smarter decision-making.",
+            keywords: ["AI & Automation", "Data Analysis", "LLM Tools"],
+            expandedDetails: {
+                intro: "We integrate intelligent systems into your products with a practical, results-driven approach.",
+                bullets: [
+                    "AI integrations and automation workflows",
+                    "Data processing and analysis pipelines",
+                    "Custom tools powered by LLMs",
+                    "Business logic optimization through data"
+                ]
+            }
         },
         {
             title: "Growth & SEO",
-            description: "SEO structure, performance optimization and tracking systems to acquire and convert users.",
-            keywords: ["SEO", "Performance", "Conversion"]
+            description: "We optimize products to increase visibility, traffic and conversions over time.",
+            keywords: ["SEO Strategy", "CRO", "Performance Tracking"],
+            expandedDetails: {
+                intro: "Combining SEO, data analysis and continuous iteration, we turn traffic into measurable growth.",
+                bullets: [
+                    "Technical SEO and site structure",
+                    "Content and keyword strategy",
+                    "Conversion rate optimization (CRO)",
+                    "Analytics and performance tracking"
+                ]
+            }
         }
     ];
 
@@ -71,6 +131,7 @@ export default function Services() {
                 {servicesList.map((service, index) => (
                     <div 
                         key={index} 
+                        ref={(el) => (itemRefs.current[index] = el)}
                         className={`${styles.listItem} ${activeIndex === index ? styles.active : ''}`}
                         onClick={() => toggleAccordion(index)}
                     >
@@ -92,41 +153,30 @@ export default function Services() {
 
                             <div className={`${styles.expandedContent} ${activeIndex === index ? styles.expanded : ''}`}>
                                 <div className={styles.expandedInner}>
-                                    {service.expandedDetails ? (
-                                        <div className={styles.expandedSection}>
-                                            {service.expandedDetails.intro && (
-                                                <div className={styles.detailBlock}>
-                                                    <p className={styles.detailIntro}>
-                                                        {service.expandedDetails.intro}
+                                    <div className={styles.expandedSection}>
+                                        {service.expandedDetails.intro && (
+                                            <div className={styles.detailBlock}>
+                                                <p className={styles.detailIntro}>
+                                                    {service.expandedDetails.intro}
+                                                </p>
+                                                {service.expandedDetails.supporting && (
+                                                    <p className={styles.detailSupporting}>
+                                                        {service.expandedDetails.supporting}
                                                     </p>
-                                                    {service.expandedDetails.supporting && (
-                                                        <p className={styles.detailSupporting}>
-                                                            {service.expandedDetails.supporting}
-                                                        </p>
-                                                    )}
-                                                </div>
-                                            )}
-                                            
-                                            {service.expandedDetails.bullets && (
-                                                <div className={styles.detailBlock}>
-                                                    <ul className={styles.detailList}>
-                                                        {service.expandedDetails.bullets.map((item, i) => (
-                                                            <li key={i}>{item}</li>
-                                                        ))}
-                                                    </ul>
-                                                </div>
-                                            )}
-                                        </div>
-                                    ) : (
-                                        <div className={styles.expandedTextContent}>
-                                            <p className={styles.loremIntro}>
-                                                A deep dive into how we solve complex problems with modern technology and user-centric design principles.
-                                            </p>
-                                            <p className={styles.loremText}>
-                                                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna. Ut enim ad minim veniam, quis nostrud exercitation ut labore et dolore.
-                                            </p>
-                                        </div>
-                                    )}
+                                                )}
+                                            </div>
+                                        )}
+                                        
+                                        {service.expandedDetails.bullets && (
+                                            <div className={styles.detailBlock}>
+                                                <ul className={styles.detailList}>
+                                                    {service.expandedDetails.bullets.map((item, i) => (
+                                                        <li key={i}>{item}</li>
+                                                    ))}
+                                                </ul>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                             

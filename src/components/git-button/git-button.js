@@ -7,11 +7,12 @@ export default function GitButton({
     disabled = false,
     leftShift = 0,
     revertColor = false,
+    className = "",
 }) {
     return (
         <div
             style={{ marginLeft: leftShift }}
-            className={revertColor ? styles.revert : ""}
+            className={`${revertColor ? styles.revert : ""} ${className}`}
         >
             <div
                 className={`${styles.container} ${

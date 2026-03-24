@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import styles from './social-proof.module.css';
+import GitButton from '../git-button/git-button';
 
 const LOGOS = [
     "beyond-reiki.png", "bioli.png", "ccom.png", "chora-full.png", "chora.png",
@@ -47,7 +48,7 @@ const LogoCard = ({ className, initialIndex }) => {
                     }, 50);
                 }, 2000); // Matches CSS transition duration
                 
-            }, 8000); // Cycle every 8 seconds
+            }, 6000); // Cycle every 6 seconds
             
             return () => clearInterval(interval);
         }, randomStartDelay);
@@ -91,7 +92,7 @@ export default function SocialProof() {
             </div>
 
             <div className={styles.container}>
-                <div className={styles.badge}>Testimonials</div>
+                <div className={styles.badge}>Customers</div>
                 
                 <h2 className={styles.title}>
                     Trusted by founders<br/>
@@ -99,15 +100,11 @@ export default function SocialProof() {
                 </h2>
                 
                 <p className={styles.description}>
-                    From MVPs to scalable platforms,<br/>
-                    we partner with teams across Europe.
+                    We design, build and scale<br/>digital products end-to-end.
                 </p>
                 
-                <Link href="/contacts" className={styles.button}>
-                    Start your project today
-                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 12H19M19 12L12 5M19 12L12 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
+                <Link href="/contacts" className={styles.buttonWrapper}>
+                    <GitButton text="Let's Meet" className={styles.socialProofGitButton} leftShift="-20px" />
                 </Link>
             </div>
         </section>
