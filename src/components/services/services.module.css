@@ -1,6 +1,6 @@
 .servicesSection {
     position: relative;
-    padding: 100px 10vw;
+    padding: 120px 10vw;
     background-color: var(--background);
     color: var(--foreground);
     z-index: 10;
@@ -9,16 +9,17 @@
 .header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-end;
-    margin-bottom: 60px;
-    gap: 40px;
+    align-items: center;
+    margin-bottom: 100px;
+    gap: clamp(80px, 8vw, 120px);
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
 }
 
 .headerLeft {
-    flex: 1;
+    flex: 1 1 0;
+    min-width: 0;
 }
 
 .subtitle {
@@ -54,17 +55,20 @@
 }
 
 .headerRight {
-    flex: 1;
-    max-width: 600px;
-    padding-bottom: 0.5rem;
+    flex: 0 1 460px;
+    max-width: 460px;
+    align-self: center;
+    transform: translateY(28px);
 }
 
 .description {
-    font-size: 1.35rem;
-    line-height: 1.5;
-    opacity: 0.85;
+    font-size: clamp(1.125rem, 1.02rem + 0.42vw, 1.25rem);
+    line-height: 1.6;
+    color: color-mix(in srgb, var(--foreground) 72%, var(--background) 28%);
     margin: 0;
     font-weight: 400;
+    max-width: 28ch;
+    text-wrap: pretty;
 }
 
 .listContainer {
@@ -73,171 +77,205 @@
     max-width: 1400px;
     margin-left: auto;
     margin-right: auto;
-    border-top: 1px solid var(--box-bg);
+    border-top: 2px solid var(--box-bg);
+}
+
+.listContainer:hover .listItem {
+    opacity: 0.3;
+}
+
+.listContainer:hover .listItem:hover {
+    opacity: 1;
+    transform: translateY(-4px);
+    border-bottom-color: var(--primary);
 }
 
 .listItem {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 35px 0;
-    border-bottom: 1px solid var(--box-bg);
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    align-items: flex-start;
+    padding: 70px 0;
+    gap: 60px;
+    border-bottom: 2px solid var(--box-bg);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     cursor: pointer;
     position: relative;
-}
-
-.listItem::before {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    width: 0%;
-    height: 1px;
-    background-color: var(--primary);
-    transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    z-index: 2;
-}
-
-.listItem:hover::before {
-    width: 100%;
-}
-
-.itemLeft {
-    display: flex;
-    align-items: flex-start;
-    gap: 30px;
-    transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 1;
 }
 
 .itemNumber {
-    font-size: 1.1rem;
-    font-weight: 500;
+    font-size: 1.5rem;
+    font-weight: 600;
     color: var(--foreground);
-    opacity: 0.2;
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0.3;
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     margin-top: 10px;
-}
-
-.serviceName {
-    font-size: 3rem;
-    font-weight: 400;
-    margin: 0;
-    color: var(--foreground);
-    opacity: 0.4;
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    letter-spacing: -0.01em;
-}
-
-.serviceDot {
-    color: transparent;
-    transition: color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.listItem:hover .itemLeft {
-    transform: translateX(30px);
-}
-
-.listItem:hover .serviceName {
-    opacity: 1;
+    flex-shrink: 0;
 }
 
 .listItem:hover .itemNumber {
+    color: var(--primary);
     opacity: 1;
-    color: var(--primary);
 }
 
-.listItem:hover .serviceDot {
-    color: var(--primary);
+.itemContent {
+    display: flex;
+    flex-direction: column;
+    max-width: 900px;
 }
 
-.arrowIcon {
-    opacity: 0.3;
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+.titleRow {
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    margin-bottom: 25px;
+}
+
+.serviceName {
+    font-size: 3.8rem;
+    font-weight: 600;
+    margin: 0;
     color: var(--foreground);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+}
+
+.titleArrow {
+    opacity: 0;
+    transform: translateX(-15px);
+    transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    color: var(--primary);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .svgIcon {
-    width: 50px;
-    height: 50px;
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    width: 60px;
+    height: 60px;
 }
 
-.arrowCircle {
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.arrowPath {
-    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-    stroke-width: 1px;
-}
-
-.listItem:hover .arrowIcon {
+.listItem:hover .titleArrow {
     opacity: 1;
-    transform: translateX(-20px) rotate(-45deg);
+    transform: translateX(0);
 }
 
-.listItem:hover .arrowCircle {
-    fill: var(--primary);
-    stroke: var(--primary);
+.serviceDescription {
+    font-size: 1.35rem;
+    line-height: 1.6;
+    opacity: 0.7;
+    margin: 0;
+    margin-bottom: 30px;
+    font-weight: 300;
+    max-width: 750px;
 }
 
-.listItem:hover .arrowPath {
-    stroke: var(--background);
-    stroke-width: 1.5px;
+.keywordList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.keywordTag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 600;
+    padding: 10px 20px;
+    border: 1px solid var(--box-bg);
+    border-radius: 40px;
+    color: var(--foreground);
+    opacity: 0.6;
+    transition: all 0.4s ease;
+}
+
+.listItem:hover .keywordTag {
+    border-color: var(--primary);
+    color: var(--primary);
+    opacity: 1;
 }
 
 @media (max-width: 1024px) {
     .header {
         flex-direction: column;
         align-items: flex-start;
-        margin-bottom: 40px;
+        margin-bottom: 60px;
+        gap: 36px;
     }
     .title {
-        font-size: 3.5rem;
+        font-size: 4rem;
+    }
+    .headerRight {
+        flex-basis: auto;
+        max-width: 34rem;
+        transform: none;
+    }
+    .description {
+        max-width: 32ch;
     }
     .serviceName {
-        font-size: 2.5rem;
+        font-size: 3rem;
     }
-    .itemLeft {
-        gap: 20px;
+    .listItem {
+        padding: 50px 0;
+        gap: 30px;
     }
     .itemNumber {
-        margin-top: 6px;
+        font-size: 1.25rem;
+        margin-top: 8px;
+    }
+    .serviceDescription {
+        font-size: 1.2rem;
     }
 }
 
 @media (max-width: 768px) {
     .servicesSection {
-        padding: 60px 5vw;
+        padding: 80px 5vw;
     }
     .title {
-        font-size: 2.8rem;
+        font-size: 3rem;
     }
-    .serviceName {
-        font-size: 2rem;
+    .description {
+        font-size: 1.1rem;
+        max-width: 100%;
+        color: var(--foreground);
     }
     .listItem {
-        padding: 25px 0;
+        padding: 40px 0;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 20px;
     }
-    .itemLeft {
-        gap: 15px;
+    .titleRow {
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .serviceName {
+        font-size: 2.5rem;
+    }
+    .serviceDescription {
+        font-size: 1.1rem;
+        margin-bottom: 20px;
     }
     .itemNumber {
-        font-size: 1rem;
-        margin-top: 4px;
+        font-size: 1.1rem;
+        margin-top: 0;
+        opacity: 0.5; /* more visible on mobile */
     }
-    .listItem:hover .itemLeft {
-        transform: translateX(15px);
-    }
-    .listItem:hover .arrowIcon {
-        transform: translateX(-10px) rotate(-45deg);
+    .titleArrow {
+        opacity: 1; /* always visible on mobile */
+        transform: translateX(0);
+        color: var(--foreground); /* default color */
     }
     .svgIcon {
-        width: 38px;
-        height: 38px;
+        width: 45px;
+        height: 45px;
+    }
+    .listItem:hover .titleArrow {
+        color: var(--primary);
+    }
+    .listContainer:hover .listItem {
+        opacity: 1;
+        transform: none;
     }
 }
