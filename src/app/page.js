@@ -71,6 +71,22 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    window.dispatchEvent(
+      new CustomEvent("home-slider-visibility", {
+        detail: { isSliderActive: !isOverviewVisible },
+      }),
+    );
+
+    return () => {
+      window.dispatchEvent(
+        new CustomEvent("home-slider-visibility", {
+          detail: { isSliderActive: false },
+        }),
+      );
+    };
+  }, [isOverviewVisible]);
+
+  useEffect(() => {
     const handleSliderReopen = () => {
       if (!isOverviewVisible || discoverAnimationRef.current) return;
 

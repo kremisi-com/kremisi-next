@@ -8,14 +8,17 @@ import ThemeToggle from "./theme-toggler";
 import React from "react";
 import AnimatedLink from "@/components/animated-link/animated-link";
 import { GalleryVerticalEnd } from "lucide-react";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
     const animationDelay = 300;
+    const pathname = usePathname();
 
     const handleSliderButtonClick = React.useCallback(() => {
+        if (pathname !== "/") return;
         window.dispatchEvent(new CustomEvent("home-slider-reopen"));
-    }, []);
+    }, [pathname]);
 
     return (
         <>
@@ -25,6 +28,7 @@ export default function Navbar() {
                         className={styles.icon}
                         animation={false}
                         onClick={handleSliderButtonClick}
+                        href={pathname === "/" ? "" : "/"}
                     >
                         <GalleryVerticalEnd size={17} />
                     </Button>

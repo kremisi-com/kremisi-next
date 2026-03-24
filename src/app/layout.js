@@ -131,7 +131,7 @@ export default function RootLayout({ children }) {
           <TransitionProvider>
             <Navbar />
             {children}
-            <Footer hideVAT={true} />
+            <Footer />
             <Toaster position="bottom-center" reverseOrder={false} />
             <Scripts />
           </TransitionProvider>

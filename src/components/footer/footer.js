@@ -1,8 +1,36 @@
-import { MessageCircleMore, MessageCircleQuestionMark } from "lucide-react";
+"use client";
+
+import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
+import { MessageCircleMore } from "lucide-react";
 import styles from "./footer.module.css";
 import Button from "../button/button";
 
-export default function Footer({hideVAT}) {
+export default function Footer() {
+    const pathname = usePathname();
+    const [isVATHidden, setIsVATHidden] = useState(pathname === "/");
+
+    useEffect(() => {
+        if (pathname !== "/") {
+            setIsVATHidden(false);
+            return;
+        }
+
+        setIsVATHidden(true);
+
+        function handleSliderVisibility(event) {
+            setIsVATHidden(Boolean(event.detail?.isSliderActive));
+        }
+
+        window.addEventListener("home-slider-visibility", handleSliderVisibility);
+        return () => {
+            window.removeEventListener(
+                "home-slider-visibility",
+                handleSliderVisibility
+            );
+        };
+    }, [pathname]);
+
     return (
         <>
             <footer className={`${styles.footer} onlyDesktop`}>
@@ -10,7 +38,12 @@ export default function Footer({hideVAT}) {
                     <a href="mailto:info@kremisi.com">info@kremisi.com</a>
                 </address>
                 <span className={styles.info}></span>
-                <span className={`${styles.info} ${hideVAT ? "d-none" : ""}`}>
+                <span
+                    className={`${styles.info} ${styles.vatInfo} ${
+                        isVATHidden ? styles.vatHidden : ""
+                    }`}
+                    aria-hidden={isVATHidden}
+                >
                     VAT IT03894640121 - © 2022{" "}
                     <span className="color-primary">Kremisi</span>
                 </span>

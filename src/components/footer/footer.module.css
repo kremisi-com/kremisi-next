@@ -32,6 +32,15 @@
     left: unset;
 }
 
+.vatInfo {
+    transition: opacity .3s ease-in-out, visibility .3s ease-in-out;
+}
+
+.vatHidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
 .footer a:hover {
     color: var(--primary);
 }
