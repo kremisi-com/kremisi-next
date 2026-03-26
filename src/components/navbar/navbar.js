@@ -14,6 +14,12 @@ export default function Navbar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
     const animationDelay = 300;
     const pathname = usePathname();
+    
+    React.useEffect(() => {
+        window.dispatchEvent(new CustomEvent("mobile-menu-visibility", {
+            detail: { isMenuOpen: menuOpen }
+        }));
+    }, [menuOpen]);
 
     const reopenHomeSlider = React.useCallback(() => {
         if (pathname !== "/") return;

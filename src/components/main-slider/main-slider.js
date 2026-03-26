@@ -88,6 +88,7 @@ export default function MainSlider({
     initialSlidesDisplayed,
   );
   const [slope, setSlope] = useState(1);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [, startTransition] = useTransition();
 
   const initialChunk = findActualChunk(animationTargetScroll);
@@ -111,6 +112,17 @@ export default function MainSlider({
   const leaveAnimationFrameRef = useRef(null);
   const reopenAnimationTimeoutRef = useRef(null);
   const handledReopenSignalRef = useRef(0);
+
+  useEffect(() => {
+    const handleMenuVisibility = (e) => {
+      setIsMenuOpen(e.detail.isMenuOpen);
+    };
+
+    window.addEventListener("mobile-menu-visibility", handleMenuVisibility);
+    return () => {
+      window.removeEventListener("mobile-menu-visibility", handleMenuVisibility);
+    };
+  }, []);
 
   useEffect(() => {
     trackViewItemList("Project Slider");
@@ -663,10 +675,13 @@ export default function MainSlider({
         {titleStateRef.current.text}
       </label>
       <button
-        className={`${styles.scrollIndicator} ${isLeaving ? styles.scrollIndicatorLeaving : ""}`}
-        style={{ opacity: animationEnded && !isLeaving ? 1 : 0 }}
+        className={`${styles.scrollIndicator} ${isLeaving ? styles.scrollIndicatorLeaving : ""} ${isMenuOpen ? styles.menuOpen : ""}`}
+        style={{ 
+          opacity: animationEnded && !isLeaving ? 1 : 0,
+          pointerEvents: animationEnded && !isLeaving ? "auto" : "none"
+        }}
         onClick={handleDiscoverMore}
-        disabled={isLeaving}
+        disabled={isLeaving || isMenuOpen}
       >
         <p>Discover More</p>
         <ArrowRight size={30} />

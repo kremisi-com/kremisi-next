@@ -125,3 +125,16 @@
 .scrollIndicator:hover::after {
     max-width: 100%;
 }
+
+@media (max-width: 768px) {
+    .scrollIndicator {
+        right: 30px;
+        font-size: 16pt;
+    }
+}
+
+.menuOpen {
+    opacity: 0 !important;
+    pointer-events: none !important;
+    transition: opacity 0.1s ease-out !important;
+}
