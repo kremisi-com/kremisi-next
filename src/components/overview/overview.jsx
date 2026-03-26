@@ -33,7 +33,9 @@ export default function Overview({
             
             <div className={styles.content}>
                 <RevelatingText play={textShouldAnimate}>
-                    We shape the <span className="highlight">future</span><br/>through uncompromising <span className="highlight">digital design.</span>
+                    We design, build and scale<br/>
+                    <span className="highlight">digital products</span><br/>
+                    that drive <span className="highlight"> real results.</span>
                 </RevelatingText>
             </div>
         </section>
