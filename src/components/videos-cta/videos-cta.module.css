@@ -148,6 +148,11 @@
     opacity: 0.4;
     filter: brightness(0.8);
     transition: opacity 0.4s ease, filter 0.4s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform, opacity;
 }
 
 .videoCard:hover .video {
@@ -178,26 +183,45 @@
 }
 
 @media (max-width: 1024px) {
+    .videosCtaSection {
+        padding: 80px 0;
+    }
     .title {
-        font-size: 4rem;
+        font-size: 3.5rem;
     }
 }
 
 @media (max-width: 768px) {
     .videosCtaSection {
-        padding: 100px 0;
+        padding: 60px 0 80px 0;
     }
     .title {
-        font-size: 3rem;
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+    }
+    .badge {
+        margin-bottom: 1.5rem;
+    }
+    .gallery {
+        height: 400px;
+        clip-path: none; /* Removed clipping to avoid artifacts and keep it simple on mobile */
+    }
+    .videoCard:not(:last-child) {
+        border-right: 1px solid var(--background); /* Thinner separator for mobile */
+    }
+    .bracket {
+        display: none; /* Brackets usually look too cluttered on small screens */
+    }
+    .container {
+        margin-bottom: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .title {
+        font-size: 2.2rem;
     }
     .gallery {
         height: 350px;
-        clip-path: ellipse(140% 70% at 50% 50%);
-    }
-    .bracket {
-        width: 20px;
-        height: 20px;
-        left: 20px !important;
-        right: 20px !important;
     }
 }

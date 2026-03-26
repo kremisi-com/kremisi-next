@@ -343,7 +343,7 @@
     
     .container {
         flex-direction: column;
-        gap: 80px;
+        gap: 30px;
     }
 
     .leftColumn, .rightColumn {
@@ -374,7 +374,11 @@
 
 @media (max-width: 768px) {
     .testimonialsSection {
-        padding: 80px 5vw;
+        padding: 50px 5vw;
+    }
+
+    .container {
+        gap: 20px;
     }
 
     .title {
@@ -385,8 +389,12 @@
         display: none;
     }
 
+    .reviewsContainer {
+        padding: 10px 0;
+    }
+
     .reviewsList {
-        height: 460px;
+        height: 320px;
     }
 
     .active .avatarWrapper {

@@ -12,7 +12,7 @@ const TESTIMONIALS = [
         projectId: "vecchi360",
         projectTitle: "Vecchi360",
         rating: "5.0",
-        date: "26 Mar, 2026",
+        date: "18 Jan, 2024",
         image: "/images/testimonials/andrea.jpg",
         text: "We entrusted Kremisi with the creation of our new website. The experience was extremely positive: beyond being satisfied with the final product, we truly enjoyed working with such a professional and responsive team.",
         tasks: ["Real Estate API", "Automation", "UI/UX Design"]
@@ -24,7 +24,7 @@ const TESTIMONIALS = [
         projectId: "casa-palmi",
         projectTitle: "Casa Palmi",
         rating: "5.0",
-        date: "24 Mar, 2026",
+        date: "26 Mar, 2026",
         image: "/images/testimonials/palmi.jpg",
         text: "A great experience with this agency: professional, available, and highly competent. They created a modern website that perfectly aligns with my needs, guiding me with care through every phase. Highly recommended!",
         tasks: ["Booking System", "Online Payments", "UI/UX Design"]
@@ -36,7 +36,7 @@ const TESTIMONIALS = [
         projectId: "gamelia",
         projectTitle: "Gamelia",
         rating: "5.0",
-        date: "25 Mar, 2026",
+        date: "24 Aug, 2024",
         image: "/images/testimonials/angela.jpg",
         text: "I highly recommend them for their precision, punctuality, and professionalism. They offered great support, always available to listen to our requests and solve every situation. Heartfelt thanks!",
         tasks: ["SaaS", "Database Management", "1000+ Users"]
@@ -48,7 +48,7 @@ const TESTIMONIALS = [
         projectId: "jester",
         projectTitle: "Jester",
         rating: "5.0",
-        date: "27 Mar, 2026",
+        date: "15 Oct, 2025",
         image: "/images/testimonials/jester.jpg",
         text: "Friendly, professional, and qualified! Their speed and competence impressed us. The website perfectly reflects our company's needs. They skillfully transformed every request into an effective and efficient tailor-made solution.",
         tasks: ["SaaS", "Complex Logic", "Educational Platform"]
@@ -57,19 +57,28 @@ const TESTIMONIALS = [
 
 export default function Testimonials() {
     const [activeIndex, setActiveIndex] = useState(1);
+    const [isMobile, setIsMobile] = useState(false);
 
     React.useEffect(() => {
+        const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+        checkMobile();
+        window.addEventListener('resize', checkMobile);
+        
         const interval = setInterval(() => {
             setActiveIndex((prev) => (prev + 1) % TESTIMONIALS.length);
         }, 5000);
-        return () => clearInterval(interval);
+
+        return () => {
+            window.removeEventListener('resize', checkMobile);
+            clearInterval(interval);
+        };
     }, []);
 
     const positionVariants = {
-        top: { x: -10, y: 120, scale: 0.82, opacity: 0.35, zIndex: 1 },
-        middle: { x: 50, y: 250, scale: 1, opacity: 1, zIndex: 3 },
-        bottom: { x: 26, y: 431, scale: 0.9, opacity: 0.55, zIndex: 2 },
-        hidden: { x: 0, y: 520, scale: 0.75, opacity: 0, zIndex: 0 }
+        top: { x: -10, y: isMobile ? 50 : 120, scale: 0.82, opacity: 0.35, zIndex: 1 },
+        middle: { x: isMobile ? 30 : 50, y: isMobile ? 150 : 250, scale: 1, opacity: 1, zIndex: 3 },
+        bottom: { x: isMobile ? 15 : 26, y: isMobile ? 250 : 431, scale: 0.9, opacity: 0.55, zIndex: 2 },
+        hidden: { x: 0, y: isMobile ? 320 : 520, scale: 0.75, opacity: 0, zIndex: 0 }
     };
 
     const getPosition = (index) => {

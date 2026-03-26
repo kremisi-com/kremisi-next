@@ -1,15 +1,14 @@
 .socialProofSection {
     position: relative;
-    padding: 140px 0 60px 0;
     background-color: var(--background);
     color: var(--foreground);
     z-index: 10;
+    overflow: hidden;
+    min-height: 85vh;
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    overflow: hidden;
-    min-height: 85vh;
 }
 
 .container {
@@ -17,14 +16,18 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
-    max-width: 800px;
+    max-width: 1400px;
     margin: 0 auto;
-    padding: 0 5vw;
+    padding: 140px 5vw 60px 5vw;
     position: relative;
     z-index: 5;
+    min-height: 85vh;
+    justify-content: center;
+    width: 100%;
 }
 
-.gallery {
+.galleryTop,
+.galleryBottom {
     position: absolute;
     top: 0;
     left: 0;
@@ -54,7 +57,7 @@
     align-items: center;
     padding: 0;
     filter: grayscale(1);
-    opacity: 0.35; /* Molto più basso per renderli un pattern di sfondo */
+    opacity: 0.35;
     overflow: hidden;
 }
 
@@ -66,7 +69,7 @@
     opacity: 1;
 }
 
-/* Position mapping - all square with aspect-ratio */
+/* Position mapping - Desktop */
 .p1 { width: 140px; aspect-ratio: 1/1; top: 8%; left: 4%; transform: rotate(-3deg); }
 .p2 { width: 160px; aspect-ratio: 1/1; top: 4%; left: 22%; transform: rotate(2deg); }
 .p3 { width: 130px; aspect-ratio: 1/1; top: 22%; left: 10%; transform: rotate(-1deg); }
@@ -76,7 +79,6 @@
 .p7 { width: 160px; aspect-ratio: 1/1; top: 55%; left: 6%; transform: rotate(2deg); }
 .p8 { width: 150px; aspect-ratio: 1/1; top: 60%; right: 8%; transform: rotate(-2deg); }
 .p9 { width: 125px; aspect-ratio: 1/1; top: 42%; left: 18%; transform: rotate(3deg); opacity: 0.7; }
-.p10 { width: 140px; aspect-ratio: 1/1; top: 45%; right: 20%; transform: rotate(-1deg); opacity: 0.7; }
 
 .logoImage {
     position: absolute;
@@ -84,30 +86,28 @@
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
     user-select: none;
     pointer-events: none;
-    opacity: 1;
-    padding: 0;
+    padding: 15px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    transform: translateZ(0);
+    -webkit-transform: translateZ(0);
+    will-change: transform, opacity;
 }
 
-.overlayImage {
+.active {
+    opacity: 1;
     z-index: 2;
-    opacity: 0;
     transition: opacity 2s ease-in-out;
 }
 
-
-
-.overlayImage.visible {
-    opacity: 1;
-}
-
-.overlayImage.reset {
-    transition: none !important;
+.background {
     opacity: 0;
+    z-index: 1;
+    transition: opacity 2s ease-in-out;
 }
-
 
 .badge {
     font-size: 0.85rem;
@@ -115,10 +115,11 @@
     color: var(--primary);
     text-transform: uppercase;
     letter-spacing: 0.2em;
-    margin-bottom: 1.5rem;
+    margin-bottom: 2rem;
     display: flex;
     align-items: center;
     gap: 15px;
+    z-index: 5;
 }
 
 .badge::before,
@@ -137,6 +138,7 @@
     margin: 0 0 20px 0;
     letter-spacing: -0.03em;
     color: var(--foreground);
+    max-width: 800px;
 }
 
 .titleLight {
@@ -166,43 +168,157 @@
     margin: 0 auto;
 }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 0 120px; /* Spazio abbondante per le frecce goo del git-button */
-    position: relative;
-    z-index: 5;
-}
-
+/* Responsive adjustments */
 @media (max-width: 1024px) {
-    .title {
-        font-size: 4rem;
-    }
     .socialProofSection {
-        padding: 180px 5vw;
         min-height: auto;
     }
+    
+    .container {
+        padding: 100px 5vw;
+        min-height: auto;
+        justify-content: flex-start;
+    }
+    
+    .galleryTop,
+    .galleryBottom {
+        position: relative;
+        width: 100%;
+        height: auto;
+        pointer-events: auto;
+        z-index: 5;
+    }
+
+    .galleryTop {
+        margin-bottom: 3.5rem;
+    }
+
+    .galleryBottom {
+        margin-top: 3.5rem;
+        margin-bottom: 2.5rem;
+    }
+    
+    .galleryInner {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 24px;
+        padding: 0;
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    
     .placeholder {
-        display: none; /* Hide scattered layout on small screens for clarity, or can be rearranged */
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        bottom: auto !important;
+        transform: rotate(0deg) !important;
+        width: calc(33.33% - 24px) !important;
+        aspect-ratio: 1/1 !important;
+        opacity: 0.45 !important;
+        background-color: transparent !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        filter: grayscale(1);
+    }
+    
+    .placeholder:hover {
+        transform: scale(1.05) !important;
+        opacity: 1 !important;
+        filter: grayscale(0);
+    }
+
+    .logoImage {
+        padding: 0 !important;
+    }
+
+    .title {
+        font-size: 3.5rem;
+        margin-bottom: 1.5rem;
+        z-index: 10;
+        position: relative;
+    }
+
+    .description {
+        margin-bottom: 2rem;
+        font-size: 1.4rem;
+    }
+
+    .buttonWrapper {
+        margin-top: 0;
+        transform: scale(1);
     }
 }
 
 @media (max-width: 768px) {
-    .socialProofSection {
-        padding: 120px 5vw;
+    .container {
+        padding: 100px 20px 120px 20px; /* More overall breathing room */
     }
+    
+    .galleryTop { margin-bottom: 4rem; }
+    .galleryBottom { margin-top: 4rem; margin-bottom: 3.5rem; }
+    
+    .galleryInner {
+        gap: 20px; /* Signficantly increased gap for 'open' feel */
+        max-width: 360px;
+    }
+    
+    .placeholder {
+        width: calc(33.33% - 20px) !important;
+        opacity: 0.45 !important;
+        background-color: transparent !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+    }
+    
+    .logoImage {
+        padding: 0 !important;
+    }
+
     .title {
-        font-size: 3rem;
+        font-size: 2.6rem; /* Slightly larger heading */
+        font-weight: 700;
+        margin-bottom: 2rem;
+        line-height: 1.1;
     }
+    
     .description {
-        font-size: 1.15rem;
-        margin-bottom: 35px;
+        font-size: 1.25rem;
+        margin-bottom: 3rem;
+        opacity: 0.6;
     }
+    
     .badge {
-        margin-bottom: 25px;
+        margin-bottom: 2.5rem;
+    }
+
+    .buttonWrapper {
+        margin-top: 0.5rem;
+        transform: scale(1.05); /* Slightly larger button for emphasis */
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 80px 20px 140px 20px;
+    }
+    
+    .title {
+        font-size: 2.2rem;
+    }
+    
+    .galleryInner {
+        max-width: 300px;
+        gap: 15px;
+    }
+    
+    .placeholder {
+        width: calc(33.33% - 15px) !important;
+    }
+
+    .logoImage {
+        padding: 0 !important;
     }
 }

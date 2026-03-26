@@ -8,18 +8,18 @@ import Button from "../button/button";
 
 export default function Footer() {
     const pathname = usePathname();
-    const [isVATHidden, setIsVATHidden] = useState(pathname === "/");
+    const [isHomeSliderActive, setIsHomeSliderActive] = useState(pathname === "/");
 
     useEffect(() => {
         if (pathname !== "/") {
-            setIsVATHidden(false);
+            setIsHomeSliderActive(false);
             return;
         }
 
-        setIsVATHidden(true);
+        setIsHomeSliderActive(true);
 
         function handleSliderVisibility(event) {
-            setIsVATHidden(Boolean(event.detail?.isSliderActive));
+            setIsHomeSliderActive(Boolean(event.detail?.isSliderActive));
         }
 
         window.addEventListener("home-slider-visibility", handleSliderVisibility);
@@ -40,9 +40,9 @@ export default function Footer() {
                 <span className={styles.info}></span>
                 <span
                     className={`${styles.info} ${styles.vatInfo} ${
-                        isVATHidden ? styles.vatHidden : ""
+                        isHomeSliderActive ? styles.vatHidden : ""
                     }`}
-                    aria-hidden={isVATHidden}
+                    aria-hidden={isHomeSliderActive}
                 >
                     VAT IT03894640121 - © 2022{" "}
                     <span className="color-primary">Kremisi</span>
@@ -54,7 +54,9 @@ export default function Footer() {
                 </address>
                 <div className={`${styles.buttons} ${styles.right} whatsapp-floating-button`}>
                     <Button
-                        className={styles.whatsappButton}
+                        className={`${styles.whatsappButton} ${
+                            isHomeSliderActive ? styles.whatsappHidden : ""
+                        }`}
                         href="https://wa.me/393517444749?text=Can%20I%20have%20more%20informations%3F"
                         target="_blank"
                     >

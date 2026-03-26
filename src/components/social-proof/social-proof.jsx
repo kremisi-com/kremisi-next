@@ -14,39 +14,36 @@ const LOGOS = [
 ];
 
 const LogoCard = ({ className, initialIndex }) => {
-    const [indices, setIndices] = useState({
-        current: initialIndex,
-        next: (initialIndex + 1) % LOGOS.length
-    });
-    const [isFading, setIsFading] = useState(false);
-    const [isResetting, setIsResetting] = useState(false);
+    // We use two slots for images to cross-fade between them.
+    // This allows us to change the 'src' of the hidden image before it fades in.
+    const [indices, setIndices] = useState([
+        initialIndex, 
+        (initialIndex + 1) % LOGOS.length
+    ]);
+    const [activeSlot, setActiveSlot] = useState(0); // 0 or 1
 
     useEffect(() => {
-        // Shuffle the logos for each card to avoid all showing the same cycle
         const randomStartDelay = Math.random() * 8000;
         
         const timeout = setTimeout(() => {
             const interval = setInterval(() => {
-                // Step 1: Start fading in the next image over the current one
-                setIsFading(true);
-
-                // Step 2: Wait for transition to complete
+                // Step 1: Switch active slot
+                // The transition is handled by CSS (.active / .background)
+                setActiveSlot(prev => (prev === 0 ? 1 : 0));
+                
+                // Step 2: After the fade is complete, update the now-hidden slot
+                // with the next logo in the sequence
                 setTimeout(() => {
-                    // Step 3: Update base image to the next logo
-                    setIndices(prev => ({
-                        current: prev.next,
-                        next: (prev.next + 1) % LOGOS.length
-                    }));
-                    
-                    // Step 4: Instantly hide the overlay and disable transitions
-                    setIsResetting(true);
-                    setIsFading(false);
-                    
-                    // Step 5: After a short delay to ensure DOM update, re-enable transitions
-                    setTimeout(() => {
-                        setIsResetting(false);
-                    }, 50);
-                }, 2000); // Matches CSS transition duration
+                    setIndices(prev => {
+                        const newIndices = [...prev];
+                        // The hidden slot is 'prev === 0 ? 0 : 1' BEFORE the update, 
+                        // but since we just swapped, it's actually '1 - current_activeSlot'
+                        // Let's use the local 'newActiveSlot' logic
+                        const hiddenSlot = activeSlot; // The slot that WAS active is now background
+                        newIndices[hiddenSlot] = (newIndices[hiddenSlot] + 2) % LOGOS.length;
+                        return newIndices;
+                    });
+                }, 2100); // 2100ms > 2000ms transition duration
                 
             }, 6000); // Cycle every 6 seconds
             
@@ -54,19 +51,19 @@ const LogoCard = ({ className, initialIndex }) => {
         }, randomStartDelay);
 
         return () => clearTimeout(timeout);
-    }, []);
+    }, [activeSlot]);
 
     return (
         <div className={`${styles.placeholder} ${className}`}>
             <img 
-                src={`/projects-logos/${LOGOS[indices.current]}`} 
+                src={`/projects-logos/${LOGOS[indices[0]]}`} 
                 alt="Logo" 
-                className={styles.logoImage}
+                className={`${styles.logoImage} ${activeSlot === 0 ? styles.active : styles.background}`}
             />
             <img 
-                src={`/projects-logos/${LOGOS[indices.next]}`} 
+                src={`/projects-logos/${LOGOS[indices[1]]}`} 
                 alt="Logo" 
-                className={`${styles.logoImage} ${styles.overlayImage} ${isFading ? styles.visible : ''} ${isResetting ? styles.reset : ''}`}
+                className={`${styles.logoImage} ${activeSlot === 1 ? styles.active : styles.background}`}
             />
         </div>
     );
@@ -76,28 +73,32 @@ const LogoCard = ({ className, initialIndex }) => {
 export default function SocialProof() {
     return (
         <section className={styles.socialProofSection} id="social-proof">
-            <div className={styles.gallery}>
-                <div className={styles.galleryInner}>
-                    <LogoCard className={styles.p1} initialIndex={0} />
-                    <LogoCard className={styles.p2} initialIndex={3} />
-                    <LogoCard className={styles.p3} initialIndex={6} />
-                    <LogoCard className={styles.p4} initialIndex={9} />
-                    <LogoCard className={styles.p5} initialIndex={12} />
-                    <LogoCard className={styles.p6} initialIndex={15} />
-                    <LogoCard className={styles.p7} initialIndex={18} />
-                    <LogoCard className={styles.p8} initialIndex={21} />
-                    <LogoCard className={styles.p9} initialIndex={24} />
-                    <LogoCard className={styles.p10} initialIndex={27} />
-                </div>
-            </div>
-
             <div className={styles.container}>
                 <div className={styles.badge}>Customers</div>
                 
+                <div className={styles.galleryTop}>
+                    <div className={styles.galleryInner}>
+                        <LogoCard className={styles.p1} initialIndex={0} />
+                        <LogoCard className={styles.p2} initialIndex={3} />
+                        <LogoCard className={styles.p3} initialIndex={6} />
+                        <LogoCard className={styles.p4} initialIndex={9} />
+                        <LogoCard className={styles.p5} initialIndex={12} />
+                        <LogoCard className={styles.p6} initialIndex={15} />
+                    </div>
+                </div>
+
                 <h2 className={styles.title}>
                     Trusted by founders<br/>
                     <span className={styles.titleLight}>building real products</span>
                 </h2>
+
+                <div className={styles.galleryBottom}>
+                    <div className={styles.galleryInner}>
+                        <LogoCard className={styles.p7} initialIndex={18} />
+                        <LogoCard className={styles.p8} initialIndex={21} />
+                        <LogoCard className={styles.p9} initialIndex={24} />
+                    </div>
+                </div>
                 
                 <p className={styles.description}>
                     We design, build and scale<br/>digital products end-to-end.

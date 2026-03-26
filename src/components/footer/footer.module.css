@@ -57,6 +57,14 @@
     position: absolute;
     bottom: 25px;
     right: 25px;
+    transition: opacity .3s ease-in-out, visibility .3s ease-in-out, transform .3s ease-in-out;
+}
+
+.whatsappHidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateY(10px);
 }
 
 @media screen and (max-width: 768px) {
