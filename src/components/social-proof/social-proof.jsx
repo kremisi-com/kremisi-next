@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import styles from './social-proof.module.css';
 import GitButton from '../git-button/git-button';
@@ -13,45 +13,77 @@ const LOGOS = [
     "studylux.png", "theorica.png", "vecchi360.png"
 ];
 
+const LOGO_CYCLE_DELAY = 6000;
+const LOGO_FADE_DURATION = 1400;
+const LOGO_FADE_BUFFER = 120;
+
 const LogoCard = ({ className, initialIndex }) => {
-    // We use two slots for images to cross-fade between them.
-    // This allows us to change the 'src' of the hidden image before it fades in.
+    const startDelay = useMemo(() => Math.random() * 8000, []);
     const [indices, setIndices] = useState([
-        initialIndex, 
+        initialIndex,
         (initialIndex + 1) % LOGOS.length
     ]);
-    const [activeSlot, setActiveSlot] = useState(0); // 0 or 1
+    const [activeSlot, setActiveSlot] = useState(0);
+    const activeSlotRef = useRef(0);
+    const cycleTimeoutRef = useRef(null);
+    const swapTimeoutRef = useRef(null);
 
     useEffect(() => {
-        const randomStartDelay = Math.random() * 8000;
-        
-        const timeout = setTimeout(() => {
-            const interval = setInterval(() => {
-                // Step 1: Switch active slot
-                // The transition is handled by CSS (.active / .background)
-                setActiveSlot(prev => (prev === 0 ? 1 : 0));
-                
-                // Step 2: After the fade is complete, update the now-hidden slot
-                // with the next logo in the sequence
-                setTimeout(() => {
-                    setIndices(prev => {
-                        const newIndices = [...prev];
-                        // The hidden slot is 'prev === 0 ? 0 : 1' BEFORE the update, 
-                        // but since we just swapped, it's actually '1 - current_activeSlot'
-                        // Let's use the local 'newActiveSlot' logic
-                        const hiddenSlot = activeSlot; // The slot that WAS active is now background
-                        newIndices[hiddenSlot] = (newIndices[hiddenSlot] + 2) % LOGOS.length;
-                        return newIndices;
-                    });
-                }, 2100); // 2100ms > 2000ms transition duration
-                
-            }, 6000); // Cycle every 6 seconds
-            
-            return () => clearInterval(interval);
-        }, randomStartDelay);
+        const preloadedImages = LOGOS.map((logo) => {
+            const image = new window.Image();
+            image.src = `/projects-logos/${logo}`;
+            return image;
+        });
 
-        return () => clearTimeout(timeout);
-    }, [activeSlot]);
+        return () => {
+            preloadedImages.forEach((image) => {
+                image.onload = null;
+                image.onerror = null;
+            });
+        };
+    }, []);
+
+    useEffect(() => {
+        const clearTimers = () => {
+            if (cycleTimeoutRef.current) {
+                window.clearTimeout(cycleTimeoutRef.current);
+                cycleTimeoutRef.current = null;
+            }
+
+            if (swapTimeoutRef.current) {
+                window.clearTimeout(swapTimeoutRef.current);
+                swapTimeoutRef.current = null;
+            }
+        };
+
+        const scheduleCycle = () => {
+            clearTimers();
+
+            cycleTimeoutRef.current = window.setTimeout(() => {
+                const currentActiveSlot = activeSlotRef.current;
+                const nextActiveSlot = currentActiveSlot === 0 ? 1 : 0;
+
+                setActiveSlot(nextActiveSlot);
+                activeSlotRef.current = nextActiveSlot;
+
+                swapTimeoutRef.current = window.setTimeout(() => {
+                    setIndices((prevIndices) => {
+                        const nextIndices = [...prevIndices];
+                        nextIndices[currentActiveSlot] = (nextIndices[currentActiveSlot] + 2) % LOGOS.length;
+                        return nextIndices;
+                    });
+
+                    scheduleCycle();
+                }, LOGO_FADE_DURATION + LOGO_FADE_BUFFER);
+            }, activeSlotRef.current === 0 ? startDelay : LOGO_CYCLE_DELAY);
+        };
+
+        scheduleCycle();
+
+        return () => {
+            clearTimers();
+        };
+    }, [startDelay]);
 
     return (
         <div className={`${styles.placeholder} ${className}`}>
@@ -59,11 +91,15 @@ const LogoCard = ({ className, initialIndex }) => {
                 src={`/projects-logos/${LOGOS[indices[0]]}`} 
                 alt="Logo" 
                 className={`${styles.logoImage} ${activeSlot === 0 ? styles.active : styles.background}`}
+                decoding="async"
+                draggable="false"
             />
             <img 
                 src={`/projects-logos/${LOGOS[indices[1]]}`} 
                 alt="Logo" 
                 className={`${styles.logoImage} ${activeSlot === 1 ? styles.active : styles.background}`}
+                decoding="async"
+                draggable="false"
             />
         </div>
     );

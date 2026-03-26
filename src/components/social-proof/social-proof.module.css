@@ -86,27 +86,27 @@
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: center center;
     user-select: none;
     pointer-events: none;
-    padding: 15px;
+    padding: 0;
     backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
     transform: translateZ(0);
     -webkit-transform: translateZ(0);
-    will-change: transform, opacity;
+    will-change: opacity, transform;
+    transition: opacity 1.4s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .active {
     opacity: 1;
     z-index: 2;
-    transition: opacity 2s ease-in-out;
 }
 
 .background {
     opacity: 0;
     z-index: 1;
-    transition: opacity 2s ease-in-out;
 }
 
 .badge {
@@ -230,10 +230,6 @@
         filter: grayscale(0);
     }
 
-    .logoImage {
-        padding: 0 !important;
-    }
-
     .title {
         font-size: 3.5rem;
         margin-bottom: 1.5rem;
@@ -273,10 +269,6 @@
         box-shadow: none !important;
     }
     
-    .logoImage {
-        padding: 0 !important;
-    }
-
     .title {
         font-size: 2.6rem; /* Slightly larger heading */
         font-weight: 700;
@@ -318,7 +310,4 @@
         width: calc(33.33% - 15px) !important;
     }
 
-    .logoImage {
-        padding: 0 !important;
-    }
 }
