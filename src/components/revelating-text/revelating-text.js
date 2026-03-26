@@ -56,14 +56,14 @@ export default function RevelatingText({ children, play }) {
                             const isHighlight = !!w.closest(`.highlight`);
                             const color = isHighlight
                                 ? "var(--primary)"
-                                : "var(--foreground)";
+                                : "inherit";
                             gsap.to(w, { color, duration: 0.2 });
                         },
                         onEnterBack: () => {
                             const isHighlight = !!w.closest(`.highlight`);
                             const color = isHighlight
                                 ? "var(--primary)"
-                                : "var(--foreground)";
+                                : "inherit";
                             gsap.to(w, { color, duration: 0.2 });
                         },
                         onLeave: () => gsap.set(w, { clearProps: "color" }),
@@ -100,7 +100,7 @@ export default function RevelatingText({ children, play }) {
         split.words.forEach((word) => {
             const isHighlight = !!word.closest(`.highlight`);
             gsap.set(word, {
-                color: isHighlight ? "var(--primary)" : "var(--foreground)",
+                color: isHighlight ? "var(--primary)" : "inherit",
             });
         });
 

@@ -33,9 +33,9 @@ export default function Overview({
             
             <div className={styles.content}>
                 <RevelatingText play={textShouldAnimate}>
-                    We design, build and scale<br/>
-                    <span className="highlight">digital products</span><br/>
-                    that drive <span className="highlight"> real results.</span>
+                    <span className={styles.line1}>We design, build and scale</span><br/>
+                    <span className={`highlight ${styles.line2}`}>digital products</span><br/>
+                    <span className={styles.line3}>that drive <span className={styles.line3Emph}>real results.</span></span>
                 </RevelatingText>
             </div>
         </section>
