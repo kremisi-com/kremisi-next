@@ -1,0 +1,201 @@
+.videosCtaSection {
+    position: relative;
+    padding: 0 0 60px 0;
+
+
+    background-color: var(--background);
+    color: var(--foreground);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow: hidden;
+    width: 100%;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 800px;
+    margin: 0 auto 60px auto;
+    padding: 0 5vw;
+    z-index: 5;
+}
+
+.badge {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.badge::before,
+.badge::after {
+    content: "";
+    display: inline-block;
+    width: 30px;
+    height: 1px;
+    background-color: var(--primary);
+}
+
+.title {
+    font-size: 5rem;
+    font-weight: 600;
+    line-height: 1.1;
+    margin: 0;
+    letter-spacing: -0.03em;
+    color: var(--foreground);
+}
+
+.titleLight {
+    font-weight: 400;
+    color: var(--primary);
+}
+
+.bracketsContainer {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+/* Brackets Styling - Brand consistent */
+.bracket {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-color: var(--foreground);
+    border-style: solid;
+    border-width: 0;
+    z-index: 10;
+    opacity: 0.4;
+}
+
+.topLeft {
+    top: -20px;
+    left: 40px;
+    border-top-width: 1.5px;
+    border-left-width: 1.5px;
+}
+
+.topRight {
+    top: -20px;
+    right: 40px;
+    border-top-width: 1.5px;
+    border-right-width: 1.5px;
+}
+
+.bottomLeft {
+    bottom: -20px;
+    left: 40px;
+    border-bottom-width: 1.5px;
+    border-left-width: 1.5px;
+}
+
+.bottomRight {
+    bottom: -20px;
+    right: 40px;
+    border-bottom-width: 1.5px;
+    border-right-width: 1.5px;
+}
+
+/* Gallery Wrapper and Convex Clipping */
+.galleryWrapper {
+    position: relative;
+    width: 100%;
+    overflow: visible;
+}
+
+.gallery {
+    display: flex;
+    width: 100%;
+    height: 600px;
+    overflow: hidden;
+    gap: 0;
+    clip-path: ellipse(65% 55% at 50% 50%);
+    background-color: var(--background);
+    z-index: 2;
+}
+
+.videoCard {
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    height: 100%;
+    background-color: #000;
+}
+
+.videoCard:not(:last-child) {
+    border-right: 24px solid var(--background);
+}
+
+
+
+.video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    opacity: 0.4;
+    filter: brightness(0.8);
+    transition: opacity 0.4s ease, filter 0.4s ease, transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.videoCard:hover .video {
+    opacity: 0.9;
+    filter: brightness(1);
+    transform: scale(1.05);
+}
+
+
+/* Central Button Overlay */
+.ctaCenter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+    pointer-events: auto;
+}
+
+.buttonWrapper {
+    display: block;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.ctaGitButton {
+    transform: scale(1.1);
+}
+
+@media (max-width: 1024px) {
+    .title {
+        font-size: 4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .videosCtaSection {
+        padding: 100px 0;
+    }
+    .title {
+        font-size: 3rem;
+    }
+    .gallery {
+        height: 350px;
+        clip-path: ellipse(140% 70% at 50% 50%);
+    }
+    .bracket {
+        width: 20px;
+        height: 20px;
+        left: 20px !important;
+        right: 20px !important;
+    }
+}

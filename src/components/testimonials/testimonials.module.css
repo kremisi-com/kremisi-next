@@ -1,6 +1,8 @@
 .testimonialsSection {
     position: relative;
-    padding: 40px 5vw 180px 5vw;
+    padding: 40px 5vw 20px 5vw;
+
+
     background-color: var(--background);
     color: var(--foreground);
     z-index: 10;
