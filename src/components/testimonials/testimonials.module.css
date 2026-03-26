@@ -1,6 +1,6 @@
 .testimonialsSection {
     position: relative;
-    padding: 140px 10vw;
+    padding: 40px 5vw 180px 5vw;
     background-color: var(--background);
     color: var(--foreground);
     z-index: 10;
@@ -12,13 +12,14 @@
     width: 100%;
     margin: 0 auto;
     display: flex;
-    gap: clamp(60px, 8vw, 120px);
+    gap: clamp(80px, 10vw, 160px);
     align-items: center;
 }
 
 .leftColumn {
     flex: 1;
     min-width: 400px;
+    margin-top: 20px;
 }
 
 .rightColumn {
@@ -35,7 +36,7 @@
     color: var(--foreground);
     letter-spacing: 0.2em;
     text-transform: uppercase;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     display: flex;
     align-items: center;
     gap: 15px;
@@ -62,26 +63,24 @@
 
 .reviewsContainer {
     position: relative;
-    padding: 20px 0;
+    padding: 30px 0;
 }
 
 .svgCurve {
     position: absolute;
-    left: 20px;
+    left: 0;
     top: 50%;
     transform: translateY(-50%);
     z-index: 1;
     pointer-events: none;
-    opacity: 0.15;
+    opacity: 0.25;
     color: var(--primary);
 }
 
 .reviewsList {
     position: relative;
     z-index: 2;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
+    height: 600px;
 }
 
 .reviewItem {
@@ -89,7 +88,9 @@
     align-items: center;
     gap: 24px;
     cursor: pointer;
-    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    position: absolute;
+    left: 0;
+    right: 0;
     opacity: 1;
 }
 
@@ -106,22 +107,22 @@
 }
 
 .avatarWrapper {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     overflow: hidden;
     flex-shrink: 0;
     transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     background-color: var(--box-bg);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
 }
 
 .active .avatarWrapper {
-    width: 80px;
-    height: 80px;
-    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
-    border-color: var(--primary);
+    width: 120px;
+    height: 120px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.12);
+    border: 2px solid var(--primary);
 }
 
 .avatar {
@@ -129,7 +130,7 @@
     height: 100%;
     object-fit: cover;
     filter: grayscale(100%);
-    transition: all 0.6s ease;
+    transition: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .active .avatar {
@@ -139,28 +140,83 @@
 .reviewMeta {
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 2px;
 }
 
 .reviewerName {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     font-weight: 600;
     color: var(--foreground);
     margin: 0;
-    transition: all 0.3s ease;
-    letter-spacing: -0.01em;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    letter-spacing: -0.02em;
 }
 
 .active .reviewerName {
-    font-size: 1.4rem;
+    font-size: 1.8rem;
     color: var(--foreground);
+}
+
+.reviewerRole {
+    font-size: 0.8rem;
+    color: var(--foreground);
+    opacity: 0.35;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    font-weight: 500;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.active .reviewerRole {
+    opacity: 0.5;
+    margin-bottom: 12px;
+}
+
+.projectLink {
+    font-size: 0.8rem;
+    color: var(--primary);
+    text-decoration: none;
+    transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    opacity: 0.3;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.active .projectLink {
+    opacity: 0.9;
+}
+
+.projectValue {
+    font-weight: 800;
+    letter-spacing: 0.15em;
+    font-size: 0.85rem;
+}
+
+.projectLink::after {
+    content: "›";
+    font-size: 1.2rem;
+    line-height: 1;
+    transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-block;
+    margin-left: -4px;
+}
+
+.projectLink:hover::after {
+    transform: translateX(5px) scale(1.2);
+}
+
+.projectLink:hover {
+    opacity: 1 !important;
 }
 
 .ratingRow {
     display: flex;
     align-items: center;
     gap: 6px;
-    font-size: 0.9rem;
+    font-size: 1rem;
     color: var(--foreground);
     opacity: 0.5;
 }
@@ -177,45 +233,88 @@
 
 .quoteWrapper {
     position: relative;
-    padding: 0 40px;
+    padding: 0 20px;
 }
 
 .quoteIcon {
     position: absolute;
-    left: -20px;
-    top: -20px;
-    font-size: 4rem;
+    left: -60px;
+    top: -50px;
+    font-size: 12rem;
     font-family: Georgia, serif;
     color: var(--primary);
     line-height: 1;
     font-weight: bold;
-    opacity: 0.2;
+    opacity: 0.05;
+    z-index: 0;
 }
 
 .quoteContainer {
-    min-height: 250px;
+    min-height: 320px;
     display: flex;
     align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.quoteColumn {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}
+
+.quoteRating {
+    opacity: 0.8;
 }
 
 .quoteText {
-    font-size: 3rem;
+    font-size: 3.5rem;
     font-weight: 500;
     color: var(--foreground);
-    line-height: 1.2;
+    line-height: 1.15;
     margin: 0;
     position: relative;
     z-index: 2;
     letter-spacing: -0.03em;
+    margin-bottom: 30px;
+}
+
+.quoteTasks {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    position: relative;
+    z-index: 2;
+}
+
+.taskTag {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--foreground);
+    opacity: 0.4;
+    padding: 6px 16px;
+    border: 1px solid rgba(128, 128, 128, 0.2);
+    border-radius: 30px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.taskTag:hover {
+    opacity: 0.8;
+    border-color: var(--primary);
+    color: var(--primary);
 }
 
 .firstLetter {
-    font-size: 4.5rem;
+    font-size: 8rem;
     font-weight: 600;
     color: var(--primary);
-    line-height: 0.8;
-    margin-right: -4px;
-    vertical-align: middle;
+    line-height: 0.9;
+    margin-right: 14px;
+    margin-top: 0.05em;
+    float: left;
 }
 
 @media (max-width: 1024px) {
@@ -240,9 +339,15 @@
     }
 
     .quoteText {
-        font-size: 2.2rem;
+        font-size: 2.5rem;
     }
     
+    .quoteIcon {
+        font-size: 8rem;
+        left: -30px;
+        top: -30px;
+    }
+
     .quoteContainer {
         min-height: auto;
     }
@@ -261,22 +366,22 @@
         display: none;
     }
 
-    .reviewItem:nth-child(n) {
-        transform: none !important;
-        scale: 1 !important;
-    }
-    
     .reviewsList {
-        align-items: flex-start;
-        gap: 30px;
+        height: 460px;
     }
 
     .active .avatarWrapper {
-        width: 60px;
-        height: 60px;
+        width: 70px;
+        height: 70px;
     }
     
     .quoteText {
         font-size: 1.8rem;
+    }
+    
+    .quoteIcon {
+        font-size: 6rem;
+        left: -15px;
+        top: -20px;
     }
 }
