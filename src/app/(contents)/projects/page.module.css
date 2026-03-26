@@ -94,8 +94,12 @@
 
     .subtitle {
         margin-top: 18px;
-        font-size: 1.2rem;
+        font-size: 1.4rem;
         line-height: 1.5;
         padding: 0 15px;
     }
+}
+
+.projectsTable {
+    --grid-template: 1fr 1.25fr 1fr 0.75fr;
 }

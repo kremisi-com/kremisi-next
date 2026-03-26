@@ -4,7 +4,7 @@ import Link from "next/link";
 import style from "./colored-table.module.css";
 import React from "react";
 
-export default function ColoredTable({ items, images, imageAlts = [], links }) {
+export default function ColoredTable({ items, images, imageAlts = [], links, className }) {
     const tableRef = React.useRef(null);
 
     const [imageIndexShown, setImageIndexShown] = React.useState(null);
@@ -83,7 +83,7 @@ export default function ColoredTable({ items, images, imageAlts = [], links }) {
 
     return (
         <div
-            className={style.container}
+            className={`${style.container} ${className || ""}`}
             onMouseLeave={handleMouseLeave}
             onMouseMove={handleMouseMove}
             ref={tableRef}

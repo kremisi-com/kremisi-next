@@ -40,10 +40,10 @@ export default function ProjectsPage() {
 
     let tmpCustomer = project.customer;
     if (tmpCustomer === undefined || tmpCustomer === "")
-      tmpCustomer = "Freelance";
+      tmpCustomer = "Kremisi";
     else
       tmpCustomer =
-        "Freelance with " +
+        "Kremisi for " +
         project.customer
           .split("")
           .map((ch, i, arr) =>
@@ -77,6 +77,7 @@ export default function ProjectsPage() {
         images={images}
         imageAlts={imageAlts}
         links={links}
+        className={styles.projectsTable}
       />
     </main>
   );

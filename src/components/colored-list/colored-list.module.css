@@ -45,8 +45,18 @@
 }
 
 @media (max-width: 768px) {
+    .list {
+        gap: 4px 4px;
+    }
+
     .list li {
-        font-size: 1.7rem;
+        font-size: 1.1rem;
+        padding: 5px 12px;
+    }
+
+    .notMac .rainbowContent,
+    .mac .rainbowContent {
+        padding: 5px 10px;
     }
 }
 

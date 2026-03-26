@@ -151,7 +151,7 @@ export default function AboutPage() {
       </section>
       <section className={`${styles.section} flex-center`}>
         <AnimatedLink href={"/contacts"}>
-          <GitButton />
+          <GitButton leftShift={-20} />
         </AnimatedLink>
       </section>
     </main>

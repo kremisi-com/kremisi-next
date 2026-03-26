@@ -15,18 +15,22 @@
 }
 
 .buttons,
-.logo {
+.logoWrapper {
     position: absolute;
     z-index: 10;
     top: 30px;
 }
 
-.logo {
+.logoWrapper {
     left: 50%;
     transform: translateX(-50%);
 }
 :global(.light) .logo {
     content: url("/images/logo/logo.png");
+}
+
+.logo {
+    display: block;
 }
 
 .buttons {
@@ -142,7 +146,7 @@
         );
     }
     .buttons,
-    .logo {
+    .logoWrapper {
         top: 20px;
     }
     .buttons {

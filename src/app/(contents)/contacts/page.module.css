@@ -150,7 +150,7 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  font-size: 0.95rem;
+  font-size: 1rem;
   letter-spacing: 0.15rem;
   text-transform: uppercase;
   color: var(--foreground);
@@ -254,14 +254,16 @@
 
   .metaLabel {
     justify-content: center;
+    font-size: 1.1rem;
+    letter-spacing: 0.2rem;
   }
 
   .metaValue {
-    font-size: 1.15rem;
+    font-size: 1.5rem;
   }
 
   .leadText {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     line-height: 1.4;
   }
 
@@ -270,9 +272,4 @@
     align-items: center;
     text-align: center;
   }
-}
-
-/* ------- PAGE-SPECIFIC GLOBAL OVERRIDES ------- */
-:global(.whatsapp-floating-button) {
-  display: none !important;
 }

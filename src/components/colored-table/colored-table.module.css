@@ -22,7 +22,7 @@
 
 .desktopCells {
   display: grid;
-  grid-template-columns: repeat(var(--column-count, 4), minmax(0, 1fr));
+  grid-template-columns: var(--grid-template, repeat(var(--column-count, 4), minmax(0, 1fr)));
 }
 
 .mobileCells {

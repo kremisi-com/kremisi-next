@@ -49,15 +49,35 @@
     left: 25px;
 }
 
+.buttons {
+    z-index: 10;
+    bottom: 30px;
+    position: absolute;
+}
+.right {
+    right: 25px;
+}
+
 .whatsappButton {
     background-color: #25d366;
     border-color: #25d366;
-    padding: 10px 6px 6px 6px;
+    width: 45px;
+    height: 45px;
+    padding: 0;
     border-radius: 50%;
-    position: absolute;
-    bottom: 25px;
-    right: 25px;
-    transition: opacity .3s ease-in-out, visibility .3s ease-in-out, transform .3s ease-in-out;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity .3s ease-in-out, visibility .3s ease-in-out, transform .3s ease-in-out, background-color 0.2s ease;
+    color: white;
+}
+.whatsappButton:hover {
+    background-color: #128c7e;
+    transform: scale(1.05);
+}
+.whatsappButton :global(svg) {
+    width: 24px;
+    height: 24px;
 }
 
 .whatsappHidden {

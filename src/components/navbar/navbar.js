@@ -55,7 +55,7 @@ export default function Navbar() {
                     <Button href="/about">About</Button>
                     <Button href="/projects">Projects</Button>
                 </div>
-                <AnimatedLink href="/">
+                <AnimatedLink href="/" onClick={handleHomeClick} className={styles.logoWrapper}>
                     <Image
                         src="/images/logo/logo-dark.png"
                         alt="Kremisi logo"
@@ -79,7 +79,14 @@ export default function Navbar() {
                 <div className={`${styles.buttons} ${styles.themeToggle}`}>
                     <ThemeToggle styles={styles} />
                 </div>
-                <AnimatedLink href="/" onClick={() => setMenuOpen(false)}>
+                <AnimatedLink
+                    href="/"
+                    className={styles.logoWrapper}
+                    onClick={() => {
+                        setMenuOpen(false);
+                        handleHomeClick();
+                    }}
+                >
                     <Image
                         src="/images/logo/icona-dark.png"
                         alt="Kremisi logo"

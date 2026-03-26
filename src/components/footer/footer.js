@@ -53,7 +53,7 @@ export default function Footer() {
                     <a href="mailto:info@kremisi.com">info@kremisi.com</a>
                 </address>
                 <div className={`${styles.buttons} ${styles.right} whatsapp-floating-button`}>
-                    <Button
+                    <a
                         className={`${styles.whatsappButton} ${
                             isHomeSliderActive ? styles.whatsappHidden : ""
                         }`}
@@ -61,7 +61,7 @@ export default function Footer() {
                         target="_blank"
                     >
                         <MessageCircleMore />
-                    </Button>
+                    </a>
                 </div>
             </footer>
         </>
