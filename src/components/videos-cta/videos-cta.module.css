@@ -119,7 +119,7 @@
     height: 600px;
     overflow: hidden;
     gap: 0;
-    clip-path: ellipse(65% 55% at 50% 50%);
+    /* clip-path: ellipse(65% 55% at 50% 50%); */
     background-color: var(--background);
     z-index: 2;
 }
