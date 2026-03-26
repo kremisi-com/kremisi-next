@@ -172,6 +172,14 @@
     margin-bottom: 12px;
 }
 
+:global(.dark) .reviewerRole {
+    opacity: 0.6;
+}
+
+:global(.dark) .active .reviewerRole {
+    opacity: 0.8;
+}
+
 .projectLink {
     font-size: 0.8rem;
     color: var(--primary);
@@ -223,6 +231,10 @@
 
 .active .ratingRow {
     opacity: 0.7;
+}
+
+:global(.dark) .ratingRow {
+    opacity: 0.95;
 }
 
 .star {
@@ -299,6 +311,11 @@
     border-radius: 30px;
     font-weight: 500;
     transition: all 0.3s ease;
+}
+
+:global(.dark) .taskTag {
+    opacity: 0.7;
+    border-color: rgba(255, 255, 255, 0.3);
 }
 
 .taskTag:hover {

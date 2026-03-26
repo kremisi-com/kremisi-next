@@ -111,19 +111,19 @@
     margin-bottom: 0.35rem;
     display: inline-block;
     letter-spacing: -0.02em;
-    color: var(--black); /* Explicitly black as requested */
+    color: var(--foreground);
 }
 
 .line2 {
     font-size: 8.5rem !important;
     display: inline-block;
-    color: var(--black); /* Explicitly black */
+    color: var(--foreground);
 }
 
 .line3 {
     font-size: 8.5rem !important;
     display: inline-block;
-    color: var(--black); /* Explicitly black */
+    color: var(--foreground);
 }
 
 .line3Emph {
