@@ -104,10 +104,7 @@ export default function AboutPage() {
         </RevelatingText>
       </section>
       <section className={styles.section}>
-        <h2>
-          Services /
-          <br className="onlyMobile" /> Tech Stack
-        </h2>
+        <h2>Tech Stack</h2>
         <ColoredList items={skills} />
       </section>
       <section className={styles.section}>
