@@ -48,7 +48,8 @@
     background: radial-gradient(circle, rgba(255, 0, 80, 0.6) 0%, transparent 70%);
     top: -10%;
     left: -10%;
-    animation: float1 25s infinite alternate ease-in-out;
+    animation: float1 18s infinite alternate ease-in-out;
+    animation-delay: -5s;
 }
 
 .blob2 {
@@ -57,7 +58,8 @@
     background: radial-gradient(circle, rgba(60, 60, 255, 0.5) 0%, transparent 70%);
     bottom: -20%;
     right: -10%;
-    animation: float2 32s infinite alternate ease-in-out;
+    animation: float2 22s infinite alternate ease-in-out;
+    animation-delay: -7s;
 }
 
 .blob3 {
@@ -66,7 +68,8 @@
     background: radial-gradient(circle, rgba(255, 120, 0, 0.5) 0%, transparent 70%);
     top: 40%;
     left: 40%;
-    animation: float3 38s infinite alternate ease-in-out;
+    animation: float3 26s infinite alternate ease-in-out;
+    animation-delay: -10s;
 }
 
 .noise {
