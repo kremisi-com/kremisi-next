@@ -16,6 +16,23 @@ import {
 } from "@/lib/projects";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
+function isOverviewViewInUrl() {
+  if (typeof window === "undefined") return false;
+
+  return new URLSearchParams(window.location.search).get("view") === "overview";
+}
+
+function syncHomeViewInUrl(isOverviewVisible) {
+  if (typeof window === "undefined") return;
+
+  const nextUrl = isOverviewVisible ? "/?view=overview" : "/";
+  const currentUrl = `${window.location.pathname}${window.location.search}`;
+
+  if (currentUrl === nextUrl) return;
+
+  window.history.replaceState({}, "", nextUrl);
+}
+
 export default function Home() {
   const overviewRevealAdvanceMs = 500;
   const overviewFadeDurationMs = 1400;
@@ -32,10 +49,18 @@ export default function Home() {
   const discoverAnimationRef = useRef(false);
   const sequenceTimeoutsRef = useRef([]);
   const initialPageStylesRef = useRef(null);
+  const hasMountedRef = useRef(false);
   const [isOverviewVisible, setIsOverviewVisible] = useState(false);
   const [shouldAnimateOverviewText, setShouldAnimateOverviewText] =
     useState(false);
   const [sliderReopenSignal, setSliderReopenSignal] = useState(0);
+
+  useEffect(() => {
+    if (isOverviewViewInUrl()) {
+      setIsOverviewVisible(true);
+      setShouldAnimateOverviewText(true);
+    }
+  }, []);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -95,6 +120,15 @@ export default function Home() {
     html.style.height = "100dvh";
     body.style.height = "100dvh";
     body.style.overscrollBehavior = "none";
+  }, [isOverviewVisible]);
+
+  useEffect(() => {
+    if (!hasMountedRef.current) {
+      hasMountedRef.current = true;
+      return;
+    }
+
+    syncHomeViewInUrl(isOverviewVisible);
   }, [isOverviewVisible]);
 
   useEffect(() => {
