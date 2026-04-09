@@ -10,7 +10,7 @@ import { Toaster } from "react-hot-toast";
 import Scripts from "@/components/scripts/scripts";
 import { TransitionProvider } from "@/context/transition-context/transition-context";
 import { Analytics } from "@vercel/analytics/next";
-import { GoogleAnalytics } from "@next/third-parties/google";
+import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 
 const BASE_URL = "https://kremisi.com";
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
@@ -117,7 +117,6 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
-
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
@@ -139,10 +138,13 @@ export default function RootLayout({ children }) {
 
         <Analytics />
         <SpeedInsights />
+        <GoogleTagManager gtmId="GTM-5LL6LJR" />
         <GoogleAnalytics gaId="G-TK345YVSSJ" />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(organizationJsonLd),
+          }}
         />
       </body>
     </html>
