@@ -58,7 +58,7 @@
 .eyebrow,
 .panelTag,
 .metaLabel,
-.heatLabel {
+.scoreLabel {
   text-transform: uppercase;
   letter-spacing: 0.24rem;
   font-size: 1rem;
@@ -422,32 +422,50 @@
   font-size: clamp(2.4rem, 3vw, 3.3rem);
 }
 
-.heatWrap {
+.scoreWrap {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   gap: 10px;
 }
 
-.heatLabel {
+.scoreLabel {
   color: var(--primary);
   font-size: 0.92rem;
   letter-spacing: 0.18rem;
 }
 
-.heatMeter {
+.scoreValueRow {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.scoreValue {
+  font-size: clamp(3rem, 5vw, 4.2rem);
+  font-weight: 700;
+  line-height: 0.9;
+  letter-spacing: -0.08rem;
+}
+
+.scoreScale {
+  font-size: 1.4rem;
+  opacity: 0.5;
+}
+
+.scoreMeter {
   display: flex;
   gap: 8px;
 }
 
-.heatDot {
+.scoreDot {
   width: 10px;
   height: 10px;
   border-radius: 999px;
   background: color-mix(in srgb, var(--foreground) 14%, transparent);
 }
 
-.heatDotActive {
+.scoreDotActive {
   background: var(--primary);
 }
 
@@ -457,13 +475,151 @@
   opacity: 0.58;
 }
 
-.resultText {
+.reviewBody {
   margin-top: 28px;
-  white-space: pre-wrap;
-  font-size: clamp(1.45rem, 1.8vw, 1.7rem);
-  line-height: 1.75;
-  opacity: 0.92;
   animation: bodyIn 400ms ease both;
+}
+
+.summaryBlock,
+.actionsCard,
+.listCard,
+.categoryCard {
+  border: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+  background: color-mix(in srgb, var(--background) 38%, transparent);
+  border-radius: 22px;
+}
+
+.summaryBlock,
+.actionsCard,
+.listCard,
+.categoryCard {
+  padding: 22px;
+}
+
+.summaryBlock {
+  display: grid;
+  gap: 18px;
+}
+
+.summaryText,
+.verdictText,
+.categoryComment,
+.priorityText {
+  margin: 0;
+  font-size: 1.45rem;
+  line-height: 1.7;
+}
+
+.summaryText {
+  opacity: 0.9;
+}
+
+.verdictText {
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.categoriesGrid,
+.listGrid {
+  display: grid;
+  gap: 16px;
+  margin-top: 18px;
+}
+
+.categoriesGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.categoryCard:last-child:nth-child(odd) {
+  grid-column: 1 / -1;
+}
+
+.categoryHeader,
+.actionsIntro,
+.priorityItem {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.categoryTitle {
+  margin: 0;
+  font-size: 1.55rem;
+  line-height: 1.3;
+}
+
+.categoryScore,
+.priorityBadge {
+  flex-shrink: 0;
+  min-width: 54px;
+  padding: 8px 10px;
+  border-radius: 999px;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  letter-spacing: 0.08rem;
+  text-transform: uppercase;
+  background: color-mix(in srgb, var(--primary) 14%, transparent);
+  color: var(--primary);
+}
+
+.categoryComment {
+  margin-top: 16px;
+  opacity: 0.76;
+}
+
+.listGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.listLabel {
+  margin: 0 0 16px;
+  color: var(--primary);
+  font-size: 0.98rem;
+  font-weight: 700;
+  letter-spacing: 0.18rem;
+  text-transform: uppercase;
+}
+
+.reviewList {
+  margin: 0;
+  padding-left: 18px;
+  display: grid;
+  gap: 12px;
+  font-size: 1.4rem;
+  line-height: 1.6;
+  opacity: 0.88;
+}
+
+.actionsCard {
+  margin-top: 18px;
+}
+
+.actionsCaption {
+  font-size: 1.2rem;
+  opacity: 0.5;
+}
+
+.priorityList {
+  margin-top: 18px;
+  display: grid;
+  gap: 14px;
+}
+
+.priorityItem {
+  padding-top: 14px;
+  border-top: 1px solid color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+
+.priorityItem:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
+.priorityText {
+  flex: 1;
+  opacity: 0.88;
 }
 
 .actionsRow {
@@ -664,7 +820,7 @@
   .eyebrow,
   .panelTag,
   .metaLabel,
-  .heatLabel {
+  .scoreLabel {
     letter-spacing: 0.18rem;
     font-size: 0.95rem;
   }
@@ -718,12 +874,23 @@
     min-height: 54px;
   }
 
-  .heatWrap {
+  .scoreWrap {
     align-items: flex-start;
   }
 
   .shareFeedback {
     text-align: left;
+  }
+
+  .categoriesGrid,
+  .listGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .priorityItem,
+  .actionsIntro {
+    flex-direction: column;
+    align-items: flex-start;
   }
 
   .ctaTitle {

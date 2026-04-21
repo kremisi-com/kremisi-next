@@ -25,13 +25,28 @@ function normalizeWebsiteUrl(input) {
   ).toString();
 }
 
+function buildShareText(review) {
+  if (!review) return "";
+
+  const topAction = review.priority_actions?.[0]?.action || "";
+
+  return [
+    `I analyzed my website with Kremisi's AI review.`,
+    `Overall score: ${review.overall_score}/5`,
+    `Summary: ${review.summary}`,
+    topAction ? `Top priority: ${topAction}` : "",
+    "Try it here: https://kremisi.com/website-roaster",
+  ]
+    .filter(Boolean)
+    .join("\n\n");
+}
+
 export default function WebsiteRoaster() {
   const [url, setUrl] = useState("");
   const [language, setLanguage] = useState("it");
   const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState(null);
+  const [review, setReview] = useState(null);
   const [error, setError] = useState(null);
-  const [roastLevel, setRoastLevel] = useState(null);
   const [shareFeedback, setShareFeedback] = useState("");
 
   useEffect(() => {
@@ -52,9 +67,8 @@ export default function WebsiteRoaster() {
     }
 
     setLoading(true);
-    setResult(null);
+    setReview(null);
     setError(null);
-    setRoastLevel(null);
     setShareFeedback("");
 
     try {
@@ -68,8 +82,7 @@ export default function WebsiteRoaster() {
 
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
-      setResult(data.roast);
-      setRoastLevel(data.level || Math.floor(Math.random() * 3) + 3);
+      setReview(data.review);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -78,23 +91,19 @@ export default function WebsiteRoaster() {
   };
 
   const handleShare = async () => {
-    if (!result) return;
-
-    const text = `I had my website roasted by Kremisi's AI. 🔥\n\nTry it here: https://kremisi.com/website-roaster\n\n"${result.slice(0, 120)}..."`;
+    if (!review) return;
 
     try {
       if (!navigator.clipboard) {
         throw new Error("Clipboard API unavailable");
       }
 
-      await navigator.clipboard.writeText(text);
-      setShareFeedback("Text copied. Now you can paste it anywhere.");
+      await navigator.clipboard.writeText(buildShareText(review));
+      setShareFeedback("Review summary copied.");
     } catch {
       setShareFeedback("Copy failed. Try again in a second.");
     }
   };
-
-  const currentHeat = roastLevel ? HEAT_LABELS[roastLevel - 1] : null;
 
   return (
     <main className={`page-content-simple ${styles.page}`}>
@@ -190,7 +199,7 @@ export default function WebsiteRoaster() {
                   onClick={handleRoast}
                   disabled={loading || !url.trim()}
                 >
-                  {loading ? "Analyzing... 🔍" : "Start Review"}
+                  {loading ? "Analyzing..." : "Start Review"}
                 </button>
               </div>
 
@@ -200,8 +209,8 @@ export default function WebsiteRoaster() {
                   <div>
                     <p className={styles.statusTitle}>Analysis in progress</p>
                     <p className={styles.statusText}>
-                      We are reading the site and preparing a verdict with no
-                      anesthesia. Pain is imminent.
+                      We are reading the site and preparing a strategic
+                      assessment.
                     </p>
                   </div>
                 </div>
@@ -209,7 +218,7 @@ export default function WebsiteRoaster() {
 
               {error && (
                 <div className={styles.errorPanel} aria-live="polite">
-                  <p className={styles.statusTitle}>😬 Something is off</p>
+                  <p className={styles.statusTitle}>Something is off</p>
                   <p className={styles.statusText}>{error}</p>
                 </div>
               )}
@@ -218,19 +227,27 @@ export default function WebsiteRoaster() {
             <div className={`${styles.panel} ${styles.resultPanel}`}>
               <div className={styles.resultHeader}>
                 <div>
-                  <p className={styles.eyebrow}>Verdict</p>
-                  {/* <h2 className={styles.resultTitle}>The AI roast</h2> */}
+                  <p className={styles.eyebrow}>Review</p>
+                  <h2 className={styles.resultTitle}>Strategic scorecard</h2>
                 </div>
 
-                {currentHeat && (
-                  <div className={styles.heatWrap}>
-                    <span className={styles.heatLabel}>{currentHeat}</span>
-                    <div className={styles.heatMeter} aria-hidden="true">
+                {review && (
+                  <div className={styles.scoreWrap}>
+                    <span className={styles.scoreLabel}>Overall Score</span>
+                    <div className={styles.scoreValueRow}>
+                      <span className={styles.scoreValue}>
+                        {review.overall_score}
+                      </span>
+                      <span className={styles.scoreScale}>/5</span>
+                    </div>
+                    <div className={styles.scoreMeter} aria-hidden="true">
                       {Array.from({ length: 5 }, (_, index) => (
                         <span
                           key={index}
-                          className={`${styles.heatDot} ${
-                            index < roastLevel ? styles.heatDotActive : ""
+                          className={`${styles.scoreDot} ${
+                            index < review.overall_score
+                              ? styles.scoreDotActive
+                              : ""
                           }`}
                         />
                       ))}
@@ -239,29 +256,95 @@ export default function WebsiteRoaster() {
                 )}
               </div>
 
-              {!result && !loading && !error && (
+              {!review && !loading && !error && (
                 <p className={styles.emptyState}>
-                  The verdict will appear here. If your site deserves mercy, we
-                  cannot promise it.
+                  The strategic review will appear here, structured and ready
+                  for action.
                 </p>
               )}
 
-              {result && !loading && (
-                <>
-                  <p className={styles.resultText}>{result}</p>
+              {review && !loading && (
+                <div className={styles.reviewBody}>
+                  <section className={styles.summaryBlock}>
+                    <p className={styles.summaryText}>{review.summary}</p>
+                    <p className={styles.verdictText}>{review.verdict}</p>
+                  </section>
+
+                  <section className={styles.categoriesGrid}>
+                    {review.categories.map((category) => (
+                      <article
+                        key={category.name}
+                        className={styles.categoryCard}
+                      >
+                        <div className={styles.categoryHeader}>
+                          <h3 className={styles.categoryTitle}>
+                            {category.name}
+                          </h3>
+                          <span className={styles.categoryScore}>
+                            {category.score}/5
+                          </span>
+                        </div>
+                        <p className={styles.categoryComment}>
+                          {category.comment}
+                        </p>
+                      </article>
+                    ))}
+                  </section>
+
+                  <section className={styles.listGrid}>
+                    <div className={styles.listCard}>
+                      <p className={styles.listLabel}>Top Strengths</p>
+                      <ul className={styles.reviewList}>
+                        {review.top_strengths.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className={styles.listCard}>
+                      <p className={styles.listLabel}>Top Issues</p>
+                      <ul className={styles.reviewList}>
+                        {review.top_issues.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </section>
+
+                  <section className={styles.actionsCard}>
+                    <div className={styles.actionsIntro}>
+                      <p className={styles.listLabel}>Priority Actions</p>
+                      <span className={styles.actionsCaption}>
+                        What to fix first
+                      </span>
+                    </div>
+                    <div className={styles.priorityList}>
+                      {review.priority_actions.map((item) => (
+                        <div
+                          key={item.priority}
+                          className={styles.priorityItem}
+                        >
+                          <span className={styles.priorityBadge}>
+                            {item.priority}
+                          </span>
+                          <p className={styles.priorityText}>{item.action}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
 
                   <div className={styles.actionsRow}>
-                    {/* <button
+                    <button
                       className={styles.secondaryButton}
                       onClick={handleShare}
                     >
-                      Copy the roast
-                    </button> */}
+                      Copy summary
+                    </button>
                     <span className={styles.shareFeedback} aria-live="polite">
                       {shareFeedback}
                     </span>
                   </div>
-                </>
+                </div>
               )}
             </div>
           </div>

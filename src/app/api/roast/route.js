@@ -3,16 +3,24 @@ const MAIL_ENDPOINT =
   process.env.KREMISI_MAIL_ENDPOINT?.trim() ||
   "https://api.kremisi.com/send-mail.php";
 const ROASTER_MAIL_KIND = "website-roaster";
+const CATEGORY_NAMES = [
+  "Visual Design",
+  "Trust & Credibility",
+  "Clarity of Offer",
+  "Conversion Potential",
+  "Performance & UX",
+];
+const PRIORITY_LEVELS = ["High", "Medium", "Low"];
 const SUPPORTED_LANGUAGES = {
   it: {
     label: "Italian",
     instruction:
-      "Write the full response in Italian. Keep the tone sharp, natural, and idiomatic for an Italian-speaking audience.",
+      "Write prose fields in Italian. Keep the tone elegant, sharp, professional, and natural for an Italian-speaking audience.",
   },
   en: {
     label: "English",
     instruction:
-      "Write the full response in English. Keep the tone sharp, natural, and idiomatic for an English-speaking audience.",
+      "Write prose fields in English. Keep the tone elegant, sharp, professional, and natural for an English-speaking audience.",
   },
 };
 
@@ -74,7 +82,7 @@ function normalizeLanguage(input) {
   return SUPPORTED_LANGUAGES[normalized] ? normalized : "it";
 }
 
-async function requestRoast({ apiKey, model, prompt }) {
+async function requestReview({ apiKey, model, prompt }) {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -85,7 +93,7 @@ async function requestRoast({ apiKey, model, prompt }) {
     body: JSON.stringify({
       model,
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 800,
+      max_tokens: 1800,
     }),
   });
 
@@ -93,10 +101,141 @@ async function requestRoast({ apiKey, model, prompt }) {
   return { response, payload };
 }
 
-function buildRoastPreview(roast) {
-  if (!roast) return "";
+function normalizeModelText(text) {
+  if (!text || typeof text !== "string") return "";
 
-  return roast.slice(0, 280);
+  const trimmed = text.trim();
+
+  if (trimmed.startsWith("```")) {
+    return trimmed
+      .replace(/^```json\s*/i, "")
+      .replace(/^```\s*/i, "")
+      .replace(/\s*```$/, "")
+      .trim();
+  }
+
+  return trimmed;
+}
+
+function extractModelTextBlocks(payload) {
+  if (!Array.isArray(payload?.content)) return "";
+
+  return payload.content
+    .filter((block) => block?.type === "text" && typeof block.text === "string")
+    .map((block) => block.text)
+    .join("\n")
+    .trim();
+}
+
+function isTruncatedResponse(payload) {
+  return payload?.stop_reason === "max_tokens";
+}
+
+function isScore(value) {
+  return Number.isInteger(value) && value >= 1 && value <= 5;
+}
+
+function isNonEmptyString(value) {
+  return typeof value === "string" && value.trim().length > 0;
+}
+
+function validateCategories(categories) {
+  if (!Array.isArray(categories) || categories.length !== CATEGORY_NAMES.length) {
+    return false;
+  }
+
+  return categories.every((category, index) => {
+    return (
+      category &&
+      category.name === CATEGORY_NAMES[index] &&
+      isScore(category.score) &&
+      isNonEmptyString(category.comment)
+    );
+  });
+}
+
+function validateStringList(values) {
+  return (
+    Array.isArray(values) &&
+    values.length === 3 &&
+    values.every((value) => isNonEmptyString(value))
+  );
+}
+
+function validatePriorityActions(priorityActions) {
+  if (!Array.isArray(priorityActions) || priorityActions.length !== 3) {
+    return false;
+  }
+
+  return priorityActions.every((item, index) => {
+    return (
+      item &&
+      item.priority === PRIORITY_LEVELS[index] &&
+      isNonEmptyString(item.action)
+    );
+  });
+}
+
+function validateReviewShape(review) {
+  if (!review || typeof review !== "object" || Array.isArray(review)) {
+    return false;
+  }
+
+  return (
+    isNonEmptyString(review.summary) &&
+    isScore(review.overall_score) &&
+    validateCategories(review.categories) &&
+    validateStringList(review.top_strengths) &&
+    validateStringList(review.top_issues) &&
+    validatePriorityActions(review.priority_actions) &&
+    isNonEmptyString(review.verdict)
+  );
+}
+
+function parseReviewPayload(payload) {
+  if (payload && typeof payload === "object" && !Array.isArray(payload)) {
+    return payload.review && typeof payload.review === "object"
+      ? payload.review
+      : payload;
+  }
+
+  throw new Error("AI response is not a JSON object.");
+}
+
+function parseAndValidateReview(text) {
+  const normalizedText = normalizeModelText(text);
+
+  if (!normalizedText) {
+    throw new Error("AI response is empty.");
+  }
+
+  let parsed;
+
+  try {
+    parsed = JSON.parse(normalizedText);
+  } catch {
+    throw new Error("AI response is not valid JSON.");
+  }
+
+  const review = parseReviewPayload(parsed);
+
+  if (!validateReviewShape(review)) {
+    throw new Error("AI response JSON does not match the required review schema.");
+  }
+
+  return review;
+}
+
+function buildReviewPreview(review) {
+  if (!review) return "";
+
+  const preview = [
+    `Summary: ${review.summary}`,
+    `Overall score: ${review.overall_score}/5`,
+    `Verdict: ${review.verdict}`,
+  ].join("\n");
+
+  return preview.slice(0, 280);
 }
 
 async function sendRoasterNotification({
@@ -105,7 +244,7 @@ async function sendRoasterNotification({
   hostname = "",
   status,
   error = "",
-  roast = "",
+  review = null,
 }) {
   const payload = new URLSearchParams({
     kind: ROASTER_MAIL_KIND,
@@ -114,7 +253,7 @@ async function sendRoasterNotification({
     hostname,
     status,
     error,
-    roastPreview: buildRoastPreview(roast),
+    roastPreview: buildReviewPreview(review),
     timestamp: new Date().toISOString(),
   });
 
@@ -157,6 +296,95 @@ async function sendErrorResponse({
   });
 
   return Response.json({ error: message }, { status });
+}
+
+function buildPrompt({ hostname, siteContent, languageConfig }) {
+  return `You are a senior web strategist and conversion consultant.
+
+Analyze the following website content from "${hostname}" and produce a premium, structured review designed for direct UI rendering.
+
+Return JSON only.
+Do not use markdown.
+Do not include any text before or after the JSON.
+Use this exact structure and key names:
+{
+  "summary": "Short executive summary in 2-3 sentences.",
+  "overall_score": 1-5,
+  "categories": [
+    {
+      "name": "Visual Design",
+      "score": 1-5,
+      "comment": "Short professional explanation."
+    },
+    {
+      "name": "Trust & Credibility",
+      "score": 1-5,
+      "comment": "Short professional explanation."
+    },
+    {
+      "name": "Clarity of Offer",
+      "score": 1-5,
+      "comment": "Short professional explanation."
+    },
+    {
+      "name": "Conversion Potential",
+      "score": 1-5,
+      "comment": "Short professional explanation."
+    },
+    {
+      "name": "Performance & UX",
+      "score": 1-5,
+      "comment": "Short professional explanation."
+    }
+  ],
+  "top_strengths": [
+    "Strength 1",
+    "Strength 2",
+    "Strength 3"
+  ],
+  "top_issues": [
+    "Issue 1",
+    "Issue 2",
+    "Issue 3"
+  ],
+  "priority_actions": [
+    {
+      "priority": "High",
+      "action": "What should be fixed first"
+    },
+    {
+      "priority": "Medium",
+      "action": "What should be fixed second"
+    },
+    {
+      "priority": "Low",
+      "action": "What should be fixed third"
+    }
+  ],
+  "verdict": "Sharp final verdict in one sentence."
+}
+
+Hard requirements:
+- Keep all JSON keys exactly as written above.
+- Keep category "name" values exactly as written above and in the same order.
+- All scores must be integers from 1 to 5.
+- overall_score must reflect the overall business effectiveness of the site.
+- Write concise, premium consultancy-style comments.
+- Keep summary to 2 sentences max.
+- Keep each category comment to 1 sentence, max 28 words.
+- Keep each strength, issue, and action to a short single sentence or phrase.
+- Keep verdict to 1 sentence, max 20 words.
+- Focus on strategic business value, not only technical quality.
+- Evaluate whether the site feels premium, whether the offer is clear, whether trust is established quickly, whether users would convert, and whether the UX feels smooth.
+- Tone: elegant, sharp, professional, honest, premium consultancy style.
+- No jokes. No cringe. No exaggerated negativity.
+- Do not mention missing access to code, analytics, or backend systems.
+- Avoid generic praise or generic criticism; make every point specific to the provided content.
+- ${languageConfig.instruction}
+- Keep all prose content concise and directly useful.
+
+WEBSITE CONTENT:
+${siteContent || "No content available: the website may be empty or inaccessible."}`;
 }
 
 export async function POST(request) {
@@ -211,26 +439,13 @@ export async function POST(request) {
     const configuredModel =
       process.env.ANTHROPIC_MODEL?.trim() || DEFAULT_ANTHROPIC_MODEL;
 
-    const prompt = `You are an expert in web design, UX, and digital marketing with a sharp but constructive sense of humor.
+    const prompt = buildPrompt({
+      hostname: parsedUrl.hostname,
+      siteContent,
+      languageConfig,
+    });
 
-Analyze the following content extracted from the website "${parsedUrl.hostname}" and produce a professional roast: ironic, direct, but genuinely useful.
-
-STRUCTURE THE RESPONSE LIKE THIS (without markdown or headings, plain flowing text):
-1. An opening line with impact that instantly captures the essence of the site (max 1 line)
-2. What works well, be specific (2 points)
-3. What needs improvement, be direct and honest but always respectful (2 points)
-4. The 3 highest-priority improvements to make RIGHT NOW (no more)
-5. A final motivational but ironic line that makes the site owner feel a little better
-
-Use emojis sparingly (1-2 at most). Write in ${languageConfig.label}.
-${languageConfig.instruction}
-Be specific to the real website content, never generic.
-Keep the response under 600 tokens.
-Whenever you criticize something, always explain why it is a missed opportunity and what concrete benefit is being lost. Do not just say something is missing, explain the cost of that absence.
-WEBSITE CONTENT:
-${siteContent || "No content available: the website may be empty or inaccessible."}`;
-
-    const { response, payload } = await requestRoast({
+    const { response, payload } = await requestReview({
       apiKey: ANTHROPIC_API_KEY,
       model: configuredModel,
       prompt,
@@ -251,31 +466,45 @@ ${siteContent || "No content available: the website may be empty or inaccessible
 
     console.log("Anthropic model used:", configuredModel);
 
-    // Anthropic returns content[0].text instead of choices[0].message.content
-    const roast = payload?.content?.[0]?.text
-      ?.trim()
-      .replaceAll("È", "E'")
-      .replaceAll("è", "e'");
+    const reviewText = extractModelTextBlocks(payload);
 
-    if (!roast) {
+    if (isTruncatedResponse(payload)) {
+      console.error("AI review was truncated:", JSON.stringify(payload, null, 2));
+
       return sendErrorResponse({
         rawUrl,
         parsedUrl,
-        error: `Empty AI response. Raw: ${JSON.stringify(payload)}`,
+        error:
+          "The AI response was truncated before the JSON completed. Please try again.",
+        status: 502,
       });
     }
 
-    const level = Math.min(5, Math.max(1, Math.floor(roast.length / 150)));
+    let review;
+
+    try {
+      review = parseAndValidateReview(reviewText);
+    } catch (error) {
+      console.error("Invalid AI review payload:", error);
+      console.error("Raw AI payload:", JSON.stringify(payload, null, 2));
+
+      return sendErrorResponse({
+        rawUrl,
+        parsedUrl,
+        error: error.message || "Invalid AI response",
+        status: 502,
+      });
+    }
 
     await sendRoasterNotification({
       rawUrl,
       normalizedUrl: parsedUrl.href,
       hostname: parsedUrl.hostname,
       status: "success",
-      roast,
+      review,
     });
 
-    return Response.json({ roast, level });
+    return Response.json({ review });
   } catch (err) {
     console.error("Roast API error:", err);
     return sendErrorResponse({
