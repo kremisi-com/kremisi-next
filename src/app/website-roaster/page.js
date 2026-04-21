@@ -142,8 +142,8 @@ export default function WebsiteRoaster() {
               <div className={styles.metaItem}>
                 <dt className={styles.metaLabel}>Nota</dt>
                 <dd className={styles.metaValue}>
-                  Zero dati salvati. La dignità del tuo sito, quella non la
-                  garantiamo.
+                  Il roast è gratuito. Sistemare il sito, quello lo facciamo
+                  insieme.
                 </dd>
               </div>
             </dl>
@@ -186,8 +186,8 @@ export default function WebsiteRoaster() {
               </div>
 
               <p className={styles.helperText}>
-                Meglio un URL reale. Se il sito e&apos; vuoto, il roast sara&apos;
-                triste quanto lui.
+                Meglio un URL reale. Se il sito e&apos; vuoto, il roast
+                sara&apos; triste quanto lui.
               </p>
 
               {loading && (

@@ -206,6 +206,7 @@ STRUTTURA LA RISPOSTA COSI' (senza usare markdown o titoli, testo scorrevole):
 Usa emoji con parsimonia (1-2 massimo). Scrivi in italiano. Sii specifico rispetto al contenuto reale del sito, non generico.
 Non usare mai il carattere "e' con accento": scrivi sempre "e'".
 La risposta non deve superare i 600 token.
+Quando critichi qualcosa, indica sempre perche' e' un'opportunita' mancata e quale vantaggio concreto si perderebbe — non limitarti a dire che manca, spiega il costo di quella mancanza.
 CONTENUTO DEL SITO:
 ${siteContent || "Nessun contenuto disponibile: il sito potrebbe essere vuoto o inaccessibile."}`;
 
