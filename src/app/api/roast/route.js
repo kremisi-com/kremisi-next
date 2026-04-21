@@ -3,6 +3,18 @@ const MAIL_ENDPOINT =
   process.env.KREMISI_MAIL_ENDPOINT?.trim() ||
   "https://api.kremisi.com/send-mail.php";
 const ROASTER_MAIL_KIND = "website-roaster";
+const SUPPORTED_LANGUAGES = {
+  it: {
+    label: "Italian",
+    instruction:
+      "Write the full response in Italian. Keep the tone sharp, natural, and idiomatic for an Italian-speaking audience.",
+  },
+  en: {
+    label: "English",
+    instruction:
+      "Write the full response in English. Keep the tone sharp, natural, and idiomatic for an English-speaking audience.",
+  },
+};
 
 function extractErrorMessage(payload, fallbackMessage) {
   if (!payload) return fallbackMessage;
@@ -23,14 +35,14 @@ function mapProviderErrorMessage(status, payload) {
   );
 
   if (status === 400) {
-    return `Richiesta non valida verso Anthropic: ${providerMessage}. Controlla il model ID configurato in ANTHROPIC_MODEL.`;
+    return `Invalid request to Anthropic: ${providerMessage}. Check the model ID configured in ANTHROPIC_MODEL.`;
   }
 
   if (status === 401 || status === 403) {
-    return `Autenticazione Anthropic fallita: ${providerMessage}. Controlla ANTHROPIC_API_KEY.`;
+    return `Anthropic authentication failed: ${providerMessage}. Check ANTHROPIC_API_KEY.`;
   }
 
-  return `Errore provider AI: ${providerMessage}`;
+  return `AI provider error: ${providerMessage}`;
 }
 
 async function parseJsonSafely(response) {
@@ -49,12 +61,17 @@ function normalizeInputUrl(input) {
   const trimmed = input?.trim();
 
   if (!trimmed) {
-    throw new Error("URL mancante");
+    throw new Error("Missing URL");
   }
 
   return new URL(
     /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`,
   );
+}
+
+function normalizeLanguage(input) {
+  const normalized = typeof input === "string" ? input.trim().toLowerCase() : "";
+  return SUPPORTED_LANGUAGES[normalized] ? normalized : "it";
 }
 
 async function requestRoast({ apiKey, model, prompt }) {
@@ -129,7 +146,7 @@ async function sendErrorResponse({
   error,
   status = 500,
 }) {
-  const message = error || "Errore del server";
+  const message = error || "Server error";
 
   await sendRoasterNotification({
     rawUrl,
@@ -144,8 +161,10 @@ async function sendErrorResponse({
 
 export async function POST(request) {
   try {
-    const { url } = await request.json();
+    const { url, language } = await request.json();
     const rawUrl = typeof url === "string" ? url.trim() : "";
+    const outputLanguage = normalizeLanguage(language);
+    const languageConfig = SUPPORTED_LANGUAGES[outputLanguage];
 
     let parsedUrl;
     try {
@@ -153,7 +172,7 @@ export async function POST(request) {
     } catch (error) {
       return sendErrorResponse({
         rawUrl,
-        error: error.message || "URL non valido",
+        error: error.message || "Invalid URL",
         status: 400,
       });
     }
@@ -176,7 +195,7 @@ export async function POST(request) {
         siteContent = fullText.slice(0, 3000);
       }
     } catch {
-      siteContent = "Impossibile leggere il contenuto del sito.";
+      siteContent = "Unable to read the website content.";
     }
 
     const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
@@ -185,30 +204,31 @@ export async function POST(request) {
       return sendErrorResponse({
         rawUrl,
         parsedUrl,
-        error: "API key Anthropic non configurata",
+        error: "Anthropic API key is not configured",
       });
     }
 
     const configuredModel =
       process.env.ANTHROPIC_MODEL?.trim() || DEFAULT_ANTHROPIC_MODEL;
 
-    const prompt = `Sei un esperto di web design, UX e marketing digitale con un senso dell'umorismo tagliente ma costruttivo.
+    const prompt = `You are an expert in web design, UX, and digital marketing with a sharp but constructive sense of humor.
 
-Analizza il seguente contenuto estratto dal sito web "${parsedUrl.hostname}" e produci un "roast" professionale: ironico, diretto, ma genuinamente utile.
+Analyze the following content extracted from the website "${parsedUrl.hostname}" and produce a professional roast: ironic, direct, but genuinely useful.
 
-STRUTTURA LA RISPOSTA COSI' (senza usare markdown o titoli, testo scorrevole):
-1. Una frase d'apertura ad effetto che cattura subito l'essenza del sito (max 1 riga)
-2. Cosa funziona bene, sii specifico (2 punti)
-3. Cosa ha margine di miglioramento, sii diretto e onesto ma sempre rispettoso (2 punti)
-4. I 3 miglioramenti prioritari da fare SUBITO (non di piu)
-5. Una frase finale motivazionale ma ironica, che faccia sentir meglio il proprietario del sito
+STRUCTURE THE RESPONSE LIKE THIS (without markdown or headings, plain flowing text):
+1. An opening line with impact that instantly captures the essence of the site (max 1 line)
+2. What works well, be specific (2 points)
+3. What needs improvement, be direct and honest but always respectful (2 points)
+4. The 3 highest-priority improvements to make RIGHT NOW (no more)
+5. A final motivational but ironic line that makes the site owner feel a little better
 
-Usa emoji con parsimonia (1-2 massimo). Scrivi in italiano. Sii specifico rispetto al contenuto reale del sito, non generico.
-Non usare mai il carattere "e' con accento": scrivi sempre "e'".
-La risposta non deve superare i 600 token.
-Quando critichi qualcosa, indica sempre perche' e' un'opportunita' mancata e quale vantaggio concreto si perderebbe — non limitarti a dire che manca, spiega il costo di quella mancanza.
-CONTENUTO DEL SITO:
-${siteContent || "Nessun contenuto disponibile: il sito potrebbe essere vuoto o inaccessibile."}`;
+Use emojis sparingly (1-2 at most). Write in ${languageConfig.label}.
+${languageConfig.instruction}
+Be specific to the real website content, never generic.
+Keep the response under 600 tokens.
+Whenever you criticize something, always explain why it is a missed opportunity and what concrete benefit is being lost. Do not just say something is missing, explain the cost of that absence.
+WEBSITE CONTENT:
+${siteContent || "No content available: the website may be empty or inaccessible."}`;
 
     const { response, payload } = await requestRoast({
       apiKey: ANTHROPIC_API_KEY,
@@ -231,7 +251,7 @@ ${siteContent || "Nessun contenuto disponibile: il sito potrebbe essere vuoto o 
 
     console.log("Anthropic model used:", configuredModel);
 
-    // Anthropic restituisce content[0].text invece di choices[0].message.content
+    // Anthropic returns content[0].text instead of choices[0].message.content
     const roast = payload?.content?.[0]?.text
       ?.trim()
       .replaceAll("È", "E'")
@@ -241,7 +261,7 @@ ${siteContent || "Nessun contenuto disponibile: il sito potrebbe essere vuoto o 
       return sendErrorResponse({
         rawUrl,
         parsedUrl,
-        error: `Risposta AI vuota. Raw: ${JSON.stringify(payload)}`,
+        error: `Empty AI response. Raw: ${JSON.stringify(payload)}`,
       });
     }
 
@@ -259,7 +279,7 @@ ${siteContent || "Nessun contenuto disponibile: il sito potrebbe essere vuoto o 
   } catch (err) {
     console.error("Roast API error:", err);
     return sendErrorResponse({
-      error: "Errore del server",
+      error: "Server error",
     });
   }
 }

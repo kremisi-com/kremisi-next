@@ -17,7 +17,7 @@ function normalizeWebsiteUrl(input) {
   const trimmed = input.trim();
 
   if (!trimmed) {
-    throw new Error("Incolla un URL prima di iniziare.");
+    throw new Error("Paste a URL before starting.");
   }
 
   return new URL(
@@ -27,6 +27,7 @@ function normalizeWebsiteUrl(input) {
 
 export default function WebsiteRoaster() {
   const [url, setUrl] = useState("");
+  const [language, setLanguage] = useState("it");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState(null);
@@ -46,7 +47,7 @@ export default function WebsiteRoaster() {
     try {
       normalizedUrl = normalizeWebsiteUrl(url);
     } catch {
-      setError("L'URL inserito non sembra valido.");
+      setError("The URL you entered does not look valid.");
       return;
     }
 
@@ -60,12 +61,12 @@ export default function WebsiteRoaster() {
       const res = await fetch("/api/roast", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: normalizedUrl }),
+        body: JSON.stringify({ url: normalizedUrl, language }),
       });
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Errore sconosciuto");
+      if (!res.ok) throw new Error(data.error || "Unknown error");
 
       setResult(data.roast);
       setRoastLevel(data.level || Math.floor(Math.random() * 3) + 3);
@@ -79,7 +80,7 @@ export default function WebsiteRoaster() {
   const handleShare = async () => {
     if (!result) return;
 
-    const text = `Ho fatto roastare il mio sito da un'AI di Kremisi. 🔥\n\nProva anche tu: https://kremisi.com/website-roaster\n\n\"${result.slice(0, 120)}...\"`;
+    const text = `I had my website roasted by Kremisi's AI. 🔥\n\nTry it here: https://kremisi.com/website-roaster\n\n"${result.slice(0, 120)}..."`;
 
     try {
       if (!navigator.clipboard) {
@@ -87,9 +88,9 @@ export default function WebsiteRoaster() {
       }
 
       await navigator.clipboard.writeText(text);
-      setShareFeedback("Testo copiato. Ora puoi incollarlo dove vuoi.");
+      setShareFeedback("Text copied. Now you can paste it anywhere.");
     } catch {
-      setShareFeedback("Copia non riuscita. Riprova tra un secondo.");
+      setShareFeedback("Copy failed. Try again in a second.");
     }
   };
 
@@ -101,13 +102,13 @@ export default function WebsiteRoaster() {
         <div className={styles.heroContent}>
           <p className={styles.kicker}>AI Tool by Kremisi</p>
           <h1 className={styles.pageTitle}>
-            Scopri perché il tuo sito non converte.
+            Find out why your website is not converting.
             <br />
-            Fatti <span className={styles.accent}>roastare 🔥</span>
+            Get a <span className={styles.accent}>sharp review 🔥</span>
           </h1>
           <p className={styles.subtitle}>
-            Incolla un URL. L&apos;AI legge il tuo sito e lo stronca — con
-            stile. Niente pietà, niente supercazzole: solo la verità bruciante.
+            Paste your URL and receive a focused review on clarity, trust,
+            positioning and conversion friction.
           </p>
         </div>
       </section>
@@ -116,11 +117,10 @@ export default function WebsiteRoaster() {
         <div className={styles.contentGrid}>
           <div className={styles.infoColumn}>
             <div className={styles.infoBlock}>
-              <p className={styles.eyebrow}>Come funziona</p>
+              <p className={styles.eyebrow}>How it works</p>
               <p className={styles.leadText}>
-                L&apos;AI fa lo scraping del sito, lo legge con occhio critico e
-                lo brucia — in modo tagliente, leggibile e abbastanza cattivo da
-                fare male sul serio.
+                The AI analyzes your website structure, messaging and user
+                experience, then returns a concise strategic review.
               </p>
             </div>
 
@@ -128,22 +128,20 @@ export default function WebsiteRoaster() {
               <div className={styles.metaItem}>
                 <dt className={styles.metaLabel}>Input</dt>
                 <dd className={styles.metaValue}>
-                  URL pubblico: homepage, pagina prodotto, chi siamo — tutto fa
-                  male.
+                  Use a public URL for the most accurate review.
                 </dd>
               </div>
               <div className={styles.metaItem}>
-                <dt className={styles.metaLabel}>Tono</dt>
+                <dt className={styles.metaLabel}>Tone</dt>
                 <dd className={styles.metaValue}>
-                  Diretto, ironico, fastidiosamente preciso. Non e&apos; una
-                  battuta — e&apos; peggio.
+                  Direct, ironic, annoyingly precise. It is not a joke. It is
+                  worse.
                 </dd>
               </div>
               <div className={styles.metaItem}>
-                <dt className={styles.metaLabel}>Nota</dt>
+                <dt className={styles.metaLabel}>Note</dt>
                 <dd className={styles.metaValue}>
-                  Il roast è gratuito. Sistemare il sito, quello lo facciamo
-                  insieme.
+                  The roast is free. Fixing the site is the part we do together.
                 </dd>
               </div>
             </dl>
@@ -152,23 +150,18 @@ export default function WebsiteRoaster() {
           <div className={styles.toolColumn}>
             <div className={styles.panel}>
               <div className={styles.panelHeader}>
-                <span className={styles.panelTag}>Website Roaster</span>
+                <span className={styles.panelTag}>
+                  Paste the website to roast
+                </span>
                 <span className={styles.panelCaption}>Brutal honesty mode</span>
               </div>
-
-              <label
-                className={styles.inputLabel}
-                htmlFor="website-roaster-url"
-              >
-                Incolla il sito da roastare
-              </label>
 
               <div className={styles.inputRow}>
                 <input
                   id="website-roaster-url"
                   className={styles.urlInput}
                   type="url"
-                  placeholder="https://tuosito.com"
+                  placeholder="https://yourwebsite.com"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyDown={(e) =>
@@ -176,28 +169,39 @@ export default function WebsiteRoaster() {
                   }
                   disabled={loading}
                 />
+                <label
+                  className={styles.languageField}
+                  htmlFor="website-roaster-language"
+                >
+                  <span className={styles.languageLabel}>Output</span>
+                  <select
+                    id="website-roaster-language"
+                    className={styles.languageSelect}
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                    disabled={loading}
+                  >
+                    <option value="it">IT</option>
+                    <option value="en">EN</option>
+                  </select>
+                </label>
                 <button
                   className={styles.roastButton}
                   onClick={handleRoast}
                   disabled={loading || !url.trim()}
                 >
-                  {loading ? "Analisi... 🔍" : "Roastami 🔥"}
+                  {loading ? "Analyzing... 🔍" : "Start Review"}
                 </button>
               </div>
-
-              <p className={styles.helperText}>
-                Meglio un URL reale. Se il sito e&apos; vuoto, il roast
-                sara&apos; triste quanto lui.
-              </p>
 
               {loading && (
                 <div className={styles.statusPanel} aria-live="polite">
                   <div className={styles.spinner} />
                   <div>
-                    <p className={styles.statusTitle}>Analisi in corso</p>
+                    <p className={styles.statusTitle}>Analysis in progress</p>
                     <p className={styles.statusText}>
-                      Stiamo leggendo il sito e preparando un verdetto senza
-                      anestesia. Il dolore e&apos; imminente.
+                      We are reading the site and preparing a verdict with no
+                      anesthesia. Pain is imminent.
                     </p>
                   </div>
                 </div>
@@ -205,7 +209,7 @@ export default function WebsiteRoaster() {
 
               {error && (
                 <div className={styles.errorPanel} aria-live="polite">
-                  <p className={styles.statusTitle}>😬 Qualcosa non torna</p>
+                  <p className={styles.statusTitle}>😬 Something is off</p>
                   <p className={styles.statusText}>{error}</p>
                 </div>
               )}
@@ -214,8 +218,8 @@ export default function WebsiteRoaster() {
             <div className={`${styles.panel} ${styles.resultPanel}`}>
               <div className={styles.resultHeader}>
                 <div>
-                  <p className={styles.eyebrow}>Verdetto</p>
-                  <h2 className={styles.resultTitle}>Il roast dell&apos;AI</h2>
+                  <p className={styles.eyebrow}>Verdict</p>
+                  {/* <h2 className={styles.resultTitle}>The AI roast</h2> */}
                 </div>
 
                 {currentHeat && (
@@ -237,8 +241,8 @@ export default function WebsiteRoaster() {
 
               {!result && !loading && !error && (
                 <p className={styles.emptyState}>
-                  Il verdetto apparirà qui. Se il tuo sito merita pietà, non
-                  possiamo prometterla.
+                  The verdict will appear here. If your site deserves mercy, we
+                  cannot promise it.
                 </p>
               )}
 
@@ -251,7 +255,7 @@ export default function WebsiteRoaster() {
                       className={styles.secondaryButton}
                       onClick={handleShare}
                     >
-                      Copia il roast
+                      Copy the roast
                     </button> */}
                     <span className={styles.shareFeedback} aria-live="polite">
                       {shareFeedback}
@@ -269,41 +273,39 @@ export default function WebsiteRoaster() {
           <div className={styles.ctaBlob} aria-hidden="true" />
 
           <div className={styles.ctaLeft}>
-            <p className={styles.eyebrow}>Troppo vero?</p>
+            <p className={styles.eyebrow}>Clear enough?</p>
             <h2 className={styles.ctaTitle}>
-              Se il roast
+              If the review is right
               <br />
-              ha ragione,
-              <br />
-              <span className={styles.accent}>si può sistemare.</span>
+              <span className={styles.accent}>it can be improved.</span>
             </h2>
           </div>
 
           <div className={styles.ctaRight}>
             <p className={styles.ctaText}>
-              Scopri cosa funziona davvero nel tuo sito e cosa frenа i tuoi
-              risultati. Kremisi ti dà un feedback diretto su design, sviluppo e
-              struttura.
+              Find out what actually works on your website and what is slowing
+              down your results. Kremisi gives you direct feedback on design,
+              development, and structure.
             </p>
 
             <ul className={styles.ctaBenefits}>
               <li>
                 <span className={styles.benefitIcon}>🎨</span>
-                <span>Design che rispetta chi guarda</span>
+                <span>Design that respects the audience</span>
               </li>
               <li>
                 <span className={styles.benefitIcon}>⚙️</span>
-                <span>Sviluppo solido, zero scorciatoie</span>
+                <span>Solid development, zero shortcuts</span>
               </li>
               <li>
                 <span className={styles.benefitIcon}>📈</span>
-                <span>Struttura pensata per convertire</span>
+                <span>Structure built to convert</span>
               </li>
             </ul>
 
             <Link href="/contacts" className={styles.ctaGitButtonLink}>
               <GitButton
-                text="Parliamone"
+                text="Let's talk"
                 revertColor
                 className={styles.ctaGitButton}
                 leftShift={10}
