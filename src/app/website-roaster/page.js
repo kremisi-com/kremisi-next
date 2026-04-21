@@ -2,9 +2,10 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import GitButton from "@/components/git-button/git-button";
 import styles from "./page.module.css";
 
-const HEAT_LABELS = ["Mild", "Sharp", "Savage", "Brutal", "Nuclear"];
+const HEAT_LABELS = ["Mild 🌡️", "Sharp 🔪", "Savage 🔥", "Brutal 💀", "Nuclear ☢️"];
 
 export default function WebsiteRoaster() {
   const [url, setUrl] = useState("");
@@ -75,13 +76,13 @@ export default function WebsiteRoaster() {
         <div className={styles.heroContent}>
           <p className={styles.kicker}>AI Tool by Kremisi</p>
           <h1 className={styles.pageTitle}>
-            Fatti fare un <span className={styles.accent}>roast</span> del tuo
-            sito
+            Il tuo sito merita pietà?
+            <br />
+            Fatti <span className={styles.accent}>roastare 🔥</span>
           </h1>
           <p className={styles.subtitle}>
-            Inserisci un URL e ottieni un giudizio diretto, ironico e utile.
-            Nessuna supercazzola: solo quello che regge, quello che stona e
-            quello che andrebbe sistemato subito.
+            Incolla un URL. L&apos;AI legge il tuo sito e lo stronca — con stile.
+            Niente pietà, niente supercazzole: solo la verità bruciante.
           </p>
         </div>
       </section>
@@ -92,9 +93,9 @@ export default function WebsiteRoaster() {
             <div className={styles.infoBlock}>
               <p className={styles.eyebrow}>Come funziona</p>
               <p className={styles.leadText}>
-                L&apos;AI analizza il contenuto pubblico del sito e restituisce
-                un roast in stile Kremisi: tagliente, leggibile e con abbastanza
-                sostanza da non sembrare una battuta scritta male.
+                L&apos;AI scrape il sito, lo legge con occhio critico e lo
+                brucia — in modo tagliente, leggibile e abbastanza cattivo da
+                fare male sul serio.
               </p>
             </div>
 
@@ -102,19 +103,19 @@ export default function WebsiteRoaster() {
               <div className={styles.metaItem}>
                 <dt className={styles.metaLabel}>Input</dt>
                 <dd className={styles.metaValue}>
-                  URL pubblico, homepage o pagina interna.
+                  URL pubblico: homepage, pagina prodotto, chi siamo — tutto fa male.
                 </dd>
               </div>
               <div className={styles.metaItem}>
                 <dt className={styles.metaLabel}>Tono</dt>
                 <dd className={styles.metaValue}>
-                  Diretto e simpatico, ma non clownesco.
+                  Diretto, ironico, fastidiosamente preciso. Non e' una battuta — e' peggio.
                 </dd>
               </div>
               <div className={styles.metaItem}>
                 <dt className={styles.metaLabel}>Nota</dt>
                 <dd className={styles.metaValue}>
-                  Nessun dato viene salvato. Premi invio o usa il bottone.
+                  Zero dati salvati. La dignità del tuo sito, quella non la garantiamo.
                 </dd>
               </div>
             </dl>
@@ -127,7 +128,10 @@ export default function WebsiteRoaster() {
                 <span className={styles.panelCaption}>Brutal honesty mode</span>
               </div>
 
-              <label className={styles.inputLabel} htmlFor="website-roaster-url">
+              <label
+                className={styles.inputLabel}
+                htmlFor="website-roaster-url"
+              >
                 Incolla il sito da roastare
               </label>
 
@@ -139,7 +143,9 @@ export default function WebsiteRoaster() {
                   placeholder="https://tuosito.com"
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
-                  onKeyDown={(e) => e.key === "Enter" && !loading && handleRoast()}
+                  onKeyDown={(e) =>
+                    e.key === "Enter" && !loading && handleRoast()
+                  }
                   disabled={loading}
                 />
                 <button
@@ -147,13 +153,12 @@ export default function WebsiteRoaster() {
                   onClick={handleRoast}
                   disabled={loading || !url.trim()}
                 >
-                  {loading ? "Analisi..." : "Roastami"}
+                  {loading ? "Analisi... 🔍" : "Roastami 🔥"}
                 </button>
               </div>
 
               <p className={styles.helperText}>
-                Meglio un URL reale. Se il sito è vuoto, il roast sarà onestamente
-                mediocre.
+                Meglio un URL reale. Se il sito e' vuoto, il roast sara' triste quanto lui.
               </p>
 
               {loading && (
@@ -162,8 +167,8 @@ export default function WebsiteRoaster() {
                   <div>
                     <p className={styles.statusTitle}>Analisi in corso</p>
                     <p className={styles.statusText}>
-                      Stiamo leggendo il sito e preparando un giudizio senza
-                      anestesia.
+                      Stiamo leggendo il sito e preparando un verdetto senza
+                      anestesia. Il dolore e' imminente.
                     </p>
                   </div>
                 </div>
@@ -171,7 +176,7 @@ export default function WebsiteRoaster() {
 
               {error && (
                 <div className={styles.errorPanel} aria-live="polite">
-                  <p className={styles.statusTitle}>Qualcosa non torna</p>
+                  <p className={styles.statusTitle}>😬 Qualcosa non torna</p>
                   <p className={styles.statusText}>{error}</p>
                 </div>
               )}
@@ -203,8 +208,8 @@ export default function WebsiteRoaster() {
 
               {!result && !loading && !error && (
                 <p className={styles.emptyState}>
-                  Qui comparirà il responso. Se il sito merita pietà, non possiamo
-                  prometterla.
+                  Il verdetto apparirà qui. Se il tuo sito merita pietà,
+                  non possiamo prometterla.
                 </p>
               )}
 
@@ -213,9 +218,12 @@ export default function WebsiteRoaster() {
                   <p className={styles.resultText}>{result}</p>
 
                   <div className={styles.actionsRow}>
-                    <button className={styles.secondaryButton} onClick={handleShare}>
+                    {/* <button
+                      className={styles.secondaryButton}
+                      onClick={handleShare}
+                    >
                       Copia il roast
-                    </button>
+                    </button> */}
                     <span className={styles.shareFeedback} aria-live="polite">
                       {shareFeedback}
                     </span>
@@ -229,17 +237,41 @@ export default function WebsiteRoaster() {
 
       <section className={styles.ctaSection}>
         <div className={styles.ctaCard}>
-          <p className={styles.eyebrow}>Troppo vero?</p>
-          <h2 className={styles.ctaTitle}>
-            Se il roast ha ragione, si puo&apos; sistemare.
-          </h2>
-          <p className={styles.ctaText}>
-            Se vuoi trasformare un sito confuso in un sito che converte davvero,
-            Kremisi puo&apos; aiutarti con design, sviluppo e struttura.
-          </p>
-          <Link href="/contacts" className={styles.ctaLink}>
-            Parliamone
-          </Link>
+          <div className={styles.ctaBlob} aria-hidden="true" />
+
+          <div className={styles.ctaLeft}>
+            <p className={styles.eyebrow}>Troppo vero?</p>
+            <h2 className={styles.ctaTitle}>
+              Se il roast<br />ha ragione,<br />
+              <span className={styles.accent}>si può sistemare.</span>
+            </h2>
+          </div>
+
+          <div className={styles.ctaRight}>
+            <p className={styles.ctaText}>
+              Trasforma un sito che nessuno capisce in uno che converte davvero.
+              Kremisi ti aiuta con design, sviluppo e struttura — senza pietà.
+            </p>
+
+            <ul className={styles.ctaBenefits}>
+              <li>
+                <span className={styles.benefitIcon}>🎨</span>
+                <span>Design che rispetta chi guarda</span>
+              </li>
+              <li>
+                <span className={styles.benefitIcon}>⚙️</span>
+                <span>Sviluppo solido, zero scorciatoie</span>
+              </li>
+              <li>
+                <span className={styles.benefitIcon}>📈</span>
+                <span>Struttura pensata per convertire</span>
+              </li>
+            </ul>
+
+            <Link href="/contacts" className={styles.ctaGitButtonLink}>
+              <GitButton text="Parliamone" revertColor className={styles.ctaGitButton} leftShift={10} />
+            </Link>
+          </div>
         </div>
       </section>
     </main>
