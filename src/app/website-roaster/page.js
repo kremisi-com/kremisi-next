@@ -176,15 +176,14 @@ export default function WebsiteRoaster() {
               data={review?.market_momentum}
               locked={!review}
             />
-            <CompetitivePosition
-              className={styles.competitiveWrap}
-              data={review?.competitive_position}
-              locked={!review}
-            />
-            <RevenueOpportunity
-              className={styles.revenueWrap}
-              locked={!review}
-            />
+            {review && (
+              <CompetitivePosition
+                className={styles.competitiveWrap}
+                data={review?.competitive_position}
+                locked={!review}
+              />
+            )}
+            <RevenueOpportunity className={styles.revenueWrap} locked={!review} />
           </div>
 
           <div className={styles.toolColumn}>
@@ -372,6 +371,14 @@ export default function WebsiteRoaster() {
                 </div>
               )}
             </div>
+
+            {!review && (
+              <CompetitivePosition
+                className={styles.competitiveWrap}
+                data={review?.competitive_position}
+                locked={!review}
+              />
+            )}
           </div>
         </div>
       </section>

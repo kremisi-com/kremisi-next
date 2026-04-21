@@ -1,6 +1,11 @@
 import { verifyTurnstileToken } from "@/lib/turnstile";
 
 const DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
+const ANTHROPIC_MODEL_PREFERENCE_PREFIXES = [
+  "claude-sonnet-",
+  "claude-opus-",
+  "claude-haiku-",
+];
 const MAIL_ENDPOINT =
   process.env.KREMISI_MAIL_ENDPOINT?.trim() ||
   "https://api.kremisi.com/send-mail.php";
@@ -76,6 +81,21 @@ function mapProviderErrorMessage(status, payload) {
   return `AI provider error: ${providerMessage}`;
 }
 
+function extractProviderErrorType(payload) {
+  return typeof payload?.error?.type === "string" ? payload.error.type : "";
+}
+
+function isMissingModelError(status, payload) {
+  const providerMessage = extractErrorMessage(payload, "");
+  const providerType = extractProviderErrorType(payload);
+
+  return (
+    status === 404 &&
+    providerType === "not_found_error" &&
+    providerMessage.toLowerCase().startsWith("model:")
+  );
+}
+
 async function parseJsonSafely(response) {
   const raw = await response.text();
 
@@ -122,6 +142,34 @@ async function requestReview({ apiKey, model, prompt }) {
 
   const payload = await parseJsonSafely(response);
   return { response, payload };
+}
+
+async function requestAvailableModels({ apiKey }) {
+  const response = await fetch("https://api.anthropic.com/v1/models", {
+    method: "GET",
+    headers: {
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
+    },
+  });
+
+  const payload = await parseJsonSafely(response);
+  return { response, payload };
+}
+
+function pickFallbackAnthropicModel(payload) {
+  const models = Array.isArray(payload?.data) ? payload.data : [];
+  const modelIds = models
+    .map((model) => (typeof model?.id === "string" ? model.id.trim() : ""))
+    .filter(Boolean);
+
+  for (const prefix of ANTHROPIC_MODEL_PREFERENCE_PREFIXES) {
+    const match = modelIds.find((id) => id.startsWith(prefix));
+
+    if (match) return match;
+  }
+
+  return modelIds[0] || "";
 }
 
 function normalizeModelText(text) {
@@ -600,14 +648,54 @@ export async function POST(request) {
       languageConfig,
     });
 
-    const { response, payload } = await requestReview({
+    let modelInUse = configuredModel;
+    let { response, payload } = await requestReview({
       apiKey: ANTHROPIC_API_KEY,
-      model: configuredModel,
+      model: modelInUse,
       prompt,
     });
 
+    if (isMissingModelError(response.status, payload)) {
+      console.warn(
+        `Anthropic model unavailable: ${modelInUse}. Looking up available models.`,
+      );
+
+      const {
+        response: modelsResponse,
+        payload: modelsPayload,
+      } = await requestAvailableModels({
+        apiKey: ANTHROPIC_API_KEY,
+      });
+
+      if (modelsResponse.ok) {
+        const fallbackModel = pickFallbackAnthropicModel(modelsPayload);
+
+        if (fallbackModel && fallbackModel !== modelInUse) {
+          console.warn(
+            `Retrying Anthropic request with fallback model: ${fallbackModel}`,
+          );
+
+          modelInUse = fallbackModel;
+          ({ response, payload } = await requestReview({
+            apiKey: ANTHROPIC_API_KEY,
+            model: modelInUse,
+            prompt,
+          }));
+        }
+      } else {
+        console.error(
+          "Unable to list Anthropic models:",
+          JSON.stringify(modelsPayload, null, 2),
+        );
+      }
+    }
+
     if (!response.ok) {
-      const message = mapProviderErrorMessage(response.status, payload);
+      let message = mapProviderErrorMessage(response.status, payload);
+
+      if (modelInUse !== configuredModel) {
+        message = `${message} Requested model: ${configuredModel}. Retried with: ${modelInUse}.`;
+      }
 
       console.error("Anthropic status:", response.status);
       console.error("Anthropic error:", JSON.stringify(payload, null, 2));
@@ -619,7 +707,7 @@ export async function POST(request) {
       });
     }
 
-    console.log("Anthropic model used:", configuredModel);
+    console.log("Anthropic model used:", modelInUse);
 
     const reviewText = extractModelTextBlocks(payload);
 
