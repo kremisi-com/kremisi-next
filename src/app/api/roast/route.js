@@ -1,4 +1,8 @@
-const DEFAULT_ANTHROPIC_MODEL = "claude-3-5-haiku-latest";
+const DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-6";
+const MAIL_ENDPOINT =
+  process.env.KREMISI_MAIL_ENDPOINT?.trim() ||
+  "https://api.kremisi.com/send-mail.php";
+const ROASTER_MAIL_KIND = "website-roaster";
 
 function extractErrorMessage(payload, fallbackMessage) {
   if (!payload) return fallbackMessage;
@@ -72,18 +76,86 @@ async function requestRoast({ apiKey, model, prompt }) {
   return { response, payload };
 }
 
+function buildRoastPreview(roast) {
+  if (!roast) return "";
+
+  return roast.slice(0, 280);
+}
+
+async function sendRoasterNotification({
+  rawUrl = "",
+  normalizedUrl = "",
+  hostname = "",
+  status,
+  error = "",
+  roast = "",
+}) {
+  const payload = new URLSearchParams({
+    kind: ROASTER_MAIL_KIND,
+    url: rawUrl,
+    normalizedUrl,
+    hostname,
+    status,
+    error,
+    roastPreview: buildRoastPreview(roast),
+    timestamp: new Date().toISOString(),
+  });
+
+  try {
+    const response = await fetch(MAIL_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body: payload,
+    });
+
+    if (!response.ok) {
+      const mailPayload = await parseJsonSafely(response);
+      console.error(
+        "Website roaster mail error:",
+        response.status,
+        JSON.stringify(mailPayload, null, 2),
+      );
+    }
+  } catch (mailError) {
+    console.error("Website roaster mail request failed:", mailError);
+  }
+}
+
+async function sendErrorResponse({
+  rawUrl = "",
+  parsedUrl = null,
+  error,
+  status = 500,
+}) {
+  const message = error || "Errore del server";
+
+  await sendRoasterNotification({
+    rawUrl,
+    normalizedUrl: parsedUrl?.href || "",
+    hostname: parsedUrl?.hostname || "",
+    status: "error",
+    error: message,
+  });
+
+  return Response.json({ error: message }, { status });
+}
+
 export async function POST(request) {
   try {
     const { url } = await request.json();
+    const rawUrl = typeof url === "string" ? url.trim() : "";
 
     let parsedUrl;
     try {
       parsedUrl = normalizeInputUrl(url);
     } catch (error) {
-      return Response.json(
-        { error: error.message || "URL non valido" },
-        { status: 400 },
-      );
+      return sendErrorResponse({
+        rawUrl,
+        error: error.message || "URL non valido",
+        status: 400,
+      });
     }
 
     const jinaUrl = `https://r.jina.ai/${parsedUrl.href}`;
@@ -110,10 +182,11 @@ export async function POST(request) {
     const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
     if (!ANTHROPIC_API_KEY) {
-      return Response.json(
-        { error: "API key Anthropic non configurata" },
-        { status: 500 },
-      );
+      return sendErrorResponse({
+        rawUrl,
+        parsedUrl,
+        error: "API key Anthropic non configurata",
+      });
     }
 
     const configuredModel =
@@ -148,7 +221,11 @@ ${siteContent || "Nessun contenuto disponibile: il sito potrebbe essere vuoto o 
       console.error("Anthropic status:", response.status);
       console.error("Anthropic error:", JSON.stringify(payload, null, 2));
 
-      return Response.json({ error: message }, { status: 500 });
+      return sendErrorResponse({
+        rawUrl,
+        parsedUrl,
+        error: message,
+      });
     }
 
     console.log("Anthropic model used:", configuredModel);
@@ -160,17 +237,28 @@ ${siteContent || "Nessun contenuto disponibile: il sito potrebbe essere vuoto o 
       .replaceAll("è", "e'");
 
     if (!roast) {
-      return Response.json(
-        { error: `Risposta AI vuota. Raw: ${JSON.stringify(payload)}` },
-        { status: 500 },
-      );
+      return sendErrorResponse({
+        rawUrl,
+        parsedUrl,
+        error: `Risposta AI vuota. Raw: ${JSON.stringify(payload)}`,
+      });
     }
 
     const level = Math.min(5, Math.max(1, Math.floor(roast.length / 150)));
 
+    await sendRoasterNotification({
+      rawUrl,
+      normalizedUrl: parsedUrl.href,
+      hostname: parsedUrl.hostname,
+      status: "success",
+      roast,
+    });
+
     return Response.json({ roast, level });
   } catch (err) {
     console.error("Roast API error:", err);
-    return Response.json({ error: "Errore del server" }, { status: 500 });
+    return sendErrorResponse({
+      error: "Errore del server",
+    });
   }
 }
