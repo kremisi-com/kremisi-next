@@ -5,6 +5,7 @@ import Link from "next/link";
 import GitButton from "@/components/git-button/git-button";
 import styles from "./page.module.css";
 import MarketMomentum from "@/components/market-momentum/market-momentum";
+import CompetitivePosition from "@/components/competitive-position/competitive-position";
 
 const HEAT_LABELS = [
   "Mild 🌡️",
@@ -158,6 +159,11 @@ export default function WebsiteRoaster() {
             <MarketMomentum
               className={styles.momentumWrap}
               data={review?.market_momentum}
+              locked={!review}
+            />
+            <CompetitivePosition
+              className={styles.competitiveWrap}
+              data={review?.competitive_position}
               locked={!review}
             />
           </div>
@@ -375,7 +381,7 @@ export default function WebsiteRoaster() {
                 <span>Solid development, zero shortcuts</span>
               </li>
               <li>
-                <span className={styles.benefitIcon}>📈</span>
+                <span className={styles.benefitIcon}>🎯</span>
                 <span>Structure built to convert</span>
               </li>
             </ul>

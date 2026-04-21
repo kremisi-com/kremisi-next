@@ -1,4 +1,4 @@
-const DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-6";
+const DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
 const MAIL_ENDPOINT =
   process.env.KREMISI_MAIL_ENDPOINT?.trim() ||
   "https://api.kremisi.com/send-mail.php";
@@ -11,6 +11,16 @@ const CATEGORY_NAMES = [
   "Performance & UX",
 ];
 const MARKET_MOMENTUM_PERIODS = 5;
+const COMPETITIVE_POSITION_AXES = [
+  "Trust",
+  "UX",
+  "SEO",
+  "Offer",
+  "Branding",
+  "Conversion",
+];
+const COMPETITIVE_POSITION_INSIGHT =
+  "Strong technical base. Weak differentiation.";
 
 function getMarketMomentumLabels() {
   const currentYear = new Date().getFullYear();
@@ -104,7 +114,7 @@ async function requestReview({ apiKey, model, prompt }) {
     body: JSON.stringify({
       model,
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 1800,
+      max_tokens: 2200,
     }),
   });
 
@@ -232,6 +242,44 @@ function validateMarketMomentum(marketMomentum) {
   return true;
 }
 
+function validateCompetitiveSeries(series) {
+  return (
+    Array.isArray(series) &&
+    series.length === COMPETITIVE_POSITION_AXES.length &&
+    series.every((value) => isFiniteNumber(value) && value >= 0 && value <= 100)
+  );
+}
+
+function validateCompetitivePosition(competitivePosition) {
+  if (
+    !competitivePosition ||
+    typeof competitivePosition !== "object" ||
+    Array.isArray(competitivePosition)
+  ) {
+    return false;
+  }
+
+  const {
+    axes,
+    your_site,
+    top_competitor,
+    category_average,
+    insight,
+    method_note,
+  } = competitivePosition;
+
+  return (
+    Array.isArray(axes) &&
+    axes.length === COMPETITIVE_POSITION_AXES.length &&
+    axes.every((axis, index) => axis === COMPETITIVE_POSITION_AXES[index]) &&
+    validateCompetitiveSeries(your_site) &&
+    validateCompetitiveSeries(top_competitor) &&
+    validateCompetitiveSeries(category_average) &&
+    insight === COMPETITIVE_POSITION_INSIGHT &&
+    isNonEmptyString(method_note)
+  );
+}
+
 function validateReviewShape(review) {
   if (!review || typeof review !== "object" || Array.isArray(review)) {
     return false;
@@ -245,7 +293,8 @@ function validateReviewShape(review) {
     validateStringList(review.top_issues) &&
     validatePriorityActions(review.priority_actions) &&
     isNonEmptyString(review.verdict) &&
-    validateMarketMomentum(review.market_momentum)
+    validateMarketMomentum(review.market_momentum) &&
+    validateCompetitivePosition(review.competitive_position)
   );
 }
 
@@ -426,6 +475,14 @@ Use this exact structure and key names:
     "series": [42, 47, 51, 58, 63],
     "insight": "Short sentence explaining the market signal.",
     "method_note": "Short disclosure that the chart is AI-estimated."
+  },
+  "competitive_position": {
+    "axes": ["${COMPETITIVE_POSITION_AXES[0]}", "${COMPETITIVE_POSITION_AXES[1]}", "${COMPETITIVE_POSITION_AXES[2]}", "${COMPETITIVE_POSITION_AXES[3]}", "${COMPETITIVE_POSITION_AXES[4]}", "${COMPETITIVE_POSITION_AXES[5]}"],
+    "your_site": [76, 71, 84, 55, 42, 61],
+    "top_competitor": [83, 80, 76, 79, 74, 77],
+    "category_average": [62, 59, 64, 58, 56, 54],
+    "insight": "${COMPETITIVE_POSITION_INSIGHT}",
+    "method_note": "Short disclosure that the chart is AI-estimated."
   }
 }
 
@@ -447,6 +504,13 @@ Hard requirements:
 - Make the series shape and the insight logically consistent with each other.
 - delta_percent must be derived from the general change across the five-year window, rounded to a whole number.
 - label and method_note must clearly frame the chart as an estimate, not factual analytics.
+- The competitive_position object is required.
+- competitive_position.axes must use exactly these 6 labels and in this order: ${COMPETITIVE_POSITION_AXES.join(", ")}.
+- competitive_position.your_site, competitive_position.top_competitor, and competitive_position.category_average must each contain exactly 6 numbers in the 0-100 range.
+- competitive_position must estimate visible execution quality and positioning strength from the website content, not hidden analytics.
+- competitive_position.insight must be exactly: "${COMPETITIVE_POSITION_INSIGHT}".
+- competitive_position.method_note must clearly frame the chart as an AI-estimated comparative read.
+- The three competitive_position series should be internally consistent and strategically plausible for the site's visible maturity, clarity, and differentiation.
 - Use "${hostname}" as a stable anchor and prefer internally consistent outputs over novelty.
 - Focus on strategic business value, not only technical quality.
 - Evaluate whether the site feels premium, whether the offer is clear, whether trust is established quickly, whether users would convert, and whether the UX feels smooth.
