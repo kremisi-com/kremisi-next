@@ -1,3 +1,4 @@
+/* ─── Panel shell ───────────────────────────────────── */
 .panel {
   position: relative;
   overflow: hidden;
@@ -18,80 +19,98 @@
 :global(.light) .panel {
   background:
     radial-gradient(circle at 18% 16%, rgba(220, 20, 60, 0.08), transparent 40%),
-    linear-gradient(145deg, rgba(255, 255, 255, 0.96) 0%, rgba(253, 248, 248, 0.94) 100%);
-  border: 1px solid rgba(220, 20, 60, 0.1);
+    linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(253, 248, 248, 0.96) 100%);
+  border: 1px solid rgba(220, 20, 60, 0.12);
   box-shadow:
-    0 2px 0 rgba(255, 255, 255, 0.84) inset,
-    0 4px 24px rgba(0, 0, 0, 0.06),
-    0 1px 4px rgba(0, 0, 0, 0.03);
+    0 2px 0 rgba(255, 255, 255, 0.9) inset,
+    0 4px 32px rgba(0, 0, 0, 0.07),
+    0 1px 4px rgba(0, 0, 0, 0.04);
 }
 
+/* ─── Eyebrow ───────────────────────────────────────── */
 .eyebrow {
-  margin: 0 0 12px;
+  margin: 0 0 16px;
   color: var(--primary);
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: 0.24rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.25em;
   text-transform: uppercase;
-  opacity: 0.9;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
+.eyebrow::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(220, 20, 60, 0.35) 0%, transparent 100%);
+}
+
+/* ─── Header ────────────────────────────────────────── */
 .header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 22px;
+  margin-bottom: 32px;
 }
 
 .title {
   margin: 0;
   color: var(--foreground);
-  font-size: clamp(1.8rem, 3vw, 2.35rem);
-  font-weight: 500;
-  line-height: 1.15;
+  font-size: clamp(1.8rem, 3vw, 2.2rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
 }
 
 .subtitle {
-  margin: 10px 0 0;
+  margin: 6px 0 0;
   color: var(--foreground);
-  font-size: 1.2rem;
-  letter-spacing: 0.04em;
-  opacity: 0.56;
+  font-size: 1.05rem;
+  letter-spacing: 0.01em;
+  opacity: 0.5;
 }
 
+/* ─── Badge ─────────────────────────────────────────── */
 .badge {
   display: inline-flex;
   align-items: center;
-  min-height: 34px;
-  padding: 0 14px;
-  border-radius: 999px;
-  border: 1px solid rgba(220, 20, 60, 0.3);
-  background: linear-gradient(180deg, rgba(220, 20, 60, 0.18) 0%, rgba(220, 20, 60, 0.08) 100%);
-  color: #ffd6de;
-  font-size: 1.05rem;
+  padding: 8px 16px;
+  border-radius: 12px;
+  background: rgba(220, 20, 60, 0.1);
+  border: 1px solid rgba(220, 20, 60, 0.2);
+  color: #ff4d6d;
+  font-size: 0.9rem;
   font-weight: 700;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    0 10px 24px -14px rgba(220, 20, 60, 0.7);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 20px -10px rgba(220, 20, 60, 0.5);
 }
 
 :global(.light) .badge {
   color: var(--primary);
 }
 
+/* ─── Chart shell ───────────────────────────────────── */
 .chartShell {
   position: relative;
   margin-bottom: 22px;
-  padding: 20px;
-  border-radius: 22px;
+  padding: 32px 24px;
+  border-radius: 24px;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--foreground) 8%, transparent);
-  background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.015) 100%),
-    color-mix(in srgb, var(--background) 60%, transparent);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: 
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%),
+    rgba(13, 15, 18, 0.4);
+  backdrop-filter: blur(12px);
+}
+
+:global(.light) .chartShell {
+  background: rgba(0, 0, 0, 0.02);
+  border-color: rgba(220, 20, 60, 0.08);
 }
 
 .chartGlow {
@@ -100,8 +119,8 @@
   width: 260px;
   height: 260px;
   border-radius: 999px;
-  background: radial-gradient(circle, rgba(220, 20, 60, 0.18) 0%, transparent 68%);
-  filter: blur(16px);
+  background: radial-gradient(circle, rgba(220, 20, 60, 0.22) 0%, transparent 68%);
+  filter: blur(20px);
   pointer-events: none;
 }
 
@@ -112,6 +131,7 @@
   transform: scale(1.02);
 }
 
+/* ─── Chart header / legend ─────────────────────────── */
 .chartHeader {
   position: relative;
   z-index: 1;
@@ -119,27 +139,41 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 18px;
+  margin-bottom: 20px;
   transition:
     filter 400ms ease,
     opacity 400ms ease,
-    transform 400ms ease;
+  transform 400ms ease;
+}
+
+.chartHeading {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .chartTitle {
   color: var(--foreground);
-  font-size: 0.95rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.2em;
   text-transform: uppercase;
-  opacity: 0.48;
+  opacity: 0.4;
+}
+
+.chartHint {
+  color: var(--foreground);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  letter-spacing: 0.03em;
+  opacity: 0.52;
 }
 
 .legend {
   display: flex;
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 10px 16px;
+  gap: 10px 20px;
 }
 
 .legendItem {
@@ -147,14 +181,14 @@
   align-items: center;
   gap: 8px;
   color: var(--foreground);
-  font-size: 0.95rem;
-  letter-spacing: 0.08em;
+  font-size: 0.78rem;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
-  opacity: 0.68;
+  opacity: 0.6;
 }
 
 .legendSwatch {
-  width: 18px;
+  width: 22px;
   height: 2px;
   border-radius: 999px;
 }
@@ -163,16 +197,21 @@
   background: rgba(255, 255, 255, 0.42);
 }
 
+:global(.light) .currentSwatch {
+  background: rgba(0, 0, 0, 0.28);
+}
+
 .optimizedSwatch {
   background: linear-gradient(90deg, rgba(220, 20, 60, 0.92) 0%, rgba(255, 120, 140, 0.92) 100%);
 }
 
+/* ─── Stage list ────────────────────────────────────── */
 .stageList {
   position: relative;
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
   transition:
     filter 400ms ease,
     opacity 400ms ease,
@@ -181,86 +220,233 @@
 
 .stageRow {
   display: grid;
-  grid-template-columns: minmax(78px, 92px) minmax(0, 1fr);
-  gap: 16px;
-  align-items: start;
+  grid-template-columns: 1.2fr 2fr 1fr;
+  grid-template-areas: "meta bar values";
+  gap: 20px 32px;
+  align-items: center;
+  padding: 24px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
 }
 
+:global(.light) .stageRow {
+  border-bottom-color: rgba(0, 0, 0, 0.06);
+}
+
+.stageRow:last-child {
+  border-bottom: none;
+}
+
+/* ─── Stage meta (label + direction) ───────────────── */
 .stageMeta {
-  padding-top: 8px;
+  grid-area: meta;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
 }
 
 .stageLabel {
   color: var(--foreground);
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  opacity: 0.72;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  opacity: 0.95;
 }
 
-.trackGroup {
+.stageDirection {
+  color: #ff4d6d;
+  font-size: 0.65rem;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* ─── Bar column ────────────────────────────────────── */
+.barColumn {
+  grid-area: bar;
+  width: 100%;
+  min-width: 0;
+}
+
+/* ─── Dual-track signal area ────────────────────────── */
+.stageSignal {
+  position: relative;
+  height: 24px; 
+  width: 100%;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  justify-content: center;
 }
 
-.trackRow {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  gap: 14px;
-  align-items: center;
-}
-
-.trackRail {
-  position: relative;
-  height: 18px;
-  overflow: hidden;
+/* Ghost rail - cleaner and more subtle */
+.signalRail {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 12px;
   border-radius: 999px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
-.trackFill {
-  height: 100%;
-  border-radius: inherit;
-  transform-origin: left center;
-  box-shadow: 0 10px 20px -12px rgba(0, 0, 0, 0.7);
+:global(.light) .signalRail {
+  background: rgba(0, 0, 0, 0.03);
+  border-color: rgba(0, 0, 0, 0.05);
 }
 
+/* Both fills share these basics */
+.signalFill {
+  position: absolute;
+  left: 0;
+  border-radius: 999px;
+  display: block;
+}
+
+/* Current site track – centered and thin */
 .currentFill {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0.3) 0%, rgba(210, 210, 210, 0.18) 100%);
+  top: 50%;
+  transform: translateY(-100%);
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  margin-top: -1px;
 }
 
+:global(.light) .currentFill {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Optimized site track – bottom half, thicker and vibrant */
 .optimizedFill {
-  background: linear-gradient(90deg, rgba(220, 20, 60, 0.9) 0%, rgba(255, 112, 133, 0.76) 100%);
-  box-shadow: 0 12px 24px -12px rgba(220, 20, 60, 0.72);
+  top: 50%;
+  height: 6px;
+  background: linear-gradient(90deg, #dc143c 0%, #ff5b78 100%);
+  box-shadow: 0 0 20px rgba(220, 20, 60, 0.4);
+  margin-top: 2px;
 }
 
-.metricBlock {
+/* Dot at the optimized tip */
+.signalDot {
+  position: absolute;
+  top: 50%;
+  margin-top: 5px; /* aligned with optimizedFill */
+  transform: translate(-50%, -50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: #fff;
+  border: 3px solid #ff4d6d;
+  box-shadow: 0 0 15px rgba(220, 20, 60, 0.8);
+  z-index: 2;
+}
+
+/* ─── Scale labels ───────────────────────────────────── */
+.signalScale {
   display: flex;
-  align-items: baseline;
-  gap: 10px;
-  min-width: 132px;
-  justify-content: flex-end;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 4px;
+  color: var(--foreground);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  opacity: 0.52;
 }
 
-.metricLabel {
-  color: var(--foreground);
-  font-size: 0.82rem;
-  font-weight: 700;
+/* ─── Inline track labels ───────────────────────────── */
+/* Small labels anchored to the right inside each lane */
+.trackLabel {
+  position: absolute;
+  left: 0;
+  font-size: 0.58rem;
+  font-weight: 800;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  opacity: 0.42;
+  pointer-events: none;
+  white-space: nowrap;
+  line-height: 1;
 }
 
-.metricValue {
-  color: var(--foreground);
-  font-size: 1.02rem;
+/* Upper lane label – sits just above the currentFill bar */
+.trackLabelCurrent {
+  top: 0;                       /* outside the 12px rail start */
+  color: rgba(255, 255, 255, 0.35);
+}
+
+:global(.light) .trackLabelCurrent {
+  color: rgba(0, 0, 0, 0.3);
+}
+
+/* Lower lane label – sits just below the rail */
+.trackLabelOptimized {
+  bottom: 0;                    /* outside the 52px rail end */
+  color: rgba(220, 20, 60, 0.55);
+}
+
+/* ─── Values group ──────────────────────────────────── */
+.valuesGroup {
+  grid-area: values;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
+  width: fit-content;
+  justify-content: flex-end;
+  justify-self: end;
+}
+
+.valueItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  min-width: 68px;
+}
+
+.valueType {
+  font-size: 0.65rem;
   font-weight: 700;
-  letter-spacing: -0.01em;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  opacity: 0.38;
+  margin-bottom: 3px;
+  color: var(--foreground);
 }
 
+.valueNumber {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--foreground);
+  opacity: 0.6;
+}
+
+.valueDivider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+:global(.light) .valueDivider {
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.optimizedValueItem .valueNumber {
+  color: #ff4d6d;
+  opacity: 1;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.optimizedValueItem .valueType {
+  color: #ff4d6d;
+  opacity: 0.75;
+}
+
+/* ─── Locked overlay ────────────────────────────────── */
 .lockedOverlay {
   position: absolute;
   inset: 0;
@@ -294,38 +480,32 @@
   opacity: 0.62;
 }
 
+/* ─── Footnote ──────────────────────────────────────── */
 .insight {
   margin: 0;
   color: var(--foreground);
-  font-size: 1.4rem;
-  line-height: 1.58;
-  opacity: 0.78;
+  font-size: 0.9rem;
+  line-height: 1.5;
+  opacity: 0.38;
+  text-align: center;
 }
 
-@media (max-width: 768px) {
-  .panel {
-    padding: 22px;
-    border-radius: 24px;
+/* ─── Responsive ────────────────────────────────────── */
+@media (max-width: 900px) {
+  .stageRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "meta values"
+      "bar bar";
+    gap: 10px 16px;
+    padding: 16px 0;
   }
+}
 
-  .header,
-  .chartHeader,
-  .trackRow {
-    grid-template-columns: none;
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-  }
-
-  .header {
-    gap: 12px;
-  }
-
-  .badge {
-    align-self: flex-start;
-  }
-
+@media (max-width: 1180px) {
   .chartHeader {
+    flex-direction: column;
+    align-items: flex-start;
     gap: 12px;
   }
 
@@ -334,21 +514,66 @@
   }
 
   .stageRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-areas:
+      "meta values"
+      "bar bar";
+    gap: 12px 16px;
+  }
+
+  .valuesGroup {
+    min-width: 150px;
+  }
+}
+
+@media (max-width: 768px) {
+  .panel {
+    padding: 22px;
+    border-radius: 24px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .badge {
+    align-self: flex-start;
+  }
+
+  .chartHint {
+    max-width: 30ch;
+  }
+
+  .stageRow {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "meta"
+      "bar"
+      "values";
     gap: 10px;
+    padding: 14px 0;
   }
 
-  .stageMeta {
-    padding-top: 0;
+  .barColumn {
+    width: 100%;
   }
 
-  .trackRow {
-    gap: 10px;
+  .stageSignal {
+    height: 64px;
+    width: 100%;
   }
 
-  .metricBlock {
-    min-width: 0;
+  .valuesGroup {
     justify-content: space-between;
+    min-width: 0;
+    width: 100%;
+    justify-self: stretch;
+  }
+
+  .valueItem {
+    align-items: flex-start;
   }
 }
 

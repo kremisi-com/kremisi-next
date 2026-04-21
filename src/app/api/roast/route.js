@@ -17,7 +17,15 @@ const CATEGORY_NAMES = [
   "Conversion Potential",
   "Performance & UX",
 ];
-const MARKET_MOMENTUM_PERIODS = 5;
+const MARKET_MOMENTUM_LABELS = ["2022", "2023", "2024", "2025", "2026"];
+const MARKET_MOMENTUM_BADGES = [
+  "Strong Growth",
+  "Moderate Growth",
+  "Stable",
+  "Mixed Signals",
+  "Under Pressure",
+  "Declining",
+];
 const COMPETITIVE_POSITION_AXES = [
   "Trust",
   "UX",
@@ -28,16 +36,8 @@ const COMPETITIVE_POSITION_AXES = [
 ];
 const COMPETITIVE_POSITION_INSIGHT =
   "Strong technical base. Weak differentiation.";
-
-function getMarketMomentumLabels() {
-  const currentYear = new Date().getFullYear();
-
-  return Array.from({ length: MARKET_MOMENTUM_PERIODS }, (_, index) =>
-    String(currentYear - (MARKET_MOMENTUM_PERIODS - 1) + index),
-  );
-}
-
-const MARKET_MOMENTUM_LABELS = getMarketMomentumLabels();
+const DEBUG_REVENUE_ENABLED =
+  process.env.DEBUG_REVENUE?.trim().toLowerCase() === "true";
 const PRIORITY_LEVELS = ["High", "Medium", "Low"];
 const SUPPORTED_LANGUAGES = {
   it: {
@@ -125,7 +125,7 @@ function normalizeLanguage(input) {
   return SUPPORTED_LANGUAGES[normalized] ? normalized : "it";
 }
 
-async function requestReview({ apiKey, model, prompt }) {
+async function requestReview({ apiKey, model, prompt, maxTokens = 2200 }) {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
@@ -136,7 +136,7 @@ async function requestReview({ apiKey, model, prompt }) {
     body: JSON.stringify({
       model,
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 2200,
+      max_tokens: maxTokens,
     }),
   });
 
@@ -251,6 +251,10 @@ function isFiniteNumber(value) {
   return typeof value === "number" && Number.isFinite(value);
 }
 
+function isBoundedInteger(value, min, max) {
+  return Number.isInteger(value) && value >= min && value <= max;
+}
+
 function validateMarketMomentum(marketMomentum) {
   if (
     !marketMomentum ||
@@ -260,13 +264,17 @@ function validateMarketMomentum(marketMomentum) {
     return false;
   }
 
-  const { label, delta_percent, period_labels, series, insight, method_note } =
-    marketMomentum;
+  const {
+    badge,
+    period_labels,
+    industry_trend,
+    brand_momentum,
+    insight,
+    method_note,
+  } = marketMomentum;
 
   if (
-    !isNonEmptyString(label) ||
-    !isFiniteNumber(delta_percent) ||
-    Math.abs(delta_percent) > 100 ||
+    !MARKET_MOMENTUM_BADGES.includes(badge) ||
     !isNonEmptyString(insight) ||
     !isNonEmptyString(method_note)
   ) {
@@ -282,14 +290,60 @@ function validateMarketMomentum(marketMomentum) {
   }
 
   if (
-    !Array.isArray(series) ||
-    series.length !== MARKET_MOMENTUM_LABELS.length ||
-    series.some((value) => !isFiniteNumber(value) || value < 25 || value > 100)
+    !Array.isArray(industry_trend) ||
+    industry_trend.length !== MARKET_MOMENTUM_LABELS.length ||
+    industry_trend.some(
+      (value) => !isFiniteNumber(value) || value < 25 || value > 100,
+    )
+  ) {
+    return false;
+  }
+
+  if (
+    !Array.isArray(brand_momentum) ||
+    brand_momentum.length !== MARKET_MOMENTUM_LABELS.length ||
+    brand_momentum.some(
+      (value) => !isFiniteNumber(value) || value < 25 || value > 100,
+    )
   ) {
     return false;
   }
 
   return true;
+}
+
+function validateRevenueSignal(signal) {
+  return (
+    signal &&
+    typeof signal === "object" &&
+    !Array.isArray(signal) &&
+    isNonEmptyString(signal.id) &&
+    /^[a-z-]+$/.test(signal.id) &&
+    isNonEmptyString(signal.label) &&
+    isNonEmptyString(signal.direction) &&
+    isNonEmptyString(signal.current_value) &&
+    isNonEmptyString(signal.optimized_value) &&
+    isBoundedInteger(signal.current_score, 0, 100) &&
+    isBoundedInteger(signal.optimized_score, 0, 100) &&
+    signal.optimized_score >= signal.current_score
+  );
+}
+
+function validateRevenueOpportunity(revenueOpportunity) {
+  if (
+    !revenueOpportunity ||
+    typeof revenueOpportunity !== "object" ||
+    Array.isArray(revenueOpportunity)
+  ) {
+    return false;
+  }
+
+  return (
+    isBoundedInteger(revenueOpportunity.opportunity_score, 0, 100) &&
+    Array.isArray(revenueOpportunity.signals) &&
+    revenueOpportunity.signals.length === 5 &&
+    revenueOpportunity.signals.every(validateRevenueSignal)
+  );
 }
 
 function validateCompetitiveSeries(series) {
@@ -344,7 +398,8 @@ function validateReviewShape(review) {
     validatePriorityActions(review.priority_actions) &&
     isNonEmptyString(review.verdict) &&
     validateMarketMomentum(review.market_momentum) &&
-    validateCompetitivePosition(review.competitive_position)
+    validateCompetitivePosition(review.competitive_position) &&
+    validateRevenueOpportunity(review.revenue_opportunity)
   );
 }
 
@@ -382,8 +437,52 @@ function parseAndValidateReview(text) {
   return review;
 }
 
+function parseAndValidateRevenueOpportunity(text) {
+  const normalizedText = normalizeModelText(text);
+
+  if (!normalizedText) {
+    throw new Error("AI response is empty.");
+  }
+
+  let parsed;
+
+  try {
+    parsed = JSON.parse(normalizedText);
+  } catch {
+    throw new Error("AI response is not valid JSON.");
+  }
+
+  const payload =
+    parsed && typeof parsed === "object" && !Array.isArray(parsed)
+      ? parsed.review && typeof parsed.review === "object"
+        ? parsed.review
+        : parsed
+      : null;
+
+  const revenueOpportunity = payload?.revenue_opportunity || payload;
+
+  if (!validateRevenueOpportunity(revenueOpportunity)) {
+    throw new Error(
+      "AI response JSON does not match the required revenue opportunity schema.",
+    );
+  }
+
+  return {
+    revenue_opportunity: revenueOpportunity,
+  };
+}
+
 function buildReviewPreview(review) {
   if (!review) return "";
+
+  if (review.revenue_opportunity && !review.summary) {
+    return [
+      `Opportunity score: ${review.revenue_opportunity.opportunity_score}/100`,
+      `Signals: ${review.revenue_opportunity.signals.map((item) => item.label).join(", ")}`,
+    ]
+      .join("\n")
+      .slice(0, 280);
+  }
 
   const preview = [
     `Summary: ${review.summary}`,
@@ -464,7 +563,7 @@ Do not use markdown.
 Do not include any text before or after the JSON.
 Use this exact structure and key names:
 {
-  "summary": "Short executive summary in 2-3 sentences.",
+  "summary": "Short executive summary in 1-2 sentences.",
   "overall_score": 1-5,
   "categories": [
     {
@@ -519,12 +618,12 @@ Use this exact structure and key names:
   ],
   "verdict": "Sharp final verdict in one sentence.",
   "market_momentum": {
-    "label": "Short descriptor for the chart.",
-    "delta_percent": 18,
     "period_labels": ["${MARKET_MOMENTUM_LABELS[0]}", "${MARKET_MOMENTUM_LABELS[1]}", "${MARKET_MOMENTUM_LABELS[2]}", "${MARKET_MOMENTUM_LABELS[3]}", "${MARKET_MOMENTUM_LABELS[4]}"],
-    "series": [42, 47, 51, 58, 63],
-    "insight": "Short sentence explaining the market signal.",
-    "method_note": "Short disclosure that the chart is AI-estimated."
+    "industry_trend": [42, 47, 51, 58, 63],
+    "brand_momentum": [48, 46, 43, 40, 38],
+    "badge": "Mixed Signals",
+    "insight": "Short explanation of the relationship between the market and the analyzed brand, including why and any visible upside.",
+    "method_note": "Short disclosure that both lines are AI-estimated."
   },
   "competitive_position": {
     "axes": ["${COMPETITIVE_POSITION_AXES[0]}", "${COMPETITIVE_POSITION_AXES[1]}", "${COMPETITIVE_POSITION_AXES[2]}", "${COMPETITIVE_POSITION_AXES[3]}", "${COMPETITIVE_POSITION_AXES[4]}", "${COMPETITIVE_POSITION_AXES[5]}"],
@@ -533,6 +632,56 @@ Use this exact structure and key names:
     "category_average": [62, 59, 64, 58, 56, 54],
     "insight": "${COMPETITIVE_POSITION_INSIGHT}",
     "method_note": "Short disclosure that the chart is AI-estimated."
+  },
+  "revenue_opportunity": {
+    "opportunity_score": 89,
+    "signals": [
+      {
+        "id": "trust-score",
+        "label": "Trust Score",
+        "direction": "Rising",
+        "current_score": 42,
+        "optimized_score": 78,
+        "current_value": "42/100",
+        "optimized_value": "78/100"
+      },
+      {
+        "id": "conversion-readiness",
+        "label": "Conversion Readiness",
+        "direction": "Improving",
+        "current_score": 51,
+        "optimized_score": 81,
+        "current_value": "51/100",
+        "optimized_value": "81/100"
+      },
+      {
+        "id": "ux-friction",
+        "label": "UX Friction",
+        "direction": "Reducing",
+        "current_score": 28,
+        "optimized_score": 76,
+        "current_value": "High",
+        "optimized_value": "Low"
+      },
+      {
+        "id": "cta-clarity",
+        "label": "CTA Clarity",
+        "direction": "Sharpening",
+        "current_score": 34,
+        "optimized_score": 74,
+        "current_value": "Poor",
+        "optimized_value": "Strong"
+      },
+      {
+        "id": "funnel-efficiency",
+        "label": "Funnel Efficiency",
+        "direction": "Advancing",
+        "current_score": 47,
+        "optimized_score": 79,
+        "current_value": "47/100",
+        "optimized_value": "79/100"
+      }
+    ]
   }
 }
 
@@ -548,12 +697,24 @@ Hard requirements:
 - Keep verdict to 1 sentence, max 20 words.
 - The market_momentum object is required.
 - market_momentum.period_labels must use exactly these 5 labels and in this order: ${MARKET_MOMENTUM_LABELS.join(", ")}.
-- market_momentum.series must contain exactly 5 numbers in the 25-100 range.
-- market_momentum must represent estimated category demand over the last 5 years inferred from the site's category, offer clarity, market maturity, and positioning.
-- Keep the series plausible and low-variance: no chaotic spikes, no dramatic collapses unless clearly justified by the site context.
-- Make the series shape and the insight logically consistent with each other.
-- delta_percent must be derived from the general change across the five-year window, rounded to a whole number.
-- label and method_note must clearly frame the chart as an estimate, not factual analytics.
+- market_momentum.industry_trend must contain exactly 5 numbers in the 25-100 range.
+- market_momentum.brand_momentum must contain exactly 5 numbers in the 25-100 range.
+- market_momentum.badge must be exactly one of: ${MARKET_MOMENTUM_BADGES.join(", ")}.
+- Never merge category growth with company strength.
+- market_momentum.industry_trend must estimate how the overall sector/category is evolving based on category demand inferred from the site niche, sector expansion or contraction likelihood, digital adoption, macro relevance, AI disruption tailwinds or headwinds, and search/commercial intent durability.
+- market_momentum.brand_momentum must estimate how the analyzed company appears positioned relative to that market today based on site modernity, perceived trust, conversion readiness, clarity of offer, social proof strength, premium positioning, competitiveness versus modern alternatives, brand age perception, emotional resonance, and UX quality.
+- Keep both series plausible and low-variance: no chaotic spikes, no dramatic collapses unless clearly justified by the visible site context.
+- The two series may diverge and must stay strategically honest.
+- If the market looks resilient but the brand feels dated, let industry_trend rise while brand_momentum flattens or declines.
+- If the brand feels strong in a mature category, let brand_momentum hold stronger than industry_trend.
+- If both are weak, show both weak. If both are strong, show both strong.
+- If uncertainty is high, prefer stable or moderate outcomes over exaggerated moves.
+- market_momentum.insight must describe the relationship between the sector trajectory and the brand's visible positioning.
+- market_momentum.insight must explain why the two lines diverge, hold, or improve by referencing visible signals from the site.
+- If the site shows credible strengths or upside, explicitly mention them instead of making the read uniformly negative.
+- Avoid generic formulas like "market up, brand down" without a concrete reason.
+- Keep market_momentum.insight to 2 sentences max, max 38 words total.
+- market_momentum.method_note must clearly frame both lines as estimates, not factual analytics.
 - The competitive_position object is required.
 - competitive_position.axes must use exactly these 6 labels and in this order: ${COMPETITIVE_POSITION_AXES.join(", ")}.
 - competitive_position.your_site, competitive_position.top_competitor, and competitive_position.category_average must each contain exactly 6 numbers in the 0-100 range.
@@ -561,6 +722,18 @@ Hard requirements:
 - competitive_position.insight must be exactly: "${COMPETITIVE_POSITION_INSIGHT}".
 - competitive_position.method_note must clearly frame the chart as an AI-estimated comparative read.
 - The three competitive_position series should be internally consistent and strategically plausible for the site's visible maturity, clarity, and differentiation.
+- The revenue_opportunity object is required.
+- revenue_opportunity.opportunity_score must be an integer from 0 to 100.
+- revenue_opportunity.signals must contain exactly 5 items.
+- Each revenue_opportunity signal must include: id, label, direction, current_score, optimized_score, current_value, optimized_value.
+- Each signal id must be a short stable slug using lowercase letters and hyphens only.
+- Each signal label must be concise, premium, and easy to scan in a UI.
+- direction must be short and uppercase-friendly, such as Rising, Improving, Reducing, Sharpening, or Advancing.
+- current_score and optimized_score must be integers from 0 to 100.
+- optimized_score must always be greater than or equal to current_score.
+- current_value and optimized_value must be concise display strings suitable for direct rendering.
+- Use signals that reflect visible trust, clarity, friction, CTA quality, and funnel strength inferred from the website.
+- Keep the revenue_opportunity values internally consistent with the rest of the review.
 - Use "${hostname}" as a stable anchor and prefer internally consistent outputs over novelty.
 - Focus on strategic business value, not only technical quality.
 - Evaluate whether the site feels premium, whether the offer is clear, whether trust is established quickly, whether users would convert, and whether the UX feels smooth.
@@ -570,6 +743,87 @@ Hard requirements:
 - Avoid generic praise or generic criticism; make every point specific to the provided content.
 - ${languageConfig.instruction}
 - Keep all prose content concise and directly useful.
+
+WEBSITE CONTENT:
+${siteContent || "No content available: the website may be empty or inaccessible."}`;
+}
+
+function buildRevenuePrompt({ hostname, siteContent, languageConfig }) {
+  return `You are a senior web strategist and conversion consultant.
+
+Analyze the following website content from "${hostname}" and produce only the Revenue Opportunity card payload for direct UI rendering.
+
+Return JSON only.
+Do not use markdown.
+Do not include any text before or after the JSON.
+Use this exact structure and key names:
+{
+  "revenue_opportunity": {
+    "opportunity_score": 89,
+    "signals": [
+      {
+        "id": "trust-score",
+        "label": "Trust Score",
+        "direction": "Rising",
+        "current_score": 42,
+        "optimized_score": 78,
+        "current_value": "42/100",
+        "optimized_value": "78/100"
+      },
+      {
+        "id": "conversion-readiness",
+        "label": "Conversion Readiness",
+        "direction": "Improving",
+        "current_score": 51,
+        "optimized_score": 81,
+        "current_value": "51/100",
+        "optimized_value": "81/100"
+      },
+      {
+        "id": "ux-friction",
+        "label": "UX Friction",
+        "direction": "Reducing",
+        "current_score": 28,
+        "optimized_score": 76,
+        "current_value": "High",
+        "optimized_value": "Low"
+      },
+      {
+        "id": "cta-clarity",
+        "label": "CTA Clarity",
+        "direction": "Sharpening",
+        "current_score": 34,
+        "optimized_score": 74,
+        "current_value": "Poor",
+        "optimized_value": "Strong"
+      },
+      {
+        "id": "funnel-efficiency",
+        "label": "Funnel Efficiency",
+        "direction": "Advancing",
+        "current_score": 47,
+        "optimized_score": 79,
+        "current_value": "47/100",
+        "optimized_value": "79/100"
+      }
+    ]
+  }
+}
+
+Hard requirements:
+- Return only the revenue_opportunity object shown above.
+- revenue_opportunity.opportunity_score must be an integer from 0 to 100.
+- revenue_opportunity.signals must contain exactly 5 items.
+- Each signal must include: id, label, direction, current_score, optimized_score, current_value, optimized_value.
+- Each signal id must be a short stable slug using lowercase letters and hyphens only.
+- Each signal label must be concise, premium, and easy to scan in a UI.
+- direction must be short and uppercase-friendly.
+- current_score and optimized_score must be integers from 0 to 100.
+- optimized_score must always be greater than or equal to current_score.
+- current_value and optimized_value must be concise display strings suitable for direct rendering.
+- Use signals that reflect visible trust, clarity, friction, CTA quality, and funnel strength inferred from the website.
+- Be strategically honest and keep the values internally plausible.
+- ${languageConfig.instruction}
 
 WEBSITE CONTENT:
 ${siteContent || "No content available: the website may be empty or inaccessible."}`;
@@ -642,17 +896,24 @@ export async function POST(request) {
     const configuredModel =
       process.env.ANTHROPIC_MODEL?.trim() || DEFAULT_ANTHROPIC_MODEL;
 
-    const prompt = buildPrompt({
-      hostname: parsedUrl.hostname,
-      siteContent,
-      languageConfig,
-    });
+    const prompt = DEBUG_REVENUE_ENABLED
+      ? buildRevenuePrompt({
+          hostname: parsedUrl.hostname,
+          siteContent,
+          languageConfig,
+        })
+      : buildPrompt({
+          hostname: parsedUrl.hostname,
+          siteContent,
+          languageConfig,
+        });
 
     let modelInUse = configuredModel;
     let { response, payload } = await requestReview({
       apiKey: ANTHROPIC_API_KEY,
       model: modelInUse,
       prompt,
+      maxTokens: DEBUG_REVENUE_ENABLED ? 900 : 2200,
     });
 
     if (isMissingModelError(response.status, payload)) {
@@ -680,6 +941,7 @@ export async function POST(request) {
             apiKey: ANTHROPIC_API_KEY,
             model: modelInUse,
             prompt,
+            maxTokens: DEBUG_REVENUE_ENABLED ? 900 : 2200,
           }));
         }
       } else {
@@ -726,7 +988,9 @@ export async function POST(request) {
     let review;
 
     try {
-      review = parseAndValidateReview(reviewText);
+      review = DEBUG_REVENUE_ENABLED
+        ? parseAndValidateRevenueOpportunity(reviewText)
+        : parseAndValidateReview(reviewText);
     } catch (error) {
       console.error("Invalid AI review payload:", error);
       console.error("Raw AI payload:", JSON.stringify(payload, null, 2));
@@ -747,7 +1011,10 @@ export async function POST(request) {
       review,
     });
 
-    return Response.json({ review });
+    return Response.json({
+      review,
+      debug_mode: DEBUG_REVENUE_ENABLED ? "revenue" : null,
+    });
   } catch (err) {
     console.error("Roast API error:", err);
     return sendErrorResponse({

@@ -31,6 +31,7 @@ function normalizeWebsiteUrl(input) {
 
 function buildShareText(review) {
   if (!review) return "";
+  if (!review.summary || !review.overall_score) return "";
 
   const topAction = review.priority_actions?.[0]?.action || "";
 
@@ -50,6 +51,7 @@ export default function WebsiteRoaster() {
   const [language, setLanguage] = useState("it");
   const [loading, setLoading] = useState(false);
   const [review, setReview] = useState(null);
+  const [debugMode, setDebugMode] = useState("");
   const [error, setError] = useState(null);
   const [shareFeedback, setShareFeedback] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
@@ -79,6 +81,7 @@ export default function WebsiteRoaster() {
 
     setLoading(true);
     setReview(null);
+    setDebugMode("");
     setError(null);
     setShareFeedback("");
 
@@ -98,6 +101,7 @@ export default function WebsiteRoaster() {
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
       setReview(data.review);
+      setDebugMode(data.debug_mode || "");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -122,6 +126,9 @@ export default function WebsiteRoaster() {
     }
   };
 
+  const isRevenueDebug = debugMode === "revenue";
+  const showFullReview = Boolean(review) && !isRevenueDebug;
+
   return (
     <main className={`page-content-simple ${styles.page}`}>
       <section className={styles.hero}>
@@ -142,48 +149,59 @@ export default function WebsiteRoaster() {
       <section className={styles.section}>
         <div className={styles.contentGrid}>
           <div className={styles.infoColumn}>
-            <div className={styles.infoBlock}>
-              <p className={styles.eyebrow}>How it works</p>
-              <p className={styles.leadText}>
-                The AI analyzes your website structure, messaging and user
-                experience, then returns a concise strategic review.
-              </p>
-            </div>
+            {!isRevenueDebug && (
+              <>
+                <div className={styles.infoBlock}>
+                  <p className={styles.eyebrow}>How it works</p>
+                  <p className={styles.leadText}>
+                    The AI analyzes your website structure, messaging and user
+                    experience, then returns a concise strategic review.
+                  </p>
+                </div>
 
-            <dl className={styles.metaList}>
-              <div className={styles.metaItem}>
-                <dt className={styles.metaLabel}>Input</dt>
-                <dd className={styles.metaValue}>
-                  Use a public URL for the most accurate review.
-                </dd>
-              </div>
-              <div className={styles.metaItem}>
-                <dt className={styles.metaLabel}>Tone</dt>
-                <dd className={styles.metaValue}>
-                  Direct, ironic, annoyingly precise. It is not a joke. It is
-                  worse.
-                </dd>
-              </div>
-              <div className={styles.metaItem}>
-                <dt className={styles.metaLabel}>Note</dt>
-                <dd className={styles.metaValue}>
-                  The roast is free. Fixing the site is the part we do together.
-                </dd>
-              </div>
-            </dl>
-            <MarketMomentum
-              className={styles.momentumWrap}
-              data={review?.market_momentum}
-              locked={!review}
-            />
-            {review && (
-              <CompetitivePosition
-                className={styles.competitiveWrap}
-                data={review?.competitive_position}
-                locked={!review}
-              />
+                <dl className={styles.metaList}>
+                  <div className={styles.metaItem}>
+                    <dt className={styles.metaLabel}>Input</dt>
+                    <dd className={styles.metaValue}>
+                      Use a public URL for the most accurate review.
+                    </dd>
+                  </div>
+                  <div className={styles.metaItem}>
+                    <dt className={styles.metaLabel}>Tone</dt>
+                    <dd className={styles.metaValue}>
+                      Direct, ironic, annoyingly precise. It is not a joke. It
+                      is worse.
+                    </dd>
+                  </div>
+                  <div className={styles.metaItem}>
+                    <dt className={styles.metaLabel}>Note</dt>
+                    <dd className={styles.metaValue}>
+                      The roast is free. Fixing the site is the part we do
+                      together.
+                    </dd>
+                  </div>
+                </dl>
+                <MarketMomentum
+                  className={styles.momentumWrap}
+                  data={review?.market_momentum}
+                  locked={!review}
+                  locale={language}
+                />
+                {review && (
+                  <CompetitivePosition
+                    className={styles.competitiveWrap}
+                    data={review?.competitive_position}
+                    locked={!review}
+                  />
+                )}
+              </>
             )}
-            <RevenueOpportunity className={styles.revenueWrap} locked={!review} />
+            <RevenueOpportunity
+              className={styles.revenueWrap}
+              data={review?.revenue_opportunity}
+              locked={!review}
+              locale={language}
+            />
           </div>
 
           <div className={styles.toolColumn}>
@@ -247,6 +265,8 @@ export default function WebsiteRoaster() {
                     <p className={styles.statusText}>
                       We are reading the site and preparing a strategic
                       assessment.
+                      <br />
+                      It can take up to a minute.
                     </p>
                   </div>
                 </div>
@@ -260,14 +280,15 @@ export default function WebsiteRoaster() {
               )}
             </div>
 
-            <div className={`${styles.panel} ${styles.resultPanel}`}>
+            {!isRevenueDebug && (
+              <div className={`${styles.panel} ${styles.resultPanel}`}>
               <div className={styles.resultHeader}>
                 <div>
                   <p className={styles.eyebrow}>Review</p>
                   <h2 className={styles.resultTitle}>Strategic scorecard</h2>
                 </div>
 
-                {review && (
+                {showFullReview && (
                   <div className={styles.scoreWrap}>
                     <span className={styles.scoreLabel}>Overall Score</span>
                     <div className={styles.scoreValueRow}>
@@ -299,7 +320,7 @@ export default function WebsiteRoaster() {
                 </p>
               )}
 
-              {review && !loading && (
+              {showFullReview && !loading && (
                 <div className={styles.reviewBody}>
                   <section className={styles.summaryBlock}>
                     <p className={styles.summaryText}>{review.summary}</p>
@@ -370,9 +391,10 @@ export default function WebsiteRoaster() {
                   </section>
                 </div>
               )}
-            </div>
+              </div>
+            )}
 
-            {!review && (
+            {!review && !isRevenueDebug && (
               <CompetitivePosition
                 className={styles.competitiveWrap}
                 data={review?.competitive_position}
@@ -383,52 +405,54 @@ export default function WebsiteRoaster() {
         </div>
       </section>
 
-      <section className={styles.ctaSection}>
-        <div className={styles.ctaCard}>
-          <div className={styles.ctaBlob} aria-hidden="true" />
+      {!isRevenueDebug && (
+        <section className={styles.ctaSection}>
+          <div className={styles.ctaCard}>
+            <div className={styles.ctaBlob} aria-hidden="true" />
 
-          <div className={styles.ctaLeft}>
-            <p className={styles.eyebrow}>Clear enough?</p>
-            <h2 className={styles.ctaTitle}>
-              If the review is right
-              <br />
-              <span className={styles.accent}>it can be improved.</span>
-            </h2>
+            <div className={styles.ctaLeft}>
+              <p className={styles.eyebrow}>Clear enough?</p>
+              <h2 className={styles.ctaTitle}>
+                If the review is right
+                <br />
+                <span className={styles.accent}>it can be improved.</span>
+              </h2>
+            </div>
+
+            <div className={styles.ctaRight}>
+              <p className={styles.ctaText}>
+                Find out what actually works on your website and what is slowing
+                down your results. Kremisi gives you direct feedback on design,
+                development, and structure.
+              </p>
+
+              <ul className={styles.ctaBenefits}>
+                <li>
+                  <span className={styles.benefitIcon}>🎨</span>
+                  <span>Design that respects the audience</span>
+                </li>
+                <li>
+                  <span className={styles.benefitIcon}>⚙️</span>
+                  <span>Solid development, zero shortcuts</span>
+                </li>
+                <li>
+                  <span className={styles.benefitIcon}>🎯</span>
+                  <span>Structure built to convert</span>
+                </li>
+              </ul>
+
+              <Link href="/contacts" className={styles.ctaGitButtonLink}>
+                <GitButton
+                  text="Let's talk"
+                  revertColor
+                  className={styles.ctaGitButton}
+                  leftShift={10}
+                />
+              </Link>
+            </div>
           </div>
-
-          <div className={styles.ctaRight}>
-            <p className={styles.ctaText}>
-              Find out what actually works on your website and what is slowing
-              down your results. Kremisi gives you direct feedback on design,
-              development, and structure.
-            </p>
-
-            <ul className={styles.ctaBenefits}>
-              <li>
-                <span className={styles.benefitIcon}>🎨</span>
-                <span>Design that respects the audience</span>
-              </li>
-              <li>
-                <span className={styles.benefitIcon}>⚙️</span>
-                <span>Solid development, zero shortcuts</span>
-              </li>
-              <li>
-                <span className={styles.benefitIcon}>🎯</span>
-                <span>Structure built to convert</span>
-              </li>
-            </ul>
-
-            <Link href="/contacts" className={styles.ctaGitButtonLink}>
-              <GitButton
-                text="Let's talk"
-                revertColor
-                className={styles.ctaGitButton}
-                leftShift={10}
-              />
-            </Link>
-          </div>
-        </div>
-      </section>
+        </section>
+      )}
     </main>
   );
 }
