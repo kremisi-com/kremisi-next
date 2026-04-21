@@ -247,23 +247,18 @@
   position: relative;
   overflow: hidden;
   min-width: 172px;
-  border: none;
-  background: linear-gradient(
-    135deg,
-    #ff6b2b 0%,
-    #ff3d1f 45%,
-    #e8001a 100%
-  );
+  border: 1px solid color-mix(in srgb, var(--primary) 55%, white 8%);
+  background: var(--primary);
   color: #fff;
   font-size: 1.45rem;
   font-weight: 700;
-  letter-spacing: 0.01em;
+  letter-spacing: 0.02em;
   padding: 0 28px;
   cursor: pointer;
   box-shadow:
-    0 4px 18px color-mix(in srgb, #ff3d1f 42%, transparent),
-    0 1px 0 rgba(255, 255, 255, 0.18) inset;
-  animation: roastGlow 2.8s ease-in-out infinite;
+    0 4px 22px color-mix(in srgb, var(--primary) 38%, transparent),
+    0 1px 0 rgba(255, 255, 255, 0.14) inset;
+  animation: roastPulse 3s ease-in-out infinite;
 }
 
 /* shimmer sweep */
@@ -272,32 +267,33 @@
   position: absolute;
   inset: 0;
   background: linear-gradient(
-    105deg,
-    transparent 38%,
-    rgba(255, 255, 255, 0.28) 50%,
-    transparent 62%
+    110deg,
+    transparent 36%,
+    rgba(255, 255, 255, 0.22) 50%,
+    transparent 64%
   );
-  transform: translateX(-100%);
+  transform: translateX(-120%);
   transition: transform 0s;
 }
 
 .roastButton:hover:not(:disabled)::after {
-  transform: translateX(100%);
-  transition: transform 0.52s ease;
+  transform: translateX(120%);
+  transition: transform 0.55s ease;
 }
 
 .roastButton:hover:not(:disabled) {
-  transform: translateY(-2px) scale(1.025);
+  transform: translateY(-2px) scale(1.03);
+  background: color-mix(in srgb, var(--primary) 85%, white 15%);
   box-shadow:
-    0 8px 28px color-mix(in srgb, #ff3d1f 55%, transparent),
-    0 1px 0 rgba(255, 255, 255, 0.22) inset;
+    0 8px 32px color-mix(in srgb, var(--primary) 52%, transparent),
+    0 1px 0 rgba(255, 255, 255, 0.2) inset;
 }
 
 .roastButton:active:not(:disabled) {
-  transform: translateY(0) scale(0.97);
+  transform: translateY(1px) scale(0.97);
   box-shadow:
-    0 2px 8px color-mix(in srgb, #ff3d1f 30%, transparent),
-    0 1px 0 rgba(255, 255, 255, 0.18) inset;
+    0 2px 10px color-mix(in srgb, var(--primary) 28%, transparent),
+    0 1px 0 rgba(255, 255, 255, 0.12) inset;
 }
 
 .secondaryButton:hover {
@@ -569,17 +565,17 @@
   }
 }
 
-@keyframes roastGlow {
+@keyframes roastPulse {
   0%, 100% {
     box-shadow:
-      0 4px 18px color-mix(in srgb, #ff3d1f 42%, transparent),
-      0 1px 0 rgba(255, 255, 255, 0.18) inset;
+      0 4px 22px color-mix(in srgb, var(--primary) 38%, transparent),
+      0 1px 0 rgba(255, 255, 255, 0.14) inset;
   }
   50% {
     box-shadow:
-      0 4px 28px color-mix(in srgb, #ff3d1f 68%, transparent),
-      0 0 0 3px color-mix(in srgb, #ff6b2b 18%, transparent),
-      0 1px 0 rgba(255, 255, 255, 0.18) inset;
+      0 4px 30px color-mix(in srgb, var(--primary) 60%, transparent),
+      0 0 0 4px color-mix(in srgb, var(--primary) 14%, transparent),
+      0 1px 0 rgba(255, 255, 255, 0.14) inset;
   }
 }
 
@@ -594,6 +590,7 @@
   .spinner,
   .roastButton {
     animation: none;
+    box-shadow: 0 4px 22px color-mix(in srgb, var(--primary) 38%, transparent);
   }
 
   .roastButton,

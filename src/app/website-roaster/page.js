@@ -5,7 +5,13 @@ import Link from "next/link";
 import GitButton from "@/components/git-button/git-button";
 import styles from "./page.module.css";
 
-const HEAT_LABELS = ["Mild 🌡️", "Sharp 🔪", "Savage 🔥", "Brutal 💀", "Nuclear ☢️"];
+const HEAT_LABELS = [
+  "Mild 🌡️",
+  "Sharp 🔪",
+  "Savage 🔥",
+  "Brutal 💀",
+  "Nuclear ☢️",
+];
 
 export default function WebsiteRoaster() {
   const [url, setUrl] = useState("");
@@ -81,8 +87,8 @@ export default function WebsiteRoaster() {
             Fatti <span className={styles.accent}>roastare 🔥</span>
           </h1>
           <p className={styles.subtitle}>
-            Incolla un URL. L&apos;AI legge il tuo sito e lo stronca — con stile.
-            Niente pietà, niente supercazzole: solo la verità bruciante.
+            Incolla un URL. L&apos;AI legge il tuo sito e lo stronca — con
+            stile. Niente pietà, niente supercazzole: solo la verità bruciante.
           </p>
         </div>
       </section>
@@ -93,8 +99,8 @@ export default function WebsiteRoaster() {
             <div className={styles.infoBlock}>
               <p className={styles.eyebrow}>Come funziona</p>
               <p className={styles.leadText}>
-                L&apos;AI scrape il sito, lo legge con occhio critico e lo
-                brucia — in modo tagliente, leggibile e abbastanza cattivo da
+                L&apos;AI fa lo scraping del sito, lo legge con occhio critico e
+                lo brucia — in modo tagliente, leggibile e abbastanza cattivo da
                 fare male sul serio.
               </p>
             </div>
@@ -103,19 +109,22 @@ export default function WebsiteRoaster() {
               <div className={styles.metaItem}>
                 <dt className={styles.metaLabel}>Input</dt>
                 <dd className={styles.metaValue}>
-                  URL pubblico: homepage, pagina prodotto, chi siamo — tutto fa male.
+                  URL pubblico: homepage, pagina prodotto, chi siamo — tutto fa
+                  male.
                 </dd>
               </div>
               <div className={styles.metaItem}>
                 <dt className={styles.metaLabel}>Tono</dt>
                 <dd className={styles.metaValue}>
-                  Diretto, ironico, fastidiosamente preciso. Non e' una battuta — e' peggio.
+                  Diretto, ironico, fastidiosamente preciso. Non e' una battuta
+                  — e' peggio.
                 </dd>
               </div>
               <div className={styles.metaItem}>
                 <dt className={styles.metaLabel}>Nota</dt>
                 <dd className={styles.metaValue}>
-                  Zero dati salvati. La dignità del tuo sito, quella non la garantiamo.
+                  Zero dati salvati. La dignità del tuo sito, quella non la
+                  garantiamo.
                 </dd>
               </div>
             </dl>
@@ -158,7 +167,8 @@ export default function WebsiteRoaster() {
               </div>
 
               <p className={styles.helperText}>
-                Meglio un URL reale. Se il sito e' vuoto, il roast sara' triste quanto lui.
+                Meglio un URL reale. Se il sito e' vuoto, il roast sara' triste
+                quanto lui.
               </p>
 
               {loading && (
@@ -208,8 +218,8 @@ export default function WebsiteRoaster() {
 
               {!result && !loading && !error && (
                 <p className={styles.emptyState}>
-                  Il verdetto apparirà qui. Se il tuo sito merita pietà,
-                  non possiamo prometterla.
+                  Il verdetto apparirà qui. Se il tuo sito merita pietà, non
+                  possiamo prometterla.
                 </p>
               )}
 
@@ -242,7 +252,10 @@ export default function WebsiteRoaster() {
           <div className={styles.ctaLeft}>
             <p className={styles.eyebrow}>Troppo vero?</p>
             <h2 className={styles.ctaTitle}>
-              Se il roast<br />ha ragione,<br />
+              Se il roast
+              <br />
+              ha ragione,
+              <br />
               <span className={styles.accent}>si può sistemare.</span>
             </h2>
           </div>
@@ -269,7 +282,12 @@ export default function WebsiteRoaster() {
             </ul>
 
             <Link href="/contacts" className={styles.ctaGitButtonLink}>
-              <GitButton text="Parliamone" revertColor className={styles.ctaGitButton} leftShift={10} />
+              <GitButton
+                text="Parliamone"
+                revertColor
+                className={styles.ctaGitButton}
+                leftShift={10}
+              />
             </Link>
           </div>
         </div>

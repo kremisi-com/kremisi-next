@@ -1,4 +1,4 @@
-const DEFAULT_OPENROUTER_MODEL = "openrouter/auto";
+const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5-20251001";
 
 function extractErrorMessage(payload, fallbackMessage) {
   if (!payload) return fallbackMessage;
@@ -37,19 +37,17 @@ function normalizeInputUrl(input) {
 }
 
 async function requestRoast({ apiKey, model, prompt }) {
-  const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+  const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${apiKey}`,
+      "x-api-key": apiKey,
+      "anthropic-version": "2023-06-01",
       "Content-Type": "application/json",
-      "HTTP-Referer": "https://kremisi.com",
-      "X-Title": "Kremisi Website Roaster",
     },
     body: JSON.stringify({
       model,
       messages: [{ role: "user", content: prompt }],
-      max_tokens: 600,
-      temperature: 0.85,
+      max_tokens: 800,
     }),
   });
 
@@ -76,7 +74,11 @@ export async function POST(request) {
 
     try {
       const jinaRes = await fetch(jinaUrl, {
-        headers: { Accept: "text/plain" },
+        headers: {
+          Accept: "text/plain",
+          "X-Return-Format": "text",
+          "X-Remove-Selector": "header,footer,nav,script,style",
+        },
         signal: AbortSignal.timeout(15000),
       });
 
@@ -88,17 +90,17 @@ export async function POST(request) {
       siteContent = "Impossibile leggere il contenuto del sito.";
     }
 
-    const OPENROUTER_API_KEY = process.env.OPENROUTER_API_KEY;
+    const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;
 
-    if (!OPENROUTER_API_KEY) {
+    if (!ANTHROPIC_API_KEY) {
       return Response.json(
-        { error: "API key OpenRouter non configurata" },
+        { error: "API key Anthropic non configurata" },
         { status: 500 },
       );
     }
 
     const configuredModel =
-      process.env.OPENROUTER_MODEL?.trim() || DEFAULT_OPENROUTER_MODEL;
+      process.env.ANTHROPIC_MODEL?.trim() || DEFAULT_ANTHROPIC_MODEL;
 
     const prompt = `Sei un esperto di web design, UX e marketing digitale con un senso dell'umorismo tagliente ma costruttivo.
 
@@ -112,76 +114,42 @@ STRUTTURA LA RISPOSTA COSI' (senza usare markdown o titoli, testo scorrevole):
 5. Una frase finale motivazionale ma ironica, che faccia sentir meglio il proprietario del sito
 
 Usa emoji con parsimonia (1-2 massimo). Scrivi in italiano. Sii specifico rispetto al contenuto reale del sito, non generico.
-Non usare mai il carattere "è": scrivi sempre "e'".
+Non usare mai il carattere "e' con accento": scrivi sempre "e'".
 CONTENUTO DEL SITO:
 ${siteContent || "Nessun contenuto disponibile: il sito potrebbe essere vuoto o inaccessibile."}`;
 
-    const attempts = [configuredModel];
-    if (configuredModel !== DEFAULT_OPENROUTER_MODEL) {
-      attempts.push(DEFAULT_OPENROUTER_MODEL);
+    const { response, payload } = await requestRoast({
+      apiKey: ANTHROPIC_API_KEY,
+      model: configuredModel,
+      prompt,
+    });
+
+    if (!response.ok) {
+      const message = extractErrorMessage(
+        payload,
+        `Anthropic error ${response.status}`,
+      );
+
+      console.error("Anthropic status:", response.status);
+      console.error("Anthropic error:", JSON.stringify(payload, null, 2));
+
+      return Response.json(
+        { error: `Errore provider AI: ${message}` },
+        { status: 500 },
+      );
     }
 
-    let aiData = null;
-    let resolvedModel = configuredModel;
-    let lastError = null;
+    console.log("Anthropic model used:", configuredModel);
 
-    for (const model of attempts) {
-      const { response, payload } = await requestRoast({
-        apiKey: OPENROUTER_API_KEY,
-        model,
-        prompt,
-      });
-
-      if (response.ok) {
-        aiData = payload;
-        resolvedModel = model;
-        break;
-      }
-
-      lastError = {
-        status: response.status,
-        model,
-        message: extractErrorMessage(
-          payload,
-          `OpenRouter error ${response.status}`,
-        ),
-      };
-
-      console.error("OpenRouter status:", response.status);
-      console.error("OpenRouter model:", model);
-      console.error("OpenRouter error:", JSON.stringify(payload, null, 2));
-
-      const canRetryWithFallback =
-        model !== DEFAULT_OPENROUTER_MODEL &&
-        (response.status === 400 || response.status === 404);
-
-      if (!canRetryWithFallback) {
-        break;
-      }
-    }
-
-    if (!aiData) {
-      const status =
-        lastError?.status === 400 || lastError?.status === 404 ? 502 : 500;
-
-      const message =
-        lastError?.status === 400 || lastError?.status === 404
-          ? `Il provider AI ha rifiutato la richiesta (${lastError.message}). Verifica OPENROUTER_MODEL o riprova tra poco.`
-          : `Errore provider AI: ${lastError?.message || "risposta non valida"}`;
-
-      return Response.json({ error: message }, { status });
-    }
-
-    console.log("OpenRouter model used:", resolvedModel);
-
-    const roast = aiData.choices?.[0]?.message?.content
+    // Anthropic restituisce content[0].text invece di choices[0].message.content
+    const roast = payload?.content?.[0]?.text
       ?.trim()
       .replaceAll("È", "E'")
       .replaceAll("è", "e'");
 
     if (!roast) {
       return Response.json(
-        { error: `Risposta AI vuota. Raw: ${JSON.stringify(aiData)}` },
+        { error: `Risposta AI vuota. Raw: ${JSON.stringify(payload)}` },
         { status: 500 },
       );
     }
