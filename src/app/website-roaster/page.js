@@ -13,6 +13,18 @@ const HEAT_LABELS = [
   "Nuclear ☢️",
 ];
 
+function normalizeWebsiteUrl(input) {
+  const trimmed = input.trim();
+
+  if (!trimmed) {
+    throw new Error("Incolla un URL prima di iniziare.");
+  }
+
+  return new URL(
+    /^https?:\/\//i.test(trimmed) ? trimmed : `https://${trimmed}`,
+  ).toString();
+}
+
 export default function WebsiteRoaster() {
   const [url, setUrl] = useState("");
   const [loading, setLoading] = useState(false);
@@ -29,7 +41,14 @@ export default function WebsiteRoaster() {
   }, [shareFeedback]);
 
   const handleRoast = async () => {
-    if (!url.trim()) return;
+    let normalizedUrl;
+
+    try {
+      normalizedUrl = normalizeWebsiteUrl(url);
+    } catch {
+      setError("L'URL inserito non sembra valido.");
+      return;
+    }
 
     setLoading(true);
     setResult(null);
@@ -41,7 +60,7 @@ export default function WebsiteRoaster() {
       const res = await fetch("/api/roast", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: url.trim() }),
+        body: JSON.stringify({ url: normalizedUrl }),
       });
 
       const data = await res.json();
@@ -82,7 +101,7 @@ export default function WebsiteRoaster() {
         <div className={styles.heroContent}>
           <p className={styles.kicker}>AI Tool by Kremisi</p>
           <h1 className={styles.pageTitle}>
-            Il tuo sito merita pietà?
+            Scopri perché il tuo sito non converte.
             <br />
             Fatti <span className={styles.accent}>roastare 🔥</span>
           </h1>
@@ -116,8 +135,8 @@ export default function WebsiteRoaster() {
               <div className={styles.metaItem}>
                 <dt className={styles.metaLabel}>Tono</dt>
                 <dd className={styles.metaValue}>
-                  Diretto, ironico, fastidiosamente preciso. Non e' una battuta
-                  — e' peggio.
+                  Diretto, ironico, fastidiosamente preciso. Non e&apos; una
+                  battuta — e&apos; peggio.
                 </dd>
               </div>
               <div className={styles.metaItem}>
@@ -167,8 +186,8 @@ export default function WebsiteRoaster() {
               </div>
 
               <p className={styles.helperText}>
-                Meglio un URL reale. Se il sito e' vuoto, il roast sara' triste
-                quanto lui.
+                Meglio un URL reale. Se il sito e&apos; vuoto, il roast sara&apos;
+                triste quanto lui.
               </p>
 
               {loading && (
@@ -178,7 +197,7 @@ export default function WebsiteRoaster() {
                     <p className={styles.statusTitle}>Analisi in corso</p>
                     <p className={styles.statusText}>
                       Stiamo leggendo il sito e preparando un verdetto senza
-                      anestesia. Il dolore e' imminente.
+                      anestesia. Il dolore e&apos; imminente.
                     </p>
                   </div>
                 </div>
@@ -262,8 +281,9 @@ export default function WebsiteRoaster() {
 
           <div className={styles.ctaRight}>
             <p className={styles.ctaText}>
-              Trasforma un sito che nessuno capisce in uno che converte davvero.
-              Kremisi ti aiuta con design, sviluppo e struttura — senza pietà.
+              Scopri cosa funziona davvero nel tuo sito e cosa frenа i tuoi
+              risultati. Kremisi ti dà un feedback diretto su design, sviluppo e
+              struttura.
             </p>
 
             <ul className={styles.ctaBenefits}>

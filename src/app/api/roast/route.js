@@ -1,4 +1,4 @@
-const DEFAULT_ANTHROPIC_MODEL = "claude-haiku-4-5-20251001";
+const DEFAULT_ANTHROPIC_MODEL = "claude-3-5-haiku-latest";
 
 function extractErrorMessage(payload, fallbackMessage) {
   if (!payload) return fallbackMessage;
@@ -10,6 +10,23 @@ function extractErrorMessage(payload, fallbackMessage) {
   if (payload.raw) return payload.raw;
 
   return fallbackMessage;
+}
+
+function mapProviderErrorMessage(status, payload) {
+  const providerMessage = extractErrorMessage(
+    payload,
+    `Anthropic error ${status}`,
+  );
+
+  if (status === 400) {
+    return `Richiesta non valida verso Anthropic: ${providerMessage}. Controlla il model ID configurato in ANTHROPIC_MODEL.`;
+  }
+
+  if (status === 401 || status === 403) {
+    return `Autenticazione Anthropic fallita: ${providerMessage}. Controlla ANTHROPIC_API_KEY.`;
+  }
+
+  return `Errore provider AI: ${providerMessage}`;
 }
 
 async function parseJsonSafely(response) {
@@ -115,6 +132,7 @@ STRUTTURA LA RISPOSTA COSI' (senza usare markdown o titoli, testo scorrevole):
 
 Usa emoji con parsimonia (1-2 massimo). Scrivi in italiano. Sii specifico rispetto al contenuto reale del sito, non generico.
 Non usare mai il carattere "e' con accento": scrivi sempre "e'".
+La risposta non deve superare i 600 token.
 CONTENUTO DEL SITO:
 ${siteContent || "Nessun contenuto disponibile: il sito potrebbe essere vuoto o inaccessibile."}`;
 
@@ -125,18 +143,12 @@ ${siteContent || "Nessun contenuto disponibile: il sito potrebbe essere vuoto o 
     });
 
     if (!response.ok) {
-      const message = extractErrorMessage(
-        payload,
-        `Anthropic error ${response.status}`,
-      );
+      const message = mapProviderErrorMessage(response.status, payload);
 
       console.error("Anthropic status:", response.status);
       console.error("Anthropic error:", JSON.stringify(payload, null, 2));
 
-      return Response.json(
-        { error: `Errore provider AI: ${message}` },
-        { status: 500 },
-      );
+      return Response.json({ error: message }, { status: 500 });
     }
 
     console.log("Anthropic model used:", configuredModel);
