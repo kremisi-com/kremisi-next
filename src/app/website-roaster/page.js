@@ -333,7 +333,7 @@ export default function WebsiteRoaster() {
                     </div>
                   </section>
 
-                  <div className={styles.actionsRow}>
+                  {/* <div className={styles.actionsRow}>
                     <button
                       className={styles.secondaryButton}
                       onClick={handleShare}
@@ -343,7 +343,7 @@ export default function WebsiteRoaster() {
                     <span className={styles.shareFeedback} aria-live="polite">
                       {shareFeedback}
                     </span>
-                  </div>
+                  </div> */}
                 </div>
               )}
             </div>

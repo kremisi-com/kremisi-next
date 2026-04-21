@@ -700,7 +700,7 @@
 
 .ctaTitle {
   font-size: clamp(3.2rem, 5vw, 5rem);
-  max-width: 12ch;
+  max-width: 14ch;
   line-height: 1;
   letter-spacing: -0.06rem;
   margin: 16px 0 0;
