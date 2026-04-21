@@ -1,3 +1,7 @@
 .form h3 {
     text-transform: uppercase;
 }
+
+.turnstile {
+    margin-top: 10px;
+}

@@ -111,7 +111,8 @@
 }
 
 .momentumWrap,
-.competitiveWrap {
+.competitiveWrap,
+.revenueWrap {
   margin-top: 0;
 }
 
@@ -372,6 +373,10 @@
 .helperText {
   margin-top: 14px;
   opacity: 0.56;
+}
+
+.turnstileWrap {
+  margin-top: 18px;
 }
 
 .statusPanel,

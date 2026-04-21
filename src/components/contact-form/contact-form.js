@@ -7,6 +7,7 @@ import { useActionState, useEffect, useRef, useState } from "react";
 import GitButton from "../git-button/git-button";
 import toast from "react-hot-toast";
 import Script from "next/script";
+import Turnstile from "@/components/turnstile/turnstile";
 import {
   trackViewContactForm,
   trackContactFormStart,
@@ -25,11 +26,13 @@ export default function ContactForm({}) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [details, setDetails] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [formStartedAt] = useState(() => Date.now().toString());
 
   const serviceRef = useRef();
   const budgetRef = useRef();
   const deliveryRef = useRef();
+  const turnstileRef = useRef(null);
 
   useEffect(() => {
     trackViewContactForm();
@@ -55,10 +58,13 @@ export default function ContactForm({}) {
       setEmail("");
       setPhone("");
       setDetails("");
+      setTurnstileToken("");
+      turnstileRef.current?.reset?.();
     }
 
     if (state?.error && !state.success) {
       toast.error(state.error);
+      turnstileRef.current?.reset?.();
     }
 
     if (state?.message) {
@@ -69,6 +75,12 @@ export default function ContactForm({}) {
   return (
     <form className={styles.form} action={formAction}>
       <input type="hidden" name="formStartedAt" value={formStartedAt} />
+      <input
+        type="hidden"
+        name="cf-turnstile-response"
+        value={turnstileToken}
+        readOnly
+      />
       <input
         type="text"
         name="website"
@@ -214,7 +226,16 @@ export default function ContactForm({}) {
       </div>
       <div className="row">
         <div className="col">
-          <GitButton isSubmit={true} disabled={pending}>
+          <Turnstile
+            ref={turnstileRef}
+            className={styles.turnstile}
+            onTokenChange={setTurnstileToken}
+          />
+        </div>
+      </div>
+      <div className="row">
+        <div className="col">
+          <GitButton isSubmit={true} disabled={pending || !turnstileToken}>
             {pending ? "Sending..." : "Send"}
           </GitButton>
         </div>

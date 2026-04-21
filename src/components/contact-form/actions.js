@@ -1,5 +1,7 @@
 "use server";
 
+import { verifyTurnstileToken } from "@/lib/turnstile";
+
 export async function submitContact(prevState, formData) {
     const getVal = (key) => (formData.get(key) ?? "").toString().trim();
     const MIN_FORM_FILL_TIME_MS = 3000;
@@ -14,6 +16,7 @@ export async function submitContact(prevState, formData) {
     const phone = getVal("phone");
     const privacy = getVal("privacy") === "on";
     const website = getVal("website");
+    const turnstileToken = getVal("cf-turnstile-response");
     const formStartedAt = Number(getVal("formStartedAt"));
     const elapsedMs = Date.now() - formStartedAt;
     const isTooFast =
@@ -24,6 +27,15 @@ export async function submitContact(prevState, formData) {
 
     if (isSpam) {
         return { success: true, silentDrop: true };
+    }
+
+    const turnstileResult = await verifyTurnstileToken({ token: turnstileToken });
+
+    if (!turnstileResult.success) {
+        return {
+            success: false,
+            error: "Security check failed. Refresh the page and try again.",
+        };
     }
 
     if (!privacy) {

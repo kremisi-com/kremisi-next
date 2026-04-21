@@ -1,3 +1,5 @@
+import { verifyTurnstileToken } from "@/lib/turnstile";
+
 const DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
 const MAIL_ENDPOINT =
   process.env.KREMISI_MAIL_ENDPOINT?.trim() ||
@@ -527,10 +529,25 @@ ${siteContent || "No content available: the website may be empty or inaccessible
 
 export async function POST(request) {
   try {
-    const { url, language } = await request.json();
+    const { url, language, turnstileToken } = await request.json();
     const rawUrl = typeof url === "string" ? url.trim() : "";
     const outputLanguage = normalizeLanguage(language);
     const languageConfig = SUPPORTED_LANGUAGES[outputLanguage];
+    const forwardedFor = request.headers.get("x-forwarded-for") || "";
+    const clientIp = forwardedFor.split(",")[0]?.trim() || "";
+
+    const turnstileResult = await verifyTurnstileToken({
+      token: turnstileToken,
+      ip: clientIp,
+    });
+
+    if (!turnstileResult.success) {
+      return sendErrorResponse({
+        rawUrl,
+        error: "Security check failed. Refresh the page and try again.",
+        status: 400,
+      });
+    }
 
     let parsedUrl;
     try {

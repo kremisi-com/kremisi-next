@@ -1,11 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import GitButton from "@/components/git-button/git-button";
 import styles from "./page.module.css";
 import MarketMomentum from "@/components/market-momentum/market-momentum";
 import CompetitivePosition from "@/components/competitive-position/competitive-position";
+import RevenueOpportunity from "@/components/revenue-opportunity/revenue-opportunity";
+import Turnstile from "@/components/turnstile/turnstile";
 
 const HEAT_LABELS = [
   "Mild 🌡️",
@@ -50,6 +52,8 @@ export default function WebsiteRoaster() {
   const [review, setReview] = useState(null);
   const [error, setError] = useState(null);
   const [shareFeedback, setShareFeedback] = useState("");
+  const [turnstileToken, setTurnstileToken] = useState("");
+  const turnstileRef = useRef(null);
 
   useEffect(() => {
     if (!shareFeedback) return undefined;
@@ -68,6 +72,11 @@ export default function WebsiteRoaster() {
       return;
     }
 
+    if (!turnstileToken) {
+      setError("Complete the security check before starting the review.");
+      return;
+    }
+
     setLoading(true);
     setReview(null);
     setError(null);
@@ -77,7 +86,11 @@ export default function WebsiteRoaster() {
       const res = await fetch("/api/roast", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ url: normalizedUrl, language }),
+        body: JSON.stringify({
+          url: normalizedUrl,
+          language,
+          turnstileToken,
+        }),
       });
 
       const data = await res.json();
@@ -88,6 +101,8 @@ export default function WebsiteRoaster() {
     } catch (err) {
       setError(err.message);
     } finally {
+      setTurnstileToken("");
+      turnstileRef.current?.reset?.();
       setLoading(false);
     }
   };
@@ -166,6 +181,10 @@ export default function WebsiteRoaster() {
               data={review?.competitive_position}
               locked={!review}
             />
+            <RevenueOpportunity
+              className={styles.revenueWrap}
+              locked={!review}
+            />
           </div>
 
           <div className={styles.toolColumn}>
@@ -209,11 +228,17 @@ export default function WebsiteRoaster() {
                 <button
                   className={styles.roastButton}
                   onClick={handleRoast}
-                  disabled={loading || !url.trim()}
+                  disabled={loading || !url.trim() || !turnstileToken}
                 >
                   {loading ? "Analyzing..." : "Start Review"}
                 </button>
               </div>
+
+              <Turnstile
+                ref={turnstileRef}
+                className={styles.turnstileWrap}
+                onTokenChange={setTurnstileToken}
+              />
 
               {loading && (
                 <div className={styles.statusPanel} aria-live="polite">
