@@ -10,6 +10,17 @@ const CATEGORY_NAMES = [
   "Conversion Potential",
   "Performance & UX",
 ];
+const MARKET_MOMENTUM_PERIODS = 5;
+
+function getMarketMomentumLabels() {
+  const currentYear = new Date().getFullYear();
+
+  return Array.from({ length: MARKET_MOMENTUM_PERIODS }, (_, index) =>
+    String(currentYear - (MARKET_MOMENTUM_PERIODS - 1) + index),
+  );
+}
+
+const MARKET_MOMENTUM_LABELS = getMarketMomentumLabels();
 const PRIORITY_LEVELS = ["High", "Medium", "Low"];
 const SUPPORTED_LANGUAGES = {
   it: {
@@ -176,6 +187,51 @@ function validatePriorityActions(priorityActions) {
   });
 }
 
+function isFiniteNumber(value) {
+  return typeof value === "number" && Number.isFinite(value);
+}
+
+function validateMarketMomentum(marketMomentum) {
+  if (
+    !marketMomentum ||
+    typeof marketMomentum !== "object" ||
+    Array.isArray(marketMomentum)
+  ) {
+    return false;
+  }
+
+  const { label, delta_percent, period_labels, series, insight, method_note } =
+    marketMomentum;
+
+  if (
+    !isNonEmptyString(label) ||
+    !isFiniteNumber(delta_percent) ||
+    Math.abs(delta_percent) > 100 ||
+    !isNonEmptyString(insight) ||
+    !isNonEmptyString(method_note)
+  ) {
+    return false;
+  }
+
+  if (
+    !Array.isArray(period_labels) ||
+    period_labels.length !== MARKET_MOMENTUM_LABELS.length ||
+    period_labels.some((item, index) => item !== MARKET_MOMENTUM_LABELS[index])
+  ) {
+    return false;
+  }
+
+  if (
+    !Array.isArray(series) ||
+    series.length !== MARKET_MOMENTUM_LABELS.length ||
+    series.some((value) => !isFiniteNumber(value) || value < 25 || value > 100)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
 function validateReviewShape(review) {
   if (!review || typeof review !== "object" || Array.isArray(review)) {
     return false;
@@ -188,7 +244,8 @@ function validateReviewShape(review) {
     validateStringList(review.top_strengths) &&
     validateStringList(review.top_issues) &&
     validatePriorityActions(review.priority_actions) &&
-    isNonEmptyString(review.verdict)
+    isNonEmptyString(review.verdict) &&
+    validateMarketMomentum(review.market_momentum)
   );
 }
 
@@ -361,7 +418,15 @@ Use this exact structure and key names:
       "action": "What should be fixed third"
     }
   ],
-  "verdict": "Sharp final verdict in one sentence."
+  "verdict": "Sharp final verdict in one sentence.",
+  "market_momentum": {
+    "label": "Short descriptor for the chart.",
+    "delta_percent": 18,
+    "period_labels": ["${MARKET_MOMENTUM_LABELS[0]}", "${MARKET_MOMENTUM_LABELS[1]}", "${MARKET_MOMENTUM_LABELS[2]}", "${MARKET_MOMENTUM_LABELS[3]}", "${MARKET_MOMENTUM_LABELS[4]}"],
+    "series": [42, 47, 51, 58, 63],
+    "insight": "Short sentence explaining the market signal.",
+    "method_note": "Short disclosure that the chart is AI-estimated."
+  }
 }
 
 Hard requirements:
@@ -374,6 +439,15 @@ Hard requirements:
 - Keep each category comment to 1 sentence, max 28 words.
 - Keep each strength, issue, and action to a short single sentence or phrase.
 - Keep verdict to 1 sentence, max 20 words.
+- The market_momentum object is required.
+- market_momentum.period_labels must use exactly these 5 labels and in this order: ${MARKET_MOMENTUM_LABELS.join(", ")}.
+- market_momentum.series must contain exactly 5 numbers in the 25-100 range.
+- market_momentum must represent estimated category demand over the last 5 years inferred from the site's category, offer clarity, market maturity, and positioning.
+- Keep the series plausible and low-variance: no chaotic spikes, no dramatic collapses unless clearly justified by the site context.
+- Make the series shape and the insight logically consistent with each other.
+- delta_percent must be derived from the general change across the five-year window, rounded to a whole number.
+- label and method_note must clearly frame the chart as an estimate, not factual analytics.
+- Use "${hostname}" as a stable anchor and prefer internally consistent outputs over novelty.
 - Focus on strategic business value, not only technical quality.
 - Evaluate whether the site feels premium, whether the offer is clear, whether trust is established quickly, whether users would convert, and whether the UX feels smooth.
 - Tone: elegant, sharp, professional, honest, premium consultancy style.

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import GitButton from "@/components/git-button/git-button";
 import styles from "./page.module.css";
+import MarketMomentum from "@/components/market-momentum/market-momentum";
 
 const HEAT_LABELS = [
   "Mild 🌡️",
@@ -154,6 +155,11 @@ export default function WebsiteRoaster() {
                 </dd>
               </div>
             </dl>
+            <MarketMomentum
+              className={styles.momentumWrap}
+              data={review?.market_momentum}
+              locked={!review}
+            />
           </div>
 
           <div className={styles.toolColumn}>
@@ -332,18 +338,6 @@ export default function WebsiteRoaster() {
                       ))}
                     </div>
                   </section>
-
-                  {/* <div className={styles.actionsRow}>
-                    <button
-                      className={styles.secondaryButton}
-                      onClick={handleShare}
-                    >
-                      Copy summary
-                    </button>
-                    <span className={styles.shareFeedback} aria-live="polite">
-                      {shareFeedback}
-                    </span>
-                  </div> */}
                 </div>
               )}
             </div>

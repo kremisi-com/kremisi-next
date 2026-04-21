@@ -913,3 +913,14 @@
     padding: 22px;
   }
 }
+
+/* in page.module.css */
+.infoColumn .momentumWrap {
+  margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .infoColumn .momentumWrap {
+    display: none;
+  }
+}
