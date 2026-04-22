@@ -136,19 +136,32 @@ export default function WebsiteRoaster() {
   }, [loading]);
 
   useEffect(() => {
-    let interval;
-    if (funnelLoading) {
+    if (!funnelLoading) {
       setFunnelProgress(0);
-      interval = setInterval(() => {
-        setFunnelProgress((prev) => {
-          if (prev < 100) return prev + 1;
-          return prev;
-        });
-      }, 150); // 15000ms / 100 steps = 150ms per step
-    } else {
-      setFunnelProgress(0);
+      return;
     }
-    return () => clearInterval(interval);
+
+    const start = performance.now();
+    const durationMs = 15_000;
+    let frameId = null;
+
+    const tick = (now) => {
+      const elapsed = now - start;
+      const nextProgress = Math.min((elapsed / durationMs) * 100, 100);
+      setFunnelProgress(nextProgress);
+
+      if (nextProgress < 100) {
+        frameId = requestAnimationFrame(tick);
+      }
+    };
+
+    frameId = requestAnimationFrame(tick);
+
+    return () => {
+      if (frameId !== null) {
+        cancelAnimationFrame(frameId);
+      }
+    };
   }, [funnelLoading]);
 
   const handleRoast = async () => {
@@ -672,10 +685,9 @@ export default function WebsiteRoaster() {
                     >
                       {funnelLoading && (
                         <div className={styles.triggerProgressBacking}>
-                          <motion.div 
+                          <div
                             className={styles.triggerProgressBar}
                             style={{ width: `${funnelProgress}%` }}
-                            transition={{ duration: 0.15, ease: "linear" }}
                           />
                           <div className={styles.triggerScanner} />
                         </div>
@@ -721,7 +733,9 @@ export default function WebsiteRoaster() {
 
                           {funnelLoading && (
                             <div className={styles.triggerProgressBadge}>
-                              <span className={styles.progressCount}>{funnelProgress}</span>
+                              <span className={styles.progressCount}>
+                                {Math.round(funnelProgress)}
+                              </span>
                               <span className={styles.progressTotal}>/100</span>
                             </div>
                           )}

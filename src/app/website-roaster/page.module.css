@@ -839,7 +839,7 @@
     color-mix(in srgb, var(--primary) 10%, transparent) 0%, 
     color-mix(in srgb, var(--primary) 16%, transparent) 100%
   );
-  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: width;
 }
 
 .triggerScanner {
