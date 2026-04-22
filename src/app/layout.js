@@ -1,4 +1,3 @@
-import { Geist, Geist_Mono } from "next/font/google";
 import "./fonts.css";
 import "./globals.css";
 import Navbar from "@/components/navbar/navbar";
@@ -16,16 +15,6 @@ const BASE_URL = "https://kremisi.com";
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
 const WEBSITE_ID = `${BASE_URL}/#website`;
 const SERVICE_ID = `${BASE_URL}/#professional-service`;
-
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -119,7 +108,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable}`}>
+      <body>
         <CursorTrailCanvas />
         <ThemeProvider
           attribute="class"

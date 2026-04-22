@@ -20,7 +20,8 @@ const LOCALE_COPY = {
   en: {
     eyebrow: "Strategic Intelligence",
     title: "Market Momentum",
-    subtitle: "Industry vs brand positioning",
+    subtitleTemplate: "Industry trend ({sector}) vs brand momentum",
+    defaultSector: "General",
     industryTrend: "Industry Trend",
     brandMomentum: "Brand Momentum",
     badge: {
@@ -44,7 +45,8 @@ const LOCALE_COPY = {
   it: {
     eyebrow: "Intelligence Strategica",
     title: "Momentum di Mercato",
-    subtitle: "Trend di settore vs slancio del brand",
+    subtitleTemplate: "Trend di settore ({sector}) vs slancio del brand",
+    defaultSector: "Settore",
     industryTrend: "Trend di Settore",
     brandMomentum: "Slancio del Brand",
     badge: {
@@ -79,10 +81,18 @@ function normalizeSeries(series, fallback) {
     : fallback;
 }
 
+function normalizeSectorLabel(sector, fallbackSector) {
+  if (typeof sector !== "string") return fallbackSector;
+
+  const cleaned = sector.trim().replace(/[()]/g, "");
+  return cleaned || fallbackSector;
+}
+
 function normalizeMomentumData(data, copy) {
   if (!data || typeof data !== "object") {
     return {
       ...FALLBACK_DATA,
+      sector: copy.defaultSector,
       insight: copy.fallbackInsight,
       method_note: copy.fallbackMethod,
     };
@@ -94,6 +104,7 @@ function normalizeMomentumData(data, copy) {
       data.period_labels.length === DEFAULT_PERIOD_LABELS.length
         ? data.period_labels
         : FALLBACK_DATA.period_labels,
+    sector: normalizeSectorLabel(data.sector, copy.defaultSector),
     industry_trend: normalizeSeries(
       data.industry_trend,
       FALLBACK_DATA.industry_trend,
@@ -119,6 +130,10 @@ export default function MarketMomentum({
   const copy = LOCALE_COPY[locale] || LOCALE_COPY.it;
   const momentum = normalizeMomentumData(data, copy);
   const hasResult = !locked && Boolean(data && typeof data === "object");
+  const subtitleLabel = copy.subtitleTemplate.replace(
+    "{sector}",
+    momentum.sector,
+  );
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -268,7 +283,7 @@ export default function MarketMomentum({
       <div className={styles.titleRow}>
         <div className={styles.titleBlock}>
           <p className={styles.title}>{copy.title}</p>
-          <p className={styles.label}>{copy.subtitle}</p>
+          <p className={styles.label}>{subtitleLabel}</p>
         </div>
         {hasResult && (
           <span className={`${styles.badge} ${styles[badgeVariant]}`}>{badgeLabel}</span>

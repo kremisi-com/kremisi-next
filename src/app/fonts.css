@@ -171,81 +171,88 @@
     font-style: italic;
 }
 /* ============================
-   FK Grotesk Trial
+   fk-grotesk-neue
 ============================ */
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-Thin.otf") format("opentype");
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-Thin-BF6576818c2a14c.otf")
+        format("opentype");
     font-weight: 100;
     font-style: normal;
 }
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-ThinItalic.otf")
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-ThinItalic-BF6576818c5cbd8.otf")
         format("opentype");
     font-weight: 100;
     font-style: italic;
 }
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-Light.otf") format("opentype");
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-Light-BF6576818c0f3e8.otf")
+        format("opentype");
     font-weight: 300;
     font-style: normal;
 }
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-LightItalic.otf")
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-LightItalic-BF6576818c3183c.otf")
         format("opentype");
     font-weight: 300;
     font-style: italic;
 }
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-Regular.otf") format("opentype");
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-Regular-BF6576818c3af74.otf")
+        format("opentype");
     font-weight: 400;
     font-style: normal;
 }
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-Italic.otf") format("opentype");
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-Italic-BF6576818c041e2.otf")
+        format("opentype");
     font-weight: 400;
     font-style: italic;
 }
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-Medium.otf") format("opentype");
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-Medium-BF6576818c3a00a.otf")
+        format("opentype");
     font-weight: 500;
     font-style: normal;
 }
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-MediumItalic.otf")
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-MediumItalic-BF6576818c2aaf8.otf")
         format("opentype");
     font-weight: 500;
     font-style: italic;
 }
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-Bold.otf") format("opentype");
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-Bold-BF6576818bd3700.otf")
+        format("opentype");
     font-weight: 700;
     font-style: normal;
 }
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-BoldItalic.otf")
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-BoldItalic-BF6576818c39d11.otf")
         format("opentype");
     font-weight: 700;
     font-style: italic;
 }
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-Black.otf") format("opentype");
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-Black-BF6576818b4c472.otf")
+        format("opentype");
     font-weight: 900;
     font-style: normal;
 }
 @font-face {
-    font-family: "FK Grotesk Trial";
-    src: url("/fonts/FKGrotesk/FKGroteskTrial-BlackItalic.otf")
+    font-family: "fk-grotesk-neue";
+    src: url("/fk-grotesk-neue/FKGroteskNeueTrial-BlackItalic-BF6576818becb0d.otf")
         format("opentype");
     font-weight: 900;
     font-style: italic;

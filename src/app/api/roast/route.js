@@ -1204,6 +1204,7 @@ async function maybeTranslateBaseReviewToItalian(review, options = {}) {
     verdict: await translateToItalianSafe(review.verdict, cache),
     market_momentum: {
       ...review.market_momentum,
+      sector: await translateToItalianSafe(review.market_momentum.sector, cache),
       insight: await translateToItalianSafe(review.market_momentum.insight, cache),
       method_note: await translateToItalianSafe(
         review.market_momentum.method_note,
@@ -1438,6 +1439,7 @@ function normalizeMarketMomentum(marketMomentum) {
 
   return {
     period_labels: [...MARKET_MOMENTUM_LABELS],
+    sector: toNonEmptyString(source.sector, "General"),
     industry_trend: normalizeNumericSeries(
       source.industry_trend,
       [44, 48, 53, 57, 61],
@@ -1750,6 +1752,7 @@ function validateMarketMomentum(marketMomentum) {
   const {
     badge,
     period_labels,
+    sector,
     industry_trend,
     brand_momentum,
     insight,
@@ -1758,6 +1761,7 @@ function validateMarketMomentum(marketMomentum) {
 
   if (
     !MARKET_MOMENTUM_BADGES.includes(badge) ||
+    !isNonEmptyString(sector) ||
     !isNonEmptyString(insight) ||
     !isNonEmptyString(method_note)
   ) {
@@ -2158,6 +2162,7 @@ Use this exact structure and key names:
   "verdict": "Sharp final verdict in one sentence.",
   "market_momentum": {
     "period_labels": [${MARKET_MOMENTUM_LABELS.map((label) => `"${label}"`).join(", ")}],
+    "sector": "Precise sector label (for example: Fashion Ecommerce)",
     "industry_trend": [42, 47, 51, 58, 63],
     "brand_momentum": [48, 46, 43, 40, 38],
     "badge": "Diverging Trends",
@@ -2192,6 +2197,7 @@ Hard requirements:
 - Keep each strength, issue, and action concise.
 - Keep verdict to 1 sentence (max 20 words).
 - market_momentum.period_labels must be exactly: ${MARKET_MOMENTUM_LABELS.join(", ")}.
+- market_momentum.sector must be a concise sector label in the requested language (1-3 words, no parentheses).
 - market_momentum.badge must be one of: ${MARKET_MOMENTUM_BADGES.join(", ")}.
 - market_momentum.insight must explicitly answer why the trend relationship exists (cause -> effect), not just describe what the lines do.
 - market_momentum.insight must cite at least one concrete page cue (for example: unclear value proposition, weak differentiation claim, hidden pricing, sparse proof near CTA, unclear offer scope).
