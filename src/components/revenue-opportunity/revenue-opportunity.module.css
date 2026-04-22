@@ -125,6 +125,10 @@
   transform: scale(1.02);
 }
 
+.chartShellLocked {
+  max-height: clamp(220px, 32vh, 300px);
+}
+
 .simulationGrid {
   position: relative;
   z-index: 1;
@@ -548,6 +552,10 @@
 
   .chartShell {
     padding: 18px;
+  }
+
+  .chartShellLocked {
+    max-height: 230px;
   }
 
   .funnelPanel,

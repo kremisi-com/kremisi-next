@@ -58,6 +58,60 @@ const REVIEW_RETRY_MAX_TOKENS = 3800;
 const DEBUG_REVENUE_MAX_TOKENS = 1200;
 const DEBUG_REVENUE_RETRY_MAX_TOKENS = 1600;
 const PRIORITY_LEVELS = ["High", "Medium", "Low"];
+const DEPTH_ONE_MAX_LINKS = 8;
+const CRAWL_FETCH_CONCURRENCY = 3;
+const HOMEPAGE_HTML_TIMEOUT_MS = 8000;
+const JINA_FETCH_TIMEOUT_MS = 12000;
+const HOMEPAGE_HTML_MAX_CHARS = 250000;
+const PAGE_STAGE_ONE_MAX_CHARS = 900;
+const GLOBAL_SITE_CONTENT_MAX_CHARS = 4200;
+const TRACKING_QUERY_PARAMS = new Set([
+  "utm_source",
+  "utm_medium",
+  "utm_campaign",
+  "utm_term",
+  "utm_content",
+  "gclid",
+  "fbclid",
+  "mc_cid",
+  "mc_eid",
+  "msclkid",
+  "_hsenc",
+  "_hsmi",
+  "ref",
+  "source",
+]);
+const SKIPPED_PATH_PREFIXES = [
+  "/wp-json",
+  "/feed",
+  "/xmlrpc",
+  "/sitemap",
+  "/cdn-cgi",
+  "/.well-known",
+  "/api",
+  "/cart",
+  "/checkout",
+  "/account",
+  "/login",
+  "/register",
+  "/wp-admin",
+];
+const BOILERPLATE_LINE_PATTERNS = [
+  /\bcookie(s)?\b/i,
+  /\bprivacy\b/i,
+  /\bterms\b/i,
+  /\ball rights reserved\b/i,
+  /\bnewsletter\b/i,
+  /\bsubscribe\b/i,
+  /\baccept\b.{0,30}\bcookie/i,
+];
+const HIGH_SIGNAL_LINE_PATTERNS = [
+  /^#{1,6}\s+/,
+  /\b(offer|solution|service|product|pricing|price|plan|cta|call to action)\b/i,
+  /\b(book|start|get|request|contact|call|demo|quote)\b/i,
+  /\b(trust|testimonial|review|case study|portfolio|client|guarantee)\b/i,
+  /\b(conversion|funnel|lead|checkout|form)\b/i,
+];
 const SUPPORTED_LANGUAGES = {
   it: {
     label: "Italian",
@@ -144,6 +198,291 @@ function normalizeLanguage(input) {
   return SUPPORTED_LANGUAGES[normalized] ? normalized : "it";
 }
 
+function toCanonicalUrl(inputUrl) {
+  const url = new URL(inputUrl.toString());
+  url.hash = "";
+
+  for (const key of [...url.searchParams.keys()]) {
+    if (TRACKING_QUERY_PARAMS.has(key.toLowerCase())) {
+      url.searchParams.delete(key);
+    }
+  }
+
+  url.searchParams.sort();
+
+  if (url.pathname.length > 1) {
+    url.pathname = url.pathname.replace(/\/+$/, "");
+  }
+
+  return url;
+}
+
+function isStaticAssetPath(pathname = "") {
+  return /\.(?:avif|bmp|css|docx?|gif|ico|jpe?g|js|json|mp3|mp4|pdf|png|svg|txt|webm|webp|woff2?|xml|zip)$/i.test(
+    pathname,
+  );
+}
+
+function shouldSkipPathname(pathname = "") {
+  const lowerPathname = pathname.toLowerCase();
+  return SKIPPED_PATH_PREFIXES.some((prefix) => lowerPathname.startsWith(prefix));
+}
+
+function getDepthOnePriorityScore(url) {
+  const target = `${url.pathname} ${url.search}`.toLowerCase();
+  let score = 0;
+
+  if (/\bpricing|price|plan\b/.test(target)) score += 120;
+  if (/\bservice|solution|product\b/.test(target)) score += 110;
+  if (/\babout|company|team\b/.test(target)) score += 95;
+  if (/\bcontact|book|quote|demo\b/.test(target)) score += 90;
+  if (/\bcase|portfolio|work|project|client\b/.test(target)) score += 85;
+  if (/\btestimon|review|result|success\b/.test(target)) score += 70;
+
+  const depth = url.pathname.split("/").filter(Boolean).length;
+  score -= depth * 3;
+
+  return score;
+}
+
+function extractHrefCandidates(html = "") {
+  const hrefs = [];
+  const hrefRegex = /\bhref\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>"']+))/gi;
+  let match;
+
+  while ((match = hrefRegex.exec(html))) {
+    const href = (match[1] || match[2] || match[3] || "").trim();
+    if (href) hrefs.push(href);
+  }
+
+  return hrefs;
+}
+
+async function fetchHomepageHtml(url) {
+  const response = await fetch(url, {
+    headers: {
+      Accept: "text/html,application/xhtml+xml",
+    },
+    signal: AbortSignal.timeout(HOMEPAGE_HTML_TIMEOUT_MS),
+  });
+
+  if (!response.ok) {
+    throw new Error(`Homepage HTML fetch failed with status ${response.status}`);
+  }
+
+  const html = await response.text();
+  return html.slice(0, HOMEPAGE_HTML_MAX_CHARS);
+}
+
+function discoverDepthOneLinks({ homepageUrl, homepageHtml }) {
+  const homepageCanonical = toCanonicalUrl(homepageUrl).href;
+  const hrefCandidates = extractHrefCandidates(homepageHtml);
+  const seen = new Set();
+  const candidates = [];
+
+  hrefCandidates.forEach((href, index) => {
+    if (!href || href.startsWith("#")) return;
+    if (/^(mailto|tel|javascript):/i.test(href)) return;
+
+    let resolved;
+    try {
+      resolved = new URL(href, homepageUrl);
+    } catch {
+      return;
+    }
+
+    if (!["http:", "https:"].includes(resolved.protocol)) return;
+    if (resolved.hostname !== homepageUrl.hostname) return;
+    if (isStaticAssetPath(resolved.pathname)) return;
+    if (shouldSkipPathname(resolved.pathname)) return;
+
+    const canonical = toCanonicalUrl(resolved);
+    const canonicalHref = canonical.href;
+
+    if (canonicalHref === homepageCanonical || seen.has(canonicalHref)) return;
+    seen.add(canonicalHref);
+
+    candidates.push({
+      url: canonicalHref,
+      score: getDepthOnePriorityScore(canonical),
+      order: index,
+    });
+  });
+
+  candidates.sort((a, b) => {
+    if (b.score !== a.score) return b.score - a.score;
+    return a.order - b.order;
+  });
+
+  const selected = candidates.slice(0, DEPTH_ONE_MAX_LINKS).map((item) => item.url);
+  return {
+    selected,
+    discoveredCount: candidates.length,
+    droppedCount: Math.max(candidates.length - selected.length, 0),
+  };
+}
+
+async function mapWithConcurrency(items, limit, mapper) {
+  const safeLimit = Math.max(1, Math.min(limit, items.length || 1));
+  const output = new Array(items.length);
+  let cursor = 0;
+
+  async function worker() {
+    while (true) {
+      const current = cursor;
+      cursor += 1;
+      if (current >= items.length) return;
+      output[current] = await mapper(items[current], current);
+    }
+  }
+
+  await Promise.all(Array.from({ length: safeLimit }, () => worker()));
+  return output;
+}
+
+async function fetchJinaPageText(url) {
+  const jinaUrl = `https://r.jina.ai/${url}`;
+
+  try {
+    const response = await fetch(jinaUrl, {
+      headers: {
+        Accept: "text/plain",
+        "X-Return-Format": "text",
+        "X-Remove-Selector": "header,footer,nav,script,style",
+      },
+      signal: AbortSignal.timeout(JINA_FETCH_TIMEOUT_MS),
+    });
+
+    if (!response.ok) {
+      return {
+        url,
+        ok: false,
+        status: response.status,
+        error: `status ${response.status}`,
+        text: "",
+      };
+    }
+
+    const text = await response.text();
+    return { url, ok: true, status: response.status, text };
+  } catch (error) {
+    return {
+      url,
+      ok: false,
+      status: 0,
+      error: error instanceof Error ? error.message : "fetch error",
+      text: "",
+    };
+  }
+}
+
+function toLineKey(line = "") {
+  return line.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+}
+
+function compressPageTextStageOne(text = "", maxChars = PAGE_STAGE_ONE_MAX_CHARS) {
+  if (!text) return "";
+
+  const normalized = text.replace(/\r/g, "").replace(/\t/g, " ");
+  const lines = normalized
+    .split("\n")
+    .map((line) => line.replace(/\s+/g, " ").trim())
+    .filter(Boolean)
+    .filter((line) => line.length >= 8 && line.length <= 260)
+    .filter((line) => !BOILERPLATE_LINE_PATTERNS.some((pattern) => pattern.test(line)));
+
+  const seen = new Set();
+  const highSignal = [];
+  const fallback = [];
+
+  for (const line of lines) {
+    const key = toLineKey(line);
+    if (!key || key.length < 10 || seen.has(key)) continue;
+    seen.add(key);
+
+    if (HIGH_SIGNAL_LINE_PATTERNS.some((pattern) => pattern.test(line))) {
+      highSignal.push(line);
+    } else {
+      fallback.push(line);
+    }
+  }
+
+  const selected = [];
+  let total = 0;
+  const ordered = [...highSignal, ...fallback];
+
+  for (const line of ordered) {
+    const additional = selected.length === 0 ? line.length : line.length + 1;
+    if (total + additional > maxChars) break;
+    selected.push(line);
+    total += additional;
+  }
+
+  if (selected.length > 0) return selected.join("\n");
+
+  return normalized.replace(/\s+/g, " ").trim().slice(0, maxChars);
+}
+
+function buildCompressedSiteContent(pageResults) {
+  const successfulPages = pageResults.filter((item) => item.ok && item.text.trim());
+
+  if (successfulPages.length === 0) {
+    return {
+      siteContent: "",
+      rawChars: 0,
+      stageOneChars: 0,
+      successfulPages: 0,
+      failedPages: pageResults.length,
+      failedDetails: pageResults
+        .filter((item) => !item.ok)
+        .map((item) => `${item.url} (${item.error || "unknown"})`),
+    };
+  }
+
+  const stageOne = successfulPages.map((item) => ({
+    url: item.url,
+    rawChars: item.text.length,
+    snippet: compressPageTextStageOne(item.text),
+  }));
+
+  const globalSeen = new Set();
+  const blocks = [];
+  let totalChars = 0;
+
+  for (const [index, page] of stageOne.entries()) {
+    const snippetLines = page.snippet
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .filter((line) => {
+        const key = toLineKey(line);
+        if (!key || globalSeen.has(key)) return false;
+        globalSeen.add(key);
+        return true;
+      });
+
+    if (snippetLines.length === 0) continue;
+
+    const block = [`[PAGE ${index + 1}] ${page.url}`, ...snippetLines].join("\n");
+    const additional = blocks.length === 0 ? block.length : block.length + 2;
+
+    if (totalChars + additional > GLOBAL_SITE_CONTENT_MAX_CHARS) break;
+    blocks.push(block);
+    totalChars += additional;
+  }
+
+  return {
+    siteContent: blocks.join("\n\n"),
+    rawChars: stageOne.reduce((sum, item) => sum + item.rawChars, 0),
+    stageOneChars: stageOne.reduce((sum, item) => sum + item.snippet.length, 0),
+    successfulPages: successfulPages.length,
+    failedPages: pageResults.length - successfulPages.length,
+    failedDetails: pageResults
+      .filter((item) => !item.ok)
+      .map((item) => `${item.url} (${item.error || "unknown"})`),
+  };
+}
+
 async function requestReview({ apiKey, model, prompt, maxTokens = 2200 }) {
   const response = await fetch("https://api.anthropic.com/v1/messages", {
     method: "POST",
@@ -156,6 +495,7 @@ async function requestReview({ apiKey, model, prompt, maxTokens = 2200 }) {
       model,
       messages: [{ role: "user", content: prompt }],
       max_tokens: maxTokens,
+      temperature: 0,
     }),
   });
 
@@ -786,21 +1126,42 @@ Hard requirements:
 - market_momentum.industry_trend must contain exactly 5 numbers in the 25-100 range.
 - market_momentum.brand_momentum must contain exactly 5 numbers in the 25-100 range.
 - market_momentum.badge must be exactly one of: ${MARKET_MOMENTUM_BADGES.join(", ")}.
-- Never merge category growth with company strength.
-- market_momentum.industry_trend must estimate how the overall sector/category is evolving based on category demand inferred from the site niche, sector expansion or contraction likelihood, digital adoption, macro relevance, AI disruption tailwinds or headwinds, and search/commercial intent durability.
-- market_momentum.brand_momentum must estimate how the analyzed company appears positioned relative to that market today based on site modernity, perceived trust, conversion readiness, clarity of offer, social proof strength, premium positioning, competitiveness versus modern alternatives, brand age perception, emotional resonance, and UX quality.
-- Keep both series plausible and low-variance: no chaotic spikes, no dramatic collapses unless clearly justified by the visible site context.
-- The two series may diverge and must stay strategically honest.
-- If the market looks resilient but the brand feels dated, let industry_trend rise while brand_momentum flattens or declines.
-- If the brand feels strong in a mature category, let brand_momentum hold stronger than industry_trend.
-- If both are weak, show both weak. If both are strong, show both strong.
-- If uncertainty is high, prefer stable or moderate outcomes over exaggerated moves.
-- market_momentum.insight must describe the relationship between the sector trajectory and the brand's visible positioning.
-- market_momentum.insight must explain why the two lines diverge, hold, or improve by referencing visible signals from the site.
-- If the site shows credible strengths or upside, explicitly mention them instead of making the read uniformly negative.
-- Avoid generic formulas like "market up, brand down" without a concrete reason.
-- Keep market_momentum.insight to 2 sentences max, max 38 words total.
-- market_momentum.method_note must clearly frame both lines as estimates, not factual analytics.
+- Never merge category trend with brand execution.
+- This section is an external strategic read, not business analytics.
+
+- Define market_momentum.industry_trend as Trend di Settore:
+  estimate how attractive/active/growing the visible category appears from public signals and broad category perception.
+
+- Define market_momentum.brand_momentum as Slancio del Brand:
+  estimate how strong the brand’s external momentum appears from visible website execution and positioning.
+  This is NOT revenue, user growth, retention, or internal company performance.
+
+- Use only visible/public signals such as:
+  clarity of value proposition, UI/UX modernity, brand consistency, differentiation, messaging confidence,
+  trust cues, visible maturity of offer, perceived innovation, category competitiveness, premium perception,
+  and content quality.
+
+- Never infer or claim: revenue, MRR, churn, retention, funding health, internal growth, user numbers,
+  or certain customer satisfaction outcomes.
+
+- Curve rules for 2024-2028:
+  keep both series realistic and strategically plausible.
+  Prefer gradual rise, plateau, mild decline, delayed acceleration, converging lines, or modest divergence.
+  Avoid dramatic jumps/collapses unless clearly justified by strong visible evidence.
+  Both lines may rise together or fall together.
+
+- If evidence is mixed or weak, keep both curves moderate and avoid confident extremes.
+- If the brand shows visible strengths, acknowledge them; avoid uniformly negative framing.
+- Neutral, evidence-led output is better than invented confidence.
+
+- market_momentum.insight must explain the relationship between sector trajectory and brand momentum
+  using only visible signals from the site.
+- market_momentum.insight must be max 70 words, premium consultant tone, balanced and intelligent.
+- Use probabilistic language where appropriate (e.g., "suggests", "appears", "may indicate", "seems", "likely").
+- No roasting, arrogance, or fake certainty.
+
+- market_momentum.method_note must clearly state both lines are AI-estimated from visible website signals
+  and broad market perception, not internal company data.
 - The competitive_position object is required.
 - competitive_position.axes must use exactly these 6 labels and in this order: ${COMPETITIVE_POSITION_AXES.join(", ")}.
 - competitive_position.your_site, competitive_position.top_competitor, and competitive_position.category_average must each contain exactly 6 numbers in the 0-100 range.
@@ -993,25 +1354,61 @@ export async function POST(request) {
       });
     }
 
-    const jinaUrl = `https://r.jina.ai/${parsedUrl.href}`;
-    let siteContent = "";
+    const homepageCanonical = toCanonicalUrl(parsedUrl).href;
+    let depthOneLinks = [];
+    let discoveredDepthOneCount = 0;
+    let droppedDepthOneCount = 0;
 
     try {
-      const jinaRes = await fetch(jinaUrl, {
-        headers: {
-          Accept: "text/plain",
-          "X-Return-Format": "text",
-          "X-Remove-Selector": "header,footer,nav,script,style",
-        },
-        signal: AbortSignal.timeout(15000),
+      const homepageHtml = await fetchHomepageHtml(homepageCanonical);
+      const discovery = discoverDepthOneLinks({
+        homepageUrl: toCanonicalUrl(parsedUrl),
+        homepageHtml,
       });
+      depthOneLinks = discovery.selected;
+      discoveredDepthOneCount = discovery.discoveredCount;
+      droppedDepthOneCount = discovery.droppedCount;
+    } catch (discoveryError) {
+      console.warn(
+        "Website roaster depth-1 discovery fallback to homepage only:",
+        discoveryError instanceof Error ? discoveryError.message : discoveryError,
+      );
+    }
 
-      if (jinaRes.ok) {
-        const fullText = await jinaRes.text();
-        siteContent = fullText.slice(0, 3000);
-      }
-    } catch {
+    const targetUrls = [homepageCanonical, ...depthOneLinks];
+    const pageResults = await mapWithConcurrency(
+      targetUrls,
+      CRAWL_FETCH_CONCURRENCY,
+      (targetUrl) => fetchJinaPageText(targetUrl),
+    );
+    const compression = buildCompressedSiteContent(pageResults);
+
+    let siteContent = compression.siteContent;
+    if (!siteContent) {
       siteContent = "Unable to read the website content.";
+    }
+
+    console.log(
+      "Website roaster crawl summary:",
+      JSON.stringify({
+        homepage: homepageCanonical,
+        candidate_depth1: discoveredDepthOneCount,
+        selected_depth1: depthOneLinks.length,
+        dropped_depth1: droppedDepthOneCount,
+        total_targets: targetUrls.length,
+        successful_pages: compression.successfulPages,
+        failed_pages: compression.failedPages,
+        raw_chars: compression.rawChars,
+        stage1_chars: compression.stageOneChars,
+        final_chars: siteContent.length,
+      }),
+    );
+
+    if (compression.failedDetails.length > 0) {
+      console.warn(
+        "Website roaster page fetch failures:",
+        compression.failedDetails.join(" | "),
+      );
     }
 
     const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY;

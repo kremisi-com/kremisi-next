@@ -3,5 +3,48 @@
 }
 
 .turnstile {
-    margin-top: 10px;
+    margin-top: 5px;
+}
+
+.submitWrapper {
+    display: flex;
+    align-items: center;
+    gap: 60px; /* Increased to avoid overlap with GitButton arrows */
+    margin-top: 20px;
+}
+
+.replyNote {
+    font-size: 1.4rem;
+    opacity: 0.5;
+    color: var(--foreground);
+    font-weight: 300;
+    line-height: 1;
+}
+
+.privacyConsent {
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem !important;
+    opacity: 0.8;
+}
+
+.privacyConsent input {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    width: auto !important;
+    cursor: pointer;
+}
+
+@media (max-width: 768px) {
+    .submitWrapper {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+        margin-top: 15px;
+    }
+    
+    .replyNote {
+        font-size: 1.2rem;
+        padding-left: 10px;
+    }
 }
