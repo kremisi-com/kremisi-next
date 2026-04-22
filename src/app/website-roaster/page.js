@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import GitButton from "@/components/git-button/git-button";
 import styles from "./page.module.css";
@@ -9,13 +9,8 @@ import CompetitivePosition from "@/components/competitive-position/competitive-p
 import RevenueOpportunity from "@/components/revenue-opportunity/revenue-opportunity";
 import Turnstile from "@/components/turnstile/turnstile";
 
-const HEAT_LABELS = [
-  "Mild 🌡️",
-  "Sharp 🔪",
-  "Savage 🔥",
-  "Brutal 💀",
-  "Nuclear ☢️",
-];
+const FUNNEL_CACHE_PREFIX = "roaster:funnel:";
+const FUNNEL_CACHE_TTL_MS = 24 * 60 * 60 * 1000;
 
 function normalizeWebsiteUrl(input) {
   const trimmed = input.trim();
@@ -29,40 +24,77 @@ function normalizeWebsiteUrl(input) {
   ).toString();
 }
 
-function buildShareText(review) {
-  if (!review) return "";
-  if (!review.summary || !review.overall_score) return "";
+function buildFunnelCacheKey(normalizedUrl, language) {
+  return `${FUNNEL_CACHE_PREFIX}${encodeURIComponent(normalizedUrl)}:${language}`;
+}
 
-  const topAction = review.priority_actions?.[0]?.action || "";
+function readFunnelCache(normalizedUrl, language) {
+  if (typeof window === "undefined") return null;
 
-  return [
-    `I analyzed my website with Kremisi's AI review.`,
-    `Overall score: ${review.overall_score}/5`,
-    `Summary: ${review.summary}`,
-    topAction ? `Top priority: ${topAction}` : "",
-    "Try it here: https://kremisi.com/website-roaster",
-  ]
-    .filter(Boolean)
-    .join("\n\n");
+  const storageKey = buildFunnelCacheKey(normalizedUrl, language);
+  const raw = window.localStorage.getItem(storageKey);
+
+  if (!raw) return null;
+
+  try {
+    const parsed = JSON.parse(raw);
+    const artifact = typeof parsed?.artifact === "string" ? parsed.artifact : "";
+    const savedAt = Number(parsed?.savedAt || 0);
+    const explicitExpiresAt = Date.parse(parsed?.expiresAt || "");
+    const expiresAtMs = Number.isFinite(explicitExpiresAt)
+      ? explicitExpiresAt
+      : savedAt + FUNNEL_CACHE_TTL_MS;
+
+    if (!artifact || !Number.isFinite(expiresAtMs) || Date.now() > expiresAtMs) {
+      window.localStorage.removeItem(storageKey);
+      return null;
+    }
+
+    return {
+      artifact,
+      expiresAt: new Date(expiresAtMs).toISOString(),
+    };
+  } catch {
+    window.localStorage.removeItem(storageKey);
+    return null;
+  }
+}
+
+function writeFunnelCache({ normalizedUrl, language, artifact, expiresAt }) {
+  if (typeof window === "undefined") return;
+
+  if (!artifact) return;
+
+  const storageKey = buildFunnelCacheKey(normalizedUrl, language);
+  const payload = {
+    artifact,
+    expiresAt,
+    savedAt: Date.now(),
+  };
+
+  window.localStorage.setItem(storageKey, JSON.stringify(payload));
+}
+
+function clearFunnelCache(normalizedUrl, language) {
+  if (typeof window === "undefined") return;
+  window.localStorage.removeItem(buildFunnelCacheKey(normalizedUrl, language));
 }
 
 export default function WebsiteRoaster() {
   const [url, setUrl] = useState("");
   const [language, setLanguage] = useState("it");
   const [loading, setLoading] = useState(false);
-  const [review, setReview] = useState(null);
-  const [debugMode, setDebugMode] = useState("");
+  const [funnelLoading, setFunnelLoading] = useState(false);
+  const [reviewBase, setReviewBase] = useState(null);
+  const [revenueData, setRevenueData] = useState(null);
+  const [reviewContext, setReviewContext] = useState(null);
+  const [funnelArtifact, setFunnelArtifact] = useState("");
+  const [funnelExpiresAt, setFunnelExpiresAt] = useState("");
+  const [funnelMessage, setFunnelMessage] = useState("");
+  const [notice, setNotice] = useState("");
   const [error, setError] = useState(null);
-  const [shareFeedback, setShareFeedback] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
   const turnstileRef = useRef(null);
-
-  useEffect(() => {
-    if (!shareFeedback) return undefined;
-
-    const timeoutId = window.setTimeout(() => setShareFeedback(""), 2500);
-    return () => window.clearTimeout(timeoutId);
-  }, [shareFeedback]);
 
   const handleRoast = async () => {
     let normalizedUrl;
@@ -80,16 +112,21 @@ export default function WebsiteRoaster() {
     }
 
     setLoading(true);
-    setReview(null);
-    setDebugMode("");
+    setReviewBase(null);
+    setRevenueData(null);
+    setReviewContext(null);
+    setFunnelArtifact("");
+    setFunnelExpiresAt("");
+    setFunnelMessage("");
+    setNotice("");
     setError(null);
-    setShareFeedback("");
 
     try {
       const res = await fetch("/api/roast", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          mode: "base",
           url: normalizedUrl,
           language,
           turnstileToken,
@@ -99,9 +136,34 @@ export default function WebsiteRoaster() {
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.error || "Unknown error");
+      setNotice(typeof data.notice === "string" ? data.notice : "");
 
-      setReview(data.review);
-      setDebugMode(data.debug_mode || "");
+      setReviewBase(data.review || null);
+      setReviewContext({
+        normalizedUrl,
+        language,
+      });
+
+      const artifact =
+        typeof data.funnel_artifact === "string" ? data.funnel_artifact : "";
+      const expiresAt =
+        typeof data.funnel_expires_at === "string" ? data.funnel_expires_at : "";
+
+      setFunnelArtifact(artifact);
+      setFunnelExpiresAt(expiresAt);
+
+      if (artifact) {
+        writeFunnelCache({
+          normalizedUrl,
+          language,
+          artifact,
+          expiresAt,
+        });
+      } else {
+        setFunnelMessage(
+          "Funnel cache is not available for this review. Run Start Review again.",
+        );
+      }
     } catch (err) {
       setError(err.message);
     } finally {
@@ -111,24 +173,73 @@ export default function WebsiteRoaster() {
     }
   };
 
-  const handleShare = async () => {
-    if (!review) return;
+  const handleRunFunnel = async () => {
+    if (!reviewContext) {
+      setFunnelMessage("Run Start Review first to prepare the cached page snapshot.");
+      return;
+    }
+
+    setFunnelLoading(true);
+    setError(null);
+    setFunnelMessage("");
 
     try {
-      if (!navigator.clipboard) {
-        throw new Error("Clipboard API unavailable");
+      let artifactToUse = funnelArtifact;
+      const expiresAtMs = Date.parse(funnelExpiresAt || "");
+      const artifactExpired = Number.isFinite(expiresAtMs) && Date.now() > expiresAtMs;
+
+      if (!artifactToUse || artifactExpired) {
+        const cached = readFunnelCache(
+          reviewContext.normalizedUrl,
+          reviewContext.language,
+        );
+
+        if (cached) {
+          artifactToUse = cached.artifact;
+          setFunnelArtifact(cached.artifact);
+          setFunnelExpiresAt(cached.expiresAt);
+        }
       }
 
-      await navigator.clipboard.writeText(buildShareText(review));
-      setShareFeedback("Review summary copied.");
-    } catch {
-      setShareFeedback("Copy failed. Try again in a second.");
+      if (!artifactToUse) {
+        clearFunnelCache(reviewContext.normalizedUrl, reviewContext.language);
+        setFunnelMessage(
+          "Cached snapshot missing or expired. Run Start Review again.",
+        );
+        return;
+      }
+
+      const res = await fetch("/api/roast", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          mode: "funnel",
+          funnel_artifact: artifactToUse,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Unknown error");
+
+      setRevenueData(data.revenue_opportunity || null);
+      setNotice(typeof data.notice === "string" ? data.notice : "");
+      setFunnelMessage("");
+    } catch (err) {
+      if ((err.message || "").toLowerCase().includes("expired")) {
+        clearFunnelCache(reviewContext.normalizedUrl, reviewContext.language);
+        setFunnelArtifact("");
+        setFunnelExpiresAt("");
+        setFunnelMessage("Cached snapshot expired. Run Start Review again.");
+      } else {
+        setError(err.message);
+      }
+    } finally {
+      setFunnelLoading(false);
     }
   };
 
-  const isRevenueDebug = debugMode === "revenue";
-  const showFullReview = Boolean(review) && !isRevenueDebug;
-  const uiLocale = review ? language : "en";
+  const showFullReview = Boolean(reviewBase);
+  const uiLocale = reviewContext?.language || (reviewBase ? language : "en");
 
   return (
     <main className={`page-content-simple ${styles.page}`}>
@@ -150,67 +261,61 @@ export default function WebsiteRoaster() {
       <section className={styles.section}>
         <div className={styles.contentGrid}>
           <div className={styles.infoColumn}>
-            {!isRevenueDebug && (
-              <>
-                <div className={styles.infoBlock}>
-                  <p className={styles.eyebrow}>How it works</p>
-                  <p className={styles.leadText}>
-                    The AI analyzes your website structure, messaging and user
-                    experience, then returns a concise strategic review.
-                  </p>
-                </div>
+            <div className={styles.infoBlock}>
+              <p className={styles.eyebrow}>How it works</p>
+              <p className={styles.leadText}>
+                The AI analyzes your website structure, messaging and user
+                experience, then returns a concise strategic review.
+              </p>
+            </div>
 
-                <dl className={styles.metaList}>
-                  <div className={styles.metaItem}>
-                    <dt className={styles.metaLabel}>Input</dt>
-                    <dd className={styles.metaValue}>
-                      Use a public URL for the most accurate review.
-                    </dd>
-                  </div>
-                  <div className={styles.metaItem}>
-                    <dt className={styles.metaLabel}>Tone</dt>
-                    <dd className={styles.metaValue}>
-                      Direct, ironic, annoyingly precise. It is not a joke. It
-                      is worse.
-                    </dd>
-                  </div>
-                  <div className={styles.metaItem}>
-                    <dt className={styles.metaLabel}>Note</dt>
-                    <dd className={styles.metaValue}>
-                      The roast is free. Fixing the site is the part we do
-                      together.
-                    </dd>
-                  </div>
-                </dl>
-                <MarketMomentum
-                  className={styles.momentumWrap}
-                  data={review?.market_momentum}
-                  locked={!review}
-                  locale={uiLocale}
-                />
-                {review && (
-                  <CompetitivePosition
-                    className={styles.competitiveWrap}
-                    data={review?.competitive_position}
-                    locked={!review}
-                  />
-                )}
-              </>
-            )}
-            <RevenueOpportunity
-              className={styles.revenueWrap}
-              data={review?.revenue_opportunity}
-              locked={!review}
+            <dl className={styles.metaList}>
+              <div className={styles.metaItem}>
+                <dt className={styles.metaLabel}>Input</dt>
+                <dd className={styles.metaValue}>
+                  Use a public URL for the most accurate review.
+                </dd>
+              </div>
+              <div className={styles.metaItem}>
+                <dt className={styles.metaLabel}>Tone</dt>
+                <dd className={styles.metaValue}>
+                  Direct, ironic, annoyingly precise. It is not a joke. It is
+                  worse.
+                </dd>
+              </div>
+              <div className={styles.metaItem}>
+                <dt className={styles.metaLabel}>Note</dt>
+                <dd className={styles.metaValue}>
+                  The roast is free. Fixing the site is the part we do together.
+                </dd>
+              </div>
+            </dl>
+            <MarketMomentum
+              className={styles.momentumWrap}
+              data={reviewBase?.market_momentum}
+              locked={!reviewBase}
               locale={uiLocale}
             />
+            {!reviewBase && (
+              <RevenueOpportunity
+                className={styles.revenuePreviewWrap}
+                locked
+                locale={uiLocale}
+              />
+            )}
+            {reviewBase && (
+              <CompetitivePosition
+                className={styles.competitiveWrap}
+                data={reviewBase?.competitive_position}
+                locked={!reviewBase}
+              />
+            )}
           </div>
 
           <div className={styles.toolColumn}>
             <div className={styles.panel}>
               <div className={styles.panelHeader}>
-                <span className={styles.panelTag}>
-                  Paste the website to roast
-                </span>
+                <span className={styles.panelTag}>Paste the website to roast</span>
                 <span className={styles.panelCaption}>Brutal honesty mode</span>
               </div>
 
@@ -225,7 +330,7 @@ export default function WebsiteRoaster() {
                   onKeyDown={(e) =>
                     e.key === "Enter" && !loading && handleRoast()
                   }
-                  disabled={loading}
+                  disabled={loading || funnelLoading}
                 />
                 <label
                   className={styles.languageField}
@@ -237,7 +342,7 @@ export default function WebsiteRoaster() {
                     className={styles.languageSelect}
                     value={language}
                     onChange={(e) => setLanguage(e.target.value)}
-                    disabled={loading}
+                    disabled={loading || funnelLoading}
                   >
                     <option value="it">IT</option>
                     <option value="en">EN</option>
@@ -246,7 +351,7 @@ export default function WebsiteRoaster() {
                 <button
                   className={styles.roastButton}
                   onClick={handleRoast}
-                  disabled={loading || !url.trim() || !turnstileToken}
+                  disabled={loading || funnelLoading || !url.trim() || !turnstileToken}
                 >
                   {loading ? "Analyzing..." : "Start Review"}
                 </button>
@@ -273,187 +378,228 @@ export default function WebsiteRoaster() {
                 </div>
               )}
 
+              {funnelLoading && (
+                <div className={styles.statusPanel} aria-live="polite">
+                  <div className={styles.spinner} />
+                  <div>
+                    <p className={styles.statusTitle}>Funnel simulation in progress</p>
+                    <p className={styles.statusText}>
+                      We are reusing the cached page snapshot and generating the
+                      AI Funnel Simulation.
+                    </p>
+                  </div>
+                </div>
+              )}
+
               {error && (
                 <div className={styles.errorPanel} aria-live="polite">
                   <p className={styles.statusTitle}>Something is off</p>
                   <p className={styles.statusText}>{error}</p>
                 </div>
               )}
+
+              {!error && notice && !loading && !funnelLoading && (
+                <div className={styles.statusPanel} aria-live="polite">
+                  <div>
+                    <p className={styles.statusTitle}>Provider update</p>
+                    <p className={styles.statusText}>{notice}</p>
+                  </div>
+                </div>
+              )}
             </div>
 
-            {!isRevenueDebug && (
-              <div className={`${styles.panel} ${styles.resultPanel}`}>
-                <div className={styles.resultHeader}>
-                  <div>
-                    <p className={styles.eyebrow}>Review</p>
-                    <h2 className={styles.resultTitle}>Strategic scorecard</h2>
-                  </div>
-
-                  {showFullReview && (
-                    <div className={styles.scoreWrap}>
-                      <span className={styles.scoreLabel}>Overall Score</span>
-                      <div className={styles.scoreValueRow}>
-                        <span className={styles.scoreValue}>
-                          {review.overall_score}
-                        </span>
-                        <span className={styles.scoreScale}>/5</span>
-                      </div>
-                      <div className={styles.scoreMeter} aria-hidden="true">
-                        {Array.from({ length: 5 }, (_, index) => (
-                          <span
-                            key={index}
-                            className={`${styles.scoreDot} ${
-                              index < review.overall_score
-                                ? styles.scoreDotActive
-                                : ""
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  )}
+            <div className={`${styles.panel} ${styles.resultPanel}`}>
+              <div className={styles.resultHeader}>
+                <div>
+                  <p className={styles.eyebrow}>Review</p>
+                  <h2 className={styles.resultTitle}>Strategic scorecard</h2>
                 </div>
 
-                {!review && !loading && !error && (
-                  <p className={styles.emptyState}>
-                    The strategic review will appear here, structured and ready
-                    for action.
-                  </p>
-                )}
-
-                {showFullReview && !loading && (
-                  <div className={styles.reviewBody}>
-                    <section className={styles.summaryBlock}>
-                      <p className={styles.summaryText}>{review.summary}</p>
-                      <p className={styles.verdictText}>{review.verdict}</p>
-                    </section>
-
-                    <section className={styles.categoriesGrid}>
-                      {review.categories.map((category) => (
-                        <article
-                          key={category.name}
-                          className={styles.categoryCard}
-                        >
-                          <div className={styles.categoryHeader}>
-                            <h3 className={styles.categoryTitle}>
-                              {category.name}
-                            </h3>
-                            <span className={styles.categoryScore}>
-                              {category.score}/5
-                            </span>
-                          </div>
-                          <p className={styles.categoryComment}>
-                            {category.comment}
-                          </p>
-                        </article>
+                {showFullReview && (
+                  <div className={styles.scoreWrap}>
+                    <span className={styles.scoreLabel}>Overall Score</span>
+                    <div className={styles.scoreValueRow}>
+                      <span className={styles.scoreValue}>{reviewBase.overall_score}</span>
+                      <span className={styles.scoreScale}>/5</span>
+                    </div>
+                    <div className={styles.scoreMeter} aria-hidden="true">
+                      {Array.from({ length: 5 }, (_, index) => (
+                        <span
+                          key={index}
+                          className={`${styles.scoreDot} ${
+                            index < reviewBase.overall_score
+                              ? styles.scoreDotActive
+                              : ""
+                          }`}
+                        />
                       ))}
-                    </section>
-
-                    <section className={styles.listGrid}>
-                      <div className={styles.listCard}>
-                        <p className={styles.listLabel}>Top Strengths</p>
-                        <ul className={styles.reviewList}>
-                          {review.top_strengths.map((item) => (
-                            <li key={item}>{item}</li>
-                          ))}
-                        </ul>
-                      </div>
-
-                      <div className={styles.listCard}>
-                        <p className={styles.listLabel}>Top Issues</p>
-                        <ul className={styles.reviewList}>
-                          {review.top_issues.map((item) => (
-                            <li key={item}>{item}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </section>
-
-                    <section className={styles.actionsCard}>
-                      <div className={styles.actionsIntro}>
-                        <p className={styles.listLabel}>Priority Actions</p>
-                        <span className={styles.actionsCaption}>
-                          What to fix first
-                        </span>
-                      </div>
-                      <div className={styles.priorityList}>
-                        {review.priority_actions.map((item) => (
-                          <div
-                            key={item.priority}
-                            className={styles.priorityItem}
-                          >
-                            <span className={styles.priorityBadge}>
-                              {item.priority}
-                            </span>
-                            <p className={styles.priorityText}>{item.action}</p>
-                          </div>
-                        ))}
-                      </div>
-                    </section>
+                    </div>
                   </div>
                 )}
               </div>
-            )}
 
-            {!review && !isRevenueDebug && (
+              {!reviewBase && !loading && !funnelLoading && !error && (
+                <p className={styles.emptyState}>
+                  The strategic review will appear here, structured and ready
+                  for action.
+                </p>
+              )}
+
+              {showFullReview && !loading && (
+                <div className={styles.reviewBody}>
+                  <section className={styles.summaryBlock}>
+                    <p className={styles.summaryText}>{reviewBase.summary}</p>
+                    <p className={styles.verdictText}>{reviewBase.verdict}</p>
+                  </section>
+
+                  <section className={styles.categoriesGrid}>
+                    {reviewBase.categories.map((category) => (
+                      <article key={category.name} className={styles.categoryCard}>
+                        <div className={styles.categoryHeader}>
+                          <h3 className={styles.categoryTitle}>{category.name}</h3>
+                          <span className={styles.categoryScore}>
+                            {category.score}/5
+                          </span>
+                        </div>
+                        <p className={styles.categoryComment}>{category.comment}</p>
+                      </article>
+                    ))}
+                  </section>
+
+                  <section className={styles.listGrid}>
+                    <div className={styles.listCard}>
+                      <p className={styles.listLabel}>Top Strengths</p>
+                      <ul className={styles.reviewList}>
+                        {reviewBase.top_strengths.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <div className={styles.listCard}>
+                      <p className={styles.listLabel}>Top Issues</p>
+                      <ul className={styles.reviewList}>
+                        {reviewBase.top_issues.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  </section>
+
+                  <section className={styles.actionsCard}>
+                    <div className={styles.actionsIntro}>
+                      <p className={styles.listLabel}>Priority Actions</p>
+                      <span className={styles.actionsCaption}>What to fix first</span>
+                    </div>
+                    <div className={styles.priorityList}>
+                      {reviewBase.priority_actions.map((item) => (
+                        <div key={item.priority} className={styles.priorityItem}>
+                          <span className={styles.priorityBadge}>{item.priority}</span>
+                          <p className={styles.priorityText}>{item.action}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {!revenueData && (
+                    <button
+                      className={`${styles.actionsCard} ${styles.funnelSimulationTrigger}`}
+                      onClick={handleRunFunnel}
+                      disabled={funnelLoading}
+                    >
+                      <div className={styles.actionsIntro}>
+                        <p className={styles.listLabel}>AI Funnel Simulation</p>
+                        <span className={styles.actionsCaption}>
+                          {uiLocale === "it" ? "Analisi comportamentale" : "Behavioral analysis"}
+                        </span>
+                      </div>
+                      <div className={styles.triggerContent}>
+                        <p className={styles.triggerText}>
+                          {uiLocale === "it" 
+                            ? "I tuoi utenti abbandonano il sito? Clicca per scoprire esattamente dove e perché." 
+                            : "Are users leaving your site? Click to discover exactly where and why."}
+                        </p>
+                        <span className={styles.triggerAction}>
+                          {funnelLoading 
+                            ? (uiLocale === "it" ? "Simulazione in corso..." : "Simulation in progress...") 
+                            : (uiLocale === "it" ? "Avvia Simulazione →" : "Start Simulation →")}
+                        </span>
+                      </div>
+                      {funnelMessage && (
+                        <p className={styles.statusText}>{funnelMessage}</p>
+                      )}
+                    </button>
+                  )}
+                </div>
+              )}
+            </div>
+
+            {!reviewBase && (
               <CompetitivePosition
                 className={styles.competitiveWrap}
-                data={review?.competitive_position}
-                locked={!review}
+                data={reviewBase?.competitive_position}
+                locked={!reviewBase}
               />
             )}
           </div>
         </div>
+
+        {revenueData && (
+          <RevenueOpportunity
+            className={styles.revenueWrap}
+            data={revenueData}
+            locked={false}
+            locale={uiLocale}
+          />
+        )}
       </section>
 
-      {!isRevenueDebug && (
-        <section className={styles.ctaSection}>
-          <div className={styles.ctaCard}>
-            <div className={styles.ctaBlob} aria-hidden="true" />
+      <section className={styles.ctaSection}>
+        <div className={styles.ctaCard}>
+          <div className={styles.ctaBlob} aria-hidden="true" />
 
-            <div className={styles.ctaLeft}>
-              <p className={styles.eyebrow}>Clear enough?</p>
-              <h2 className={styles.ctaTitle}>
-                If the review is right
-                <br />
-                <span className={styles.accent}>it can be improved.</span>
-              </h2>
-            </div>
-
-            <div className={styles.ctaRight}>
-              <p className={styles.ctaText}>
-                Find out what actually works on your website and what is slowing
-                down your results. Kremisi gives you direct feedback on design,
-                development, and structure.
-              </p>
-
-              <ul className={styles.ctaBenefits}>
-                <li>
-                  <span className={styles.benefitIcon}>🎨</span>
-                  <span>Design that respects the audience</span>
-                </li>
-                <li>
-                  <span className={styles.benefitIcon}>⚙️</span>
-                  <span>Solid development, zero shortcuts</span>
-                </li>
-                <li>
-                  <span className={styles.benefitIcon}>🎯</span>
-                  <span>Structure built to convert</span>
-                </li>
-              </ul>
-
-              <Link href="/contacts" className={styles.ctaGitButtonLink}>
-                <GitButton
-                  text="Let's talk"
-                  revertColor
-                  className={styles.ctaGitButton}
-                  leftShift={10}
-                />
-              </Link>
-            </div>
+          <div className={styles.ctaLeft}>
+            <p className={styles.eyebrow}>Clear enough?</p>
+            <h2 className={styles.ctaTitle}>
+              If the review is right
+              <br />
+              <span className={styles.accent}>it can be improved.</span>
+            </h2>
           </div>
-        </section>
-      )}
+
+          <div className={styles.ctaRight}>
+            <p className={styles.ctaText}>
+              Find out what actually works on your website and what is slowing
+              down your results. Kremisi gives you direct feedback on design,
+              development, and structure.
+            </p>
+
+            <ul className={styles.ctaBenefits}>
+              <li>
+                <span className={styles.benefitIcon}>🎨</span>
+                <span>Design that respects the audience</span>
+              </li>
+              <li>
+                <span className={styles.benefitIcon}>⚙️</span>
+                <span>Solid development, zero shortcuts</span>
+              </li>
+              <li>
+                <span className={styles.benefitIcon}>🎯</span>
+                <span>Structure built to convert</span>
+              </li>
+            </ul>
+
+            <Link href="/contacts" className={styles.ctaGitButtonLink}>
+              <GitButton
+                text="Let's talk"
+                revertColor
+                className={styles.ctaGitButton}
+                leftShift={10}
+              />
+            </Link>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

@@ -3,12 +3,16 @@
 import { useEffect, useRef } from "react";
 import styles from "./market-momentum.module.css";
 
-const DEFAULT_PERIOD_LABELS = ["2022", "2023", "2024", "2025", "2026"];
+function buildMarketMomentumLabels(currentYear = new Date().getUTCFullYear()) {
+  return Array.from({ length: 5 }, (_, index) => String(currentYear - 2 + index));
+}
+
+const DEFAULT_PERIOD_LABELS = buildMarketMomentumLabels();
 const BADGE_VARIANTS = {
   "Strong Growth": "strongGrowth",
   "Moderate Growth": "moderateGrowth",
   Stable: "stable",
-  "Mixed Signals": "mixedSignals",
+  "Diverging Trends": "mixedSignals",
   "Under Pressure": "underPressure",
   Declining: "declining",
 };
@@ -23,7 +27,7 @@ const LOCALE_COPY = {
       "Strong Growth": "Strong Growth",
       "Moderate Growth": "Moderate Growth",
       Stable: "Stable",
-      "Mixed Signals": "Mixed Signals",
+      "Diverging Trends": "Diverging Trends",
       "Under Pressure": "Under Pressure",
       Declining: "Declining",
     },
@@ -47,7 +51,7 @@ const LOCALE_COPY = {
       "Strong Growth": "Forte Crescita",
       "Moderate Growth": "Crescita Moderata",
       Stable: "Stabile",
-      "Mixed Signals": "Segnali Misti",
+      "Diverging Trends": "Trend Divergenti",
       "Under Pressure": "Sotto Pressione",
       Declining: "In Calo",
     },
@@ -66,7 +70,7 @@ const FALLBACK_DATA = {
   period_labels: DEFAULT_PERIOD_LABELS,
   industry_trend: [44, 48, 53, 57, 61],
   brand_momentum: [52, 50, 47, 43, 40],
-  badge: "Mixed Signals",
+  badge: "Diverging Trends",
 };
 
 function normalizeSeries(series, fallback) {
@@ -114,6 +118,7 @@ export default function MarketMomentum({
   const chartWrapRef = useRef(null);
   const copy = LOCALE_COPY[locale] || LOCALE_COPY.it;
   const momentum = normalizeMomentumData(data, copy);
+  const hasResult = !locked && Boolean(data && typeof data === "object");
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -265,7 +270,9 @@ export default function MarketMomentum({
           <p className={styles.title}>{copy.title}</p>
           <p className={styles.label}>{copy.subtitle}</p>
         </div>
-        <span className={`${styles.badge} ${styles[badgeVariant]}`}>{badgeLabel}</span>
+        {hasResult && (
+          <span className={`${styles.badge} ${styles[badgeVariant]}`}>{badgeLabel}</span>
+        )}
       </div>
       <div className={styles.legend} aria-hidden="true">
         <span className={styles.legendItem}>

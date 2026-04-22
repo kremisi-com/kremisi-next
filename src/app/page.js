@@ -251,14 +251,16 @@ export default function Home() {
         </div>
       </div>
 
-      <div className={styles.sliderWrapper}>
-        <MainSlider
-          projectsData={sortedProjects}
-          slideByScroll={true}
-          onDiscoverMoreClick={handleDiscoverMoreClick}
-          reopenSignal={sliderReopenSignal}
-        />
-      </div>
+      {!isOverviewVisible && (
+        <div className={styles.sliderWrapper}>
+          <MainSlider
+            projectsData={sortedProjects}
+            slideByScroll={true}
+            onDiscoverMoreClick={handleDiscoverMoreClick}
+            reopenSignal={sliderReopenSignal}
+          />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { useState } from "react";
+import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
 import styles from "./competitive-position.module.css";
 
 const COMPETITIVE_AXES = [
@@ -17,6 +18,20 @@ const FALLBACK_DATA = {
   your_site: [76, 71, 84, 55, 42, 61],
   top_competitor: [83, 80, 76, 79, 74, 77],
   category_average: [62, 59, 64, 58, 56, 54],
+  axis_explanations: {
+    Trust:
+      "The opening area does not show named proof, quantified outcomes, or authority badges near the first action.",
+    UX:
+      "Primary actions are not consistently repeated through sections, so users must scan to find the next step.",
+    SEO:
+      "Headings and service copy include explicit intent terms, helping search engines map the page topic.",
+    Offer:
+      "Service intent is visible, but scope and deliverables are not summarized early in one compact block.",
+    Branding:
+      "Visual style is coherent, yet the unique promise is not repeated consistently across headline, proof, and CTA copy.",
+    Conversion:
+      "CTA priority softens after the hero and the contact path lacks urgency cues near the action point.",
+  },
   insight: "Strong technical base. Weak differentiation.",
   method_note:
     "Synthetic preview. Final chart is generated from the submitted site.",
@@ -43,6 +58,12 @@ function normalizeCompetitiveData(data) {
     data.axes.every((axis, index) => axis === COMPETITIVE_AXES[index])
       ? data.axes
       : FALLBACK_DATA.axes;
+  const axisExplanations =
+    data.axis_explanations &&
+    typeof data.axis_explanations === "object" &&
+    !Array.isArray(data.axis_explanations)
+      ? data.axis_explanations
+      : {};
 
   return {
     axes,
@@ -55,6 +76,15 @@ function normalizeCompetitiveData(data) {
     category_average: isValidSeries(data.category_average)
       ? data.category_average
       : FALLBACK_DATA.category_average,
+    axis_explanations: Object.fromEntries(
+      COMPETITIVE_AXES.map((axis) => [
+        axis,
+        typeof axisExplanations[axis] === "string" &&
+        axisExplanations[axis].trim()
+          ? axisExplanations[axis].trim()
+          : FALLBACK_DATA.axis_explanations[axis],
+      ]),
+    ),
     insight:
       data.insight === FALLBACK_DATA.insight
         ? data.insight
@@ -86,6 +116,7 @@ export default function CompetitivePosition({
   locked = false,
 }) {
   const reduceMotion = useReducedMotion();
+  const [activeAxisIndex, setActiveAxisIndex] = useState(null);
   const position = normalizeCompetitiveData(data);
   const centerX = 210;
   const centerY = 176;
@@ -125,6 +156,25 @@ export default function CompetitivePosition({
       dotClassName: styles.siteDot,
     },
   ];
+  const activeAxis = Number.isInteger(activeAxisIndex)
+    ? axes[activeAxisIndex]
+    : null;
+  const activeValue = Number.isInteger(activeAxisIndex)
+    ? position.your_site[activeAxisIndex]
+    : null;
+  const activePoint =
+    activeAxis && typeof activeValue === "number"
+      ? {
+          x: centerX + Math.cos(activeAxis.angle) * ((activeValue / 100) * radius),
+          y: centerY + Math.sin(activeAxis.angle) * ((activeValue / 100) * radius),
+        }
+      : null;
+  const tooltipLeftPercent = activePoint
+    ? Math.min(92, Math.max(8, (activePoint.x / 420) * 100))
+    : 50;
+  const tooltipTopPercent = activePoint
+    ? Math.min(90, Math.max(12, (activePoint.y / 360) * 100))
+    : 50;
 
   return (
     <motion.div
@@ -143,12 +193,15 @@ export default function CompetitivePosition({
       </div>
 
       <div className={`${styles.chartShell} ${locked ? styles.chartShellLocked : ""}`}>
-        <div className={styles.chartGlow} aria-hidden="true" />
+        <div className={styles.chartGlowContainer} aria-hidden="true">
+          <div className={styles.chartGlow} />
+        </div>
         <svg
           viewBox="0 0 420 360"
           className={styles.chart}
           aria-label="Competitive position radar chart comparing your site, top competitor, and category average"
           role="img"
+          onClick={() => setActiveAxisIndex(null)}
         >
           <defs>
             <linearGradient id="competitive-site-fill" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -223,22 +276,112 @@ export default function CompetitivePosition({
               const x = centerX + Math.cos(angle) * scaledRadius;
               const y = centerY + Math.sin(angle) * scaledRadius;
 
-              return <circle key={`${set.id}-${position.axes[index]}`} className={set.dotClassName} cx={x} cy={y} r="3.2" />;
+              if (set.id === "your-site") {
+                return (
+                  <g
+                    key={`${set.id}-${position.axes[index]}`}
+                    onMouseEnter={() => setActiveAxisIndex(index)}
+                    onMouseLeave={() => setActiveAxisIndex(null)}
+                    onFocus={() => setActiveAxisIndex(index)}
+                    onBlur={() => setActiveAxisIndex(null)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActiveAxisIndex(index === activeAxisIndex ? null : index);
+                    }}
+                  >
+                    <motion.circle
+                      className={styles.dotHitArea}
+                      cx={x}
+                      cy={y}
+                      r="22"
+                      tabIndex={0}
+                      aria-label={`${position.axes[index]}: ${value}/100`}
+                    />
+                    <motion.circle
+                      className={`${set.dotClassName} ${
+                        activeAxisIndex === index ? styles.siteDotActive : ""
+                      }`}
+                      cx={x}
+                      cy={y}
+                      r={activeAxisIndex === index ? 7 : 5.5}
+                      animate={activeAxisIndex === index ? { scale: 1.2 } : { scale: 1 }}
+                      transition={{ duration: 0.2 }}
+                    />
+                    {/* Add a pulse effect to show it's clickable */}
+                    <motion.circle
+                      className={styles.dotPulse}
+                      cx={x}
+                      cy={y}
+                      r="5.5"
+                      initial={{ scale: 1, opacity: 0.5 }}
+                      animate={{ scale: [1, 1.8], opacity: [0.5, 0] }}
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        ease: "easeOut",
+                        delay: index * 0.3,
+                      }}
+                    />
+                  </g>
+                );
+              }
+
+              return (
+                <circle
+                  key={`${set.id}-${position.axes[index]}`}
+                  className={set.dotClassName}
+                  cx={x}
+                  cy={y}
+                  r="4"
+                />
+              );
             }),
           )}
 
-          {axes.map((axis) => (
+          {axes.map((axis, index) => (
             <text
               key={`label-${axis.label}`}
-              className={styles.axisLabel}
+              className={`${styles.axisLabel} ${
+                activeAxisIndex === index ? styles.axisLabelActive : ""
+              } ${activeAxisIndex !== null && activeAxisIndex !== index ? styles.axisLabelDimmed : ""}`}
               x={axis.labelX}
               y={axis.labelY}
               textAnchor={axis.labelX < centerX - 8 ? "end" : axis.labelX > centerX + 8 ? "start" : "middle"}
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveAxisIndex(index === activeAxisIndex ? null : index);
+              }}
+              onMouseEnter={() => setActiveAxisIndex(index)}
+              onMouseLeave={() => setActiveAxisIndex(null)}
+              style={{ cursor: "pointer" }}
             >
               {axis.label}
             </text>
           ))}
         </svg>
+
+        <AnimatePresence>
+          {!locked && activeAxis && activePoint && (
+            <motion.div
+              initial={{ opacity: 0, y: 10, scale: 0.95, x: "-50%" }}
+              animate={{ opacity: 1, y: 0, scale: 1, x: "-50%" }}
+              exit={{ opacity: 0, scale: 0.95, x: "-50%" }}
+              transition={{ duration: 0.15, ease: "easeOut" }}
+              className={styles.axisTooltip}
+              style={{
+                left: `${tooltipLeftPercent}%`,
+                top: `${tooltipTopPercent}%`,
+              }}
+            >
+              <p className={styles.axisTooltipTitle}>
+                {activeAxis.label} · {activeValue}/100
+              </p>
+              <p className={styles.axisTooltipText}>
+                {position.axis_explanations[activeAxis.label]}
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
 
         <div className={styles.legend} aria-hidden="true">
           <span className={styles.legendItem}>

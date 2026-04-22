@@ -31,6 +31,8 @@ const FALLBACK_FUNNEL_STEPS = [
 
 const EXPLANATION_MICROCOPY =
   "Estimated from CTA placement, visual hierarchy, trust signals, readability and friction patterns.";
+const STEP_INSIGHT_EXPLANATION_MAX_CHARS = 190;
+const STEP_INSIGHT_QUICK_FIX_MAX_CHARS = 90;
 
 const LOCALE_COPY = {
   en: {
@@ -242,6 +244,19 @@ function isNonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+function truncateWithEllipsis(value, maxChars) {
+  if (!isNonEmptyString(value)) return "";
+
+  const normalized = value.replace(/\s+/g, " ").trim();
+
+  if (normalized.length <= maxChars) {
+    return normalized;
+  }
+
+  const cutLength = Math.max(maxChars - 3, 1);
+  return `${normalized.slice(0, cutLength).trimEnd()}...`;
+}
+
 function normalizeStepInsight(stepInsight, fallbackInsight) {
   const source =
     stepInsight && typeof stepInsight === "object" && !Array.isArray(stepInsight)
@@ -256,13 +271,19 @@ function normalizeStepInsight(stepInsight, fallbackInsight) {
     : [];
 
   return {
-    explanation: isNonEmptyString(source.explanation)
-      ? source.explanation
-      : fallbackInsight.explanation,
+    explanation: truncateWithEllipsis(
+      isNonEmptyString(source.explanation)
+        ? source.explanation
+        : fallbackInsight.explanation,
+      STEP_INSIGHT_EXPLANATION_MAX_CHARS,
+    ),
     quickFixes: fallbackQuickFixes.map((fallbackItem, index) =>
-      isNonEmptyString(sourceQuickFixes[index])
-        ? sourceQuickFixes[index]
-        : fallbackItem,
+      truncateWithEllipsis(
+        isNonEmptyString(sourceQuickFixes[index])
+          ? sourceQuickFixes[index]
+          : fallbackItem,
+        STEP_INSIGHT_QUICK_FIX_MAX_CHARS,
+      ),
     ),
   };
 }
@@ -394,6 +415,7 @@ export default function RevenueOpportunity({
   const revenue = normalizeRevenueData(data, copy);
   const showLockedOverlay = locked || !revenue.hasRealData;
   const [activeStepId, setActiveStepId] = useState(FUNNEL_STEP_IDS[0]);
+  const [hasUserHoveredFunnel, setHasUserHoveredFunnel] = useState(false);
 
   useEffect(() => {
     const stepStillAvailable = revenue.funnel_steps.some(
@@ -404,6 +426,32 @@ export default function RevenueOpportunity({
       setActiveStepId(revenue.funnel_steps[0]?.id || FUNNEL_STEP_IDS[0]);
     }
   }, [activeStepId, revenue.funnel_steps]);
+
+  useEffect(() => {
+    if (
+      hasUserHoveredFunnel ||
+      showLockedOverlay ||
+      revenue.funnel_steps.length < 2
+    ) {
+      return undefined;
+    }
+
+    const intervalId = setInterval(() => {
+      setActiveStepId((currentStepId) => {
+        const currentIndex = revenue.funnel_steps.findIndex(
+          (step) => step.id === currentStepId,
+        );
+        const nextIndex =
+          currentIndex === -1
+            ? 0
+            : (currentIndex + 1) % revenue.funnel_steps.length;
+
+        return revenue.funnel_steps[nextIndex].id;
+      });
+    }, 1500);
+
+    return () => clearInterval(intervalId);
+  }, [hasUserHoveredFunnel, revenue.funnel_steps, showLockedOverlay]);
 
   const activeStep = useMemo(
     () =>
@@ -460,7 +508,10 @@ export default function RevenueOpportunity({
                     type="button"
                     className={`${styles.funnelRow} ${isActive ? styles.funnelRowActive : ""}`}
                     aria-pressed={isActive}
-                    onMouseEnter={() => setActiveStepId(step.id)}
+                    onMouseEnter={() => {
+                      setActiveStepId(step.id);
+                      setHasUserHoveredFunnel(true);
+                    }}
                     onFocus={() => setActiveStepId(step.id)}
                     onClick={() => setActiveStepId(step.id)}
                     initial={reduceMotion ? false : { opacity: 0, y: 12 }}
@@ -529,35 +580,37 @@ export default function RevenueOpportunity({
                 );
               })}
             </div>
+          </section>
 
-            <div className={styles.stepInsightPanel}>
-              <p className={styles.sectionHeading}>{copy.stepInsightHeading}</p>
+          <div className={styles.stepInsightPanel}>
+            <p className={styles.sectionHeading}>{copy.stepInsightHeading}</p>
 
-              <AnimatePresence mode="wait">
-                <motion.article
-                  key={activeStep.id}
-                  className={styles.stepInsightCard}
-                  initial={reduceMotion ? false : { opacity: 0, y: 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
-                  transition={{
-                    duration: reduceMotion ? 0 : 0.24,
-                    ease: [0.22, 1, 0.36, 1],
-                  }}
-                >
-                  <div className={styles.stepInsightTop}>
-                    <p className={styles.stepInsightTitle}>
-                      {copy.steps[activeStep.id]}
-                    </p>
-                    <p className={styles.stepInsightScore}>
-                      {copy.stepRatingLabel} {activeScore}/5
-                    </p>
-                  </div>
-
-                  <p className={styles.stepInsightText}>
-                    {activeInsight.explanation}
+            <AnimatePresence mode="wait">
+              <motion.article
+                key={activeStep.id}
+                className={styles.stepInsightCard}
+                initial={reduceMotion ? false : { opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={reduceMotion ? undefined : { opacity: 0, y: -8 }}
+                transition={{
+                  duration: reduceMotion ? 0 : 0.24,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+              >
+                <div className={styles.stepInsightTop}>
+                  <p className={styles.stepInsightTitle}>
+                    {copy.steps[activeStep.id]}
                   </p>
+                  <p className={styles.stepInsightScore}>
+                    {copy.stepRatingLabel} {activeScore}/5
+                  </p>
+                </div>
 
+                <p className={styles.stepInsightText}>
+                  {activeInsight.explanation}
+                </p>
+
+                <div className={styles.stepInsightMeta}>
                   {isPerfectStep ? (
                     <p className={styles.noFixText}>
                       <span className={styles.noFixLabel}>
@@ -571,49 +624,51 @@ export default function RevenueOpportunity({
                         {copy.quickFixLabel}
                       </p>
                       <ul className={styles.quickFixList}>
-                        {activeInsight.quickFixes.map((item) => (
-                          <li key={item}>{item}</li>
+                        {activeInsight.quickFixes.map((item, index) => (
+                          <li key={`${activeStep.id}-fix-${index}`}>{item}</li>
                         ))}
                       </ul>
                     </div>
                   )}
-                </motion.article>
-              </AnimatePresence>
-            </div>
-          </section>
+                </div>
+              </motion.article>
+            </AnimatePresence>
+          </div>
 
           <aside className={styles.analysisPanel}>
             <p className={styles.sectionHeading}>{copy.analysisHeading}</p>
 
-            <article className={styles.analysisCard}>
-              <p className={styles.analysisLabel}>{copy.strengths}</p>
-              <ul className={styles.analysisList}>
-                {revenue.strengths.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </article>
+            <div className={styles.analysisGrid}>
+              <article className={styles.analysisCard}>
+                <p className={styles.analysisLabel}>{copy.strengths}</p>
+                <ul className={styles.analysisList}>
+                  {revenue.strengths.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
 
-            <article className={styles.analysisCard}>
-              <p className={styles.analysisLabel}>{copy.weaknesses}</p>
-              <ul className={styles.analysisList}>
-                {revenue.weaknesses.map((item) => (
-                  <li key={item}>{item}</li>
-                ))}
-              </ul>
-            </article>
+              <article className={styles.analysisCard}>
+                <p className={styles.analysisLabel}>{copy.weaknesses}</p>
+                <ul className={styles.analysisList}>
+                  {revenue.weaknesses.map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </article>
 
-            <article className={styles.analysisCard}>
-              <p className={styles.analysisLabel}>{copy.biggestLeak}</p>
-              <p className={styles.analysisText}>{revenue.biggest_leak}</p>
-            </article>
+              <article className={styles.analysisCard}>
+                <p className={styles.analysisLabel}>{copy.biggestLeak}</p>
+                <p className={styles.analysisText}>{revenue.biggest_leak}</p>
+              </article>
 
-            <article
-              className={`${styles.analysisCard} ${styles.quickWinCard}`}
-            >
-              <p className={styles.analysisLabel}>{copy.quickestWin}</p>
-              <p className={styles.analysisText}>{revenue.quickest_win}</p>
-            </article>
+              <article
+                className={`${styles.analysisCard} ${styles.quickWinCard}`}
+              >
+                <p className={styles.analysisLabel}>{copy.quickestWin}</p>
+                <p className={styles.analysisText}>{revenue.quickest_win}</p>
+              </article>
+            </div>
           </aside>
         </div>
 

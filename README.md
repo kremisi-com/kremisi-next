@@ -20,6 +20,34 @@ You can start editing the page by modifying `app/page.js`. The page auto-updates
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
 
+## Website Roaster Env
+
+`src/app/api/roast/route.js` supports cost-control and model-routing env vars:
+
+```bash
+# Main cost target (0-70). Default: 40
+ROASTER_COST_TARGET_PERCENT=40
+
+# Optional overrides (if omitted, derived from target profile)
+ROASTER_DEPTH_ONE_MAX_LINKS=3
+ROASTER_PAGE_STAGE_ONE_MAX_CHARS=500
+ROASTER_GLOBAL_SITE_CONTENT_MAX_CHARS=2200
+ROASTER_BASE_MAX_TOKENS=1200
+ROASTER_BASE_RETRY_MAX_TOKENS=1600
+ROASTER_REVENUE_MAX_TOKENS=700
+ROASTER_REVENUE_RETRY_MAX_TOKENS=1000
+
+# In-memory cache
+ROASTER_CACHE_TTL_SECONDS=86400
+ROASTER_CACHE_MAX_ENTRIES=500
+ROASTER_PROMPT_VERSION=1
+
+# Model routing
+ROASTER_PRIMARY_MODEL=claude-3-5-haiku-latest
+ROASTER_FALLBACK_MODEL=claude-sonnet-4-20250514
+ROASTER_ENABLE_MODEL_FALLBACK=true
+```
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
