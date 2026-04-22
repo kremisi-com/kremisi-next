@@ -1255,14 +1255,22 @@ async function warmItalianTranslationCache(cache, values, options = {}) {
   }
 
   try {
-    const translationAiApiMode =
-      translationContext.anthropicApiKey && translationContext.openRouterApiKey
-        ? "anthropic-before"
-        : translationContext.anthropicApiKey
-          ? "anthropic"
-          : translationContext.openRouterApiKey
-            ? "openrouter"
-            : translationContext.aiApiMode;
+    const hasAnthropicKey = Boolean(translationContext.anthropicApiKey);
+    const hasOpenRouterKey = Boolean(translationContext.openRouterApiKey);
+    let translationAiApiMode = translationContext.aiApiMode;
+
+    if (hasAnthropicKey && hasOpenRouterKey) {
+      if (!AI_API_MODES.has(translationAiApiMode)) {
+        translationAiApiMode = "openrouter-before";
+      } else if (translationAiApiMode === "both") {
+        // Keep "both" deterministic: OpenRouter first, Anthropic fallback.
+        translationAiApiMode = "openrouter-before";
+      }
+    } else if (hasOpenRouterKey) {
+      translationAiApiMode = "openrouter";
+    } else if (hasAnthropicKey) {
+      translationAiApiMode = "anthropic";
+    }
 
     const prompt = buildItalianBatchTranslationPrompt(uniqueSources);
     const { result } = await runStructuredGenerationByApiMode({

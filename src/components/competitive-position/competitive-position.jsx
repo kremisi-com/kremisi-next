@@ -338,26 +338,33 @@ export default function CompetitivePosition({
             }),
           )}
 
-          {axes.map((axis, index) => (
-            <text
-              key={`label-${axis.label}`}
-              className={`${styles.axisLabel} ${
-                activeAxisIndex === index ? styles.axisLabelActive : ""
-              } ${activeAxisIndex !== null && activeAxisIndex !== index ? styles.axisLabelDimmed : ""}`}
-              x={axis.labelX}
-              y={axis.labelY}
-              textAnchor={axis.labelX < centerX - 8 ? "end" : axis.labelX > centerX + 8 ? "start" : "middle"}
-              onClick={(e) => {
-                e.stopPropagation();
-                setActiveAxisIndex(index === activeAxisIndex ? null : index);
-              }}
-              onMouseEnter={() => setActiveAxisIndex(index)}
-              onMouseLeave={() => setActiveAxisIndex(null)}
-              style={{ cursor: "pointer" }}
-            >
-              {axis.label}
-            </text>
-          ))}
+          {axes.map((axis, index) => {
+            const isLeft = axis.labelX < centerX - 8;
+            const isRight = axis.labelX > centerX + 8;
+            const textAnchor = isLeft ? "end" : isRight ? "start" : "middle";
+            const labelX = axis.labelX + (isLeft ? 10 : isRight ? -10 : 0);
+
+            return (
+              <text
+                key={`label-${axis.label}`}
+                className={`${styles.axisLabel} ${
+                  activeAxisIndex === index ? styles.axisLabelActive : ""
+                } ${activeAxisIndex !== null && activeAxisIndex !== index ? styles.axisLabelDimmed : ""}`}
+                x={labelX}
+                y={axis.labelY}
+                textAnchor={textAnchor}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveAxisIndex(index === activeAxisIndex ? null : index);
+                }}
+                onMouseEnter={() => setActiveAxisIndex(index)}
+                onMouseLeave={() => setActiveAxisIndex(null)}
+                style={{ cursor: "pointer" }}
+              >
+                {axis.label}
+              </text>
+            );
+          })}
         </svg>
 
         <AnimatePresence>
