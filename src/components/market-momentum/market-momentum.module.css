@@ -214,6 +214,65 @@
   opacity: 0.62;
 }
 
+.tooltip {
+  position: absolute;
+  top: 12px;
+  pointer-events: none;
+  background: rgba(15, 15, 15, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 12px;
+  z-index: 10;
+  min-width: 140px;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+  transition:
+    left 150ms cubic-bezier(0.23, 1, 0.32, 1),
+    transform 150ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+:global(.light) .tooltip {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(0, 0, 0, 0.08);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+}
+
+.tooltipYear {
+  margin: 0 0 8px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--foreground);
+  opacity: 0.5;
+  letter-spacing: 0.05em;
+}
+
+.tooltipItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.tooltipSwatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.tooltipLabel {
+  font-size: 0.9rem;
+  color: var(--foreground);
+  opacity: 0.8;
+  flex-grow: 1;
+}
+
+.tooltipValue {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--foreground);
+}
+
 .insight {
   font-size: 1.35rem;
   color: var(--foreground);

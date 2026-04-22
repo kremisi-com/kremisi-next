@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import styles from "./market-momentum.module.css";
 
 function buildMarketMomentumLabels(currentYear = new Date().getUTCFullYear()) {
@@ -126,6 +126,7 @@ export default function MarketMomentum({
   locale = "it",
 }) {
   const canvasRef = useRef(null);
+  const [hoveredIndex, setHoveredIndex] = useState(null);
   const chartWrapRef = useRef(null);
   const copy = LOCALE_COPY[locale] || LOCALE_COPY.it;
   const momentum = normalizeMomentumData(data, copy);
@@ -224,78 +225,121 @@ export default function MarketMomentum({
       context.fill();
     };
 
-    const drawChart = () => {
-      const { width: cssWidth, height: cssHeight } =
-        chartWrap.getBoundingClientRect();
-      const dpr = window.devicePixelRatio || 1;
-      const width = Math.max(Math.floor(cssWidth), 1);
-      const height = Math.max(Math.floor(cssHeight), 1);
+      const drawHoverState = (width, height, industryPoints, brandPoints) => {
+        if (hoveredIndex === null) return;
 
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      context.setTransform(dpr, 0, 0, dpr, 0, 0);
-      context.clearRect(0, 0, width, height);
+        const point = industryPoints[hoveredIndex];
+        const brandPoint = brandPoints[hoveredIndex];
+        if (!point || !brandPoint) return;
 
-      context.font =
-        "600 12px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
-      context.textBaseline = "top";
-
-      const industryPoints = momentum.industry_trend.map((value, index) =>
-        getPoint(value, index, width, height),
-      );
-      const brandPoints = momentum.brand_momentum.map((value, index) =>
-        getPoint(value, index, width, height),
-      );
-      const tickIndexes = momentum.period_labels.map((_, index) => index);
-      const yTicks = 4;
-
-      for (let index = 0; index < yTicks; index += 1) {
-        const y =
-          padding.top +
-          ((height - padding.top - padding.bottom) * index) / (yTicks - 1);
-
+        // Vertical Guide Line
         context.beginPath();
-        context.strokeStyle = gridColor;
-        context.lineWidth = 1;
-        context.moveTo(padding.left, y);
-        context.lineTo(width - padding.right, y);
-        context.stroke();
-      }
-
-      tickIndexes.forEach((tickIndex) => {
-        const point = industryPoints[tickIndex];
-        if (!point) return;
-
-        context.beginPath();
-        context.strokeStyle = gridColor;
+        context.setLineDash([4, 4]);
+        context.strokeStyle = "rgba(255, 255, 255, 0.25)";
         context.lineWidth = 1;
         context.moveTo(point.x, 0);
         context.lineTo(point.x, height - padding.bottom);
         context.stroke();
+        context.setLineDash([]);
 
-        context.fillStyle = tickColor;
-        let xPos = point.x;
-        
-        if (tickIndex === 0) {
-          context.textAlign = "left";
-          xPos += 8; // Slight margin for the first number
-        } else if (tickIndex === tickIndexes.length - 1) {
-          context.textAlign = "right";
-          xPos -= 8; // Slight margin for the last number
-        } else {
-          context.textAlign = "center";
+        // Highlight dots
+        const drawHighlightDot = (p, color) => {
+          context.beginPath();
+          context.fillStyle = "#fff";
+          context.shadowBlur = 10;
+          context.shadowColor = color;
+          context.arc(p.x, p.y, 5, 0, Math.PI * 2);
+          context.fill();
+          context.shadowBlur = 0;
+
+          context.beginPath();
+          context.strokeStyle = color;
+          context.lineWidth = 2;
+          context.arc(p.x, p.y, 5, 0, Math.PI * 2);
+          context.stroke();
+        };
+
+        drawHighlightDot(point, industryColor);
+        drawHighlightDot(brandPoint, brandColor);
+      };
+
+      const drawChart = () => {
+        const { width: cssWidth, height: cssHeight } =
+          chartWrap.getBoundingClientRect();
+        const dpr = window.devicePixelRatio || 1;
+        const width = Math.max(Math.floor(cssWidth), 1);
+        const height = Math.max(Math.floor(cssHeight), 1);
+
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        context.setTransform(dpr, 0, 0, dpr, 0, 0);
+        context.clearRect(0, 0, width, height);
+
+        context.font =
+          "600 12px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+        context.textBaseline = "top";
+
+        const industryPoints = momentum.industry_trend.map((value, index) =>
+          getPoint(value, index, width, height),
+        );
+        const brandPoints = momentum.brand_momentum.map((value, index) =>
+          getPoint(value, index, width, height),
+        );
+        const tickIndexes = momentum.period_labels.map((_, index) => index);
+        const yTicks = 4;
+
+        for (let index = 0; index < yTicks; index += 1) {
+          const y =
+            padding.top +
+            ((height - padding.top - padding.bottom) * index) / (yTicks - 1);
+
+          context.beginPath();
+          context.strokeStyle = gridColor;
+          context.lineWidth = 1;
+          context.moveTo(padding.left, y);
+          context.lineTo(width - padding.right, y);
+          context.stroke();
         }
 
-        context.fillText(
-          momentum.period_labels[tickIndex],
-          xPos,
-          height - padding.bottom + 12,
-        );
-      });
+        tickIndexes.forEach((tickIndex) => {
+          const point = industryPoints[tickIndex];
+          if (!point) return;
 
-      drawSeries(industryPoints, industryColor, 2.2, height - padding.bottom);
-      drawSeries(brandPoints, brandColor, 2.6, height - padding.bottom);
-    };
+          context.beginPath();
+          context.strokeStyle = gridColor;
+          context.lineWidth = 1;
+          context.moveTo(point.x, 0);
+          context.lineTo(point.x, height - padding.bottom);
+          context.stroke();
+
+          context.fillStyle = tickColor;
+          let xPos = point.x;
+
+          if (tickIndex === 0) {
+            context.textAlign = "left";
+            xPos += 8; // Slight margin for the first number
+          } else if (tickIndex === tickIndexes.length - 1) {
+            context.textAlign = "right";
+            xPos -= 8; // Slight margin for the last number
+          } else {
+            context.textAlign = "center";
+          }
+
+          context.fillText(
+            momentum.period_labels[tickIndex],
+            xPos,
+            height - padding.bottom + 12,
+          );
+        });
+
+        drawSeries(industryPoints, industryColor, 2.2, height - padding.bottom);
+        drawSeries(brandPoints, brandColor, 2.6, height - padding.bottom);
+
+        // Draw hover indicators
+        if (hoveredIndex !== null) {
+          drawHoverState(width, height, industryPoints, brandPoints);
+        }
+      };
 
     let frameId = 0;
     const scheduleDraw = () => {
@@ -312,7 +356,31 @@ export default function MarketMomentum({
       window.cancelAnimationFrame(frameId);
       resizeObserver.disconnect();
     };
-  }, [momentum]);
+  }, [momentum, hoveredIndex]);
+
+  const handleMouseMove = (e) => {
+    if (locked || !chartWrapRef.current) return;
+
+    const rect = chartWrapRef.current.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const chartWidth = rect.width;
+
+    const index = Math.round(
+      (x / chartWidth) * (momentum.period_labels.length - 1),
+    );
+    const clampedIndex = Math.max(
+      0,
+      Math.min(index, momentum.period_labels.length - 1),
+    );
+
+    if (clampedIndex !== hoveredIndex) {
+      setHoveredIndex(clampedIndex);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setHoveredIndex(null);
+  };
 
   const badgeVariant = BADGE_VARIANTS[momentum.badge] || BADGE_VARIANTS.Stable;
   const badgeLabel = copy.badge[momentum.badge] || momentum.badge;
@@ -352,12 +420,45 @@ export default function MarketMomentum({
       <div
         className={`${styles.chartWrap} ${locked ? styles.chartWrapLocked : ""}`}
         ref={chartWrapRef}
+        onMouseMove={handleMouseMove}
+        onMouseLeave={handleMouseLeave}
       >
         <canvas
           ref={canvasRef}
           className={styles.canvas}
           aria-label={copy.ariaLabel}
         />
+        {hoveredIndex !== null && (
+          <div
+            className={styles.tooltip}
+            style={{
+              left: `${(hoveredIndex / (momentum.period_labels.length - 1)) * 100}%`,
+              transform: `translateX(${hoveredIndex === 0 ? "0" : hoveredIndex === momentum.period_labels.length - 1 ? "-100%" : "-50%"})`,
+            }}
+          >
+            <p className={styles.tooltipYear}>
+              {momentum.period_labels[hoveredIndex]}
+            </p>
+            <div className={styles.tooltipItem}>
+              <span
+                className={`${styles.tooltipSwatch} ${styles.legendIndustry}`}
+              />
+              <span className={styles.tooltipLabel}>{copy.industryTrend}</span>
+              <span className={styles.tooltipValue}>
+                {momentum.industry_trend[hoveredIndex]}%
+              </span>
+            </div>
+            <div className={styles.tooltipItem}>
+              <span
+                className={`${styles.tooltipSwatch} ${styles.legendBrand}`}
+              />
+              <span className={styles.tooltipLabel}>{copy.brandMomentum}</span>
+              <span className={styles.tooltipValue}>
+                {momentum.brand_momentum[hoveredIndex]}%
+              </span>
+            </div>
+          </div>
+        )}
         {locked && (
           <div className={styles.lockedOverlay}>
             <p className={styles.lockedTitle}>{copy.lockedTitle}</p>
