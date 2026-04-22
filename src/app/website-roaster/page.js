@@ -128,6 +128,7 @@ export default function WebsiteRoaster() {
 
   const isRevenueDebug = debugMode === "revenue";
   const showFullReview = Boolean(review) && !isRevenueDebug;
+  const uiLocale = review ? language : "en";
 
   return (
     <main className={`page-content-simple ${styles.page}`}>
@@ -185,7 +186,7 @@ export default function WebsiteRoaster() {
                   className={styles.momentumWrap}
                   data={review?.market_momentum}
                   locked={!review}
-                  locale={language}
+                  locale={uiLocale}
                 />
                 {review && (
                   <CompetitivePosition
@@ -200,7 +201,7 @@ export default function WebsiteRoaster() {
               className={styles.revenueWrap}
               data={review?.revenue_opportunity}
               locked={!review}
-              locale={language}
+              locale={uiLocale}
             />
           </div>
 
@@ -282,115 +283,115 @@ export default function WebsiteRoaster() {
 
             {!isRevenueDebug && (
               <div className={`${styles.panel} ${styles.resultPanel}`}>
-              <div className={styles.resultHeader}>
-                <div>
-                  <p className={styles.eyebrow}>Review</p>
-                  <h2 className={styles.resultTitle}>Strategic scorecard</h2>
+                <div className={styles.resultHeader}>
+                  <div>
+                    <p className={styles.eyebrow}>Review</p>
+                    <h2 className={styles.resultTitle}>Strategic scorecard</h2>
+                  </div>
+
+                  {showFullReview && (
+                    <div className={styles.scoreWrap}>
+                      <span className={styles.scoreLabel}>Overall Score</span>
+                      <div className={styles.scoreValueRow}>
+                        <span className={styles.scoreValue}>
+                          {review.overall_score}
+                        </span>
+                        <span className={styles.scoreScale}>/5</span>
+                      </div>
+                      <div className={styles.scoreMeter} aria-hidden="true">
+                        {Array.from({ length: 5 }, (_, index) => (
+                          <span
+                            key={index}
+                            className={`${styles.scoreDot} ${
+                              index < review.overall_score
+                                ? styles.scoreDotActive
+                                : ""
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {showFullReview && (
-                  <div className={styles.scoreWrap}>
-                    <span className={styles.scoreLabel}>Overall Score</span>
-                    <div className={styles.scoreValueRow}>
-                      <span className={styles.scoreValue}>
-                        {review.overall_score}
-                      </span>
-                      <span className={styles.scoreScale}>/5</span>
-                    </div>
-                    <div className={styles.scoreMeter} aria-hidden="true">
-                      {Array.from({ length: 5 }, (_, index) => (
-                        <span
-                          key={index}
-                          className={`${styles.scoreDot} ${
-                            index < review.overall_score
-                              ? styles.scoreDotActive
-                              : ""
-                          }`}
-                        />
+                {!review && !loading && !error && (
+                  <p className={styles.emptyState}>
+                    The strategic review will appear here, structured and ready
+                    for action.
+                  </p>
+                )}
+
+                {showFullReview && !loading && (
+                  <div className={styles.reviewBody}>
+                    <section className={styles.summaryBlock}>
+                      <p className={styles.summaryText}>{review.summary}</p>
+                      <p className={styles.verdictText}>{review.verdict}</p>
+                    </section>
+
+                    <section className={styles.categoriesGrid}>
+                      {review.categories.map((category) => (
+                        <article
+                          key={category.name}
+                          className={styles.categoryCard}
+                        >
+                          <div className={styles.categoryHeader}>
+                            <h3 className={styles.categoryTitle}>
+                              {category.name}
+                            </h3>
+                            <span className={styles.categoryScore}>
+                              {category.score}/5
+                            </span>
+                          </div>
+                          <p className={styles.categoryComment}>
+                            {category.comment}
+                          </p>
+                        </article>
                       ))}
-                    </div>
+                    </section>
+
+                    <section className={styles.listGrid}>
+                      <div className={styles.listCard}>
+                        <p className={styles.listLabel}>Top Strengths</p>
+                        <ul className={styles.reviewList}>
+                          {review.top_strengths.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+
+                      <div className={styles.listCard}>
+                        <p className={styles.listLabel}>Top Issues</p>
+                        <ul className={styles.reviewList}>
+                          {review.top_issues.map((item) => (
+                            <li key={item}>{item}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </section>
+
+                    <section className={styles.actionsCard}>
+                      <div className={styles.actionsIntro}>
+                        <p className={styles.listLabel}>Priority Actions</p>
+                        <span className={styles.actionsCaption}>
+                          What to fix first
+                        </span>
+                      </div>
+                      <div className={styles.priorityList}>
+                        {review.priority_actions.map((item) => (
+                          <div
+                            key={item.priority}
+                            className={styles.priorityItem}
+                          >
+                            <span className={styles.priorityBadge}>
+                              {item.priority}
+                            </span>
+                            <p className={styles.priorityText}>{item.action}</p>
+                          </div>
+                        ))}
+                      </div>
+                    </section>
                   </div>
                 )}
-              </div>
-
-              {!review && !loading && !error && (
-                <p className={styles.emptyState}>
-                  The strategic review will appear here, structured and ready
-                  for action.
-                </p>
-              )}
-
-              {showFullReview && !loading && (
-                <div className={styles.reviewBody}>
-                  <section className={styles.summaryBlock}>
-                    <p className={styles.summaryText}>{review.summary}</p>
-                    <p className={styles.verdictText}>{review.verdict}</p>
-                  </section>
-
-                  <section className={styles.categoriesGrid}>
-                    {review.categories.map((category) => (
-                      <article
-                        key={category.name}
-                        className={styles.categoryCard}
-                      >
-                        <div className={styles.categoryHeader}>
-                          <h3 className={styles.categoryTitle}>
-                            {category.name}
-                          </h3>
-                          <span className={styles.categoryScore}>
-                            {category.score}/5
-                          </span>
-                        </div>
-                        <p className={styles.categoryComment}>
-                          {category.comment}
-                        </p>
-                      </article>
-                    ))}
-                  </section>
-
-                  <section className={styles.listGrid}>
-                    <div className={styles.listCard}>
-                      <p className={styles.listLabel}>Top Strengths</p>
-                      <ul className={styles.reviewList}>
-                        {review.top_strengths.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <div className={styles.listCard}>
-                      <p className={styles.listLabel}>Top Issues</p>
-                      <ul className={styles.reviewList}>
-                        {review.top_issues.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </section>
-
-                  <section className={styles.actionsCard}>
-                    <div className={styles.actionsIntro}>
-                      <p className={styles.listLabel}>Priority Actions</p>
-                      <span className={styles.actionsCaption}>
-                        What to fix first
-                      </span>
-                    </div>
-                    <div className={styles.priorityList}>
-                      {review.priority_actions.map((item) => (
-                        <div
-                          key={item.priority}
-                          className={styles.priorityItem}
-                        >
-                          <span className={styles.priorityBadge}>
-                            {item.priority}
-                          </span>
-                          <p className={styles.priorityText}>{item.action}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-                </div>
-              )}
               </div>
             )}
 

@@ -34,10 +34,29 @@ const COMPETITIVE_POSITION_AXES = [
   "Branding",
   "Conversion",
 ];
+const REVENUE_FUNNEL_STEP_IDS = [
+  "landing-visits",
+  "hero-retention",
+  "scroll-depth",
+  "cta-reach",
+  "cta-click",
+  "lead-submit",
+];
+const REVENUE_UI_STEP_IDS = [
+  "visits",
+  "understood-offer",
+  "trusted-brand",
+  "clicked-cta",
+  "submitted-lead",
+];
 const COMPETITIVE_POSITION_INSIGHT =
   "Strong technical base. Weak differentiation.";
 const DEBUG_REVENUE_ENABLED =
   process.env.DEBUG_REVENUE?.trim().toLowerCase() === "true";
+const REVIEW_MAX_TOKENS = 3200;
+const REVIEW_RETRY_MAX_TOKENS = 3800;
+const DEBUG_REVENUE_MAX_TOKENS = 1200;
+const DEBUG_REVENUE_RETRY_MAX_TOKENS = 1600;
 const PRIORITY_LEVELS = ["High", "Medium", "Low"];
 const SUPPORTED_LANGUAGES = {
   it: {
@@ -312,20 +331,61 @@ function validateMarketMomentum(marketMomentum) {
   return true;
 }
 
-function validateRevenueSignal(signal) {
+function validateRevenueFunnelStep(step, index, previousStep = null) {
+  if (!step || typeof step !== "object" || Array.isArray(step)) {
+    return false;
+  }
+
+  if (
+    step.id !== REVENUE_FUNNEL_STEP_IDS[index] ||
+    !isBoundedInteger(step.range_min, 0, 100) ||
+    !isBoundedInteger(step.range_max, 0, 100) ||
+    step.range_min > step.range_max
+  ) {
+    return false;
+  }
+
+  if (index === 0) {
+    return step.range_min === 100 && step.range_max === 100;
+  }
+
+  if (!previousStep) {
+    return false;
+  }
+
   return (
-    signal &&
-    typeof signal === "object" &&
-    !Array.isArray(signal) &&
-    isNonEmptyString(signal.id) &&
-    /^[a-z-]+$/.test(signal.id) &&
-    isNonEmptyString(signal.label) &&
-    isNonEmptyString(signal.direction) &&
-    isNonEmptyString(signal.current_value) &&
-    isNonEmptyString(signal.optimized_value) &&
-    isBoundedInteger(signal.current_score, 0, 100) &&
-    isBoundedInteger(signal.optimized_score, 0, 100) &&
-    signal.optimized_score >= signal.current_score
+    step.range_min <= previousStep.range_min &&
+    step.range_max <= previousStep.range_max
+  );
+}
+
+function validateRevenueStepInsight(stepInsight) {
+  if (
+    !stepInsight ||
+    typeof stepInsight !== "object" ||
+    Array.isArray(stepInsight)
+  ) {
+    return false;
+  }
+
+  return (
+    isNonEmptyString(stepInsight.explanation) &&
+    Array.isArray(stepInsight.quick_fixes) &&
+    stepInsight.quick_fixes.length === 2 &&
+    stepInsight.quick_fixes.every(isNonEmptyString)
+  );
+}
+
+function validateRevenueStepInsights(stepInsights) {
+  if (!stepInsights || typeof stepInsights !== "object" || Array.isArray(stepInsights)) {
+    return false;
+  }
+
+  const stepIds = Object.keys(stepInsights);
+
+  return (
+    stepIds.length === REVENUE_UI_STEP_IDS.length &&
+    REVENUE_UI_STEP_IDS.every((stepId) => validateRevenueStepInsight(stepInsights[stepId]))
   );
 }
 
@@ -340,9 +400,20 @@ function validateRevenueOpportunity(revenueOpportunity) {
 
   return (
     isBoundedInteger(revenueOpportunity.opportunity_score, 0, 100) &&
-    Array.isArray(revenueOpportunity.signals) &&
-    revenueOpportunity.signals.length === 5 &&
-    revenueOpportunity.signals.every(validateRevenueSignal)
+    Array.isArray(revenueOpportunity.funnel_steps) &&
+    revenueOpportunity.funnel_steps.length === REVENUE_FUNNEL_STEP_IDS.length &&
+    revenueOpportunity.funnel_steps.every((step, index, steps) =>
+      validateRevenueFunnelStep(step, index, index > 0 ? steps[index - 1] : null),
+    ) &&
+    Array.isArray(revenueOpportunity.strengths) &&
+    revenueOpportunity.strengths.length === 2 &&
+    revenueOpportunity.strengths.every(isNonEmptyString) &&
+    Array.isArray(revenueOpportunity.weaknesses) &&
+    revenueOpportunity.weaknesses.length === 2 &&
+    revenueOpportunity.weaknesses.every(isNonEmptyString) &&
+    isNonEmptyString(revenueOpportunity.biggest_leak) &&
+    isNonEmptyString(revenueOpportunity.quickest_win) &&
+    validateRevenueStepInsights(revenueOpportunity.step_insights)
   );
 }
 
@@ -476,9 +547,16 @@ function buildReviewPreview(review) {
   if (!review) return "";
 
   if (review.revenue_opportunity && !review.summary) {
+    const funnelSummary = review.revenue_opportunity.funnel_steps
+      ?.map(
+        (step) =>
+          `${step.id}:${step.range_min}-${step.range_max}%`,
+      )
+      .join(", ");
+
     return [
       `Opportunity score: ${review.revenue_opportunity.opportunity_score}/100`,
-      `Signals: ${review.revenue_opportunity.signals.map((item) => item.label).join(", ")}`,
+      `Funnel: ${funnelSummary || "n/a"}`,
     ]
       .join("\n")
       .slice(0, 280);
@@ -635,53 +713,61 @@ Use this exact structure and key names:
   },
   "revenue_opportunity": {
     "opportunity_score": 89,
-    "signals": [
-      {
-        "id": "trust-score",
-        "label": "Trust Score",
-        "direction": "Rising",
-        "current_score": 42,
-        "optimized_score": 78,
-        "current_value": "42/100",
-        "optimized_value": "78/100"
+    "funnel_steps": [
+      { "id": "landing-visits", "range_min": 100, "range_max": 100 },
+      { "id": "hero-retention", "range_min": 72, "range_max": 84 },
+      { "id": "scroll-depth", "range_min": 54, "range_max": 70 },
+      { "id": "cta-reach", "range_min": 35, "range_max": 50 },
+      { "id": "cta-click", "range_min": 12, "range_max": 20 },
+      { "id": "lead-submit", "range_min": 3, "range_max": 7 }
+    ],
+    "strengths": [
+      "Strong above-the-fold visual hierarchy",
+      "Trust indicators appear early in the page flow"
+    ],
+    "weaknesses": [
+      "CTA visibility drops after the hero section",
+      "Form friction likely too high for cold traffic"
+    ],
+    "biggest_leak": "Users lose momentum between first scroll and CTA reach.",
+    "quickest_win": "Surface a stronger primary CTA earlier with clearer contrast.",
+    "step_insights": {
+      "visits": {
+        "explanation": "The hero reaches broad traffic, but first-screen clarity is diluted by generic framing and a crowded opening hierarchy.",
+        "quick_fixes": [
+          "Lead with one concrete hero outcome in the first headline line.",
+          "Remove one above-the-fold visual block to reduce split attention."
+        ]
       },
-      {
-        "id": "conversion-readiness",
-        "label": "Conversion Readiness",
-        "direction": "Improving",
-        "current_score": 51,
-        "optimized_score": 81,
-        "current_value": "51/100",
-        "optimized_value": "81/100"
+      "understood-offer": {
+        "explanation": "Users continue browsing but offer comprehension drops when scope, deliverables, and audience fit appear late in the page flow.",
+        "quick_fixes": [
+          "Add a one-line what-you-get strip under the hero.",
+          "Surface package summary before longer narrative sections."
+        ]
       },
-      {
-        "id": "ux-friction",
-        "label": "UX Friction",
-        "direction": "Reducing",
-        "current_score": 28,
-        "optimized_score": 76,
-        "current_value": "High",
-        "optimized_value": "Low"
+      "trusted-brand": {
+        "explanation": "Trust weakens when proof signals are soft, with limited named references, sparse outcomes, and testimonials lacking measurable context.",
+        "quick_fixes": [
+          "Move the strongest proof block above the first CTA.",
+          "Rewrite one testimonial with a measurable business result."
+        ]
       },
-      {
-        "id": "cta-clarity",
-        "label": "CTA Clarity",
-        "direction": "Sharpening",
-        "current_score": 34,
-        "optimized_score": 74,
-        "current_value": "Poor",
-        "optimized_value": "Strong"
+      "clicked-cta": {
+        "explanation": "Intent falls when CTA visibility is inconsistent, repetition is delayed, and action labels do not set clear post-click expectations.",
+        "quick_fixes": [
+          "Increase primary CTA contrast and keep one action color.",
+          "Use outcome-led CTA copy instead of generic wording."
+        ]
       },
-      {
-        "id": "funnel-efficiency",
-        "label": "Funnel Efficiency",
-        "direction": "Advancing",
-        "current_score": 47,
-        "optimized_score": 79,
-        "current_value": "47/100",
-        "optimized_value": "79/100"
+      "submitted-lead": {
+        "explanation": "Lead completion declines when form load feels heavy, response timing is unclear, and privacy reassurance is weak near submit.",
+        "quick_fixes": [
+          "Reduce form fields to first-contact essentials only.",
+          "Add response-time and privacy reassurance under submit."
+        ]
       }
-    ]
+    }
   }
 }
 
@@ -724,16 +810,27 @@ Hard requirements:
 - The three competitive_position series should be internally consistent and strategically plausible for the site's visible maturity, clarity, and differentiation.
 - The revenue_opportunity object is required.
 - revenue_opportunity.opportunity_score must be an integer from 0 to 100.
-- revenue_opportunity.signals must contain exactly 5 items.
-- Each revenue_opportunity signal must include: id, label, direction, current_score, optimized_score, current_value, optimized_value.
-- Each signal id must be a short stable slug using lowercase letters and hyphens only.
-- Each signal label must be concise, premium, and easy to scan in a UI.
-- direction must be short and uppercase-friendly, such as Rising, Improving, Reducing, Sharpening, or Advancing.
-- current_score and optimized_score must be integers from 0 to 100.
-- optimized_score must always be greater than or equal to current_score.
-- current_value and optimized_value must be concise display strings suitable for direct rendering.
-- Use signals that reflect visible trust, clarity, friction, CTA quality, and funnel strength inferred from the website.
-- Keep the revenue_opportunity values internally consistent with the rest of the review.
+- revenue_opportunity.funnel_steps must contain exactly 6 items.
+- Use exactly these step ids and this exact order: ${REVENUE_FUNNEL_STEP_IDS.join(", ")}.
+- Each funnel step must include: id, range_min, range_max.
+- range_min and range_max must be integers from 0 to 100.
+- range_min must be less than or equal to range_max for each step.
+- The first step (landing-visits) must be exactly 100-100.
+- For every following step, both range_min and range_max must be less than or equal to the previous step values (non-increasing funnel).
+- Use realistic strategic ranges, not fake exact precision and not overly narrow ranges unless clearly justified.
+- revenue_opportunity.strengths must contain exactly 2 concise items.
+- revenue_opportunity.weaknesses must contain exactly 2 concise items.
+- revenue_opportunity.biggest_leak must be one concise sentence.
+- revenue_opportunity.quickest_win must be one concise sentence.
+- strengths, weaknesses, biggest_leak, and quickest_win must reference visible site cues when possible.
+- Keep revenue_opportunity prose length close to the provided examples.
+- revenue_opportunity.step_insights must be an object with exactly these keys and order: ${REVENUE_UI_STEP_IDS.join(", ")}.
+- Each revenue_opportunity.step_insights entry must include: explanation, quick_fixes.
+- explanation must be a single short paragraph, about 18-40 words.
+- quick_fixes must contain exactly 2 concise items, about 8-18 words each.
+- step_insights text must reference concrete page elements (hero, CTA placement, proof blocks, form friction, structure) when visible.
+- Avoid generic formulas; tie each step insight to observed site cues.
+- The revenue_opportunity output must be internally consistent with the rest of the review.
 - Use "${hostname}" as a stable anchor and prefer internally consistent outputs over novelty.
 - Focus on strategic business value, not only technical quality.
 - Evaluate whether the site feels premium, whether the offer is clear, whether trust is established quickly, whether users would convert, and whether the UX feels smooth.
@@ -760,73 +857,107 @@ Use this exact structure and key names:
 {
   "revenue_opportunity": {
     "opportunity_score": 89,
-    "signals": [
-      {
-        "id": "trust-score",
-        "label": "Trust Score",
-        "direction": "Rising",
-        "current_score": 42,
-        "optimized_score": 78,
-        "current_value": "42/100",
-        "optimized_value": "78/100"
+    "funnel_steps": [
+      { "id": "landing-visits", "range_min": 100, "range_max": 100 },
+      { "id": "hero-retention", "range_min": 72, "range_max": 84 },
+      { "id": "scroll-depth", "range_min": 54, "range_max": 70 },
+      { "id": "cta-reach", "range_min": 35, "range_max": 50 },
+      { "id": "cta-click", "range_min": 12, "range_max": 20 },
+      { "id": "lead-submit", "range_min": 3, "range_max": 7 }
+    ],
+    "strengths": [
+      "Strong above-the-fold visual hierarchy",
+      "Trust indicators appear early in the page flow"
+    ],
+    "weaknesses": [
+      "CTA visibility drops after the hero section",
+      "Form friction likely too high for cold traffic"
+    ],
+    "biggest_leak": "Users lose momentum between first scroll and CTA reach.",
+    "quickest_win": "Surface a stronger primary CTA earlier with clearer contrast.",
+    "step_insights": {
+      "visits": {
+        "explanation": "The opening section attracts traffic, but initial clarity weakens when the hero promise is too generic.",
+        "quick_fixes": [
+          "Rewrite the first headline line with one concrete outcome.",
+          "Simplify above-the-fold visuals to focus attention on value."
+        ]
       },
-      {
-        "id": "conversion-readiness",
-        "label": "Conversion Readiness",
-        "direction": "Improving",
-        "current_score": 51,
-        "optimized_score": 81,
-        "current_value": "51/100",
-        "optimized_value": "81/100"
+      "understood-offer": {
+        "explanation": "Offer understanding drops when users must scroll too far to see scope, deliverables, and audience fit.",
+        "quick_fixes": [
+          "Place a concise offer summary directly below the hero.",
+          "Show service packages before long brand storytelling."
+        ]
       },
-      {
-        "id": "ux-friction",
-        "label": "UX Friction",
-        "direction": "Reducing",
-        "current_score": 28,
-        "optimized_score": 76,
-        "current_value": "High",
-        "optimized_value": "Low"
+      "trusted-brand": {
+        "explanation": "Trust conversion slows when proof is not immediate through strong logos, outcomes, or specific case evidence.",
+        "quick_fixes": [
+          "Move the strongest proof asset above the first CTA.",
+          "Add one testimonial with a specific measurable result."
+        ]
       },
-      {
-        "id": "cta-clarity",
-        "label": "CTA Clarity",
-        "direction": "Sharpening",
-        "current_score": 34,
-        "optimized_score": 74,
-        "current_value": "Poor",
-        "optimized_value": "Strong"
+      "clicked-cta": {
+        "explanation": "CTA click intent declines when the primary action lacks contrast and appears too late in the flow.",
+        "quick_fixes": [
+          "Increase CTA contrast with one consistent action color.",
+          "Use direct outcome-oriented CTA copy."
+        ]
       },
-      {
-        "id": "funnel-efficiency",
-        "label": "Funnel Efficiency",
-        "direction": "Advancing",
-        "current_score": 47,
-        "optimized_score": 79,
-        "current_value": "47/100",
-        "optimized_value": "79/100"
+      "submitted-lead": {
+        "explanation": "Lead submission drops when the form feels long and response expectations are not visible near submit.",
+        "quick_fixes": [
+          "Remove non-essential fields from first-contact form.",
+          "Add response-time and privacy reassurance under submit."
+        ]
       }
-    ]
+    }
   }
 }
 
 Hard requirements:
 - Return only the revenue_opportunity object shown above.
 - revenue_opportunity.opportunity_score must be an integer from 0 to 100.
-- revenue_opportunity.signals must contain exactly 5 items.
-- Each signal must include: id, label, direction, current_score, optimized_score, current_value, optimized_value.
-- Each signal id must be a short stable slug using lowercase letters and hyphens only.
-- Each signal label must be concise, premium, and easy to scan in a UI.
-- direction must be short and uppercase-friendly.
-- current_score and optimized_score must be integers from 0 to 100.
-- optimized_score must always be greater than or equal to current_score.
-- current_value and optimized_value must be concise display strings suitable for direct rendering.
-- Use signals that reflect visible trust, clarity, friction, CTA quality, and funnel strength inferred from the website.
-- Be strategically honest and keep the values internally plausible.
+- revenue_opportunity.funnel_steps must contain exactly 6 items.
+- Use exactly these step ids and this exact order: ${REVENUE_FUNNEL_STEP_IDS.join(", ")}.
+- Each funnel step must include: id, range_min, range_max.
+- range_min and range_max must be integers from 0 to 100.
+- range_min must be less than or equal to range_max for each step.
+- The first step (landing-visits) must be exactly 100-100.
+- For every following step, both range_min and range_max must be less than or equal to the previous step values (non-increasing funnel).
+- Use realistic strategic ranges, not fake exact precision and not overly narrow ranges unless clearly justified.
+- revenue_opportunity.strengths must contain exactly 2 concise items.
+- revenue_opportunity.weaknesses must contain exactly 2 concise items.
+- revenue_opportunity.biggest_leak must be one concise sentence.
+- revenue_opportunity.quickest_win must be one concise sentence.
+- strengths, weaknesses, biggest_leak, and quickest_win must reference visible site cues when possible.
+- Keep revenue_opportunity prose length close to the provided examples.
+- revenue_opportunity.step_insights must be an object with exactly these keys and order: ${REVENUE_UI_STEP_IDS.join(", ")}.
+- Each revenue_opportunity.step_insights entry must include: explanation, quick_fixes.
+- explanation must be a single short paragraph, about 18-40 words.
+- quick_fixes must contain exactly 2 concise items, about 8-18 words each.
+- step_insights text must reference concrete page elements (hero, CTA placement, proof blocks, form friction, structure) when visible.
+- Avoid generic formulas; tie each step insight to observed site cues.
+- Keep the output strategically honest and internally plausible.
 - ${languageConfig.instruction}
 
 WEBSITE CONTENT:
 ${siteContent || "No content available: the website may be empty or inaccessible."}`;
+}
+
+function buildSchemaRepairPrompt({ basePrompt, previousOutput, validationError }) {
+  return `${basePrompt}
+
+SCHEMA CORRECTION:
+Your previous output failed schema validation.
+Validation error: ${validationError || "Unknown schema error"}.
+
+Return the full JSON again, valid and complete.
+Do not omit any required key.
+Do not add commentary.
+
+PREVIOUS INVALID OUTPUT:
+${previousOutput || "<empty>"}`;
 }
 
 export async function POST(request) {
@@ -908,12 +1039,19 @@ export async function POST(request) {
           languageConfig,
         });
 
+    const primaryMaxTokens = DEBUG_REVENUE_ENABLED
+      ? DEBUG_REVENUE_MAX_TOKENS
+      : REVIEW_MAX_TOKENS;
+    const retryMaxTokens = DEBUG_REVENUE_ENABLED
+      ? DEBUG_REVENUE_RETRY_MAX_TOKENS
+      : REVIEW_RETRY_MAX_TOKENS;
+
     let modelInUse = configuredModel;
     let { response, payload } = await requestReview({
       apiKey: ANTHROPIC_API_KEY,
       model: modelInUse,
       prompt,
-      maxTokens: DEBUG_REVENUE_ENABLED ? 900 : 2200,
+      maxTokens: primaryMaxTokens,
     });
 
     if (isMissingModelError(response.status, payload)) {
@@ -941,7 +1079,7 @@ export async function POST(request) {
             apiKey: ANTHROPIC_API_KEY,
             model: modelInUse,
             prompt,
-            maxTokens: DEBUG_REVENUE_ENABLED ? 900 : 2200,
+            maxTokens: primaryMaxTokens,
           }));
         }
       } else {
@@ -971,36 +1109,123 @@ export async function POST(request) {
 
     console.log("Anthropic model used:", modelInUse);
 
-    const reviewText = extractModelTextBlocks(payload);
+    let reviewText = extractModelTextBlocks(payload);
 
     if (isTruncatedResponse(payload)) {
-      console.error("AI review was truncated:", JSON.stringify(payload, null, 2));
+      console.warn("AI review was truncated on first attempt. Retrying once.");
 
-      return sendErrorResponse({
-        rawUrl,
-        parsedUrl,
-        error:
-          "The AI response was truncated before the JSON completed. Please try again.",
-        status: 502,
+      const truncationRepairPrompt = buildSchemaRepairPrompt({
+        basePrompt: prompt,
+        previousOutput: reviewText,
+        validationError:
+          "Response was truncated because max output tokens were reached.",
       });
+
+      const {
+        response: truncationRetryResponse,
+        payload: truncationRetryPayload,
+      } = await requestReview({
+        apiKey: ANTHROPIC_API_KEY,
+        model: modelInUse,
+        prompt: truncationRepairPrompt,
+        maxTokens: retryMaxTokens,
+      });
+
+      if (!truncationRetryResponse.ok) {
+        const retryMessage = mapProviderErrorMessage(
+          truncationRetryResponse.status,
+          truncationRetryPayload,
+        );
+
+        return sendErrorResponse({
+          rawUrl,
+          parsedUrl,
+          error: retryMessage,
+          status: 502,
+        });
+      }
+
+      if (isTruncatedResponse(truncationRetryPayload)) {
+        console.error(
+          "AI review was truncated again after retry:",
+          JSON.stringify(truncationRetryPayload, null, 2),
+        );
+
+        return sendErrorResponse({
+          rawUrl,
+          parsedUrl,
+          error:
+            "The AI response was truncated before the JSON completed. Please try again.",
+          status: 502,
+        });
+      }
+
+      reviewText = extractModelTextBlocks(truncationRetryPayload);
+      payload = truncationRetryPayload;
     }
+
+    const parseResponse = (text) =>
+      DEBUG_REVENUE_ENABLED
+        ? parseAndValidateRevenueOpportunity(text)
+        : parseAndValidateReview(text);
 
     let review;
 
     try {
-      review = DEBUG_REVENUE_ENABLED
-        ? parseAndValidateRevenueOpportunity(reviewText)
-        : parseAndValidateReview(reviewText);
-    } catch (error) {
-      console.error("Invalid AI review payload:", error);
-      console.error("Raw AI payload:", JSON.stringify(payload, null, 2));
+      review = parseResponse(reviewText);
+    } catch (firstParseError) {
+      console.error("Invalid AI review payload (attempt 1):", firstParseError);
 
-      return sendErrorResponse({
-        rawUrl,
-        parsedUrl,
-        error: error.message || "Invalid AI response",
-        status: 502,
+      const repairPrompt = buildSchemaRepairPrompt({
+        basePrompt: prompt,
+        previousOutput: reviewText,
+        validationError: firstParseError?.message || "Invalid AI response",
       });
+
+      const { response: retryResponse, payload: retryPayload } = await requestReview({
+        apiKey: ANTHROPIC_API_KEY,
+        model: modelInUse,
+        prompt: repairPrompt,
+        maxTokens: retryMaxTokens,
+      });
+
+      if (!retryResponse.ok) {
+        const retryMessage = mapProviderErrorMessage(retryResponse.status, retryPayload);
+
+        return sendErrorResponse({
+          rawUrl,
+          parsedUrl,
+          error: retryMessage,
+          status: 502,
+        });
+      }
+
+      if (isTruncatedResponse(retryPayload)) {
+        return sendErrorResponse({
+          rawUrl,
+          parsedUrl,
+          error:
+            "The AI response was truncated before the JSON completed. Please try again.",
+          status: 502,
+        });
+      }
+
+      const retryText = extractModelTextBlocks(retryPayload);
+
+      try {
+        review = parseResponse(retryText);
+      } catch (secondParseError) {
+        console.error("Invalid AI review payload (attempt 2):", secondParseError);
+        console.error("Raw AI payload (attempt 1):", JSON.stringify(payload, null, 2));
+        console.error("Raw AI payload (attempt 2):", JSON.stringify(retryPayload, null, 2));
+
+        return sendErrorResponse({
+          rawUrl,
+          parsedUrl,
+          error: secondParseError.message || "Invalid AI response",
+          status: 502,
+        });
+      }
     }
 
     await sendRoasterNotification({
