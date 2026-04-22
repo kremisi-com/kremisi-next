@@ -3,7 +3,8 @@
   padding-bottom: 150px;
   position: relative;
   font-family: "FK Grotesk Trial", Arial, Helvetica, sans-serif;
-  --roaster-copy-font: Calibri, "Segoe UI", Arial, Helvetica, sans-serif;
+  --roaster-copy-font: var(--font-schibsted-grotesk), "Segoe UI", Arial,
+    Helvetica, sans-serif;
 }
 
 .page :where(
@@ -707,6 +708,7 @@
 
 .summaryText,
 .verdictText,
+.categoryTitle,
 .categoryComment,
 .priorityText {
   margin: 0;

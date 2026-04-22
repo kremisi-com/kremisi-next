@@ -1,5 +1,6 @@
 import "./fonts.css";
 import "./globals.css";
+import { Schibsted_Grotesk } from "next/font/google";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import CursorTrailCanvas from "@/components/cursor-trail-canvas";
@@ -15,6 +16,12 @@ const BASE_URL = "https://kremisi.com";
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
 const WEBSITE_ID = `${BASE_URL}/#website`;
 const SERVICE_ID = `${BASE_URL}/#professional-service`;
+
+const schibstedGrotesk = Schibsted_Grotesk({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-schibsted-grotesk",
+});
 
 const organizationJsonLd = {
   "@context": "https://schema.org",
@@ -108,7 +115,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body>
+      <body className={schibstedGrotesk.variable}>
         <CursorTrailCanvas />
         <ThemeProvider
           attribute="class"

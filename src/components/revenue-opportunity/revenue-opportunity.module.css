@@ -1,4 +1,6 @@
 .panel {
+  --ai-copy-font: var(--font-schibsted-grotesk), "Segoe UI", Arial, Helvetica,
+    sans-serif;
   position: relative;
   overflow: hidden;
   background:
@@ -351,6 +353,7 @@
   opacity: 0.95;
   font-size: 1.45rem;
   line-height: 1.5;
+  font-family: var(--ai-copy-font);
   display: -webkit-box;
   -webkit-line-clamp: 4;
   -webkit-box-orient: vertical;
@@ -383,6 +386,7 @@
   color: var(--foreground);
   font-size: 1.45rem;
   line-height: 1.5;
+  font-family: var(--ai-copy-font);
 }
 
 .quickFixList li {
@@ -410,6 +414,7 @@
   opacity: 0.84;
   font-size: 1.45rem;
   line-height: 1.5;
+  font-family: var(--ai-copy-font);
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
@@ -495,6 +500,7 @@
   color: var(--foreground);
   font-size: 1.45rem;
   line-height: 1.6;
+  font-family: var(--ai-copy-font);
 }
 
 .analysisList li {
@@ -517,6 +523,7 @@
   font-size: 1.45rem;
   line-height: 1.6;
   opacity: 0.95;
+  font-family: var(--ai-copy-font);
 }
 
 .quickWinCard {

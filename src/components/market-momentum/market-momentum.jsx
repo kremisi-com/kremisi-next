@@ -20,7 +20,7 @@ const LOCALE_COPY = {
   en: {
     eyebrow: "Strategic Intelligence",
     title: "Market Momentum",
-    subtitleTemplate: "Industry trend ({sector}) vs brand momentum",
+    subtitleTemplate: "Industry trend {sector} vs brand momentum",
     defaultSector: "General",
     industryTrend: "Industry Trend",
     brandMomentum: "Brand Momentum",
@@ -45,7 +45,7 @@ const LOCALE_COPY = {
   it: {
     eyebrow: "Intelligence Strategica",
     title: "Momentum di Mercato",
-    subtitleTemplate: "Trend di settore ({sector}) vs slancio del brand",
+    subtitleTemplate: "Trend di settore {sector} vs slancio del brand",
     defaultSector: "Settore",
     industryTrend: "Trend di Settore",
     brandMomentum: "Slancio del Brand",
@@ -130,10 +130,7 @@ export default function MarketMomentum({
   const copy = LOCALE_COPY[locale] || LOCALE_COPY.it;
   const momentum = normalizeMomentumData(data, copy);
   const hasResult = !locked && Boolean(data && typeof data === "object");
-  const subtitleLabel = copy.subtitleTemplate.replace(
-    "{sector}",
-    momentum.sector,
-  );
+  const subtitleParts = copy.subtitleTemplate.split(/(\{sector\})/);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -146,9 +143,9 @@ export default function MarketMomentum({
     const allValues = [...momentum.industry_trend, ...momentum.brand_momentum];
     const minValue = Math.max(Math.min(...allValues) - 8, 20);
     const maxValue = Math.min(Math.max(...allValues) + 8, 100);
-    const padding = { top: 12, right: 8, bottom: 28, left: 8 };
-    const gridColor = "rgba(255, 255, 255, 0.05)";
-    const tickColor = "rgba(255, 255, 255, 0.34)";
+    const padding = { top: 10, right: 0, bottom: 44, left: 0 };
+    const gridColor = "rgba(255, 255, 255, 0.04)";
+    const tickColor = "rgba(255, 255, 255, 0.44)";
     const industryColor = "#b55d6d";
     const brandColor = "#dc143c";
 
@@ -165,7 +162,7 @@ export default function MarketMomentum({
       return { x, y };
     };
 
-    const drawLine = (points) => {
+    const drawLine = (points, closePath = false, height = 0) => {
       if (!points.length) return;
 
       context.beginPath();
@@ -176,22 +173,54 @@ export default function MarketMomentum({
         const next = points[index + 1];
         const controlX = (current.x + next.x) / 2;
 
-        context.bezierCurveTo(controlX, current.y, controlX, next.y, next.x, next.y);
+        context.bezierCurveTo(
+          controlX,
+          current.y,
+          controlX,
+          next.y,
+          next.x,
+          next.y,
+        );
+      }
+
+      if (closePath) {
+        context.lineTo(points[points.length - 1].x, height);
+        context.lineTo(points[0].x, height);
+        context.closePath();
       }
     };
 
-    const drawSeries = (points, color, width = 2.2) => {
+    const drawSeries = (points, color, width = 2.2, height = 0) => {
+      // Draw Area Gradient
+      const gradient = context.createLinearGradient(0, padding.top, 0, height);
+      gradient.addColorStop(0, `${color}22`);
+      gradient.addColorStop(1, "transparent");
+
+      drawLine(points, true, height);
+      context.fillStyle = gradient;
+      context.fill();
+
+      // Draw Main Line
       drawLine(points);
       context.strokeStyle = color;
       context.lineWidth = width;
+      context.lineCap = "round";
+      context.lineJoin = "round";
+
+      // Add Glow
+      context.shadowBlur = 8;
+      context.shadowColor = color;
       context.stroke();
+
+      // Reset Glow for points
+      context.shadowBlur = 0;
 
       const lastPoint = points.at(-1);
       if (!lastPoint) return;
 
       context.beginPath();
       context.fillStyle = color;
-      context.arc(lastPoint.x, lastPoint.y, 2.5, 0, Math.PI * 2);
+      context.arc(lastPoint.x, lastPoint.y, 3, 0, Math.PI * 2);
       context.fill();
     };
 
@@ -208,7 +237,7 @@ export default function MarketMomentum({
       context.clearRect(0, 0, width, height);
 
       context.font =
-        "500 10px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
+        "600 12px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif";
       context.textBaseline = "top";
 
       const industryPoints = momentum.industry_trend.map((value, index) =>
@@ -240,21 +269,32 @@ export default function MarketMomentum({
         context.beginPath();
         context.strokeStyle = gridColor;
         context.lineWidth = 1;
-        context.moveTo(point.x, padding.top);
+        context.moveTo(point.x, 0);
         context.lineTo(point.x, height - padding.bottom);
         context.stroke();
 
         context.fillStyle = tickColor;
-        context.textAlign = tickIndex === 0 ? "left" : "center";
+        let xPos = point.x;
+        
+        if (tickIndex === 0) {
+          context.textAlign = "left";
+          xPos += 8; // Slight margin for the first number
+        } else if (tickIndex === tickIndexes.length - 1) {
+          context.textAlign = "right";
+          xPos -= 8; // Slight margin for the last number
+        } else {
+          context.textAlign = "center";
+        }
+
         context.fillText(
           momentum.period_labels[tickIndex],
-          point.x,
-          height - padding.bottom + 8,
+          xPos,
+          height - padding.bottom + 12,
         );
       });
 
-      drawSeries(industryPoints, industryColor, 2.1);
-      drawSeries(brandPoints, brandColor, 2.4);
+      drawSeries(industryPoints, industryColor, 2.2, height - padding.bottom);
+      drawSeries(brandPoints, brandColor, 2.6, height - padding.bottom);
     };
 
     let frameId = 0;
@@ -283,7 +323,17 @@ export default function MarketMomentum({
       <div className={styles.titleRow}>
         <div className={styles.titleBlock}>
           <p className={styles.title}>{copy.title}</p>
-          <p className={styles.label}>{subtitleLabel}</p>
+          <p className={styles.label}>
+            {subtitleParts.map((part, i) =>
+              part === "{sector}" ? (
+                <span key={i} className={styles.sectorHighlight}>
+                  ({momentum.sector})
+                </span>
+              ) : (
+                part
+              ),
+            )}
+          </p>
         </div>
         {hasResult && (
           <span className={`${styles.badge} ${styles[badgeVariant]}`}>{badgeLabel}</span>
