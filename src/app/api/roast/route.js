@@ -1,6 +1,5 @@
 import { verifyTurnstileToken } from "@/lib/turnstile";
 import crypto from "node:crypto";
-import { translate as translateText } from "@vitalets/google-translate-api";
 
 const DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
 const DEFAULT_PRIMARY_MODEL = "claude-3-5-haiku-latest";
@@ -180,12 +179,12 @@ const SUPPORTED_LANGUAGES = {
   it: {
     label: "Italian",
     instruction:
-      "Write prose fields in Italian. Keep the tone elegant, sharp, professional, and natural for an Italian-speaking audience.",
+      "Language mode selected by user: Italian. Write every prose field in Italian only. Never output prose in English when Italian is selected. Keep the tone elegant, sharp, professional, and natural for an Italian-speaking audience.",
   },
   en: {
     label: "English",
     instruction:
-      "Write prose fields in English. Keep the tone elegant, sharp, professional, and natural for an English-speaking audience.",
+      "Language mode selected by user: English. Write every prose field in English only. Never output prose in Italian when English is selected. Keep the tone elegant, sharp, professional, and natural for an English-speaking audience.",
   },
 };
 const COMPETITIVE_AXIS_EXPLANATION_FALLBACKS = {
@@ -426,11 +425,15 @@ function resolveReviewMode(mode) {
 function buildLanguageGuardrails(languageConfig) {
   const targetLanguage =
     languageConfig?.label === "Italian" ? "Italian" : "English";
+  const oppositeLanguage = targetLanguage === "Italian" ? "English" : "Italian";
 
   return [
-    `Language lock (mandatory): write every prose value in ${targetLanguage}.`,
-    "Do not mix Italian and English in the same response.",
-    "If any generated sentence is in the wrong language, rewrite it before returning JSON.",
+    `Language lock (mandatory): when user selected ${targetLanguage}, write every prose value in ${targetLanguage} only.`,
+    `Absolute rule: if selected language is ${targetLanguage}, do not write prose in ${oppositeLanguage}.`,
+    `Repeat for compliance: selected language is ${targetLanguage}; all prose must remain ${targetLanguage}.`,
+    `Final language check before returning JSON: every prose sentence must be ${targetLanguage}; rewrite anything that is not ${targetLanguage}.`,
+    `Do not mix ${targetLanguage} and ${oppositeLanguage} in the same response.`,
+    `If any generated sentence is in ${oppositeLanguage}, rewrite it fully in ${targetLanguage} before returning JSON.`,
     "Keep schema keys, ids, and fixed enum labels exactly as specified even if they are in English.",
     "Proper nouns, brand names, URLs, and quoted on-page text may stay in original form.",
   ];
@@ -1133,29 +1136,133 @@ function isNonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
-function shouldTranslateOpenRouterOutput({ aiApiMode, language }) {
-  return aiApiMode === "openrouter" && language === "it";
+function shouldTranslateOpenRouterOutput({ language }) {
+  return language === "it";
 }
 
-async function translateToItalianSafe(value, cache) {
+function parseAndValidateItalianTranslations(text, expectedCount) {
+  const normalizedText = normalizeModelText(text);
+
+  if (!normalizedText) {
+    throw new Error("AI translation response is empty.");
+  }
+
+  let parsed;
+
+  try {
+    parsed = JSON.parse(normalizedText);
+  } catch {
+    throw new Error("AI translation response is not valid JSON.");
+  }
+
+  const translations = Array.isArray(parsed)
+    ? parsed
+    : Array.isArray(parsed?.translations)
+      ? parsed.translations
+      : [];
+
+  if (translations.length !== expectedCount) {
+    throw new Error("AI translation response count mismatch.");
+  }
+
+  const normalized = translations.map((item) =>
+    typeof item === "string" ? item.trim() : "",
+  );
+
+  if (normalized.some((item) => !item)) {
+    throw new Error("AI translation response contains empty values.");
+  }
+
+  return normalized;
+}
+
+function buildItalianBatchTranslationPrompt(values) {
+  return `You are a professional translator.
+
+Translate every string from English to Italian.
+Return JSON only with this exact shape:
+{
+  "translations": ["...", "..."]
+}
+
+Hard requirements:
+- Keep the exact same array length and order as input.
+- Translate every item to natural professional Italian.
+- Keep URLs, email addresses, brand names, and product names unchanged.
+- Do not add, remove, summarize, or explain anything.
+- Do not include markdown.
+
+INPUT JSON:
+${JSON.stringify({ values })}`;
+}
+
+async function warmItalianTranslationCache(cache, values, options = {}) {
+  const uniqueSources = Array.from(
+    new Set(
+      values
+        .filter(isNonEmptyString)
+        .map((value) => value.trim())
+        .filter((value) => !cache.has(value)),
+    ),
+  );
+
+  if (uniqueSources.length === 0) return;
+
+  const translationContext = options?.translationContext;
+  const canUseAiTranslation =
+    translationContext &&
+    (translationContext.openRouterApiKey || translationContext.anthropicApiKey);
+
+  if (!canUseAiTranslation) {
+    uniqueSources.forEach((source) => cache.set(source, source));
+    return;
+  }
+
+  try {
+    const prompt = buildItalianBatchTranslationPrompt(uniqueSources);
+    const { result } = await runStructuredGenerationByApiMode({
+      aiApiMode: translationContext.aiApiMode,
+      anthropicApiKey: translationContext.anthropicApiKey,
+      openRouterApiKey: translationContext.openRouterApiKey,
+      anthropicPrimaryModel: translationContext.anthropicPrimaryModel,
+      anthropicFallbackModel: translationContext.anthropicFallbackModel,
+      enableAnthropicModelFallback:
+        translationContext.enableAnthropicModelFallback,
+      openRouterModel: translationContext.openRouterModel,
+      openRouterFallbackModel: translationContext.openRouterFallbackModel,
+      enableOpenRouterModelFallback:
+        translationContext.enableOpenRouterModelFallback,
+      prompt,
+      primaryMaxTokens: 900,
+      retryMaxTokens: 1300,
+      parseResponse: (text) =>
+        parseAndValidateItalianTranslations(text, uniqueSources.length),
+    });
+
+    uniqueSources.forEach((source, index) => {
+      const translated = Array.isArray(result) ? result[index] : "";
+      cache.set(
+        source,
+        isNonEmptyString(translated) ? translated.trim() : source,
+      );
+    });
+  } catch (error) {
+    console.warn(
+      "AI translation fallback failed: keeping original text.",
+      error instanceof Error ? error.message : error,
+    );
+    uniqueSources.forEach((source) => cache.set(source, source));
+  }
+}
+
+async function translateToItalianSafe(value, cache, options = {}) {
   if (!isNonEmptyString(value)) return value;
   const source = value.trim();
   const cached = cache.get(source);
   if (typeof cached === "string") return cached;
 
-  try {
-    const { text } = await translateText(source, { to: "it" });
-    const translated = isNonEmptyString(text) ? text.trim() : source;
-    cache.set(source, translated);
-    return translated;
-  } catch (error) {
-    console.warn(
-      "OpenRouter translation fallback: keeping original text.",
-      error instanceof Error ? error.message : error,
-    );
-    cache.set(source, source);
-    return source;
-  }
+  await warmItalianTranslationCache(cache, [source], options);
+  return cache.get(source) || source;
 }
 
 async function maybeTranslateBaseReviewToItalian(review, options = {}) {
@@ -1164,22 +1271,44 @@ async function maybeTranslateBaseReviewToItalian(review, options = {}) {
   }
 
   const cache = new Map();
+  await warmItalianTranslationCache(
+    cache,
+    [
+      review.summary,
+      review.verdict,
+      review.market_momentum?.sector,
+      review.market_momentum?.insight,
+      review.market_momentum?.method_note,
+      review.competitive_position?.insight,
+      review.competitive_position?.method_note,
+      ...review.categories.map((category) => category.comment),
+      ...review.top_strengths,
+      ...review.top_issues,
+      ...review.priority_actions.map((item) => item.action),
+      ...COMPETITIVE_POSITION_AXES.map(
+        (axis) => review.competitive_position.axis_explanations[axis],
+      ),
+    ],
+    options,
+  );
   const categories = await Promise.all(
     review.categories.map(async (category) => ({
       ...category,
-      comment: await translateToItalianSafe(category.comment, cache),
+      comment: await translateToItalianSafe(category.comment, cache, options),
     })),
   );
   const topStrengths = await Promise.all(
-    review.top_strengths.map((item) => translateToItalianSafe(item, cache)),
+    review.top_strengths.map((item) =>
+      translateToItalianSafe(item, cache, options),
+    ),
   );
   const topIssues = await Promise.all(
-    review.top_issues.map((item) => translateToItalianSafe(item, cache)),
+    review.top_issues.map((item) => translateToItalianSafe(item, cache, options)),
   );
   const priorityActions = await Promise.all(
     review.priority_actions.map(async (item) => ({
       ...item,
-      action: await translateToItalianSafe(item.action, cache),
+      action: await translateToItalianSafe(item.action, cache, options),
     })),
   );
   const axisExplanations = Object.fromEntries(
@@ -1189,6 +1318,7 @@ async function maybeTranslateBaseReviewToItalian(review, options = {}) {
         await translateToItalianSafe(
           review.competitive_position.axis_explanations[axis],
           cache,
+          options,
         ),
       ]),
     ),
@@ -1196,28 +1326,42 @@ async function maybeTranslateBaseReviewToItalian(review, options = {}) {
 
   return {
     ...review,
-    summary: await translateToItalianSafe(review.summary, cache),
+    summary: await translateToItalianSafe(review.summary, cache, options),
     categories,
     top_strengths: topStrengths,
     top_issues: topIssues,
     priority_actions: priorityActions,
-    verdict: await translateToItalianSafe(review.verdict, cache),
+    verdict: await translateToItalianSafe(review.verdict, cache, options),
     market_momentum: {
       ...review.market_momentum,
-      sector: await translateToItalianSafe(review.market_momentum.sector, cache),
-      insight: await translateToItalianSafe(review.market_momentum.insight, cache),
+      sector: await translateToItalianSafe(
+        review.market_momentum.sector,
+        cache,
+        options,
+      ),
+      insight: await translateToItalianSafe(
+        review.market_momentum.insight,
+        cache,
+        options,
+      ),
       method_note: await translateToItalianSafe(
         review.market_momentum.method_note,
         cache,
+        options,
       ),
     },
     competitive_position: {
       ...review.competitive_position,
       axis_explanations: axisExplanations,
-      insight: await translateToItalianSafe(review.competitive_position.insight, cache),
+      insight: await translateToItalianSafe(
+        review.competitive_position.insight,
+        cache,
+        options,
+      ),
       method_note: await translateToItalianSafe(
         review.competitive_position.method_note,
         cache,
+        options,
       ),
     },
   };
@@ -1232,18 +1376,38 @@ async function maybeTranslateRevenueOpportunityToItalian(
   }
 
   const cache = new Map();
+  await warmItalianTranslationCache(
+    cache,
+    [
+      revenueOpportunity.biggest_leak,
+      revenueOpportunity.quickest_win,
+      ...revenueOpportunity.strengths,
+      ...revenueOpportunity.weaknesses,
+      ...REVENUE_UI_STEP_IDS.flatMap((stepId) => {
+        const stepInsight = revenueOpportunity.step_insights[stepId];
+        return [stepInsight.explanation, ...stepInsight.quick_fixes];
+      }),
+    ],
+    options,
+  );
   const strengths = await Promise.all(
-    revenueOpportunity.strengths.map((item) => translateToItalianSafe(item, cache)),
+    revenueOpportunity.strengths.map((item) =>
+      translateToItalianSafe(item, cache, options),
+    ),
   );
   const weaknesses = await Promise.all(
-    revenueOpportunity.weaknesses.map((item) => translateToItalianSafe(item, cache)),
+    revenueOpportunity.weaknesses.map((item) =>
+      translateToItalianSafe(item, cache, options),
+    ),
   );
   const stepInsights = Object.fromEntries(
     await Promise.all(
       REVENUE_UI_STEP_IDS.map(async (stepId) => {
         const stepInsight = revenueOpportunity.step_insights[stepId];
         const quickFixes = await Promise.all(
-          stepInsight.quick_fixes.map((item) => translateToItalianSafe(item, cache)),
+          stepInsight.quick_fixes.map((item) =>
+            translateToItalianSafe(item, cache, options),
+          ),
         );
 
         return [
@@ -1252,6 +1416,7 @@ async function maybeTranslateRevenueOpportunityToItalian(
             explanation: await translateToItalianSafe(
               stepInsight.explanation,
               cache,
+              options,
             ),
             quick_fixes: quickFixes,
           },
@@ -1267,10 +1432,12 @@ async function maybeTranslateRevenueOpportunityToItalian(
     biggest_leak: await translateToItalianSafe(
       revenueOpportunity.biggest_leak,
       cache,
+      options,
     ),
     quickest_win: await translateToItalianSafe(
       revenueOpportunity.quickest_win,
       cache,
+      options,
     ),
     step_insights: stepInsights,
   };
@@ -2789,6 +2956,18 @@ export async function POST(request) {
       });
     }
 
+    const translationContext = {
+      aiApiMode,
+      anthropicApiKey: ANTHROPIC_API_KEY,
+      openRouterApiKey: OPENROUTER_API_KEY,
+      anthropicPrimaryModel,
+      anthropicFallbackModel,
+      enableAnthropicModelFallback,
+      openRouterModel,
+      openRouterFallbackModel,
+      enableOpenRouterModelFallback,
+    };
+
     console.log(
       "Website roaster runtime config:",
       JSON.stringify({
@@ -2857,6 +3036,16 @@ export async function POST(request) {
       });
 
       if (cachedFunnel?.revenue_opportunity) {
+        const translatedCachedRevenueOpportunity =
+          await maybeTranslateRevenueOpportunityToItalian(
+            cachedFunnel.revenue_opportunity,
+            {
+              aiApiMode,
+              language: artifactPayload.language,
+              translationContext,
+            },
+          );
+
         console.log(
           "Website roaster cache:",
           JSON.stringify({
@@ -2867,7 +3056,7 @@ export async function POST(request) {
         );
 
         return Response.json({
-          revenue_opportunity: cachedFunnel.revenue_opportunity,
+          revenue_opportunity: translatedCachedRevenueOpportunity,
         });
       }
 
@@ -2906,6 +3095,7 @@ export async function POST(request) {
         {
           aiApiMode,
           language: artifactPayload.language,
+          translationContext,
         },
       );
 
@@ -2966,6 +3156,15 @@ export async function POST(request) {
     });
 
     if (cachedBase?.review && cachedBase?.site_content) {
+      const translatedCachedReview = await maybeTranslateBaseReviewToItalian(
+        cachedBase.review,
+        {
+          aiApiMode,
+          language: outputLanguage,
+          translationContext,
+        },
+      );
+
       console.log(
         "Website roaster cache:",
         JSON.stringify({
@@ -2989,11 +3188,11 @@ export async function POST(request) {
         normalizedUrl: parsedUrl.href,
         hostname: parsedUrl.hostname,
         status: "success",
-        review: cachedBase.review,
+        review: translatedCachedReview,
       });
 
       return Response.json({
-        review: cachedBase.review,
+        review: translatedCachedReview,
         funnel_artifact: funnelArtifact,
         funnel_expires_at: new Date(artifactExpiresAtMs).toISOString(),
       });
@@ -3089,6 +3288,7 @@ export async function POST(request) {
     const translatedReview = await maybeTranslateBaseReviewToItalian(review, {
       aiApiMode,
       language: outputLanguage,
+      translationContext,
     });
 
     setCachedRoasterPayload({
