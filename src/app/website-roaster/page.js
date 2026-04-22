@@ -97,7 +97,6 @@ export default function WebsiteRoaster() {
   const [funnelArtifact, setFunnelArtifact] = useState("");
   const [funnelExpiresAt, setFunnelExpiresAt] = useState("");
   const [funnelMessage, setFunnelMessage] = useState("");
-  const [notice, setNotice] = useState("");
   const [error, setError] = useState(null);
   const [turnstileToken, setTurnstileToken] = useState("");
   const [progress, setProgress] = useState(0);
@@ -186,7 +185,6 @@ export default function WebsiteRoaster() {
     setFunnelArtifact("");
     setFunnelExpiresAt("");
     setFunnelMessage("");
-    setNotice("");
     setError(null);
 
     try {
@@ -204,8 +202,6 @@ export default function WebsiteRoaster() {
       const data = await res.json();
 
       if (!res.ok) throw new Error(data.error || "Unknown error");
-      setNotice(typeof data.notice === "string" ? data.notice : "");
-
       setReviewBase(data.review || null);
       setReviewContext({
         normalizedUrl,
@@ -295,7 +291,6 @@ export default function WebsiteRoaster() {
       if (!res.ok) throw new Error(data.error || "Unknown error");
 
       setRevenueData(data.revenue_opportunity || null);
-      setNotice(typeof data.notice === "string" ? data.notice : "");
       setFunnelMessage("");
     } catch (err) {
       if ((err.message || "").toLowerCase().includes("expired")) {
@@ -495,7 +490,7 @@ export default function WebsiteRoaster() {
                         We are reading the site and preparing a strategic
                         assessment.
                         <br />
-                        It can take about 30 seconds.
+                        It can take from 30 to 90 seconds.
                       </p>
                       {showSlowServerMessage && (
                         <p className={styles.slowServerWarning}>
@@ -577,14 +572,6 @@ export default function WebsiteRoaster() {
                 </div>
               )}
 
-              {!error && notice && !loading && !funnelLoading && (
-                <div className={styles.statusPanel} aria-live="polite">
-                  <div>
-                    <p className={styles.statusTitle}>Provider update</p>
-                    <p className={styles.statusText}>{notice}</p>
-                  </div>
-                </div>
-              )}
             </div>
 
             <div className={`${styles.panel} ${styles.resultPanel}`}>
