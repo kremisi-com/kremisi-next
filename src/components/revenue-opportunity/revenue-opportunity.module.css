@@ -330,7 +330,7 @@
 .stepInsightTitle {
   margin: 0;
   color: var(--foreground);
-  font-size: 1.1rem;
+  font-size: 1.3rem;
   font-weight: 700;
   letter-spacing: 0.02em;
 }
@@ -338,7 +338,7 @@
 .stepInsightScore {
   margin: 0;
   color: var(--primary);
-  font-size: 0.88rem;
+  font-size: 1.02rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   font-weight: 800;
@@ -362,7 +362,7 @@
 .noFixLabel {
   margin: 14px 0 8px;
   color: var(--primary);
-  font-size: 0.85rem;
+  font-size: 1rem;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   font-weight: 800;
@@ -493,7 +493,7 @@
   display: grid;
   gap: 8px;
   color: var(--foreground);
-  font-size: 1.2rem;
+  font-size: 1.45rem;
   line-height: 1.6;
 }
 
@@ -514,7 +514,7 @@
 .analysisText {
   margin: 0;
   color: var(--foreground);
-  font-size: 1.2rem;
+  font-size: 1.45rem;
   line-height: 1.6;
   opacity: 0.95;
 }
@@ -621,7 +621,7 @@
 
   .analysisList,
   .analysisText {
-    font-size: 1.15rem;
+    font-size: 1.45rem;
   }
 
   .stepInsightTop {
@@ -642,6 +642,19 @@
   .quickFixList,
   .noFixText {
     font-size: 1.45rem;
+  }
+
+  .stepInsightTitle {
+    font-size: 1.18rem;
+  }
+
+  .stepInsightScore {
+    font-size: 0.95rem;
+  }
+
+  .quickFixLabel,
+  .noFixLabel {
+    font-size: 0.92rem;
   }
 
   .stepInsightText {

@@ -126,12 +126,12 @@ const LOCALE_COPY = {
     strengths: "Punti di Forza",
     weaknesses: "Debolezze",
     biggestLeak: "Perdita Maggiore",
-    quickestWin: "Win Piu Rapido",
+    quickestWin: "Win Più Rapido",
     stepInsightHeading: "Insight Dinamico",
     stepRatingLabel: "Valutazione",
     quickFixLabel: "Quick Fix",
     noFixLabel: "Nessuna Correzione",
-    noFixText: "Questo step e gia performante al massimo livello.",
+    noFixText: "Questo step è già performante al massimo livello.",
     dropOff: "Perdita",
     steps: {
       visits: "Visits",
@@ -145,7 +145,7 @@ const LOCALE_COPY = {
         explanation:
           "Il 100% in Visits rappresenta il pubblico iniziale che entra nel funnel: sono gli step successivi a determinare la conversione.",
         quickFixes: [
-          "Sostituisci il titolo hero con una promessa concreta gia nella prima riga.",
+          "Sostituisci il titolo hero con una promessa concreta già nella prima riga.",
           "Rimuovi un elemento visivo sopra la piega per ridurre distrazioni.",
         ],
       },
@@ -161,7 +161,7 @@ const LOCALE_COPY = {
         explanation:
           "La fiducia cala quando mancano prove visibili: loghi clienti, metriche di risultato e testimonianze con numeri reali e contesto business.",
         quickFixes: [
-          "Sposta il blocco prova piu forte sopra la prima CTA.",
+          "Sposta il blocco prova più forte sopra la prima CTA.",
           "Aggiorna una testimonianza con risultato specifico e finestra temporale.",
         ],
       },
@@ -175,7 +175,7 @@ const LOCALE_COPY = {
       },
       "submitted-lead": {
         explanation:
-          "I lead si perdono nel form quando i campi sono troppi, il tempo di risposta non e chiaro e mancano rassicurazioni privacy vicino al submit.",
+          "I lead si perdono nel form quando i campi sono troppi, il tempo di risposta non è chiaro e mancano rassicurazioni privacy vicino al submit.",
         quickFixes: [
           "Riduci i campi al minimo indispensabile per il primo contatto.",
           "Aggiungi sotto al bottone tempi di risposta e nota privacy sintetica.",
@@ -184,19 +184,19 @@ const LOCALE_COPY = {
     },
     lockedTitle: "Sblocca la simulazione del funnel",
     lockedText:
-      "Invia un sito per sostituire questa anteprima con un funnel stimato dall'AI, le perdite principali e i win piu rapidi.",
+      "Invia un sito per sostituire questa anteprima con un funnel stimato dall'AI, le perdite principali e i win più rapidi.",
     fallbackStrengths: [
       "La proposta di valore principale emerge subito.",
-      "Il contrasto visivo aiuta la leggibilita del messaggio.",
+      "Il contrasto visivo aiuta la leggibilità del messaggio.",
     ],
     fallbackWeaknesses: [
-      "La CTA primaria perde visibilita dopo la hero.",
+      "La CTA primaria perde visibilità dopo la hero.",
       "Le sezioni centrali rallentano la spinta alla decisione.",
     ],
     fallbackLeak:
-      "La perdita maggiore avviene tra profondita di scroll e reach della CTA.",
+      "La perdita maggiore avviene tra profondità di scroll e reach della CTA.",
     fallbackWin:
-      "Ripeti la CTA primaria prima con prove di fiducia piu immediate.",
+      "Ripeti la CTA primaria prima con prove di fiducia più immediate.",
   },
 };
 

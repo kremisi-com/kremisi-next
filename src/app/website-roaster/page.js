@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import GitButton from "@/components/git-button/git-button";
 import styles from "./page.module.css";
@@ -38,14 +39,19 @@ function readFunnelCache(normalizedUrl, language) {
 
   try {
     const parsed = JSON.parse(raw);
-    const artifact = typeof parsed?.artifact === "string" ? parsed.artifact : "";
+    const artifact =
+      typeof parsed?.artifact === "string" ? parsed.artifact : "";
     const savedAt = Number(parsed?.savedAt || 0);
     const explicitExpiresAt = Date.parse(parsed?.expiresAt || "");
     const expiresAtMs = Number.isFinite(explicitExpiresAt)
       ? explicitExpiresAt
       : savedAt + FUNNEL_CACHE_TTL_MS;
 
-    if (!artifact || !Number.isFinite(expiresAtMs) || Date.now() > expiresAtMs) {
+    if (
+      !artifact ||
+      !Number.isFinite(expiresAtMs) ||
+      Date.now() > expiresAtMs
+    ) {
       window.localStorage.removeItem(storageKey);
       return null;
     }
@@ -94,7 +100,56 @@ export default function WebsiteRoaster() {
   const [notice, setNotice] = useState("");
   const [error, setError] = useState(null);
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [progress, setProgress] = useState(0);
+  const [funnelProgress, setFunnelProgress] = useState(0);
+  const [showSlowServerMessage, setShowSlowServerMessage] = useState(false);
   const turnstileRef = useRef(null);
+
+  useEffect(() => {
+    let interval;
+    if (loading) {
+      setProgress(0);
+      interval = setInterval(() => {
+        setProgress((prev) => {
+          if (prev < 100) return prev + 1;
+          return prev;
+        });
+      }, 150); // 15000ms / 100 steps = 150ms per step
+    } else {
+      setProgress(0);
+    }
+    return () => clearInterval(interval);
+  }, [loading]);
+
+  useEffect(() => {
+    if (!loading) {
+      setShowSlowServerMessage(false);
+      return;
+    }
+
+    setShowSlowServerMessage(false);
+    const timeout = setTimeout(() => {
+      setShowSlowServerMessage(true);
+    }, 60_000);
+
+    return () => clearTimeout(timeout);
+  }, [loading]);
+
+  useEffect(() => {
+    let interval;
+    if (funnelLoading) {
+      setFunnelProgress(0);
+      interval = setInterval(() => {
+        setFunnelProgress((prev) => {
+          if (prev < 100) return prev + 1;
+          return prev;
+        });
+      }, 150); // 15000ms / 100 steps = 150ms per step
+    } else {
+      setFunnelProgress(0);
+    }
+    return () => clearInterval(interval);
+  }, [funnelLoading]);
 
   const handleRoast = async () => {
     let normalizedUrl;
@@ -147,7 +202,9 @@ export default function WebsiteRoaster() {
       const artifact =
         typeof data.funnel_artifact === "string" ? data.funnel_artifact : "";
       const expiresAt =
-        typeof data.funnel_expires_at === "string" ? data.funnel_expires_at : "";
+        typeof data.funnel_expires_at === "string"
+          ? data.funnel_expires_at
+          : "";
 
       setFunnelArtifact(artifact);
       setFunnelExpiresAt(expiresAt);
@@ -175,7 +232,9 @@ export default function WebsiteRoaster() {
 
   const handleRunFunnel = async () => {
     if (!reviewContext) {
-      setFunnelMessage("Run Start Review first to prepare the cached page snapshot.");
+      setFunnelMessage(
+        "Run Start Review first to prepare the cached page snapshot.",
+      );
       return;
     }
 
@@ -186,7 +245,8 @@ export default function WebsiteRoaster() {
     try {
       let artifactToUse = funnelArtifact;
       const expiresAtMs = Date.parse(funnelExpiresAt || "");
-      const artifactExpired = Number.isFinite(expiresAtMs) && Date.now() > expiresAtMs;
+      const artifactExpired =
+        Number.isFinite(expiresAtMs) && Date.now() > expiresAtMs;
 
       if (!artifactToUse || artifactExpired) {
         const cached = readFunnelCache(
@@ -315,7 +375,9 @@ export default function WebsiteRoaster() {
           <div className={styles.toolColumn}>
             <div className={styles.panel}>
               <div className={styles.panelHeader}>
-                <span className={styles.panelTag}>Paste the website to roast</span>
+                <span className={styles.panelTag}>
+                  Paste the website to roast
+                </span>
                 <span className={styles.panelCaption}>Brutal honesty mode</span>
               </div>
 
@@ -348,13 +410,17 @@ export default function WebsiteRoaster() {
                     <option value="en">EN</option>
                   </select>
                 </label>
-                <button
-                  className={styles.roastButton}
-                  onClick={handleRoast}
-                  disabled={loading || funnelLoading || !url.trim() || !turnstileToken}
-                >
-                  {loading ? "Analyzing..." : "Start Review"}
-                </button>
+                <div className={styles.buttonWrapper}>
+                  <button
+                    className={styles.roastButton}
+                    onClick={handleRoast}
+                    disabled={
+                      loading || funnelLoading || !url.trim() || !turnstileToken
+                    }
+                  >
+                    {loading ? "Analyzing..." : "Start Review"}
+                  </button>
+                </div>
               </div>
 
               <Turnstile
@@ -363,33 +429,114 @@ export default function WebsiteRoaster() {
                 onTokenChange={setTurnstileToken}
               />
 
-              {loading && (
-                <div className={styles.statusPanel} aria-live="polite">
-                  <div className={styles.spinner} />
-                  <div>
-                    <p className={styles.statusTitle}>Analysis in progress</p>
-                    <p className={styles.statusText}>
-                      We are reading the site and preparing a strategic
-                      assessment.
-                      <br />
-                      It can take up to a minute.
-                    </p>
-                  </div>
-                </div>
-              )}
+              <AnimatePresence>
+                {loading && (
+                  <motion.div
+                    className={styles.statusPanel}
+                    aria-live="polite"
+                    initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <div className={styles.statusVisual}>
+                      <div className={styles.spinner} />
+                      <div className={styles.progressRingWrap}>
+                        <svg className={styles.progressRing} width="36" height="36" viewBox="0 0 36 36">
+                          <circle className={styles.progressRingBg} cx="18" cy="18" r="16" />
+                          <motion.circle
+                            className={styles.progressRingFill}
+                            cx="18"
+                            cy="18"
+                            r="16"
+                            initial={{ pathLength: 0 }}
+                            animate={{ pathLength: progress / 100 }}
+                            transition={{ duration: 0.15, ease: "linear" }}
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                    <div className={styles.statusContent}>
+                      <div className={styles.statusHeaderRow}>
+                        <p className={styles.statusTitle}>Analysis in progress</p>
+                        <div className={styles.progressBadge}>
+                          <span className={styles.progressCount}>{progress}</span>
+                          <span className={styles.progressTotal}>/100</span>
+                        </div>
+                      </div>
+                      <p className={styles.statusText}>
+                        We are reading the site and preparing a strategic
+                        assessment.
+                        <br />
+                        It can take about 30 seconds.
+                      </p>
+                      {showSlowServerMessage && (
+                        <p className={styles.slowServerWarning}>
+                          I server sono pieni, quindi ci sono rallentamenti.
+                        </p>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
 
-              {funnelLoading && (
-                <div className={styles.statusPanel} aria-live="polite">
-                  <div className={styles.spinner} />
-                  <div>
-                    <p className={styles.statusTitle}>Funnel simulation in progress</p>
-                    <p className={styles.statusText}>
-                      We are reusing the cached page snapshot and generating the
-                      AI Funnel Simulation.
-                    </p>
-                  </div>
-                </div>
-              )}
+                {funnelLoading && (
+                  <motion.div
+                    className={`${styles.statusPanel} ${styles.funnelStatusPanel}`}
+                    aria-live="polite"
+                    initial={{ opacity: 0, y: 12, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.98 }}
+                    transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                  >
+                    <div className={styles.statusVisual}>
+                      <div className={styles.spinner} />
+                      <div className={styles.funnelVisualIcon}>
+                        <motion.svg 
+                          width="18" 
+                          height="18" 
+                          viewBox="0 0 24 24" 
+                          fill="none" 
+                          stroke="currentColor" 
+                          strokeWidth="2.5" 
+                          strokeLinecap="round" 
+                          strokeLinejoin="round"
+                          animate={{ 
+                            scale: [1, 1.15, 1],
+                            opacity: [0.6, 1, 0.6]
+                          }}
+                          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                        >
+                          <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
+                        </motion.svg>
+                      </div>
+                    </div>
+                    <div className={styles.statusContent}>
+                      <div className={styles.statusHeaderRow}>
+                        <p className={styles.statusTitle}>
+                          Funnel simulation in progress
+                        </p>
+                        <span className={styles.liveTag}>LIVE SIMULATION</span>
+                      </div>
+                      <p className={styles.statusText}>
+                        Reusing cached snapshot to estimate conversion leaks and behavioral patterns.
+                      </p>
+                      <div className={styles.funnelMiniBar}>
+                        <motion.div 
+                          className={styles.funnelMiniBarFill}
+                          animate={{ 
+                            left: ["-100%", "100%"] 
+                          }}
+                          transition={{ 
+                            duration: 2, 
+                            repeat: Infinity, 
+                            ease: "easeInOut" 
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
 
               {error && (
                 <div className={styles.errorPanel} aria-live="polite">
@@ -419,7 +566,9 @@ export default function WebsiteRoaster() {
                   <div className={styles.scoreWrap}>
                     <span className={styles.scoreLabel}>Overall Score</span>
                     <div className={styles.scoreValueRow}>
-                      <span className={styles.scoreValue}>{reviewBase.overall_score}</span>
+                      <span className={styles.scoreValue}>
+                        {reviewBase.overall_score}
+                      </span>
                       <span className={styles.scoreScale}>/5</span>
                     </div>
                     <div className={styles.scoreMeter} aria-hidden="true">
@@ -454,14 +603,21 @@ export default function WebsiteRoaster() {
 
                   <section className={styles.categoriesGrid}>
                     {reviewBase.categories.map((category) => (
-                      <article key={category.name} className={styles.categoryCard}>
+                      <article
+                        key={category.name}
+                        className={styles.categoryCard}
+                      >
                         <div className={styles.categoryHeader}>
-                          <h3 className={styles.categoryTitle}>{category.name}</h3>
+                          <h3 className={styles.categoryTitle}>
+                            {category.name}
+                          </h3>
                           <span className={styles.categoryScore}>
                             {category.score}/5
                           </span>
                         </div>
-                        <p className={styles.categoryComment}>{category.comment}</p>
+                        <p className={styles.categoryComment}>
+                          {category.comment}
+                        </p>
                       </article>
                     ))}
                   </section>
@@ -489,12 +645,19 @@ export default function WebsiteRoaster() {
                   <section className={styles.actionsCard}>
                     <div className={styles.actionsIntro}>
                       <p className={styles.listLabel}>Priority Actions</p>
-                      <span className={styles.actionsCaption}>What to fix first</span>
+                      <span className={styles.actionsCaption}>
+                        What to fix first
+                      </span>
                     </div>
                     <div className={styles.priorityList}>
                       {reviewBase.priority_actions.map((item) => (
-                        <div key={item.priority} className={styles.priorityItem}>
-                          <span className={styles.priorityBadge}>{item.priority}</span>
+                        <div
+                          key={item.priority}
+                          className={styles.priorityItem}
+                        >
+                          <span className={styles.priorityBadge}>
+                            {item.priority}
+                          </span>
                           <p className={styles.priorityText}>{item.action}</p>
                         </div>
                       ))}
@@ -503,28 +666,68 @@ export default function WebsiteRoaster() {
 
                   {!revenueData && (
                     <button
-                      className={`${styles.actionsCard} ${styles.funnelSimulationTrigger}`}
+                      className={`${styles.actionsCard} ${styles.funnelSimulationTrigger} ${funnelLoading ? styles.triggerLoading : ""}`}
                       onClick={handleRunFunnel}
                       disabled={funnelLoading}
                     >
+                      {funnelLoading && (
+                        <div className={styles.triggerProgressBacking}>
+                          <motion.div 
+                            className={styles.triggerProgressBar}
+                            style={{ width: `${funnelProgress}%` }}
+                            transition={{ duration: 0.15, ease: "linear" }}
+                          />
+                          <div className={styles.triggerScanner} />
+                        </div>
+                      )}
+
                       <div className={styles.actionsIntro}>
                         <p className={styles.listLabel}>AI Funnel Simulation</p>
-                        <span className={styles.actionsCaption}>
-                          {uiLocale === "it" ? "Analisi comportamentale" : "Behavioral analysis"}
-                        </span>
+                        <div className={styles.triggerHeaderRight}>
+                          {funnelLoading && (
+                            <motion.span 
+                              className={styles.triggerLiveBadge}
+                              animate={{ opacity: [1, 0.5, 1] }}
+                              transition={{ duration: 1.5, repeat: Infinity }}
+                            >
+                              PROCESSING
+                            </motion.span>
+                          )}
+                          <span className={styles.actionsCaption}>
+                            {uiLocale === "it"
+                              ? "Analisi comportamentale"
+                              : "Behavioral analysis"}
+                          </span>
+                        </div>
                       </div>
+
                       <div className={styles.triggerContent}>
                         <p className={styles.triggerText}>
-                          {uiLocale === "it" 
-                            ? "I tuoi utenti abbandonano il sito? Clicca per scoprire esattamente dove e perché." 
+                          {uiLocale === "it"
+                            ? "I tuoi utenti abbandonano il sito? \nClicca per scoprire esattamente dove e perché."
                             : "Are users leaving your site? Click to discover exactly where and why."}
                         </p>
-                        <span className={styles.triggerAction}>
-                          {funnelLoading 
-                            ? (uiLocale === "it" ? "Simulazione in corso..." : "Simulation in progress...") 
-                            : (uiLocale === "it" ? "Avvia Simulazione →" : "Start Simulation →")}
-                        </span>
+                        
+                        <div className={styles.triggerActionRow}>
+                          <span className={styles.triggerAction}>
+                            {funnelLoading
+                              ? uiLocale === "it"
+                                ? "Simulazione in corso..."
+                                : "Simulation in progress..."
+                              : uiLocale === "it"
+                                ? "Avvia Simulazione →"
+                                : "Start Simulation →"}
+                          </span>
+
+                          {funnelLoading && (
+                            <div className={styles.triggerProgressBadge}>
+                              <span className={styles.progressCount}>{funnelProgress}</span>
+                              <span className={styles.progressTotal}>/100</span>
+                            </div>
+                          )}
+                        </div>
                       </div>
+                      
                       {funnelMessage && (
                         <p className={styles.statusText}>{funnelMessage}</p>
                       )}

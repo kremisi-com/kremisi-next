@@ -65,13 +65,14 @@ const REVENUE_UI_STEP_IDS = [
   "submitted-lead",
 ];
 const OPENROUTER_FALLBACK_NOTICE =
-  "Il modello gratuito su OpenRouter ci sta mettendo piu del previsto. Ho completato l'analisi con Anthropic.";
+  "Il modello gratuito su OpenRouter ci sta mettendo più del previsto. Ho completato l'analisi con Anthropic.";
 const COMPETITIVE_POSITION_INSIGHT =
   "Strong technical base. Weak differentiation.";
 const DEFAULT_ROASTER_COST_TARGET_PERCENT = 40;
 const DEFAULT_ROASTER_CACHE_TTL_SECONDS = 24 * 60 * 60;
 const DEFAULT_ROASTER_CACHE_MAX_ENTRIES = 500;
-const DEFAULT_ROASTER_PROMPT_VERSION = "1";
+const DEFAULT_ROASTER_PROMPT_VERSION = "3";
+const ROASTER_CACHE_SCHEMA_VERSION = "3";
 const FUNNEL_ARTIFACT_TTL_MS = 24 * 60 * 60 * 1000;
 const FUNNEL_ARTIFACT_VERSION = 1;
 const PRIORITY_LEVELS = ["High", "Medium", "Low"];
@@ -434,6 +435,7 @@ function buildLanguageGuardrails(languageConfig) {
     `Final language check before returning JSON: every prose sentence must be ${targetLanguage}; rewrite anything that is not ${targetLanguage}.`,
     `Do not mix ${targetLanguage} and ${oppositeLanguage} in the same response.`,
     `If any generated sentence is in ${oppositeLanguage}, rewrite it fully in ${targetLanguage} before returning JSON.`,
+    "Use correct orthography for the selected language. For Italian, always include required accents and apostrophes (for example: è, più, perché, già).",
     "Keep schema keys, ids, and fixed enum labels exactly as specified even if they are in English.",
     "Proper nouns, brand names, URLs, and quoted on-page text may stay in original form.",
   ];
@@ -446,7 +448,7 @@ function createHttpError(message, status = 500) {
 }
 
 function buildRoasterCacheKey({ canonicalUrl, language, mode }) {
-  return `${mode}|${language}|${canonicalUrl}|${ROASTER_RUNTIME.promptVersion}`;
+  return `${mode}|${language}|${canonicalUrl}|${ROASTER_RUNTIME.promptVersion}|cache-schema:${ROASTER_CACHE_SCHEMA_VERSION}`;
 }
 
 function getCachedRoasterPayload({ canonicalUrl, language, mode }) {
@@ -1136,6 +1138,37 @@ function isNonEmptyString(value) {
   return typeof value === "string" && value.trim().length > 0;
 }
 
+function applyItalianWordReplacements(text = "") {
+  return text
+    .replace(/\bpiu\b/gi, "più")
+    .replace(/\bperche\b/gi, "perché")
+    .replace(/\bgia\b/gi, "già")
+    .replace(/\bpuo\b/gi, "può")
+    .replace(/\bcio\b/gi, "ciò")
+    .replace(/\bcosi\b/gi, "così")
+    .replace(/\bqualita\b/gi, "qualità")
+    .replace(/\bvelocita\b/gi, "velocità")
+    .replace(/\bcredibilita\b/gi, "credibilità")
+    .replace(/\bvisibilita\b/gi, "visibilità")
+    .replace(/\bleggibilita\b/gi, "leggibilità")
+    .replace(/\bprofondita\b/gi, "profondità");
+}
+
+function normalizeItalianOrthography(text = "") {
+  if (!isNonEmptyString(text)) return text;
+
+  let out = applyItalianWordReplacements(text);
+
+  // Heuristic copula fix for common AI outputs:
+  // "la proposta e chiara" -> "la proposta è chiara"
+  out = out.replace(
+    /\b((?:il|lo|la|i|gli|le|un|uno|una|questo|questa|questi|queste|quello|quella)\s+[A-Za-zÀ-ÖØ-öø-ÿ']+)\s+e\s+(?=[A-Za-zÀ-ÖØ-öø-ÿ])/gi,
+    "$1 è ",
+  );
+
+  return out;
+}
+
 function shouldTranslateOpenRouterOutput({ language }) {
   return language === "it";
 }
@@ -1166,7 +1199,7 @@ function parseAndValidateItalianTranslations(text, expectedCount) {
   }
 
   const normalized = translations.map((item) =>
-    typeof item === "string" ? item.trim() : "",
+    typeof item === "string" ? normalizeItalianOrthography(item.trim()) : "",
   );
 
   if (normalized.some((item) => !item)) {
@@ -1180,6 +1213,7 @@ function buildItalianBatchTranslationPrompt(values) {
   return `You are a professional translator.
 
 Translate every string from English to Italian.
+If a string is already in Italian, rewrite it in clean, natural Italian and correct orthography.
 Return JSON only with this exact shape:
 {
   "translations": ["...", "..."]
@@ -1188,6 +1222,8 @@ Return JSON only with this exact shape:
 Hard requirements:
 - Keep the exact same array length and order as input.
 - Translate every item to natural professional Italian.
+- If an item is already Italian, keep meaning unchanged and improve wording only when needed for naturalness.
+- Use correct Italian spelling with required accents and apostrophes (for example: è, più, perché, già).
 - Keep URLs, email addresses, brand names, and product names unchanged.
 - Do not add, remove, summarize, or explain anything.
 - Do not include markdown.
@@ -1219,9 +1255,18 @@ async function warmItalianTranslationCache(cache, values, options = {}) {
   }
 
   try {
+    const translationAiApiMode =
+      translationContext.anthropicApiKey && translationContext.openRouterApiKey
+        ? "anthropic-before"
+        : translationContext.anthropicApiKey
+          ? "anthropic"
+          : translationContext.openRouterApiKey
+            ? "openrouter"
+            : translationContext.aiApiMode;
+
     const prompt = buildItalianBatchTranslationPrompt(uniqueSources);
     const { result } = await runStructuredGenerationByApiMode({
-      aiApiMode: translationContext.aiApiMode,
+      aiApiMode: translationAiApiMode,
       anthropicApiKey: translationContext.anthropicApiKey,
       openRouterApiKey: translationContext.openRouterApiKey,
       anthropicPrimaryModel: translationContext.anthropicPrimaryModel,
@@ -1243,7 +1288,9 @@ async function warmItalianTranslationCache(cache, values, options = {}) {
       const translated = Array.isArray(result) ? result[index] : "";
       cache.set(
         source,
-        isNonEmptyString(translated) ? translated.trim() : source,
+        isNonEmptyString(translated)
+          ? normalizeItalianOrthography(translated.trim())
+          : normalizeItalianOrthography(source),
       );
     });
   } catch (error) {
@@ -1251,7 +1298,9 @@ async function warmItalianTranslationCache(cache, values, options = {}) {
       "AI translation fallback failed: keeping original text.",
       error instanceof Error ? error.message : error,
     );
-    uniqueSources.forEach((source) => cache.set(source, source));
+    uniqueSources.forEach((source) =>
+      cache.set(source, normalizeItalianOrthography(source)),
+    );
   }
 }
 
@@ -1259,10 +1308,10 @@ async function translateToItalianSafe(value, cache, options = {}) {
   if (!isNonEmptyString(value)) return value;
   const source = value.trim();
   const cached = cache.get(source);
-  if (typeof cached === "string") return cached;
+  if (typeof cached === "string") return normalizeItalianOrthography(cached);
 
   await warmItalianTranslationCache(cache, [source], options);
-  return cache.get(source) || source;
+  return normalizeItalianOrthography(cache.get(source) || source);
 }
 
 async function maybeTranslateBaseReviewToItalian(review, options = {}) {
@@ -3234,9 +3283,21 @@ export async function POST(request) {
     );
     const compression = buildCompressedSiteContent(pageResults);
 
-    let siteContent = compression.siteContent;
+    const siteContent =
+      typeof compression.siteContent === "string"
+        ? compression.siteContent.trim()
+        : "";
+
     if (!siteContent) {
-      siteContent = "Unable to read the website content.";
+      return sendErrorResponse({
+        rawUrl,
+        parsedUrl,
+        status: 422,
+        error:
+          outputLanguage === "it"
+            ? "Il sito restituisce contenuto vuoto. Potrebbe dipendere dal fatto che la home non è leggibile o blocca la scansione. Invia il link di una pagina interna (ad esempio About/Chi siamo) e riprova."
+            : "The website returned empty content. This may happen when the homepage is not readable or blocks crawling. Send a link to an internal page (for example About) and try again.",
+      });
     }
 
     console.log(
