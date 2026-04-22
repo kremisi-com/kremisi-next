@@ -103,6 +103,7 @@
   display: block;
   width: 100%;
   height: auto;
+  overflow: visible;
   transition:
     filter 400ms ease,
     opacity 400ms ease,

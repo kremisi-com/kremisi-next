@@ -2575,6 +2575,12 @@ function isRecoverableProviderStatus(status) {
   return [408, 409, 425, 429, 500, 502, 503, 504, 529].includes(status);
 }
 
+function resolveEscalatedRetryMaxTokens({ provider, primaryMaxTokens, retryMaxTokens }) {
+  const providerFloor = provider === "anthropic" ? 3200 : 2600;
+  const computed = Math.max(retryMaxTokens, primaryMaxTokens + 800, providerFloor);
+  return Math.min(4096, computed);
+}
+
 function shouldFallbackModel(error) {
   return [
     "recoverable_provider_error",
@@ -2691,7 +2697,7 @@ async function runStructuredGenerationWithModel({
   let reviewText = extractProviderText(payload, provider);
 
   if (isTruncatedResponse(payload, provider)) {
-    console.warn("AI review was truncated on first attempt. Retrying once.");
+    console.warn("AI review was truncated on first attempt. Retrying with a larger token budget.");
 
     const truncationRepairPrompt = buildSchemaRepairPrompt({
       basePrompt: prompt,
@@ -2699,46 +2705,74 @@ async function runStructuredGenerationWithModel({
         "Response was truncated because max output tokens were reached.",
     });
 
-    const {
-      response: truncationRetryResponse,
-      payload: truncationRetryPayload,
-    } = await requestReview({
-      provider,
-      apiKey,
-      model: modelInUse,
-      prompt: truncationRepairPrompt,
-      maxTokens: retryMaxTokens,
-    });
+    const retryBudgets = [
+      retryMaxTokens,
+      resolveEscalatedRetryMaxTokens({
+        provider,
+        primaryMaxTokens,
+        retryMaxTokens,
+      }),
+    ].filter((value, index, all) => value > 0 && all.indexOf(value) === index);
 
-    logUsage({
-      provider,
-      model: modelInUse,
-      response: truncationRetryResponse,
-      payload: truncationRetryPayload,
-      stage: "truncation_retry",
-    });
+    let recoveredFromTruncation = false;
 
-    if (!truncationRetryResponse.ok) {
-      const retryMessage = mapProviderErrorMessage(
-        truncationRetryResponse.status,
-        truncationRetryPayload,
-        { provider },
-      );
-      if (isRecoverableProviderStatus(truncationRetryResponse.status)) {
-        throw createGenerationError("recoverable_provider_error", retryMessage, 502, {
+    for (let index = 0; index < retryBudgets.length; index += 1) {
+      const maxTokens = retryBudgets[index];
+      const stageLabel =
+        retryBudgets.length === 1
+          ? "truncation_retry"
+          : `truncation_retry_${index + 1}`;
+
+      const {
+        response: truncationRetryResponse,
+        payload: truncationRetryPayload,
+      } = await requestReview({
+        provider,
+        apiKey,
+        model: modelInUse,
+        prompt: truncationRepairPrompt,
+        maxTokens,
+      });
+
+      logUsage({
+        provider,
+        model: modelInUse,
+        response: truncationRetryResponse,
+        payload: truncationRetryPayload,
+        stage: stageLabel,
+      });
+
+      if (!truncationRetryResponse.ok) {
+        const retryMessage = mapProviderErrorMessage(
+          truncationRetryResponse.status,
+          truncationRetryPayload,
+          { provider },
+        );
+        if (isRecoverableProviderStatus(truncationRetryResponse.status)) {
+          throw createGenerationError("recoverable_provider_error", retryMessage, 502, {
+            status: truncationRetryResponse.status,
+            model: modelInUse,
+            provider,
+          });
+        }
+        throw createGenerationError("provider_error", retryMessage, 502, {
           status: truncationRetryResponse.status,
           model: modelInUse,
           provider,
         });
       }
-      throw createGenerationError("provider_error", retryMessage, 502, {
-        status: truncationRetryResponse.status,
-        model: modelInUse,
-        provider,
-      });
+
+      if (isTruncatedResponse(truncationRetryPayload, provider)) {
+        continue;
+      }
+
+      reviewText = extractProviderText(truncationRetryPayload, provider);
+      payload = truncationRetryPayload;
+      recoveredFromTruncation = true;
+      break;
     }
 
-    if (isTruncatedResponse(truncationRetryPayload, provider)) {
+    if (!recoveredFromTruncation) {
       throw createGenerationError(
         "truncated_after_retry",
         "The AI response was truncated before the JSON completed. Please try again.",
@@ -2746,9 +2780,6 @@ async function runStructuredGenerationWithModel({
         { model: modelInUse, provider },
       );
     }
-
-    reviewText = extractProviderText(truncationRetryPayload, provider);
-    payload = truncationRetryPayload;
   }
 
   try {

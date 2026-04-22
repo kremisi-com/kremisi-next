@@ -175,6 +175,18 @@ export default function CompetitivePosition({
   const tooltipTopPercent = activePoint
     ? Math.min(90, Math.max(12, (activePoint.y / 360) * 100))
     : 50;
+  const tooltipAnchor =
+    tooltipLeftPercent <= 40
+      ? "start"
+      : tooltipLeftPercent >= 60
+        ? "end"
+        : "center";
+  const tooltipTranslateX =
+    tooltipAnchor === "start"
+      ? "0%"
+      : tooltipAnchor === "end"
+        ? "-100%"
+        : "-50%";
 
   return (
     <motion.div
@@ -370,9 +382,9 @@ export default function CompetitivePosition({
         <AnimatePresence>
           {!locked && activeAxis && activePoint && (
             <motion.div
-              initial={{ opacity: 0, y: 10, scale: 0.95, x: "-50%" }}
-              animate={{ opacity: 1, y: 0, scale: 1, x: "-50%" }}
-              exit={{ opacity: 0, scale: 0.95, x: "-50%" }}
+              initial={{ opacity: 0, y: 10, scale: 0.95, x: tooltipTranslateX }}
+              animate={{ opacity: 1, y: 0, scale: 1, x: tooltipTranslateX }}
+              exit={{ opacity: 0, scale: 0.95, x: tooltipTranslateX }}
               transition={{ duration: 0.15, ease: "easeOut" }}
               className={styles.axisTooltip}
               style={{

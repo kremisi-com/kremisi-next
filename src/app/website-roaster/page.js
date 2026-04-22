@@ -130,7 +130,7 @@ export default function WebsiteRoaster() {
     setShowSlowServerMessage(false);
     const timeout = setTimeout(() => {
       setShowSlowServerMessage(true);
-    }, 60_000);
+    }, 45_000);
 
     return () => clearTimeout(timeout);
   }, [loading]);
@@ -455,8 +455,18 @@ export default function WebsiteRoaster() {
                     <div className={styles.statusVisual}>
                       <div className={styles.spinner} />
                       <div className={styles.progressRingWrap}>
-                        <svg className={styles.progressRing} width="36" height="36" viewBox="0 0 36 36">
-                          <circle className={styles.progressRingBg} cx="18" cy="18" r="16" />
+                        <svg
+                          className={styles.progressRing}
+                          width="36"
+                          height="36"
+                          viewBox="0 0 36 36"
+                        >
+                          <circle
+                            className={styles.progressRingBg}
+                            cx="18"
+                            cy="18"
+                            r="16"
+                          />
                           <motion.circle
                             className={styles.progressRingFill}
                             cx="18"
@@ -471,9 +481,13 @@ export default function WebsiteRoaster() {
                     </div>
                     <div className={styles.statusContent}>
                       <div className={styles.statusHeaderRow}>
-                        <p className={styles.statusTitle}>Analysis in progress</p>
+                        <p className={styles.statusTitle}>
+                          Analysis in progress
+                        </p>
                         <div className={styles.progressBadge}>
-                          <span className={styles.progressCount}>{progress}</span>
+                          <span className={styles.progressCount}>
+                            {progress}
+                          </span>
                           <span className={styles.progressTotal}>/100</span>
                         </div>
                       </div>
@@ -504,20 +518,24 @@ export default function WebsiteRoaster() {
                     <div className={styles.statusVisual}>
                       <div className={styles.spinner} />
                       <div className={styles.funnelVisualIcon}>
-                        <motion.svg 
-                          width="18" 
-                          height="18" 
-                          viewBox="0 0 24 24" 
-                          fill="none" 
-                          stroke="currentColor" 
-                          strokeWidth="2.5" 
-                          strokeLinecap="round" 
+                        <motion.svg
+                          width="18"
+                          height="18"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
                           strokeLinejoin="round"
-                          animate={{ 
+                          animate={{
                             scale: [1, 1.15, 1],
-                            opacity: [0.6, 1, 0.6]
+                            opacity: [0.6, 1, 0.6],
                           }}
-                          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+                          transition={{
+                            duration: 1.5,
+                            repeat: Infinity,
+                            ease: "easeInOut",
+                          }}
                         >
                           <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z" />
                         </motion.svg>
@@ -531,18 +549,19 @@ export default function WebsiteRoaster() {
                         <span className={styles.liveTag}>LIVE SIMULATION</span>
                       </div>
                       <p className={styles.statusText}>
-                        Reusing cached snapshot to estimate conversion leaks and behavioral patterns.
+                        Reusing cached snapshot to estimate conversion leaks and
+                        behavioral patterns.
                       </p>
                       <div className={styles.funnelMiniBar}>
-                        <motion.div 
+                        <motion.div
                           className={styles.funnelMiniBarFill}
-                          animate={{ 
-                            left: ["-100%", "100%"] 
+                          animate={{
+                            left: ["-100%", "100%"],
                           }}
-                          transition={{ 
-                            duration: 2, 
-                            repeat: Infinity, 
-                            ease: "easeInOut" 
+                          transition={{
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "easeInOut",
                           }}
                         />
                       </div>
@@ -697,7 +716,7 @@ export default function WebsiteRoaster() {
                         <p className={styles.listLabel}>AI Funnel Simulation</p>
                         <div className={styles.triggerHeaderRight}>
                           {funnelLoading && (
-                            <motion.span 
+                            <motion.span
                               className={styles.triggerLiveBadge}
                               animate={{ opacity: [1, 0.5, 1] }}
                               transition={{ duration: 1.5, repeat: Infinity }}
@@ -715,11 +734,17 @@ export default function WebsiteRoaster() {
 
                       <div className={styles.triggerContent}>
                         <p className={styles.triggerText}>
-                          {uiLocale === "it"
-                            ? "I tuoi utenti abbandonano il sito? \nClicca per scoprire esattamente dove e perché."
-                            : "Are users leaving your site? Click to discover exactly where and why."}
+                          {uiLocale === "it" ? (
+                            <>
+                              I tuoi utenti abbandonano il sito?
+                              <br />
+                              Clicca per scoprire esattamente dove e perché.
+                            </>
+                          ) : (
+                            "Are users leaving your site? Click to discover exactly where and why."
+                          )}
                         </p>
-                        
+
                         <div className={styles.triggerActionRow}>
                           <span className={styles.triggerAction}>
                             {funnelLoading
@@ -741,7 +766,7 @@ export default function WebsiteRoaster() {
                           )}
                         </div>
                       </div>
-                      
+
                       {funnelMessage && (
                         <p className={styles.statusText}>{funnelMessage}</p>
                       )}
