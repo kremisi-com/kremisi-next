@@ -86,10 +86,10 @@ const LOCALE_COPY = {
       },
       "clicked-cta": {
         explanation:
-          "Intent drops when the CTA blends into the layout, repeats too late, or uses low-commitment labels that do not explain what happens after the click.",
+          "Intent drops when the CTA blends into the layout, repeats too late, or sits too far from the page's main promise.",
         quickFixes: [
           "Increase CTA contrast and keep one primary action color across the page.",
-          "Change CTA text to outcome-based language (for example, 'Get My Audit').",
+          "Tie the CTA label to the strongest promise on the page.",
         ],
       },
       "submitted-lead": {
@@ -167,10 +167,10 @@ const LOCALE_COPY = {
       },
       "clicked-cta": {
         explanation:
-          "L'intenzione si perde quando la CTA non emerge visivamente, riappare tardi o usa testo debole che non spiega cosa succede dopo il click.",
+          "L'intenzione si perde quando la CTA non emerge visivamente, riappare tardi o resta troppo lontana dalla promessa principale.",
         quickFixes: [
           "Aumenta il contrasto CTA e mantieni un solo colore d'azione primario.",
-          "Usa un testo CTA orientato al risultato, non generico.",
+          "Allinea il testo della CTA alla promessa più forte della pagina.",
         ],
       },
       "submitted-lead": {

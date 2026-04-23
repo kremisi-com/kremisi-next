@@ -38,7 +38,7 @@ const LOCALE_COPY = {
     ariaLabel:
       "Five-year strategic chart comparing industry trend and brand momentum",
     fallbackInsight:
-      "The market may improve while the brand loses ground when execution feels dated, but a clear offer or credible specialization can still create room to recover.",
+      "Momentum depends on value clarity, trust proof, and CTA continuity: execution can strengthen, stall, or weaken brand trajectory.",
     fallbackMethod:
       "Illustrative preview. Final industry and brand curves are AI-estimated from the submitted site.",
   },
@@ -63,16 +63,16 @@ const LOCALE_COPY = {
     ariaLabel:
       "Grafico strategico quinquennale che confronta trend di settore e slancio del brand",
     fallbackInsight:
-      "Il mercato puo crescere mentre il brand perde slancio se il sito appare datato o poco distintivo, ma un'offerta chiara o una specializzazione credibile possono ancora sostenerne il potenziale.",
+      "Lo slancio dipende da chiarezza della proposta di valore, prove di fiducia e percorso CTA: l'esecuzione puo rafforzare, stabilizzare o indebolire la traiettoria.",
     fallbackMethod:
       "Anteprima illustrativa. Le curve finali di settore e brand sono stime AI basate sul sito inviato.",
   },
 };
 const FALLBACK_DATA = {
   period_labels: DEFAULT_PERIOD_LABELS,
-  industry_trend: [44, 48, 53, 57, 61],
-  brand_momentum: [52, 50, 47, 43, 40],
-  badge: "Diverging Trends",
+  industry_trend: [51, 53, 52, 54, 53],
+  brand_momentum: [49, 50, 49, 50, 49],
+  badge: "Stable",
 };
 
 function normalizeSeries(series, fallback) {
@@ -127,11 +127,26 @@ export default function MarketMomentum({
 }) {
   const canvasRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [themeTick, setThemeTick] = useState(0);
   const chartWrapRef = useRef(null);
   const copy = LOCALE_COPY[locale] || LOCALE_COPY.it;
   const momentum = normalizeMomentumData(data, copy);
   const hasResult = !locked && Boolean(data && typeof data === "object");
   const subtitleParts = copy.subtitleTemplate.split(/(\{sector\})/);
+
+  useEffect(() => {
+    const html = document.documentElement;
+    const body = document.body;
+    if (!html || !body) return undefined;
+
+    const onClassChange = () => setThemeTick((value) => value + 1);
+    const observer = new MutationObserver(onClassChange);
+
+    observer.observe(html, { attributes: true, attributeFilter: ["class"] });
+    observer.observe(body, { attributes: true, attributeFilter: ["class"] });
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -145,8 +160,19 @@ export default function MarketMomentum({
     const minValue = Math.max(Math.min(...allValues) - 8, 20);
     const maxValue = Math.min(Math.max(...allValues) + 8, 100);
     const padding = { top: 10, right: 0, bottom: 44, left: 0 };
-    const gridColor = "rgba(255, 255, 255, 0.04)";
-    const tickColor = "rgba(255, 255, 255, 0.44)";
+    const isLight =
+      document.documentElement.classList.contains("light") ||
+      document.body.classList.contains("light");
+    const gridColor = isLight
+      ? "rgba(24, 24, 27, 0.14)"
+      : "rgba(255, 255, 255, 0.06)";
+    const tickColor = isLight
+      ? "rgba(24, 24, 27, 0.58)"
+      : "rgba(255, 255, 255, 0.46)";
+    const hoverGuideColor = isLight
+      ? "rgba(24, 24, 27, 0.28)"
+      : "rgba(255, 255, 255, 0.25)";
+    const hoverDotFill = isLight ? "rgba(255, 255, 255, 0.96)" : "#fff";
     const industryColor = "#b55d6d";
     const brandColor = "#dc143c";
 
@@ -235,7 +261,7 @@ export default function MarketMomentum({
         // Vertical Guide Line
         context.beginPath();
         context.setLineDash([4, 4]);
-        context.strokeStyle = "rgba(255, 255, 255, 0.25)";
+        context.strokeStyle = hoverGuideColor;
         context.lineWidth = 1;
         context.moveTo(point.x, 0);
         context.lineTo(point.x, height - padding.bottom);
@@ -245,7 +271,7 @@ export default function MarketMomentum({
         // Highlight dots
         const drawHighlightDot = (p, color) => {
           context.beginPath();
-          context.fillStyle = "#fff";
+          context.fillStyle = hoverDotFill;
           context.shadowBlur = 10;
           context.shadowColor = color;
           context.arc(p.x, p.y, 5, 0, Math.PI * 2);
@@ -356,7 +382,7 @@ export default function MarketMomentum({
       window.cancelAnimationFrame(frameId);
       resizeObserver.disconnect();
     };
-  }, [momentum, hoveredIndex]);
+  }, [momentum, hoveredIndex, themeTick]);
 
   const handleMouseMove = (e) => {
     if (locked || !chartWrapRef.current) return;

@@ -14,8 +14,8 @@
     transition: color 0.2s ease;
 }
 
-/* SplitType genera classi GLOBALI (.word) */
-:global(.word) {
+/* SplitType genera classi globali dentro il blocco locale .text */
+.text :global(.word) {
     display: inline-block;
     overflow: hidden;
     margin-right: 0.25em;

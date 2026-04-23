@@ -91,6 +91,8 @@ export default function WebsiteRoaster() {
   const [language, setLanguage] = useState("it");
   const [loading, setLoading] = useState(false);
   const [funnelLoading, setFunnelLoading] = useState(false);
+  const [isMobileViewport, setIsMobileViewport] = useState(false);
+  const [strengthsExpanded, setStrengthsExpanded] = useState(false);
   const [reviewBase, setReviewBase] = useState(null);
   const [revenueData, setRevenueData] = useState(null);
   const [reviewContext, setReviewContext] = useState(null);
@@ -162,6 +164,31 @@ export default function WebsiteRoaster() {
       }
     };
   }, [funnelLoading]);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(max-width: 768px)");
+
+    const syncViewport = (event) => {
+      setIsMobileViewport(event.matches);
+    };
+
+    setIsMobileViewport(mediaQuery.matches);
+    mediaQuery.addEventListener("change", syncViewport);
+
+    return () => {
+      mediaQuery.removeEventListener("change", syncViewport);
+    };
+  }, []);
+
+  useEffect(() => {
+    setStrengthsExpanded(false);
+  }, [reviewBase]);
+
+  useEffect(() => {
+    if (!isMobileViewport) {
+      setStrengthsExpanded(false);
+    }
+  }, [isMobileViewport]);
 
   const handleRoast = async () => {
     let normalizedUrl;
@@ -308,6 +335,17 @@ export default function WebsiteRoaster() {
 
   const showFullReview = Boolean(reviewBase);
   const uiLocale = reviewContext?.language || (reviewBase ? language : "en");
+  const topStrengths = reviewBase?.top_strengths || [];
+  const strengthsSplitIndex = Math.ceil(topStrengths.length / 2);
+  const mobileStrengthsEnabled =
+    isMobileViewport && topStrengths.length > strengthsSplitIndex;
+  const hiddenStrengthsListId = "top-strengths-mobile-list";
+  const visibleStrengths = mobileStrengthsEnabled
+    ? topStrengths.slice(0, strengthsSplitIndex)
+    : topStrengths;
+  const hiddenStrengths = mobileStrengthsEnabled
+    ? topStrengths.slice(strengthsSplitIndex)
+    : [];
 
   return (
     <main className={`page-content-simple ${styles.page}`}>
@@ -645,10 +683,37 @@ export default function WebsiteRoaster() {
                     <div className={styles.listCard}>
                       <p className={styles.listLabel}>Top Strengths</p>
                       <ul className={styles.reviewList}>
-                        {reviewBase.top_strengths.map((item) => (
-                          <li key={item}>{item}</li>
+                        {visibleStrengths.map((item, index) => (
+                          <li key={`${item}-${index}`}>{item}</li>
                         ))}
                       </ul>
+
+                      {mobileStrengthsEnabled && (
+                        <div className={styles.strengthsToggleWrap}>
+                          <button
+                            type="button"
+                            className={styles.strengthsToggle}
+                            aria-expanded={strengthsExpanded}
+                            aria-controls={hiddenStrengthsListId}
+                            onClick={() =>
+                              setStrengthsExpanded((value) => !value)
+                            }
+                          >
+                            {strengthsExpanded ? "Show less" : "Read more"}
+                          </button>
+
+                          {strengthsExpanded && (
+                            <ul
+                              id={hiddenStrengthsListId}
+                              className={styles.reviewList}
+                            >
+                              {hiddenStrengths.map((item, index) => (
+                                <li key={`${item}-${index}`}>{item}</li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      )}
                     </div>
 
                     <div className={styles.listCard}>

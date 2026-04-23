@@ -13,6 +13,11 @@
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.05),
     0 24px 68px -24px rgba(0, 0, 0, 0.85);
+
+  --competitor-fill-start: rgba(255, 255, 255, 0.16);
+  --competitor-fill-stop: rgba(255, 255, 255, 0.05);
+  --average-fill-start: rgba(255, 255, 255, 0.1);
+  --average-fill-stop: rgba(255, 255, 255, 0.03);
 }
 
 :global(.light) .panel {
@@ -24,6 +29,11 @@
     0 2px 0 rgba(255, 255, 255, 0.84) inset,
     0 4px 24px rgba(0, 0, 0, 0.06),
     0 1px 4px rgba(0, 0, 0, 0.03);
+
+  --competitor-fill-start: rgba(0, 0, 0, 0.06);
+  --competitor-fill-stop: rgba(0, 0, 0, 0.02);
+  --average-fill-start: rgba(0, 0, 0, 0.04);
+  --average-fill-stop: rgba(0, 0, 0, 0.01);
 }
 
 .eyebrow {
@@ -73,6 +83,11 @@
     color-mix(in srgb, var(--background) 58%, transparent);
 }
 
+:global(.light) .chartShell {
+  background: rgba(0, 0, 0, 0.02);
+  border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
 .chartGlowContainer {
   position: absolute;
   inset: 0;
@@ -112,13 +127,21 @@
 
 .gridRing {
   fill: none;
-  stroke: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.1);
   stroke-width: 1;
 }
 
+:global(.light) .gridRing {
+  stroke: rgba(0, 0, 0, 0.08);
+}
+
 .axisLine {
-  stroke: rgba(255, 255, 255, 0.08);
+  stroke: rgba(255, 255, 255, 0.1);
   stroke-width: 1;
+}
+
+:global(.light) .axisLine {
+  stroke: rgba(0, 0, 0, 0.08);
 }
 
 .axisLabel {
@@ -170,9 +193,17 @@
   stroke: rgba(255, 255, 255, 0.52);
 }
 
+:global(.light) .competitorShape {
+  stroke: rgba(0, 0, 0, 0.35);
+}
+
 .averageShape {
   fill: url(#competitive-average-fill);
   stroke: rgba(255, 255, 255, 0.28);
+}
+
+:global(.light) .averageShape {
+  stroke: rgba(0, 0, 0, 0.2);
 }
 
 .siteDot,
@@ -212,9 +243,19 @@
   stroke: rgba(20, 20, 20, 0.35);
 }
 
+:global(.light) .competitorDot {
+  fill: rgba(0, 0, 0, 0.45);
+  stroke: rgba(0, 0, 0, 0.6);
+}
+
 .averageDot {
   fill: rgba(255, 255, 255, 0.34);
   stroke: rgba(20, 20, 20, 0.28);
+}
+
+:global(.light) .averageDot {
+  fill: rgba(255, 255, 255, 0.8);
+  stroke: rgba(0, 0, 0, 0.3);
 }
 
 .legend {
@@ -253,8 +294,16 @@
   background: rgba(255, 255, 255, 0.62);
 }
 
+:global(.light) .competitorSwatch {
+  background: rgba(0, 0, 0, 0.45);
+}
+
 .averageSwatch {
   background: rgba(255, 255, 255, 0.32);
+}
+
+:global(.light) .averageSwatch {
+  background: rgba(0, 0, 0, 0.2);
 }
 
 .lockedOverlay {
@@ -296,6 +345,10 @@
   line-height: 1.55;
   margin: 0;
   opacity: 0.78;
+}
+
+:global(.light) .insight {
+  opacity: 0.9;
 }
 
 .axisTooltip {
@@ -356,6 +409,11 @@
   color: var(--foreground);
   opacity: 0.4;
   font-weight: 600;
+}
+
+:global(.light) .methodNote {
+  opacity: 0.55;
+  border-top-color: rgba(0, 0, 0, 0.08);
 }
 
 @media (max-width: 768px) {

@@ -24,7 +24,7 @@ const FALLBACK_DATA = {
     UX:
       "Primary actions are not consistently repeated through sections, so users must scan to find the next step.",
     SEO:
-      "Headings and service copy include explicit intent terms, helping search engines map the page topic.",
+      "Headings and service copy include explicit intent terms, but the page still needs more specific wording to fully own its search intent.",
     Offer:
       "Service intent is visible, but scope and deliverables are not summarized early in one compact block.",
     Branding:
@@ -32,7 +32,7 @@ const FALLBACK_DATA = {
     Conversion:
       "CTA priority softens after the hero and the contact path lacks urgency cues near the action point.",
   },
-  insight: "Strong technical base. Weak differentiation.",
+  insight: "The page has a strong structural base, but the remaining gap is sharper differentiation.",
   method_note:
     "Synthetic preview. Final chart is generated from the submitted site.",
 };
@@ -86,8 +86,8 @@ function normalizeCompetitiveData(data) {
       ]),
     ),
     insight:
-      data.insight === FALLBACK_DATA.insight
-        ? data.insight
+      typeof data.insight === "string" && data.insight.trim()
+        ? data.insight.trim()
         : FALLBACK_DATA.insight,
     method_note:
       typeof data.method_note === "string" && data.method_note.trim()
@@ -227,12 +227,12 @@ export default function CompetitivePosition({
               x2="100%"
               y2="100%"
             >
-              <stop offset="0%" stopColor="rgba(255, 255, 255, 0.16)" />
-              <stop offset="100%" stopColor="rgba(255, 255, 255, 0.05)" />
+              <stop offset="0%" style={{ stopColor: "var(--competitor-fill-start)" }} />
+              <stop offset="100%" style={{ stopColor: "var(--competitor-fill-stop)" }} />
             </linearGradient>
             <linearGradient id="competitive-average-fill" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" stopColor="rgba(255, 255, 255, 0.1)" />
-              <stop offset="100%" stopColor="rgba(255, 255, 255, 0.03)" />
+              <stop offset="0%" style={{ stopColor: "var(--average-fill-start)" }} />
+              <stop offset="100%" style={{ stopColor: "var(--average-fill-stop)" }} />
             </linearGradient>
           </defs>
 

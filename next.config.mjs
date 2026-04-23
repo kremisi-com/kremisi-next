@@ -1,5 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
+import { fileURLToPath } from "node:url";
 
 function normalizeProjectSlug(value = "") {
   const normalized = value
@@ -14,6 +15,7 @@ function normalizeProjectSlug(value = "") {
 
 const projectsDataPath = path.join(process.cwd(), "src/lib/projects.json");
 const projectsData = JSON.parse(fs.readFileSync(projectsDataPath, "utf8"));
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 const projectRedirects = Object.entries(projectsData)
   .filter(([, project]) => project.disabled !== true)
   .map(([projectId, project]) => {
@@ -33,6 +35,9 @@ const projectRedirects = Object.entries(projectsData)
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  turbopack: {
+    root: projectRoot,
+  },
   async redirects() {
     return projectRedirects;
   },

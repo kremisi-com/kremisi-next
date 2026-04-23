@@ -41,6 +41,38 @@ const MARKET_MOMENTUM_BADGES = [
   "Under Pressure",
   "Declining",
 ];
+const HIGH_GROWTH_SECTOR_PATTERNS = [
+  /\bai\b/i,
+  /\bmarketplace(s)?\b/i,
+  /\bplatform(s)?\b/i,
+  /\bsaas\b/i,
+  /\bsoftware\b/i,
+  /\bdevtools?\b/i,
+  /\bapi\b/i,
+  /\binfrastructure\b/i,
+  /\bautomation\b/i,
+  /\bcloud\b/i,
+  /\bdata\b/i,
+  /\bfintech\b/i,
+  /\bproduct[-\s]?led\b/i,
+];
+const MATURE_SERVICE_SECTOR_PATTERNS = [
+  /\blegal\b/i,
+  /\blaw\b/i,
+  /\battorney\b/i,
+  /\bcpa\b/i,
+  /\baccount(ing|ant)?\b/i,
+  /\btax\b/i,
+  /\bdental\b/i,
+  /\bclinic\b/i,
+  /\bmedical\b/i,
+  /\bdoctor\b/i,
+  /\btherapy\b/i,
+  /\barchitect(ure)?\b/i,
+  /\breal estate\b/i,
+  /\bmunicipal\b/i,
+  /\bpublic agency\b/i,
+];
 const COMPETITIVE_POSITION_AXES = [
   "Trust",
   "UX",
@@ -67,11 +99,11 @@ const REVENUE_UI_STEP_IDS = [
 const OPENROUTER_FALLBACK_NOTICE =
   "Il modello gratuito su OpenRouter ci sta mettendo più del previsto. Ho completato l'analisi con Anthropic.";
 const COMPETITIVE_POSITION_INSIGHT =
-  "Strong technical base. Weak differentiation.";
+  "The page has a solid structural base, but the remaining gap is clearer proof and more specific positioning near the main action.";
 const DEFAULT_ROASTER_COST_TARGET_PERCENT = 40;
 const DEFAULT_ROASTER_CACHE_TTL_SECONDS = 24 * 60 * 60;
 const DEFAULT_ROASTER_CACHE_MAX_ENTRIES = 500;
-const DEFAULT_ROASTER_PROMPT_VERSION = "3";
+const DEFAULT_ROASTER_PROMPT_VERSION = "6";
 const ROASTER_CACHE_SCHEMA_VERSION = "3";
 const FUNNEL_ARTIFACT_TTL_MS = 24 * 60 * 60 * 1000;
 const FUNNEL_ARTIFACT_VERSION = 1;
@@ -83,6 +115,58 @@ const HOMEPAGE_HTML_MAX_CHARS = 250000;
 const REVENUE_STEP_INSIGHT_EXPLANATION_CHAR_MAX = 190;
 const REVENUE_STEP_INSIGHT_QUICK_FIX_CHAR_MAX = 90;
 const COMPETITIVE_AXIS_EXPLANATION_CHAR_MAX = 230;
+const SITE_EVIDENCE_MAX_ITEMS = 8;
+const SITE_EVIDENCE_MAX_TERMS = 5;
+const SITE_EVIDENCE_MAX_LINE_LENGTH = 140;
+const SITE_EVIDENCE_STOP_WORDS = new Set([
+  "the",
+  "and",
+  "for",
+  "with",
+  "from",
+  "that",
+  "this",
+  "your",
+  "you",
+  "our",
+  "are",
+  "was",
+  "were",
+  "can",
+  "will",
+  "into",
+  "onto",
+  "about",
+  "over",
+  "under",
+  "alla",
+  "allo",
+  "agli",
+  "alle",
+  "del",
+  "della",
+  "dello",
+  "dei",
+  "degli",
+  "delle",
+  "di",
+  "da",
+  "in",
+  "su",
+  "per",
+  "con",
+  "tra",
+  "fra",
+  "una",
+  "uno",
+  "un",
+  "il",
+  "lo",
+  "la",
+  "i",
+  "gli",
+  "le",
+]);
 const COST_PROFILE_DEFAULTS = {
   conservative: {
     depthOneMaxLinks: 6,
@@ -164,6 +248,36 @@ const TRUST_SIGNAL_LINE_PATTERNS = [
   /\b(client|clients|customer|customers|trusted by|what clients say)\b/i,
   /\b(testimonianze?|recensioni?|casi studio|clienti)\b/i,
 ];
+const HIDDEN_CONTENT_REMOVE_SELECTORS = [
+  "header",
+  "footer",
+  "nav",
+  "script",
+  "style",
+  ".elementor-hidden-desktop",
+  ".elementor-hidden-tablet",
+  ".elementor-hidden-mobile",
+  ".elementor-hidden-phone",
+  ".elementor-hidden-widescreen",
+  ".elementor-hidden-laptop",
+  "[hidden]",
+  "[aria-hidden='true']",
+  "[style*='display:none']",
+  "[style*='display: none']",
+  "[style*='visibility:hidden']",
+  "[style*='visibility: hidden']",
+].join(",");
+const HIDDEN_CONTENT_LINE_PATTERNS = [
+  /\bfusce dapus nisi est\b/i,
+  /\bcase stories\b/i,
+  /\bwhen an unknown printer took a galley type\b/i,
+  /\bunknown printer took a galley type\b/i,
+  /\blorem ipsum\b/i,
+  /\bsmartdemowp\.com\b/i,
+  /\bvideo gallery\b/i,
+  /\bwatch video\b/i,
+  /\bthe marketing advice and risk management\b/i,
+];
 const TRUST_SECTION_HEADER_PATTERNS = [
   /\bwhat clients say\b/i,
   /\btestimonial|testimonials\b/i,
@@ -194,7 +308,7 @@ const COMPETITIVE_AXIS_EXPLANATION_FALLBACKS = {
   UX:
     "Primary actions are not repeated with consistent styling after the first section, forcing users to search for the next step during scroll.",
   SEO:
-    "Section headings and service copy include clear topic terms, giving search engines enough context to map the page to commercial intent queries.",
+    "Section headings and service copy include clear topic terms, but the page still needs more specific wording to fully own its search intent.",
   Offer:
     "The homepage introduces services but does not define scope, deliverables, or who each package is for in one compact above-the-fold block.",
   Branding:
@@ -721,7 +835,7 @@ async function fetchJinaPageText(url) {
       headers: {
         Accept: "text/plain",
         "X-Return-Format": "text",
-        "X-Remove-Selector": "header,footer,nav,script,style",
+        "X-Remove-Selector": HIDDEN_CONTENT_REMOVE_SELECTORS,
       },
       signal: AbortSignal.timeout(JINA_FETCH_TIMEOUT_MS),
     });
@@ -755,6 +869,10 @@ function toLineKey(line = "") {
 
 function isTrustSignalLine(line = "") {
   return TRUST_SIGNAL_LINE_PATTERNS.some((pattern) => pattern.test(line));
+}
+
+function isHiddenContentLine(line = "") {
+  return HIDDEN_CONTENT_LINE_PATTERNS.some((pattern) => pattern.test(line));
 }
 
 function collectTrustContextLineKeys(lines = []) {
@@ -797,7 +915,8 @@ function extractTrustSnippetFromRawText(text = "", maxChars = TRUST_FALLBACK_MAX
     .map((line) => line.replace(/\s+/g, " ").trim())
     .filter(Boolean)
     .filter((line) => line.length >= 8 && line.length <= 260)
-    .filter((line) => !BOILERPLATE_LINE_PATTERNS.some((pattern) => pattern.test(line)));
+    .filter((line) => !BOILERPLATE_LINE_PATTERNS.some((pattern) => pattern.test(line)))
+    .filter((line) => !isHiddenContentLine(line));
 
   if (lines.length === 0) return "";
 
@@ -838,7 +957,8 @@ function compressPageTextStageOne(text = "", maxChars = PAGE_STAGE_ONE_MAX_CHARS
     .map((line) => line.replace(/\s+/g, " ").trim())
     .filter(Boolean)
     .filter((line) => line.length >= 8 && line.length <= 260)
-    .filter((line) => !BOILERPLATE_LINE_PATTERNS.some((pattern) => pattern.test(line)));
+    .filter((line) => !BOILERPLATE_LINE_PATTERNS.some((pattern) => pattern.test(line)))
+    .filter((line) => !isHiddenContentLine(line));
 
   const seen = new Set();
   const trustSignal = [];
@@ -986,6 +1106,147 @@ function buildCompressedSiteContent(pageResults) {
       .filter((item) => !item.ok)
       .map((item) => `${item.url} (${item.error || "unknown"})`),
   };
+}
+
+function normalizeEvidenceLine(line = "") {
+  return line
+    .replace(/\s+/g, " ")
+    .replace(/^[\-\u2022•*]+\s*/, "")
+    .trim();
+}
+
+function truncateEvidenceLine(value, maxChars = SITE_EVIDENCE_MAX_LINE_LENGTH) {
+  if (!isNonEmptyString(value)) return "";
+  const normalized = normalizeEvidenceLine(value);
+  return normalized.length <= maxChars
+    ? normalized
+    : `${normalized.slice(0, Math.max(1, maxChars - 1)).trimEnd()}…`;
+}
+
+function tokenizeEvidenceTerms(line = "") {
+  return (line.match(/[\p{L}\p{N}'-]+/gu) || [])
+    .map((token) => token.trim())
+    .filter(Boolean);
+}
+
+function isEvidenceActionLine(line = "") {
+  return /\b(book|start|get|request|contact|call|demo|quote|prenota|prenotare|contattaci|contattare|richiedi|richiedere|scopri|parla|preventivo|scrivici|chiama)\b/i.test(
+    line,
+  );
+}
+
+function isEvidenceProofLine(line = "") {
+  return /\b(testimonial|testimonials|review|reviews|case study|case studies|proof|success story|success stories|client|clients|customer|customers|trusted by|recensioni|testimonianze|casi studio|clienti)\b/i.test(
+    line,
+  );
+}
+
+function isEvidenceLocationLine(line = "") {
+  return /(?:\bin|\ba|\bsu)\s+[A-ZÀ-ÖØ-Ý][\p{L}'-]{2,}/u.test(line);
+}
+
+function extractSiteEvidenceAnchors(siteContent = "") {
+  if (!isNonEmptyString(siteContent)) {
+    return {
+      hero: [],
+      cta: [],
+      proof: [],
+      locations: [],
+      recurring_terms: [],
+    };
+  }
+
+  const lines = siteContent
+    .replace(/\r/g, "")
+    .split("\n")
+    .map((line) => normalizeEvidenceLine(line))
+    .filter(Boolean)
+    .filter((line) => !/^\[PAGE\s+\d+\]/i.test(line))
+    .filter((line) => !/^\[TRUST SIGNALS\]/i.test(line));
+
+  const hero = [];
+  const cta = [];
+  const proof = [];
+  const locations = [];
+  const termCounts = new Map();
+  const termDisplay = new Map();
+
+  for (const line of lines) {
+    if (line.length <= 18) continue;
+
+    if (line.length <= 110 && hero.length < 3) {
+      hero.push(truncateEvidenceLine(line));
+    }
+
+    if (isEvidenceActionLine(line) && cta.length < 3) {
+      cta.push(truncateEvidenceLine(line));
+    }
+
+    if (isEvidenceProofLine(line) && proof.length < 3) {
+      proof.push(truncateEvidenceLine(line));
+    }
+
+    if (isEvidenceLocationLine(line) && locations.length < 3) {
+      locations.push(truncateEvidenceLine(line));
+    }
+
+    for (const token of tokenizeEvidenceTerms(line)) {
+      const normalized = token.toLowerCase();
+      if (normalized.length < 4) continue;
+      if (SITE_EVIDENCE_STOP_WORDS.has(normalized)) continue;
+      if (/^\d+$/.test(normalized)) continue;
+
+      termCounts.set(normalized, (termCounts.get(normalized) || 0) + 1);
+      if (!termDisplay.has(normalized)) {
+        termDisplay.set(normalized, token);
+      }
+    }
+  }
+
+  const recurring_terms = [...termCounts.entries()]
+    .filter(([, count]) => count >= 2)
+    .sort((a, b) => {
+      if (b[1] !== a[1]) return b[1] - a[1];
+      return a[0].localeCompare(b[0]);
+    })
+    .slice(0, SITE_EVIDENCE_MAX_TERMS)
+    .map(([term, count]) => `${termDisplay.get(term) || term} x${count}`);
+
+  return {
+    hero,
+    cta,
+    proof,
+    locations,
+    recurring_terms,
+  };
+}
+
+function formatEvidenceAnchorsForPrompt(siteContent = "") {
+  const anchors = extractSiteEvidenceAnchors(siteContent);
+  const sections = [
+    ["Hero / opening cues", anchors.hero],
+    ["CTA / action cues", anchors.cta],
+    ["Proof / trust cues", anchors.proof],
+    ["Location cues", anchors.locations],
+    ["Recurring terms", anchors.recurring_terms],
+  ]
+    .filter(([, items]) => Array.isArray(items) && items.length > 0)
+    .map(
+      ([label, items]) =>
+        `${label}:\n${items
+          .slice(0, SITE_EVIDENCE_MAX_ITEMS)
+          .map((item) => `- ${item}`)
+          .join("\n")}`,
+    );
+
+  if (sections.length === 0) {
+    return [
+      "Evidence anchors extracted from the crawl:",
+      "- No strong anchors were found. State that the site text does not expose enough proof.",
+    ].join("\n");
+  }
+
+  return [`Evidence anchors extracted from the crawl:`, ...sections].join("\n");
 }
 
 async function requestReviewAnthropic({ apiKey, model, prompt, maxTokens = 2200 }) {
@@ -1653,6 +1914,111 @@ function normalizeNumericSeries(values, fallback, min, max) {
   );
 }
 
+function isHighGrowthSector(sector) {
+  return HIGH_GROWTH_SECTOR_PATTERNS.some((pattern) => pattern.test(sector));
+}
+
+function isMatureServiceSector(sector) {
+  return MATURE_SERVICE_SECTOR_PATTERNS.some((pattern) => pattern.test(sector));
+}
+
+function getSectorMomentumProfile(sector) {
+  if (isHighGrowthSector(sector)) return "high-growth";
+  if (isMatureServiceSector(sector)) return "mature";
+  return "steady";
+}
+
+function buildSectorTrendSeries(profile) {
+  switch (profile) {
+    case "high-growth":
+      return [58, 66, 64, 74, 83];
+    case "mature":
+      return [48, 49, 49, 50, 51];
+    default:
+      return [50, 52, 51, 53, 54];
+  }
+}
+
+function countPositiveSteps(series) {
+  let positiveSteps = 0;
+
+  for (let index = 1; index < series.length; index += 1) {
+    if (series[index] > series[index - 1]) {
+      positiveSteps += 1;
+    }
+  }
+
+  return positiveSteps;
+}
+
+function hasClearUptrend(series) {
+  const netDelta = series[series.length - 1] - series[0];
+  return netDelta >= 8 && countPositiveSteps(series) >= 3;
+}
+
+function buildGrowthSeries(startValue, offsets) {
+  return offsets.map((offset) =>
+    toIntegerInRange(startValue + offset, 25, 100, startValue + offset),
+  );
+}
+
+function createHighGrowthMomentum(industryTrend, brandMomentum) {
+  const industryStart = Math.max(58, Math.min(industryTrend[0] ?? 58, 72));
+  const brandStart = Math.max(
+    56,
+    Math.min(brandMomentum[0] ?? industryStart - 2, industryStart - 1, 70),
+  );
+
+  return {
+    industryTrend: buildGrowthSeries(industryStart, [0, 8, 6, 16, 25]),
+    brandMomentum: buildGrowthSeries(brandStart, [0, 7, 10, 17, 23]),
+  };
+}
+
+function inferMarketMomentumBadge(industryTrend, brandMomentum) {
+  const lastIndex = Math.max(industryTrend.length - 1, 0);
+  const industryDelta = industryTrend[lastIndex] - industryTrend[0];
+  const brandDelta = brandMomentum[lastIndex] - brandMomentum[0];
+  const startGap = industryTrend[0] - brandMomentum[0];
+  const endGap = industryTrend[lastIndex] - brandMomentum[lastIndex];
+  const gapDelta = endGap - startGap;
+
+  if (brandDelta <= -6 && industryDelta <= -4) return "Declining";
+  if (brandDelta <= -4 || (brandDelta < 0 && endGap >= 6)) {
+    return "Under Pressure";
+  }
+
+  if (
+    Math.abs(gapDelta) >= 6 ||
+    (brandDelta >= 4 && industryDelta <= 1) ||
+    (brandDelta <= -2 && industryDelta >= 3)
+  ) {
+    return "Diverging Trends";
+  }
+
+  if (
+    Math.abs(brandDelta) <= 2 &&
+    Math.abs(industryDelta) <= 2 &&
+    Math.abs(endGap) <= 4
+  ) {
+    return "Stable";
+  }
+
+  if (
+    brandDelta >= 8 &&
+    industryDelta >= 8 &&
+    countPositiveSteps(industryTrend) >= 3 &&
+    countPositiveSteps(brandMomentum) >= 3
+  ) {
+    return "Strong Growth";
+  }
+
+  if (brandDelta >= 3 || industryDelta >= 3) return "Moderate Growth";
+  if (brandDelta < 0 || industryDelta < 0) return "Under Pressure";
+
+  return "Stable";
+}
+
 function normalizeMarketMomentum(marketMomentum) {
   const source =
     marketMomentum &&
@@ -1660,29 +2026,74 @@ function normalizeMarketMomentum(marketMomentum) {
     !Array.isArray(marketMomentum)
       ? marketMomentum
       : {};
+  const sector = toNonEmptyString(source.sector, "General");
+  const sectorProfile = getSectorMomentumProfile(sector);
+  let industryTrend = normalizeNumericSeries(
+    source.industry_trend,
+    [52, 54, 53, 55, 54],
+    25,
+    100,
+  );
+  let brandMomentum = normalizeNumericSeries(
+    source.brand_momentum,
+    [49, 50, 48, 49, 47],
+    25,
+    100,
+  );
+
+  if (sectorProfile === "high-growth") {
+    if (!hasClearUptrend(industryTrend) || !hasClearUptrend(brandMomentum)) {
+      const growthMomentum = createHighGrowthMomentum(
+        industryTrend,
+        brandMomentum,
+      );
+      industryTrend = growthMomentum.industryTrend;
+      brandMomentum = growthMomentum.brandMomentum;
+    }
+  } else {
+    const sectorTrend = buildSectorTrendSeries(sectorProfile);
+    const weakExecution = /\b(manca|missing|unclear|weak|sparse|generic|limited|lagging|behind|slowed)\b/i.test(
+      toNonEmptyString(source.insight, ""),
+    );
+    const strongExecution = /\b(clear|clearer|specific|visible proof|testimonials|case results|strong CTA|focused|distinct|differentiation)\b/i.test(
+      toNonEmptyString(source.insight, ""),
+    );
+
+    if (hasClearUptrend(industryTrend) || sectorProfile === "mature") {
+      industryTrend = sectorTrend;
+    }
+
+    if (sectorProfile === "mature") {
+      if (weakExecution) {
+        brandMomentum = [44, 45, 44, 43, 42];
+      } else if (strongExecution) {
+        brandMomentum = [46, 48, 49, 50, 52];
+      } else if (!hasClearUptrend(brandMomentum)) {
+        brandMomentum = [45, 46, 46, 47, 48];
+      }
+    }
+  }
+
+  const inferredBadge = inferMarketMomentumBadge(industryTrend, brandMomentum);
+  const insight = toNonEmptyString(
+    source.insight,
+    "Brand momentum reflects visible execution quality: value clarity, trust evidence, and CTA continuity can drive growth, plateaus, or declines.",
+  );
+  const resetInsight =
+    isHighGrowthSector(sector) &&
+    /\b(lagging|held back|under pressure|unclear|behind|weak|slowed)\b/i.test(
+      insight,
+    );
 
   return {
     period_labels: [...MARKET_MOMENTUM_LABELS],
-    sector: toNonEmptyString(source.sector, "General"),
-    industry_trend: normalizeNumericSeries(
-      source.industry_trend,
-      [44, 48, 53, 57, 61],
-      25,
-      100,
-    ),
-    brand_momentum: normalizeNumericSeries(
-      source.brand_momentum,
-      [52, 50, 47, 43, 40],
-      25,
-      100,
-    ),
-    badge: MARKET_MOMENTUM_BADGES.includes(source.badge)
-      ? source.badge
-      : "Diverging Trends",
-    insight: toNonEmptyString(
-      source.insight,
-      "Visible positioning quality appears divergent versus category direction, with upside if offer clarity and trust communication are tightened.",
-    ),
+    sector,
+    industry_trend: industryTrend,
+    brand_momentum: brandMomentum,
+    badge: inferredBadge,
+    insight: resetInsight
+      ? `${sector} benefits from strong category tailwinds, while the site still needs sharper differentiation and proof to convert that demand consistently.`
+      : insight,
     method_note: toNonEmptyString(
       source.method_note,
       "Both lines are AI-estimated from visible website signals and broad market perception, not internal company data.",
@@ -1725,7 +2136,7 @@ function normalizeCompetitivePosition(competitivePosition) {
         ),
       ]),
     ),
-    insight: COMPETITIVE_POSITION_INSIGHT,
+    insight: toNonEmptyString(source.insight, COMPETITIVE_POSITION_INSIGHT),
     method_note: toNonEmptyString(
       source.method_note,
       "AI-estimated comparative read based on visible execution quality and positioning signals.",
@@ -2170,7 +2581,7 @@ function validateCompetitivePosition(competitivePosition) {
     validateCompetitiveSeries(top_competitor) &&
     validateCompetitiveSeries(category_average) &&
     validateCompetitiveAxisExplanations(axis_explanations) &&
-    insight === COMPETITIVE_POSITION_INSIGHT &&
+    isNonEmptyString(insight) &&
     isNonEmptyString(method_note)
   );
 }
@@ -2356,6 +2767,7 @@ async function sendErrorResponse({
 
 function buildBasePrompt({ hostname, siteContent, languageConfig }) {
   const languageGuardrails = buildLanguageGuardrails(languageConfig);
+  const evidenceAnchors = formatEvidenceAnchorsForPrompt(siteContent);
 
   return `You are a senior web strategist and conversion consultant.
 
@@ -2365,6 +2777,12 @@ Return JSON only.
 Do not use markdown.
 Do not include any text before or after the JSON.
 Do not include any key outside this schema.
+Use evidence-first reasoning: every judgment must be anchored to a concrete cue visible in WEBSITE CONTENT.
+Prefer direct site wording, repeated keywords, hero phrases, CTA labels, service names, location mentions, proof lines, or navigation labels.
+If the site does not expose enough evidence for a claim, say so explicitly instead of generalizing.
+Do not invent proof, outcomes, location signals, or audience fit that are not visible in WEBSITE CONTENT.
+When possible, cite the exact cue in the same sentence as the judgment.
+Keep interpretations short and concrete. Avoid abstract consultancy language that cannot be traced back to the page.
 Use this exact structure and key names:
 {
   "summary": "Short executive summary in 1-2 sentences.",
@@ -2387,10 +2805,10 @@ Use this exact structure and key names:
   "market_momentum": {
     "period_labels": [${MARKET_MOMENTUM_LABELS.map((label) => `"${label}"`).join(", ")}],
     "sector": "Precise sector label (for example: Fashion Ecommerce)",
-    "industry_trend": [42, 47, 51, 58, 63],
-    "brand_momentum": [48, 46, 43, 40, 38],
-    "badge": "Diverging Trends",
-    "insight": "Short causal explanation of why the gap exists between market trend and brand momentum, tied to concrete visible page cues.",
+    "industry_trend": [58, 66, 64, 74, 83],
+    "brand_momentum": [56, 63, 66, 73, 79],
+    "badge": "Moderate Growth",
+    "insight": "Short causal explanation of why the market-vs-brand relationship appears this way, tied to concrete visible page cues.",
     "method_note": "Short disclosure that both lines are AI-estimated."
   },
   "competitive_position": {
@@ -2406,7 +2824,7 @@ Use this exact structure and key names:
       "Branding": "State the concrete reason for this Branding score as communicative brand solidity: consistency between visual style and message (promise, voice, terminology) across headline, sections, and CTA microcopy.",
       "Conversion": "State the concrete reason for this Conversion score using cues like CTA placement, friction in lead capture, repeated action paths, and urgency/reassurance elements."
     },
-    "insight": "${COMPETITIVE_POSITION_INSIGHT}",
+    "insight": "One-sentence strategic synthesis of positioning versus competitor and category average.",
     "method_note": "Short disclosure that the chart is AI-estimated."
   }
 }
@@ -2420,15 +2838,40 @@ Hard requirements:
 - Keep each category comment to 1 sentence (max 28 words).
 - Keep each strength, issue, and action concise.
 - Keep verdict to 1 sentence (max 20 words).
+- Framing rules by score:
+- If a category score is 4-5, lead with what is working, then name the remaining gap in the same sentence.
+- If a category score is 3, describe it as solid but incomplete, not broken.
+- If a category score is 1-2, be direct about the weakness.
+- Do not write a purely critical sentence for a high score when there is visible evidence of strength.
 - market_momentum.period_labels must be exactly: ${MARKET_MOMENTUM_LABELS.join(", ")}.
 - market_momentum.sector must be a concise sector label in the requested language (1-3 words, no parentheses).
 - market_momentum.badge must be one of: ${MARKET_MOMENTUM_BADGES.join(", ")}.
 - market_momentum.insight must explicitly answer why the trend relationship exists (cause -> effect), not just describe what the lines do.
-- market_momentum.insight must cite at least one concrete page cue (for example: unclear value proposition, weak differentiation claim, hidden pricing, sparse proof near CTA, unclear offer scope).
+- market_momentum.insight must cite at least one concrete page cue (for example: clear value proposition, strong differentiation claim, visible proof, concise offer scope, strong CTA flow, or, on the negative side, hidden pricing, sparse proof near CTA, unclear offer scope).
+- market_momentum.industry_trend and market_momentum.brand_momentum must be numerically coherent with market_momentum.insight (cause -> effect): line behavior must support the explanation.
+- Treat market_momentum as a two-layer read: industry_trend reflects category tailwind, while brand_momentum reflects the site's execution.
+- For fast-growing categories such as AI marketplaces, AI tools, developer platforms, SaaS, fintech, automation, and infrastructure, industry_trend should usually slope upward unless the page content clearly contradicts category demand.
+- For mature service sectors such as legal, accounting, tax, dental, medical, architecture, real estate, and municipal services, industry_trend should usually be stable or only mildly growing rather than sharply bullish.
+- Do not force brand_momentum below industry_trend by default. Let it track, narrow the gap, or briefly overtake the sector when the page shows clear product depth, differentiation, trust proof, or a clean CTA path.
+- For mature service sectors, brand_momentum should reflect the site's actual conversion potential: weak sites can stay flat or drift down, while strong sites should show restrained growth rather than explosive upside.
+- If the page is strong but not flawless, prefer a growth curve with one gentle pullback over a flat, pessimistic line.
+- Do not copy or mirror the example momentum arrays from this prompt; generate site-specific values.
+- Avoid perfectly uniform step increments in momentum arrays: do not produce mechanical sequences like +4,+4,+4,+4.
+- Ensure both momentum arrays have at least 3 distinct values each to avoid static-looking output.
+- Do not force market_momentum into a bearish posture when the sector shows clear tailwinds; let the category trend breathe.
+- At least one momentum array should include a plateau or pullback unless the evidence is exceptionally consistent.
+- If market_momentum.insight says the brand is lagging, slowed, held back, unclear, or behind the sector, keep brand_momentum below industry_trend in at least 4 of 5 periods.
+- If insight describes a lagging or restrained brand trajectory, the final-period gap between industry_trend and brand_momentum must be visible and non-zero (typically >= 3 points).
+- If the page shows severe friction (for example broken paths, missing primary offer clarity, or weak proof near CTA), include at least one downward segment in brand_momentum.
+- Do not assert external market-share losses, ranking declines, or competitor performance unless that evidence is explicitly present in WEBSITE CONTENT.
+- market_momentum.badge must match the arrays: Strong Growth requires clear net rise in both lines; Declining requires net decline in brand_momentum; Stable requires near-flat net change.
 - competitive_position.axes must be exactly: ${COMPETITIVE_POSITION_AXES.join(", ")}.
 - competitive_position.axis_explanations must include exactly these keys: ${COMPETITIVE_POSITION_AXES.join(", ")}.
 - Each competitive_position.axis_explanations value must be one concrete sentence, max ${COMPETITIVE_AXIS_EXPLANATION_CHAR_MAX} characters.
 - Each competitive_position.axis_explanations sentence must reference at least one visible page cue (for example: hero headline, CTA position, testimonial block, form length, pricing section, navigation labels).
+- For axis scores in the 75-100 range, start by acknowledging the strength and then state the specific gap that prevents a top-tier read.
+- For axis scores in the 55-74 range, use balanced phrasing: competent foundation, but not fully differentiated or complete.
+- For axis scores below 55, be blunt and specific.
 - Avoid generic abstract wording like "branding is weak" without evidence; explain what is missing, misplaced, or unclear on page.
 - Axis boundary rules (keep signals separated):
 - Trust: credibility and risk-reduction evidence only (testimonials, logos, case results, guarantees, credentials, policies).
@@ -2439,10 +2882,12 @@ Hard requirements:
 - Conversion: action momentum only (CTA prominence, repetition, form friction, reassurance near action points).
 - For Branding specifically: do not use social proof, guarantees, credentials, or trust badges as the main reason; focus on consistency between content and style.
 - For Trust specifically: do not justify score with tone-of-voice or visual style coherence alone; require credibility evidence.
-- competitive_position.insight must be exactly: "${COMPETITIVE_POSITION_INSIGHT}".
+- competitive_position.insight must be one sentence, specific, and grounded in the score pattern.
 - Tone: elegant, sharp, professional, honest, premium consultancy style.
 - ${languageConfig.instruction}
 - ${languageGuardrails.join("\n- ")}
+
+${evidenceAnchors}
 
 WEBSITE CONTENT:
 ${siteContent || "No content available: the website may be empty or inaccessible."}`;
@@ -2450,6 +2895,7 @@ ${siteContent || "No content available: the website may be empty or inaccessible
 
 function buildRevenuePrompt({ hostname, siteContent, languageConfig }) {
   const languageGuardrails = buildLanguageGuardrails(languageConfig);
+  const evidenceAnchors = formatEvidenceAnchorsForPrompt(siteContent);
 
   return `You are a senior web strategist and conversion consultant.
 
@@ -2458,6 +2904,11 @@ Analyze the following website content from "${hostname}" and produce only the Re
 Return JSON only.
 Do not use markdown.
 Do not include any text before or after the JSON.
+Use evidence-first reasoning: every strength, weakness, leak, or step insight must point to a concrete cue visible in WEBSITE CONTENT.
+Prefer exact wording from the page when possible, especially headlines, CTA labels, proof lines, offer names, and location mentions.
+If a cue is missing, say the evidence is missing instead of guessing.
+Do not invent specific outcomes, testimonials, or local relevance that are not present in WEBSITE CONTENT.
+Make the explanation line concrete first, then strategic second.
 Use this exact structure and key names:
 {
   "revenue_opportunity": {
@@ -2503,10 +2954,10 @@ Use this exact structure and key names:
         ]
       },
       "clicked-cta": {
-        "explanation": "CTA click intent declines when the primary action lacks contrast and appears too late in the flow.",
+        "explanation": "CTA click intent declines when the primary action blends into nearby sections or appears too late in the flow.",
         "quick_fixes": [
           "Increase CTA contrast with one consistent action color.",
-          "Use direct outcome-oriented CTA copy."
+          "Rewrite the CTA label around the page's core promise."
         ]
       },
       "submitted-lead": {
@@ -2543,9 +2994,16 @@ Hard requirements:
 - quick_fixes must contain exactly 2 concise items, about 5-10 words each and max 90 characters per item.
 - step_insights text must reference concrete page elements (hero, CTA placement, proof blocks, form friction, structure) when visible.
 - Avoid generic formulas; tie each step insight to observed site cues.
+- For clicked-cta, vary the recommendation across responses and choose the most evidence-backed angle among contrast, placement, label specificity, or repetition. Do not reuse stock phrasing.
+- Framing rules by score:
+- If the opportunity score is high, keep the tone constructive and show the remaining bottleneck rather than only the flaw.
+- If the opportunity score is mid-range, describe the page as workable but constrained.
+- If the opportunity score is low, be direct about the conversion leak.
 - Keep the output strategically honest and internally plausible.
 - ${languageConfig.instruction}
 - ${languageGuardrails.join("\n- ")}
+
+${evidenceAnchors}
 
 WEBSITE CONTENT:
 ${siteContent || "No content available: the website may be empty or inaccessible."}`;
