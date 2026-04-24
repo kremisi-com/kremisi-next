@@ -233,7 +233,13 @@
   cursor: pointer;
 }
 
-.dotHitArea:focus-visible {
+.axisHitArea {
+  fill: transparent;
+  cursor: pointer;
+}
+
+.dotHitArea:focus-visible,
+.axisHitArea:focus-visible {
   stroke: rgba(255, 255, 255, 0.9);
   stroke-width: 1.4;
 }
@@ -367,6 +373,14 @@
   pointer-events: none;
 }
 
+.tooltipDesktop {
+  display: block;
+}
+
+.tooltipMobile {
+  display: none;
+}
+
 :global(.light) .axisTooltip {
   background:
     linear-gradient(165deg, rgba(255, 255, 255, 0.96) 0%, rgba(250, 252, 255, 0.94) 100%);
@@ -432,6 +446,27 @@
 
   .legendItem {
     font-size: 0.9rem;
+  }
+
+  .tooltipDesktop {
+    display: none;
+  }
+
+  .tooltipMobile {
+    display: block;
+    overflow: hidden;
+    margin-bottom: 18px;
+  }
+
+  .tooltipMobile .axisTooltip {
+    position: relative;
+    width: 100%;
+    max-width: none;
+    pointer-events: auto;
+    box-sizing: border-box;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
   }
 }
 

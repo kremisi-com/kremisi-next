@@ -104,7 +104,7 @@ const DEFAULT_ROASTER_COST_TARGET_PERCENT = 40;
 const DEFAULT_ROASTER_CACHE_TTL_SECONDS = 24 * 60 * 60;
 const DEFAULT_ROASTER_CACHE_MAX_ENTRIES = 500;
 const DEFAULT_ROASTER_PROMPT_VERSION = "6";
-const ROASTER_CACHE_SCHEMA_VERSION = "3";
+const ROASTER_CACHE_SCHEMA_VERSION = "4";
 const FUNNEL_ARTIFACT_TTL_MS = 24 * 60 * 60 * 1000;
 const FUNNEL_ARTIFACT_VERSION = 1;
 const PRIORITY_LEVELS = ["High", "Medium", "Low"];
@@ -1951,6 +1951,58 @@ function countPositiveSteps(series) {
   return positiveSteps;
 }
 
+function countBrandLaggingPeriods(industryTrend, brandMomentum) {
+  return industryTrend.reduce((count, industryValue, index) => {
+    const brandValue = brandMomentum[index];
+    return count + (brandValue < industryValue ? 1 : 0);
+  }, 0);
+}
+
+function describesLaggingBrandMomentum(insight) {
+  return /\b(lagging|held back|under pressure|unclear|behind|weak|slowed|trailing|outpaced|manca|debole|generico|limitato|in ritardo|indietro|arretrat[oa]|sotto pressione|poco chiaro|trattenut[oa]|rallentat[oa]|superat[oa]|non tiene il passo|rispetto al ritmo)\b/i.test(
+    insight,
+  );
+}
+
+function ensureLaggingBrandMomentum(industryTrend, brandMomentum) {
+  const lastIndex = Math.max(industryTrend.length - 1, 0);
+  const currentLaggingPeriods = countBrandLaggingPeriods(
+    industryTrend,
+    brandMomentum,
+  );
+  const currentFinalGap =
+    industryTrend[lastIndex] - brandMomentum[lastIndex];
+
+  if (currentLaggingPeriods >= 4 && currentFinalGap >= 3) {
+    return { industryTrend, brandMomentum };
+  }
+
+  const swappedLaggingPeriods = countBrandLaggingPeriods(
+    brandMomentum,
+    industryTrend,
+  );
+  const swappedFinalGap =
+    brandMomentum[lastIndex] - industryTrend[lastIndex];
+
+  if (swappedLaggingPeriods >= 4 && swappedFinalGap >= 3) {
+    return {
+      industryTrend: brandMomentum,
+      brandMomentum: industryTrend,
+    };
+  }
+
+  const adjustedBrandMomentum = brandMomentum.map((brandValue, index) => {
+    const requiredGap = index === lastIndex ? 4 : 3;
+    const ceiling = industryTrend[index] - requiredGap;
+    return toIntegerInRange(Math.min(brandValue, ceiling), 25, 100, ceiling);
+  });
+
+  return {
+    industryTrend,
+    brandMomentum: adjustedBrandMomentum,
+  };
+}
+
 function hasClearUptrend(series) {
   const netDelta = series[series.length - 1] - series[0];
   return netDelta >= 8 && countPositiveSteps(series) >= 3;
@@ -2074,7 +2126,6 @@ function normalizeMarketMomentum(marketMomentum) {
     }
   }
 
-  const inferredBadge = inferMarketMomentumBadge(industryTrend, brandMomentum);
   const insight = toNonEmptyString(
     source.insight,
     "Brand momentum reflects visible execution quality: value clarity, trust evidence, and CTA continuity can drive growth, plateaus, or declines.",
@@ -2084,16 +2135,26 @@ function normalizeMarketMomentum(marketMomentum) {
     /\b(lagging|held back|under pressure|unclear|behind|weak|slowed)\b/i.test(
       insight,
     );
+  const finalInsight = resetInsight
+    ? `${sector} benefits from strong category tailwinds, while the site still needs sharper differentiation and proof to convert that demand consistently.`
+    : insight;
+
+  if (describesLaggingBrandMomentum(finalInsight)) {
+    const coherentMomentum = ensureLaggingBrandMomentum(
+      industryTrend,
+      brandMomentum,
+    );
+    industryTrend = coherentMomentum.industryTrend;
+    brandMomentum = coherentMomentum.brandMomentum;
+  }
 
   return {
     period_labels: [...MARKET_MOMENTUM_LABELS],
     sector,
     industry_trend: industryTrend,
     brand_momentum: brandMomentum,
-    badge: inferredBadge,
-    insight: resetInsight
-      ? `${sector} benefits from strong category tailwinds, while the site still needs sharper differentiation and proof to convert that demand consistently.`
-      : insight,
+    badge: inferMarketMomentumBadge(industryTrend, brandMomentum),
+    insight: finalInsight,
     method_note: toNonEmptyString(
       source.method_note,
       "Both lines are AI-estimated from visible website signals and broad market perception, not internal company data.",

@@ -116,7 +116,8 @@ export default function CompetitivePosition({
   locked = false,
 }) {
   const reduceMotion = useReducedMotion();
-  const [activeAxisIndex, setActiveAxisIndex] = useState(null);
+  const [hoveredAxisIndex, setHoveredAxisIndex] = useState(null);
+  const [selectedAxisIndex, setSelectedAxisIndex] = useState(null);
   const position = normalizeCompetitiveData(data);
   const centerX = 210;
   const centerY = 176;
@@ -156,6 +157,9 @@ export default function CompetitivePosition({
       dotClassName: styles.siteDot,
     },
   ];
+  const activeAxisIndex = Number.isInteger(selectedAxisIndex)
+    ? selectedAxisIndex
+    : hoveredAxisIndex;
   const activeAxis = Number.isInteger(activeAxisIndex)
     ? axes[activeAxisIndex]
     : null;
@@ -187,6 +191,16 @@ export default function CompetitivePosition({
       : tooltipAnchor === "end"
         ? "-100%"
         : "-50%";
+  const selectAxis = (index) => {
+    setSelectedAxisIndex((currentIndex) =>
+      currentIndex === index ? null : index,
+    );
+    setHoveredAxisIndex(null);
+  };
+  const clearActiveAxis = () => {
+    setSelectedAxisIndex(null);
+    setHoveredAxisIndex(null);
+  };
 
   return (
     <motion.div
@@ -213,7 +227,7 @@ export default function CompetitivePosition({
           className={styles.chart}
           aria-label="Competitive position radar chart comparing your site, top competitor, and category average"
           role="img"
-          onClick={() => setActiveAxisIndex(null)}
+          onClick={clearActiveAxis}
         >
           <defs>
             <linearGradient id="competitive-site-fill" x1="0%" y1="0%" x2="100%" y2="100%">
@@ -292,13 +306,13 @@ export default function CompetitivePosition({
                 return (
                   <g
                     key={`${set.id}-${position.axes[index]}`}
-                    onMouseEnter={() => setActiveAxisIndex(index)}
-                    onMouseLeave={() => setActiveAxisIndex(null)}
-                    onFocus={() => setActiveAxisIndex(index)}
-                    onBlur={() => setActiveAxisIndex(null)}
+                    onMouseEnter={() => setHoveredAxisIndex(index)}
+                    onMouseLeave={() => setHoveredAxisIndex(null)}
+                    onFocus={() => setHoveredAxisIndex(index)}
+                    onBlur={() => setHoveredAxisIndex(null)}
                     onClick={(e) => {
                       e.stopPropagation();
-                      setActiveAxisIndex(index === activeAxisIndex ? null : index);
+                      selectAxis(index);
                     }}
                   >
                     <motion.circle
@@ -345,6 +359,53 @@ export default function CompetitivePosition({
                   cx={x}
                   cy={y}
                   r="4"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    selectAxis(index);
+                  }}
+                  onMouseEnter={() => setHoveredAxisIndex(index)}
+                  onMouseLeave={() => setHoveredAxisIndex(null)}
+                />
+              );
+            }),
+          )}
+
+          {chartSets.flatMap((set) =>
+            set.series.map((value, index) => {
+              const angle =
+                -Math.PI / 2 + (Math.PI * 2 * index) / set.series.length;
+              const scaledRadius = (value / 100) * radius;
+              const x = centerX + Math.cos(angle) * scaledRadius;
+              const y = centerY + Math.sin(angle) * scaledRadius;
+
+              return (
+                <circle
+                  key={`point-hit-${set.id}-${position.axes[index]}`}
+                  className={styles.axisHitArea}
+                  cx={x}
+                  cy={y}
+                  r="24"
+                  tabIndex={set.id === "your-site" ? 0 : undefined}
+                  role={set.id === "your-site" ? "button" : undefined}
+                  aria-label={
+                    set.id === "your-site"
+                      ? `${position.axes[index]}: ${value}/100`
+                      : undefined
+                  }
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    selectAxis(index);
+                  }}
+                  onMouseEnter={() => setHoveredAxisIndex(index)}
+                  onMouseLeave={() => setHoveredAxisIndex(null)}
+                  onFocus={() => setHoveredAxisIndex(index)}
+                  onBlur={() => setHoveredAxisIndex(null)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
+                      selectAxis(index);
+                    }
+                  }}
                 />
               );
             }),
@@ -367,10 +428,10 @@ export default function CompetitivePosition({
                 textAnchor={textAnchor}
                 onClick={(e) => {
                   e.stopPropagation();
-                  setActiveAxisIndex(index === activeAxisIndex ? null : index);
+                  selectAxis(index);
                 }}
-                onMouseEnter={() => setActiveAxisIndex(index)}
-                onMouseLeave={() => setActiveAxisIndex(null)}
+                onMouseEnter={() => setHoveredAxisIndex(index)}
+                onMouseLeave={() => setHoveredAxisIndex(null)}
                 style={{ cursor: "pointer" }}
               >
                 {axis.label}
@@ -386,7 +447,7 @@ export default function CompetitivePosition({
               animate={{ opacity: 1, y: 0, scale: 1, x: tooltipTranslateX }}
               exit={{ opacity: 0, scale: 0.95, x: tooltipTranslateX }}
               transition={{ duration: 0.15, ease: "easeOut" }}
-              className={styles.axisTooltip}
+              className={`${styles.axisTooltip} ${styles.tooltipDesktop}`}
               style={{
                 left: `${tooltipLeftPercent}%`,
                 top: `${tooltipTopPercent}%`,
@@ -427,7 +488,28 @@ export default function CompetitivePosition({
         )}
       </div>
 
+      <AnimatePresence>
+        {!locked && activeAxis && (
+          <motion.div
+            initial={{ opacity: 0, height: 0, marginTop: 0 }}
+            animate={{ opacity: 1, height: "auto", marginTop: 24 }}
+            exit={{ opacity: 0, height: 0, marginTop: 0 }}
+            className={styles.tooltipMobile}
+          >
+            <div className={styles.axisTooltip}>
+              <p className={styles.axisTooltipTitle}>
+                {activeAxis.label} · {activeValue}/100
+              </p>
+              <p className={styles.axisTooltipText}>
+                {position.axis_explanations[activeAxis.label]}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <p className={styles.insight}>{position.insight}</p>
+
       <p className={styles.methodNote}>{position.method_note}</p>
     </motion.div>
   );

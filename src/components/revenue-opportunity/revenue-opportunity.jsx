@@ -1,7 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useId, useMemo, useState } from "react";
 import styles from "./revenue-opportunity.module.css";
 
 const FUNNEL_STEP_IDS = [
@@ -46,6 +46,8 @@ const LOCALE_COPY = {
     weaknesses: "Weaknesses",
     biggestLeak: "Biggest Leak",
     quickestWin: "Quickest Win",
+    readAiAdvice: "Read AI advice",
+    hideAiAdvice: "Show less",
     stepInsightHeading: "Live Step Insight",
     stepRatingLabel: "Rate",
     quickFixLabel: "Quick Fix",
@@ -127,6 +129,8 @@ const LOCALE_COPY = {
     weaknesses: "Debolezze",
     biggestLeak: "Perdita Maggiore",
     quickestWin: "Win Più Rapido",
+    readAiAdvice: "Leggi i consigli dell'AI",
+    hideAiAdvice: "Mostra meno",
     stepInsightHeading: "Insight Dinamico",
     stepRatingLabel: "Valutazione",
     quickFixLabel: "Quick Fix",
@@ -414,8 +418,11 @@ export default function RevenueOpportunity({
   const copy = LOCALE_COPY[locale] || LOCALE_COPY.en;
   const revenue = normalizeRevenueData(data, copy);
   const showLockedOverlay = locked || !revenue.hasRealData;
+  const componentId = useId();
   const [activeStepId, setActiveStepId] = useState(FUNNEL_STEP_IDS[0]);
   const [hasUserHoveredFunnel, setHasUserHoveredFunnel] = useState(false);
+  const [aiAdviceExpanded, setAiAdviceExpanded] = useState(false);
+  const aiAdviceId = `${componentId}-ai-advice`;
 
   useEffect(() => {
     const stepStillAvailable = revenue.funnel_steps.some(
@@ -635,7 +642,22 @@ export default function RevenueOpportunity({
             </AnimatePresence>
           </div>
 
-          <aside className={styles.analysisPanel}>
+          <div className={styles.aiAdviceToggleWrap}>
+            <button
+              type="button"
+              className={styles.aiAdviceToggle}
+              aria-expanded={aiAdviceExpanded}
+              aria-controls={aiAdviceId}
+              onClick={() => setAiAdviceExpanded((value) => !value)}
+            >
+              {aiAdviceExpanded ? copy.hideAiAdvice : copy.readAiAdvice}
+            </button>
+          </div>
+
+          <aside
+            id={aiAdviceId}
+            className={`${styles.analysisPanel} ${!aiAdviceExpanded ? styles.analysisPanelCollapsedMobile : ""}`}
+          >
             <p className={styles.sectionHeading}>{copy.analysisHeading}</p>
 
             <div className={styles.analysisGrid}>

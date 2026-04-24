@@ -92,7 +92,9 @@ export default function WebsiteRoaster() {
   const [loading, setLoading] = useState(false);
   const [funnelLoading, setFunnelLoading] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
-  const [strengthsExpanded, setStrengthsExpanded] = useState(false);
+  const [readMoreExpanded, setReadMoreExpanded] = useState(false);
+  const [mobileCollapsedReviewHeight, setMobileCollapsedReviewHeight] =
+    useState(null);
   const [reviewBase, setReviewBase] = useState(null);
   const [revenueData, setRevenueData] = useState(null);
   const [reviewContext, setReviewContext] = useState(null);
@@ -105,6 +107,8 @@ export default function WebsiteRoaster() {
   const [funnelProgress, setFunnelProgress] = useState(0);
   const [showSlowServerMessage, setShowSlowServerMessage] = useState(false);
   const turnstileRef = useRef(null);
+  const reviewBodyRef = useRef(null);
+  const clarityOfferRef = useRef(null);
 
   useEffect(() => {
     let interval;
@@ -181,12 +185,12 @@ export default function WebsiteRoaster() {
   }, []);
 
   useEffect(() => {
-    setStrengthsExpanded(false);
+    setReadMoreExpanded(false);
   }, [reviewBase]);
 
   useEffect(() => {
     if (!isMobileViewport) {
-      setStrengthsExpanded(false);
+      setReadMoreExpanded(false);
     }
   }, [isMobileViewport]);
 
@@ -336,16 +340,176 @@ export default function WebsiteRoaster() {
   const showFullReview = Boolean(reviewBase);
   const uiLocale = reviewContext?.language || (reviewBase ? language : "en");
   const topStrengths = reviewBase?.top_strengths || [];
-  const strengthsSplitIndex = Math.ceil(topStrengths.length / 2);
-  const mobileStrengthsEnabled =
-    isMobileViewport && topStrengths.length > strengthsSplitIndex;
-  const hiddenStrengthsListId = "top-strengths-mobile-list";
-  const visibleStrengths = mobileStrengthsEnabled
-    ? topStrengths.slice(0, strengthsSplitIndex)
-    : topStrengths;
-  const hiddenStrengths = mobileStrengthsEnabled
-    ? topStrengths.slice(strengthsSplitIndex)
-    : [];
+  const mobileReadMoreEnabled = isMobileViewport && Boolean(reviewBase);
+  const shouldCollapseReview = mobileReadMoreEnabled && !readMoreExpanded;
+  const reviewBodyId = "website-roaster-review-body";
+  const readMoreIssuesId = "review-read-more-issues";
+  const readMoreActionsId = "review-read-more-actions";
+  const readMorePrompt =
+    uiLocale === "it" ? "Leggi l'analisi completa" : "Read full analysis";
+  const showLessPrompt = uiLocale === "it" ? "Mostra meno" : "Show less";
+  const reviewBodyFrameStyle =
+    shouldCollapseReview && mobileCollapsedReviewHeight
+      ? {
+          "--mobile-review-collapsed-height": `${mobileCollapsedReviewHeight}px`,
+        }
+      : undefined;
+  const renderInfoIntro = (className = "") => (
+    <div
+      className={`${styles.infoIntro} ${className} ${
+        showFullReview ? styles.infoIntroHiddenOnMobile : ""
+      }`}
+    >
+      <div className={styles.infoBlock}>
+        <p className={styles.eyebrow}>How it works</p>
+        <p className={styles.leadText}>
+          The AI analyzes your website structure, messaging and user experience,
+          then returns a concise strategic review.
+        </p>
+      </div>
+
+      <dl className={styles.metaList}>
+        <div className={styles.metaItem}>
+          <dt className={styles.metaLabel}>Input</dt>
+          <dd className={styles.metaValue}>
+            Use a public URL for the most accurate review.
+          </dd>
+        </div>
+        <div className={styles.metaItem}>
+          <dt className={styles.metaLabel}>Tone</dt>
+          <dd className={styles.metaValue}>
+            Direct, ironic, annoyingly precise. It is not a joke. It is worse.
+          </dd>
+        </div>
+        <div className={styles.metaItem}>
+          <dt className={styles.metaLabel}>Note</dt>
+          <dd className={styles.metaValue}>
+            The roast is free. Fixing the site is the part we do together.
+          </dd>
+        </div>
+      </dl>
+    </div>
+  );
+
+  useEffect(() => {
+    if (!mobileReadMoreEnabled || readMoreExpanded) {
+      setMobileCollapsedReviewHeight(null);
+      return;
+    }
+
+    const reviewNode = reviewBodyRef.current;
+    const clarityNode = clarityOfferRef.current;
+
+    if (!reviewNode || !clarityNode) return;
+
+    const updateCollapsedHeight = () => {
+      setMobileCollapsedReviewHeight(
+        Math.ceil(
+          clarityNode.offsetTop + Math.min(clarityNode.offsetHeight * 0.32, 92),
+        ),
+      );
+    };
+
+    updateCollapsedHeight();
+
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateCollapsedHeight);
+      return () => {
+        window.removeEventListener("resize", updateCollapsedHeight);
+      };
+    }
+
+    const resizeObserver = new ResizeObserver(updateCollapsedHeight);
+    resizeObserver.observe(reviewNode);
+    resizeObserver.observe(clarityNode);
+    window.addEventListener("resize", updateCollapsedHeight);
+
+    return () => {
+      resizeObserver.disconnect();
+      window.removeEventListener("resize", updateCollapsedHeight);
+    };
+  }, [mobileReadMoreEnabled, readMoreExpanded, reviewBase]);
+
+  const renderFunnelSimulationTrigger = (placementClassName) =>
+    showFullReview &&
+    !loading &&
+    !revenueData && (
+      <button
+        type="button"
+        className={`${styles.actionsCard} ${styles.funnelSimulationTrigger} ${placementClassName} ${funnelLoading ? styles.triggerLoading : ""}`}
+        onClick={handleRunFunnel}
+        disabled={funnelLoading}
+      >
+        {funnelLoading && (
+          <div className={styles.triggerProgressBacking}>
+            <div
+              className={styles.triggerProgressBar}
+              style={{ width: `${funnelProgress}%` }}
+            />
+            <div className={styles.triggerScanner} />
+          </div>
+        )}
+
+        <div className={styles.actionsIntro}>
+          <p className={styles.listLabel}>AI Funnel Simulation</p>
+          <div className={styles.triggerHeaderRight}>
+            {funnelLoading && (
+              <motion.span
+                className={styles.triggerLiveBadge}
+                animate={{ opacity: [1, 0.5, 1] }}
+                transition={{ duration: 1.5, repeat: Infinity }}
+              >
+                PROCESSING
+              </motion.span>
+            )}
+            <span className={styles.actionsCaption}>
+              {uiLocale === "it"
+                ? "Analisi comportamentale"
+                : "Behavioral analysis"}
+            </span>
+          </div>
+        </div>
+
+        <div className={styles.triggerContent}>
+          <p className={styles.triggerText}>
+            {uiLocale === "it" ? (
+              <>
+                I tuoi utenti abbandonano il sito?
+                <br />
+                Clicca per scoprire esattamente dove e perché.
+              </>
+            ) : (
+              "Are users leaving your site? Click to discover exactly where and why."
+            )}
+          </p>
+
+          <div className={styles.triggerActionRow}>
+            <span className={styles.triggerAction}>
+              {funnelLoading
+                ? uiLocale === "it"
+                  ? "Simulazione in corso..."
+                  : "Simulation in progress..."
+                : uiLocale === "it"
+                  ? "Avvia Simulazione →"
+                  : "Start Simulation →"}
+            </span>
+
+            {funnelLoading && (
+              <div className={styles.triggerProgressBadge}>
+                <span className={styles.progressCount}>
+                  {Math.round(funnelProgress)}
+                </span>
+                <span className={styles.progressTotal}>/100</span>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {funnelMessage && (
+          <p className={styles.statusText}>{funnelMessage}</p>
+        )}
+      </button>
+    );
 
   return (
     <main className={`page-content-simple ${styles.page}`}>
@@ -367,35 +531,7 @@ export default function WebsiteRoaster() {
       <section className={styles.section}>
         <div className={styles.contentGrid}>
           <div className={styles.infoColumn}>
-            <div className={styles.infoBlock}>
-              <p className={styles.eyebrow}>How it works</p>
-              <p className={styles.leadText}>
-                The AI analyzes your website structure, messaging and user
-                experience, then returns a concise strategic review.
-              </p>
-            </div>
-
-            <dl className={styles.metaList}>
-              <div className={styles.metaItem}>
-                <dt className={styles.metaLabel}>Input</dt>
-                <dd className={styles.metaValue}>
-                  Use a public URL for the most accurate review.
-                </dd>
-              </div>
-              <div className={styles.metaItem}>
-                <dt className={styles.metaLabel}>Tone</dt>
-                <dd className={styles.metaValue}>
-                  Direct, ironic, annoyingly precise. It is not a joke. It is
-                  worse.
-                </dd>
-              </div>
-              <div className={styles.metaItem}>
-                <dt className={styles.metaLabel}>Note</dt>
-                <dd className={styles.metaValue}>
-                  The roast is free. Fixing the site is the part we do together.
-                </dd>
-              </div>
-            </dl>
+            {renderInfoIntro(styles.desktopInfoIntro)}
             <MarketMomentum
               className={styles.momentumWrap}
               data={reviewBase?.market_momentum}
@@ -612,220 +748,174 @@ export default function WebsiteRoaster() {
 
             </div>
 
-            <div className={`${styles.panel} ${styles.resultPanel}`}>
-              <div className={styles.resultHeader}>
-                <div>
-                  <p className={styles.eyebrow}>Review</p>
-                  <h2 className={styles.resultTitle}>Strategic scorecard</h2>
+            {renderInfoIntro(styles.mobileInfoIntro)}
+
+            <div
+              className={`${styles.scorecardStack} ${
+                !reviewBase ? styles.scorecardStackEmpty : ""
+              }`}
+            >
+              <div className={`${styles.panel} ${styles.resultPanel}`}>
+                <div className={styles.resultHeader}>
+                  <div>
+                    <p className={styles.eyebrow}>Review</p>
+                    <h2 className={styles.resultTitle}>Strategic scorecard</h2>
+                  </div>
+
+                  {showFullReview && (
+                    <div className={styles.scoreWrap}>
+                      <span className={styles.scoreLabel}>Overall Score</span>
+                      <div className={styles.scoreValueRow}>
+                        <span className={styles.scoreValue}>
+                          {reviewBase.overall_score}
+                        </span>
+                        <span className={styles.scoreScale}>/5</span>
+                      </div>
+                      <div className={styles.scoreMeter} aria-hidden="true">
+                        {Array.from({ length: 5 }, (_, index) => (
+                          <span
+                            key={index}
+                            className={`${styles.scoreDot} ${
+                              index < reviewBase.overall_score
+                                ? styles.scoreDotActive
+                                : ""
+                            }`}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
-                {showFullReview && (
-                  <div className={styles.scoreWrap}>
-                    <span className={styles.scoreLabel}>Overall Score</span>
-                    <div className={styles.scoreValueRow}>
-                      <span className={styles.scoreValue}>
-                        {reviewBase.overall_score}
-                      </span>
-                      <span className={styles.scoreScale}>/5</span>
-                    </div>
-                    <div className={styles.scoreMeter} aria-hidden="true">
-                      {Array.from({ length: 5 }, (_, index) => (
-                        <span
-                          key={index}
-                          className={`${styles.scoreDot} ${
-                            index < reviewBase.overall_score
-                              ? styles.scoreDotActive
-                              : ""
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                {!reviewBase && !loading && !funnelLoading && !error && (
+                  <p className={styles.emptyState}>
+                    The strategic review will appear here, structured and ready
+                    for action.
+                  </p>
                 )}
-              </div>
 
-              {!reviewBase && !loading && !funnelLoading && !error && (
-                <p className={styles.emptyState}>
-                  The strategic review will appear here, structured and ready
-                  for action.
-                </p>
-              )}
-
-              {showFullReview && !loading && (
-                <div className={styles.reviewBody}>
-                  <section className={styles.summaryBlock}>
-                    <p className={styles.summaryText}>{reviewBase.summary}</p>
-                    <p className={styles.verdictText}>{reviewBase.verdict}</p>
-                  </section>
-
-                  <section className={styles.categoriesGrid}>
-                    {reviewBase.categories.map((category) => (
-                      <article
-                        key={category.name}
-                        className={styles.categoryCard}
+                {showFullReview && !loading && (
+                  <>
+                    <div
+                      className={`${styles.reviewBodyFrame} ${shouldCollapseReview ? styles.reviewBodyFrameCollapsed : ""}`}
+                      style={reviewBodyFrameStyle}
+                    >
+                      <div
+                        id={reviewBodyId}
+                        ref={reviewBodyRef}
+                        className={styles.reviewBody}
                       >
-                        <div className={styles.categoryHeader}>
-                          <h3 className={styles.categoryTitle}>
-                            {category.name}
-                          </h3>
-                          <span className={styles.categoryScore}>
-                            {category.score}/5
-                          </span>
-                        </div>
-                        <p className={styles.categoryComment}>
-                          {category.comment}
-                        </p>
-                      </article>
-                    ))}
-                  </section>
+                        <section className={styles.summaryBlock}>
+                          <p className={styles.summaryText}>
+                            {reviewBase.summary}
+                          </p>
+                          <p className={styles.verdictText}>
+                            {reviewBase.verdict}
+                          </p>
+                        </section>
 
-                  <section className={styles.listGrid}>
-                    <div className={styles.listCard}>
-                      <p className={styles.listLabel}>Top Strengths</p>
-                      <ul className={styles.reviewList}>
-                        {visibleStrengths.map((item, index) => (
-                          <li key={`${item}-${index}`}>{item}</li>
-                        ))}
-                      </ul>
-
-                      {mobileStrengthsEnabled && (
-                        <div className={styles.strengthsToggleWrap}>
-                          <button
-                            type="button"
-                            className={styles.strengthsToggle}
-                            aria-expanded={strengthsExpanded}
-                            aria-controls={hiddenStrengthsListId}
-                            onClick={() =>
-                              setStrengthsExpanded((value) => !value)
-                            }
-                          >
-                            {strengthsExpanded ? "Show less" : "Read more"}
-                          </button>
-
-                          {strengthsExpanded && (
-                            <ul
-                              id={hiddenStrengthsListId}
-                              className={styles.reviewList}
+                        <section className={styles.categoriesGrid}>
+                          {reviewBase.categories.map((category) => (
+                            <article
+                              key={category.name}
+                              ref={
+                                category.name === "Clarity of Offer"
+                                  ? clarityOfferRef
+                                  : null
+                              }
+                              className={styles.categoryCard}
                             >
-                              {hiddenStrengths.map((item, index) => (
+                              <div className={styles.categoryHeader}>
+                                <h3 className={styles.categoryTitle}>
+                                  {category.name}
+                                </h3>
+                                <span className={styles.categoryScore}>
+                                  {category.score}/5
+                                </span>
+                              </div>
+                              <p className={styles.categoryComment}>
+                                {category.comment}
+                              </p>
+                            </article>
+                          ))}
+                        </section>
+
+                        <section className={styles.listGrid}>
+                          <div className={styles.listCard}>
+                            <p className={styles.listLabel}>Top Strengths</p>
+                            <ul className={styles.reviewList}>
+                              {topStrengths.map((item, index) => (
                                 <li key={`${item}-${index}`}>{item}</li>
                               ))}
                             </ul>
-                          )}
-                        </div>
-                      )}
-                    </div>
+                          </div>
 
-                    <div className={styles.listCard}>
-                      <p className={styles.listLabel}>Top Issues</p>
-                      <ul className={styles.reviewList}>
-                        {reviewBase.top_issues.map((item) => (
-                          <li key={item}>{item}</li>
-                        ))}
-                      </ul>
-                    </div>
-                  </section>
-
-                  <section className={styles.actionsCard}>
-                    <div className={styles.actionsIntro}>
-                      <p className={styles.listLabel}>Priority Actions</p>
-                      <span className={styles.actionsCaption}>
-                        What to fix first
-                      </span>
-                    </div>
-                    <div className={styles.priorityList}>
-                      {reviewBase.priority_actions.map((item) => (
-                        <div
-                          key={item.priority}
-                          className={styles.priorityItem}
-                        >
-                          <span className={styles.priorityBadge}>
-                            {item.priority}
-                          </span>
-                          <p className={styles.priorityText}>{item.action}</p>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-
-                  {!revenueData && (
-                    <button
-                      className={`${styles.actionsCard} ${styles.funnelSimulationTrigger} ${funnelLoading ? styles.triggerLoading : ""}`}
-                      onClick={handleRunFunnel}
-                      disabled={funnelLoading}
-                    >
-                      {funnelLoading && (
-                        <div className={styles.triggerProgressBacking}>
                           <div
-                            className={styles.triggerProgressBar}
-                            style={{ width: `${funnelProgress}%` }}
-                          />
-                          <div className={styles.triggerScanner} />
-                        </div>
-                      )}
+                            id={readMoreIssuesId}
+                            className={styles.listCard}
+                          >
+                            <p className={styles.listLabel}>Top Issues</p>
+                            <ul className={styles.reviewList}>
+                              {reviewBase.top_issues.map((item) => (
+                                <li key={item}>{item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        </section>
 
-                      <div className={styles.actionsIntro}>
-                        <p className={styles.listLabel}>AI Funnel Simulation</p>
-                        <div className={styles.triggerHeaderRight}>
-                          {funnelLoading && (
-                            <motion.span
-                              className={styles.triggerLiveBadge}
-                              animate={{ opacity: [1, 0.5, 1] }}
-                              transition={{ duration: 1.5, repeat: Infinity }}
-                            >
-                              PROCESSING
-                            </motion.span>
-                          )}
-                          <span className={styles.actionsCaption}>
-                            {uiLocale === "it"
-                              ? "Analisi comportamentale"
-                              : "Behavioral analysis"}
-                          </span>
-                        </div>
+                        <section
+                          id={readMoreActionsId}
+                          className={styles.actionsCard}
+                        >
+                          <div className={styles.actionsIntro}>
+                            <p className={styles.listLabel}>
+                              Priority Actions
+                            </p>
+                            <span className={styles.actionsCaption}>
+                              What to fix first
+                            </span>
+                          </div>
+                          <div className={styles.priorityList}>
+                            {reviewBase.priority_actions.map((item) => (
+                              <div
+                                key={item.priority}
+                                className={styles.priorityItem}
+                              >
+                                <span className={styles.priorityBadge}>
+                                  {item.priority}
+                                </span>
+                                <p className={styles.priorityText}>
+                                  {item.action}
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </section>
                       </div>
-
-                      <div className={styles.triggerContent}>
-                        <p className={styles.triggerText}>
-                          {uiLocale === "it" ? (
-                            <>
-                              I tuoi utenti abbandonano il sito?
-                              <br />
-                              Clicca per scoprire esattamente dove e perché.
-                            </>
-                          ) : (
-                            "Are users leaving your site? Click to discover exactly where and why."
-                          )}
-                        </p>
-
-                        <div className={styles.triggerActionRow}>
-                          <span className={styles.triggerAction}>
-                            {funnelLoading
-                              ? uiLocale === "it"
-                                ? "Simulazione in corso..."
-                                : "Simulation in progress..."
-                              : uiLocale === "it"
-                                ? "Avvia Simulazione →"
-                                : "Start Simulation →"}
-                          </span>
-
-                          {funnelLoading && (
-                            <div className={styles.triggerProgressBadge}>
-                              <span className={styles.progressCount}>
-                                {Math.round(funnelProgress)}
-                              </span>
-                              <span className={styles.progressTotal}>/100</span>
-                            </div>
-                          )}
-                        </div>
-                      </div>
-
-                      {funnelMessage && (
-                        <p className={styles.statusText}>{funnelMessage}</p>
+                      {shouldCollapseReview && (
+                        <div className={styles.readMoreGradient} />
                       )}
-                    </button>
-                  )}
-                </div>
-              )}
+                    </div>
+                    {mobileReadMoreEnabled && (
+                      <div className={styles.readMoreToggleWrap}>
+                        <button
+                          type="button"
+                          className={styles.readMoreToggle}
+                          aria-expanded={readMoreExpanded}
+                          aria-controls={reviewBodyId}
+                          onClick={() =>
+                            setReadMoreExpanded((expanded) => !expanded)
+                          }
+                        >
+                          {readMoreExpanded ? showLessPrompt : readMorePrompt}
+                        </button>
+                      </div>
+                    )}
+                  </>
+                )}
+              </div>
+
+              {renderFunnelSimulationTrigger(styles.desktopFunnelTrigger)}
             </div>
 
             {!reviewBase && (
@@ -847,6 +937,8 @@ export default function WebsiteRoaster() {
           />
         )}
       </section>
+
+      {renderFunnelSimulationTrigger(styles.mobileFunnelTrigger)}
 
       <section className={styles.ctaSection}>
         <div className={styles.ctaCard}>
