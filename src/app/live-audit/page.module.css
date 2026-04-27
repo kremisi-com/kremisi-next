@@ -1,0 +1,507 @@
+.page {
+  --audit-background: #070707;
+  --audit-foreground: #ffffff;
+  --audit-panel: rgba(255, 255, 255, 0.1);
+
+  width: 100%;
+  min-height: 100dvh;
+  padding: 150px 32px 140px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--audit-foreground);
+  background: var(--audit-background);
+  font-family: "FK Grotesk Trial", Arial, Helvetica, sans-serif;
+}
+
+.page::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      circle at 18% 16%,
+      color-mix(in srgb, var(--primary) 24%, transparent),
+      transparent 32%
+    ),
+    radial-gradient(
+      circle at 82% 14%,
+      rgba(255, 255, 255, 0.12),
+      transparent 28%
+    ),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 46%);
+  opacity: 0.9;
+}
+
+.page::after {
+  content: "";
+  position: fixed;
+  inset: auto -10% -22% -10%;
+  height: 52%;
+  pointer-events: none;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--primary) 16%, transparent),
+    transparent 68%
+  );
+  opacity: 0.55;
+}
+
+.hero,
+.previewShell {
+  width: min(100%, 1180px);
+  position: relative;
+  z-index: 1;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.eyebrow {
+  margin: 0 0 18px;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.22rem;
+  font-size: clamp(0.78rem, 0.9vw, 1rem);
+  font-weight: 700;
+}
+
+.hero h1 {
+  margin: 0;
+  max-width: 12ch;
+  font-size: clamp(4.2rem, 8.8vw, 8.6rem);
+  line-height: 0.92;
+  letter-spacing: -0.05rem;
+  text-wrap: balance;
+}
+
+.subtitle {
+  margin: 26px 0 0;
+  max-width: 720px;
+  color: color-mix(in srgb, var(--audit-foreground) 78%, transparent);
+  font-size: clamp(1.15rem, 1.45vw, 1.5rem);
+  line-height: 1.55;
+  text-wrap: balance;
+}
+
+.auditForm {
+  width: min(100%, 760px);
+  margin-top: 40px;
+  padding: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 28px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.13), rgba(255, 255, 255, 0.05)),
+    color-mix(in srgb, var(--audit-panel) 64%, transparent);
+  box-shadow:
+    0 28px 90px rgba(0, 0, 0, 0.38),
+    0 1px 0 rgba(255, 255, 255, 0.18) inset;
+  backdrop-filter: blur(22px);
+}
+
+.inputLabel {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.inputRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: center;
+}
+
+.page .urlInput {
+  height: 58px;
+  width: 100%;
+  margin: 0;
+  padding: 0 20px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 18px;
+  outline: none;
+  background: rgba(0, 0, 0, 0.34);
+  color: var(--audit-foreground);
+  font: inherit;
+  font-size: 1.05rem;
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.08) inset;
+  transition:
+    border-color 180ms ease,
+    background 180ms ease,
+    box-shadow 180ms ease;
+}
+
+.page .urlInput::placeholder {
+  color: color-mix(in srgb, var(--audit-foreground) 42%, transparent);
+}
+
+.page .urlInput:focus {
+  border-color: color-mix(in srgb, var(--primary) 72%, white);
+  background: rgba(0, 0, 0, 0.44);
+  box-shadow:
+    0 0 0 4px color-mix(in srgb, var(--primary) 18%, transparent),
+    0 1px 0 rgba(255, 255, 255, 0.1) inset;
+}
+
+.submitButton,
+.openLink {
+  min-height: 58px;
+  border: 0;
+  border-radius: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  background:
+    linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--primary) 88%, white),
+      var(--primary)
+    );
+  box-shadow:
+    0 16px 36px color-mix(in srgb, var(--primary) 28%, transparent),
+    0 1px 0 rgba(255, 255, 255, 0.22) inset;
+  cursor: pointer;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    opacity 180ms ease;
+}
+
+.submitButton {
+  padding: 0 28px;
+}
+
+.submitButton:hover,
+.openLink:hover {
+  transform: translateY(-1px);
+  box-shadow:
+    0 20px 44px color-mix(in srgb, var(--primary) 34%, transparent),
+    0 1px 0 rgba(255, 255, 255, 0.24) inset;
+}
+
+.submitButton:disabled {
+  cursor: wait;
+  opacity: 0.7;
+  transform: none;
+}
+
+.errorText {
+  margin: 12px 8px 2px;
+  text-align: left;
+  color: color-mix(in srgb, var(--primary) 78%, white);
+  font-size: 0.98rem;
+}
+
+.previewShell {
+  margin-top: 56px;
+  animation: previewIn 520ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.browserWindow {
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 30px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04)),
+    rgba(8, 8, 10, 0.86);
+  box-shadow:
+    0 44px 140px rgba(0, 0, 0, 0.54),
+    0 1px 0 rgba(255, 255, 255, 0.18) inset;
+  backdrop-filter: blur(28px);
+}
+
+.browserBar {
+  min-height: 70px;
+  padding: 17px 20px;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 18px;
+  align-items: center;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.045);
+}
+
+.trafficLights {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+}
+
+.trafficLights span {
+  width: 13px;
+  height: 13px;
+  border-radius: 999px;
+  box-shadow: 0 0 18px currentColor;
+}
+
+.lightRed {
+  color: #ff5f57;
+  background: #ff5f57;
+}
+
+.lightYellow {
+  color: #ffbd2e;
+  background: #ffbd2e;
+}
+
+.lightGreen {
+  color: #28c840;
+  background: #28c840;
+}
+
+.addressBar {
+  min-width: 0;
+  height: 36px;
+  padding: 0 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(0, 0, 0, 0.28);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.07) inset;
+}
+
+.addressStatus {
+  flex: 0 0 auto;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #28c840;
+  box-shadow: 0 0 14px rgba(40, 200, 64, 0.7);
+}
+
+.addressText {
+  min-width: 0;
+  overflow: hidden;
+  color: color-mix(in srgb, var(--audit-foreground) 72%, transparent);
+  font-size: 0.95rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.browserBody {
+  position: relative;
+  min-height: 520px;
+  max-height: min(76vh, 760px);
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.04), transparent 42%),
+    #f7f7f8;
+  scrollbar-color: color-mix(in srgb, var(--primary) 70%, #ffffff)
+    rgba(0, 0, 0, 0.12);
+  scrollbar-width: thin;
+}
+
+.browserBody::-webkit-scrollbar {
+  width: 10px;
+}
+
+.browserBody::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.12);
+}
+
+.browserBody::-webkit-scrollbar-thumb {
+  border: 2px solid rgba(247, 247, 248, 0.9);
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--primary) 72%, #ffffff);
+}
+
+.screenshotStage {
+  position: relative;
+  display: block;
+  width: 100%;
+  min-height: 520px;
+  background: #ffffff;
+}
+
+.previewImage {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.overlayLayer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.previewOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  color: var(--audit-foreground);
+  background:
+    radial-gradient(circle at center, rgba(220, 20, 60, 0.16), transparent 36%),
+    rgba(7, 7, 7, 0.78);
+  backdrop-filter: blur(10px);
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.loadingSpinner {
+  width: 38px;
+  height: 38px;
+  border: 3px solid rgba(255, 255, 255, 0.18);
+  border-top-color: var(--primary);
+  border-radius: 999px;
+  animation: spin 850ms linear infinite;
+}
+
+.blockedState {
+  min-height: 520px;
+  padding: 42px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: var(--audit-foreground);
+  background:
+    radial-gradient(
+      circle at 50% 38%,
+      color-mix(in srgb, var(--primary) 18%, transparent),
+      transparent 34%
+    ),
+    linear-gradient(180deg, #121216, #08080a);
+}
+
+.blockedKicker {
+  margin: 0 0 16px;
+  color: var(--primary);
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.blockedState h2 {
+  margin: 0;
+  max-width: 12ch;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 0.98;
+}
+
+.blockedState p:not(.blockedKicker) {
+  max-width: 560px;
+  margin: 22px 0 0;
+  color: color-mix(in srgb, var(--audit-foreground) 72%, transparent);
+  font-size: 1.08rem;
+  line-height: 1.55;
+}
+
+.openLink {
+  min-height: 52px;
+  margin-top: 28px;
+  padding: 0 24px;
+  font-size: 0.98rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes previewIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.985);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .page {
+    padding: 120px 18px 96px;
+  }
+
+  .hero h1 {
+    font-size: clamp(3.3rem, 17vw, 5.8rem);
+  }
+
+  .auditForm {
+    margin-top: 32px;
+    border-radius: 24px;
+  }
+
+  .inputRow {
+    grid-template-columns: 1fr;
+  }
+
+  .submitButton {
+    width: 100%;
+  }
+
+  .previewShell {
+    margin-top: 38px;
+  }
+
+  .browserWindow {
+    border-radius: 24px;
+  }
+
+  .browserBar {
+    min-height: 62px;
+    padding: 14px;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .trafficLights {
+    justify-content: center;
+  }
+
+  .browserBody,
+  .blockedState,
+  .screenshotStage {
+    min-height: 420px;
+  }
+
+  .browserBody {
+    max-height: min(68vh, 560px);
+  }
+
+  .blockedState {
+    padding: 28px 20px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .previewShell,
+  .loadingSpinner,
+  .submitButton,
+  .openLink,
+  .urlInput {
+    animation: none;
+    transition: none;
+  }
+}
