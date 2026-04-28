@@ -3,12 +3,27 @@
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 import { MessageCircleMore } from "lucide-react";
+import toast from "react-hot-toast";
 import styles from "./footer.module.css";
-import Button from "../button/button";
+
+const CONTACT_EMAIL = "info@kremisi.com";
+const CONTACT_EMAIL_HREF = `mailto:${CONTACT_EMAIL}`;
 
 export default function Footer() {
     const pathname = usePathname();
     const [isHomeSliderActive, setIsHomeSliderActive] = useState(pathname === "/");
+
+    async function handleEmailClick(event) {
+        event.preventDefault();
+
+        try {
+            await navigator.clipboard.writeText(CONTACT_EMAIL);
+            toast.success("Email copied to clipboard");
+        } catch {
+            toast.error("Could not copy email");
+            window.location.href = CONTACT_EMAIL_HREF;
+        }
+    }
 
     useEffect(() => {
         if (pathname !== "/") {
@@ -35,7 +50,9 @@ export default function Footer() {
         <>
             <footer className={`${styles.footer} onlyDesktop`}>
                 <address className={styles.info}>
-                    <a href="mailto:info@kremisi.com">info@kremisi.com</a>
+                    <a href={CONTACT_EMAIL_HREF} onClick={handleEmailClick}>
+                        {CONTACT_EMAIL}
+                    </a>
                 </address>
                 <span className={styles.info}></span>
                 <span
@@ -50,7 +67,9 @@ export default function Footer() {
             </footer>
             <footer className={`${styles.footer} onlyMobile`}>
                 <address className={styles.info}>
-                    <a href="mailto:info@kremisi.com">info@kremisi.com</a>
+                    <a href={CONTACT_EMAIL_HREF} onClick={handleEmailClick}>
+                        {CONTACT_EMAIL}
+                    </a>
                 </address>
                 <div className={`${styles.buttons} ${styles.right} whatsapp-floating-button`}>
                     <a
