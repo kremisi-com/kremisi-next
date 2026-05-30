@@ -93,8 +93,8 @@ export default function ContactsPage() {
           <div className={styles.contentSplit}>
             <div className={styles.infoLead}>
               <p className={styles.leadText}>
-                Tell us what you're building, where you need support, and what
-                timeline you're working with. We'll reply within 24 business
+                Tell us what you&apos;re building, where you need support, and what
+                timeline you&apos;re working with. We&apos;ll reply within 24 business
                 hours with a clear next step.
               </p>
               <AnimatedLink

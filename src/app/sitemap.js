@@ -5,7 +5,13 @@ const BASE_URL = "https://kremisi.com";
 export default function sitemap() {
     const lastModified = new Date();
 
-    const staticPaths = ["/", "/about", "/projects", "/contacts"];
+    const staticPaths = [
+        "/",
+        "/about",
+        "/projects",
+        "/contacts",
+        "/case-studies/brand-identity/lucrezia-curto",
+    ];
     const staticUrls = staticPaths.map((path) => ({
         url: new URL(path, BASE_URL).toString(),
         lastModified,

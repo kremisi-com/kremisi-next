@@ -1,0 +1,628 @@
+.page {
+    width: 100%;
+    max-width: 1280px;
+    align-items: stretch;
+    gap: 0;
+    padding-bottom: 150px;
+}
+
+.section {
+    width: 100%;
+    margin-bottom: 120px;
+}
+
+.hero {
+    position: relative;
+    min-height: calc(100dvh - 220px);
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(360px, 1fr);
+    align-items: center;
+    gap: 72px;
+    padding-top: 2vh;
+    isolation: isolate;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    width: 100vw;
+    background: url("/projects/lucrezia-curto/bg.webp") center / cover no-repeat;
+    opacity: 0.35;
+    transform: translateX(-50%);
+    z-index: -1;
+}
+
+.hero > * {
+    position: relative;
+}
+
+.heroCopy {
+    max-width: 620px;
+}
+
+.kicker,
+.sectionEyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.3rem;
+    font-size: 1.1rem;
+    color: var(--primary);
+    margin-bottom: 24px;
+    font-weight: 600;
+}
+
+.pageTitle {
+    margin: 0;
+    line-height: 0.95;
+    letter-spacing: -0.08rem;
+    text-wrap: balance;
+    font-size: clamp(4.2rem, 8vw, 7.5rem);
+    animation: headingIn 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: 180ms;
+    will-change: transform, opacity;
+}
+
+.heroSubtitle {
+    margin-top: 26px;
+    font-size: clamp(1.5rem, 2.5vw, 2.2rem);
+    line-height: 1.35;
+    color: var(--foreground);
+    text-wrap: balance;
+}
+
+.heroText,
+.leadText,
+.resultText,
+.ctaText {
+    font-size: clamp(1.25rem, 2vw, 1.55rem);
+    line-height: 1.65;
+    color: var(--foreground);
+    opacity: 0.78;
+}
+
+.heroText {
+    margin-top: 28px;
+    max-width: 52ch;
+}
+
+.heroVisual {
+    position: relative;
+    min-height: 560px;
+    isolation: isolate;
+    perspective: 1400px;
+    transform: translateX(12px);
+}
+
+.heroVisual::before {
+    content: "";
+    position: absolute;
+    inset: auto 8% 8% 10%;
+    height: 38%;
+    background: color-mix(in srgb, var(--foreground) 18%, transparent);
+    filter: blur(48px);
+    opacity: 0.28;
+    transform: rotate(-4deg);
+    z-index: -1;
+    pointer-events: none;
+}
+
+.heroVisual::after {
+    content: "";
+    position: absolute;
+    inset: 12% 4% 6% 8%;
+    z-index: -2;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        color-mix(in srgb, var(--primary) 16%, transparent) 0%,
+        transparent 66%
+    );
+    filter: blur(26px);
+    opacity: 0.55;
+    pointer-events: none;
+}
+
+.previewCard,
+.documentCard {
+    border: 1px solid var(--box-bg);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--background) 88%, var(--foreground) 12%);
+    transition: transform 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.previewCard {
+    position: absolute;
+    display: block;
+    overflow: hidden;
+    border-color: color-mix(in srgb, var(--foreground) 10%, transparent);
+    background: #f7f3ed;
+    box-shadow: 0 24px 60px color-mix(in srgb, var(--foreground) 18%, transparent),
+        0 6px 18px color-mix(in srgb, var(--foreground) 10%, transparent);
+    color: inherit;
+    transform-origin: center;
+    will-change: transform;
+}
+
+.previewCard img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.previewCard:nth-child(1) {
+    z-index: 1;
+    top: 14%;
+    left: 4%;
+    width: 52%;
+    aspect-ratio: 1.414 / 1;
+    transform: rotate(-8deg);
+}
+
+.previewCard:nth-child(2) {
+    z-index: 2;
+    top: 18%;
+    right: 0;
+    width: 55%;
+    aspect-ratio: 16 / 9;
+    transform: rotate(2deg);
+}
+
+.previewCard:nth-child(3) {
+    z-index: 4;
+    left: 0;
+    bottom: 12%;
+    width: 57%;
+    aspect-ratio: 16 / 9;
+    transform: rotate(-5deg);
+}
+
+.previewCard:nth-child(4) {
+    z-index: 3;
+    right: 6%;
+    bottom: 6%;
+    width: 58%;
+    aspect-ratio: 1.424 / 1;
+    transform: rotate(6deg);
+}
+
+.documentCard:hover {
+    transform: translateY(-4px);
+    border-color: color-mix(in srgb, var(--foreground) 28%, transparent);
+}
+
+.previewCard:hover {
+    z-index: 8;
+    border-color: color-mix(in srgb, var(--foreground) 22%, transparent);
+    transform: translateY(-10px) rotate(0deg) scale(1.02);
+}
+
+.previewCard:nth-child(1):hover {
+    transform: translateY(-10px) rotate(-2deg) scale(1.02);
+}
+
+.previewCard:nth-child(2):hover {
+    transform: translateY(-10px) rotate(0deg) scale(1.02);
+}
+
+.previewCard:nth-child(3):hover {
+    transform: translateY(-10px) rotate(-1deg) scale(1.02);
+}
+
+.previewCard:nth-child(4):hover {
+    transform: translateY(-10px) rotate(2deg) scale(1.02);
+}
+
+.sectionHeader {
+    max-width: 760px;
+    margin-bottom: 48px;
+}
+
+.textGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1fr);
+    gap: 72px;
+    align-items: start;
+}
+
+.sectionTitle {
+    margin: 0;
+    line-height: 1.05;
+    letter-spacing: -0.04rem;
+    text-wrap: balance;
+}
+
+.documentsGrid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.goalList {
+    max-width: 920px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--box-bg);
+}
+
+.goalItem {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 28px;
+    padding: 28px 0;
+    border-bottom: 1px solid var(--box-bg);
+}
+
+.goalNumber {
+    width: 42px;
+    height: 42px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--primary) 14%, transparent);
+    color: var(--primary);
+    font-size: 1rem;
+    letter-spacing: 0.08rem;
+    font-weight: 600;
+}
+
+.goalItem h3 {
+    margin: 0 0 10px 0;
+    font-size: clamp(1.45rem, 2.2vw, 2rem);
+    line-height: 1.16;
+    text-wrap: balance;
+}
+
+.goalItem p {
+    max-width: 62ch;
+    margin: 0;
+    font-size: clamp(1.05rem, 1.5vw, 1.22rem);
+    line-height: 1.6;
+    color: var(--foreground);
+    opacity: 0.72;
+}
+
+.processList {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.processItem {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(420px, 0.82fr);
+    gap: 24px;
+    align-items: stretch;
+    padding: 28px 0;
+    border-top: 1px solid var(--box-bg);
+}
+
+.processItem:last-child {
+    border-bottom: 1px solid var(--box-bg);
+}
+
+.processStep {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 0 28px;
+    align-content: start;
+}
+
+.processStep span {
+    grid-row: span 2;
+    font-size: 1rem;
+    letter-spacing: 0.18rem;
+    opacity: 0.45;
+    padding-top: 8px;
+}
+
+.processStep h3 {
+    margin: 0 0 18px 0;
+    font-size: clamp(2rem, 3vw, 3rem);
+    line-height: 1.05;
+    text-wrap: balance;
+}
+
+.processStep p,
+.cardText {
+    font-size: clamp(1.15rem, 1.8vw, 1.35rem);
+    line-height: 1.55;
+    opacity: 0.72;
+}
+
+.documentCard {
+    min-height: 250px;
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 28px;
+}
+
+.documentIconWrap {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary);
+    background: var(--box-bg);
+}
+
+.cardTitle {
+    margin: 0 0 14px 0;
+    font-size: clamp(1.55rem, 2vw, 2.1rem);
+    line-height: 1.12;
+}
+
+.documentLink {
+    width: fit-content;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1.05rem;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+    color: var(--foreground);
+    opacity: 0.82;
+}
+
+.documentLink:hover {
+    color: var(--primary);
+    opacity: 1;
+}
+
+.documentViewer {
+    position: relative;
+    min-height: 420px;
+    overflow: hidden;
+    border: 1px solid var(--box-bg);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--background) 88%, var(--foreground) 12%);
+}
+
+.documentFrame {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    border: 0;
+    display: block;
+    background: var(--background);
+}
+
+.documentExpandLink {
+    position: absolute;
+    right: 14px;
+    bottom: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 13px;
+    border: 1px solid color-mix(in srgb, var(--foreground) 22%, transparent);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--background) 92%, transparent);
+    color: var(--foreground);
+    font-size: 0.92rem;
+    letter-spacing: 0.08rem;
+    text-transform: uppercase;
+    opacity: 0.9;
+    backdrop-filter: blur(10px);
+}
+
+.documentExpandLink:hover {
+    color: var(--primary);
+    border-color: color-mix(in srgb, var(--primary) 45%, transparent);
+    opacity: 1;
+}
+
+.documentsGrid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.resultSection,
+.ctaSection {
+    max-width: 920px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+.resultTitle,
+.ctaTitle {
+    margin: 0 auto 24px auto;
+    line-height: 1.05;
+    letter-spacing: -0.04rem;
+    text-wrap: balance;
+}
+
+.resultText,
+.ctaText {
+    max-width: 62ch;
+    margin: 0 auto;
+}
+
+.ctaSection {
+    margin-bottom: 0;
+    padding: 72px 32px 80px;
+    border: 1px solid var(--box-bg);
+    border-radius: 8px;
+    background: color-mix(in srgb, var(--background) 92%, var(--foreground) 8%);
+}
+
+.ctaLink {
+    display: inline-flex;
+    margin-top: 40px;
+}
+
+@keyframes headingIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pageTitle {
+        animation: none;
+    }
+
+    .previewCard,
+    .documentCard {
+        transition: none;
+    }
+}
+
+@media (max-width: 1100px) {
+    .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+    }
+
+    .heroCopy {
+        max-width: 760px;
+    }
+
+    .heroVisual {
+        min-height: clamp(430px, 65vw, 560px);
+        transform: none;
+    }
+
+    .documentsGrid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 900px) {
+    .textGrid,
+    .processItem {
+        grid-template-columns: 1fr;
+        gap: 32px;
+    }
+
+    .goalList {
+        max-width: none;
+    }
+
+    .goalItem {
+        grid-template-columns: 56px minmax(0, 1fr);
+        gap: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page {
+        padding-bottom: 130px;
+    }
+
+    .section {
+        margin-bottom: 82px;
+    }
+
+    .hero {
+        gap: 44px;
+        padding: clamp(40px, 10vw, 72px) 0 clamp(56px, 12vw, 88px);
+    }
+
+    .kicker,
+    .sectionEyebrow {
+        font-size: 1rem;
+        letter-spacing: 0.2rem;
+        margin-bottom: 16px;
+    }
+
+    .pageTitle {
+        max-width: 100%;
+        line-height: 1;
+        font-size: clamp(3.5rem, 12vw, 4.5rem);
+    }
+
+    .heroSubtitle {
+        font-size: 1.55rem;
+    }
+
+    .heroText,
+    .leadText,
+    .resultText,
+    .ctaText {
+        font-size: 1.28rem;
+        line-height: 1.55;
+    }
+
+    .heroVisual {
+        min-height: auto;
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 18px;
+    }
+
+    .documentsGrid {
+        grid-template-columns: 1fr;
+    }
+
+    .heroVisual::before,
+    .heroVisual::after {
+        display: none;
+    }
+
+    .previewCard,
+    .previewCard:nth-child(1),
+    .previewCard:nth-child(2),
+    .previewCard:nth-child(3),
+    .previewCard:nth-child(4) {
+        position: relative;
+        inset: auto;
+        width: 100%;
+        aspect-ratio: 16 / 9;
+        transform: none;
+    }
+
+    .previewCard:hover,
+    .previewCard:nth-child(1):hover,
+    .previewCard:nth-child(2):hover,
+    .previewCard:nth-child(3):hover,
+    .previewCard:nth-child(4):hover {
+        transform: translateY(-4px) scale(1);
+    }
+
+    .sectionHeader {
+        margin-bottom: 32px;
+    }
+
+    .processStep {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .processStep span {
+        grid-row: auto;
+        padding-top: 0;
+    }
+
+    .goalItem {
+        grid-template-columns: 1fr;
+        gap: 16px;
+        padding: 24px 0;
+    }
+
+    .documentCard {
+        min-height: 220px;
+    }
+
+    .documentViewer,
+    .documentFrame {
+        min-height: 360px;
+    }
+
+    .ctaSection {
+        padding: 52px 20px 60px;
+    }
+}
