@@ -48,6 +48,30 @@ ROASTER_FALLBACK_MODEL=claude-sonnet-4-20250514
 ROASTER_ENABLE_MODEL_FALLBACK=true
 ```
 
+### Free OpenRouter mode
+
+For a zero-model-cost deployment, keep the OpenRouter API key server-side and
+configure the Website Roaster with:
+
+```bash
+AI_API=openrouter
+OPENROUTER_API_KEY=your-server-side-key
+ROASTER_OPENROUTER_MODEL=openrouter/free
+ROASTER_OPENROUTER_FALLBACK_MODEL=openrouter/free
+ROASTER_ENABLE_OPENROUTER_MODEL_FALLBACK=true
+```
+
+`openrouter/free` selects from OpenRouter's currently available free models. The
+application also falls back to this router when a specifically configured free
+model is retired, removed, or becomes paid. Authentication failures do not
+trigger a fallback, and equal primary/fallback model IDs are never retried in a
+loop.
+
+Do not use `openrouter/auto` for a zero-cost deployment: that router can select
+paid models. Apply these values to the intended Vercel environments and create a
+new deployment after changing them; existing deployments keep their previous
+environment snapshot.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

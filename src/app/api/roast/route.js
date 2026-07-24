@@ -1,9 +1,15 @@
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import {
+  canUseModelFallback,
+  classifyProviderFailure,
+  DEFAULT_OPENROUTER_FALLBACK_MODEL,
+  DEFAULT_OPENROUTER_MODEL,
+  DEFAULT_OPENROUTER_MODEL_FALLBACK_ENABLED,
+} from "@/lib/roaster-ai-routing.mjs";
 import crypto from "node:crypto";
 
 const DEFAULT_ANTHROPIC_MODEL = "claude-sonnet-4-20250514";
 const DEFAULT_PRIMARY_MODEL = "claude-3-5-haiku-latest";
-const DEFAULT_OPENROUTER_MODEL = "openrouter/auto";
 const DEFAULT_AI_API_MODE = "anthropic";
 const AI_API_MODES = new Set([
   "anthropic",
@@ -98,6 +104,8 @@ const REVENUE_UI_STEP_IDS = [
 ];
 const OPENROUTER_FALLBACK_NOTICE =
   "Il modello gratuito su OpenRouter ci sta mettendo più del previsto. Ho completato l'analisi con Anthropic.";
+const OPENROUTER_PUBLIC_ERROR =
+  "The free AI service is temporarily unavailable. Please try again in a few minutes.";
 const COMPETITIVE_POSITION_INSIGHT =
   "The page has a solid structural base, but the remaining gap is clearer proof and more specific positioning near the main action.";
 const DEFAULT_ROASTER_COST_TARGET_PERCENT = 40;
@@ -426,10 +434,11 @@ function resolveRoasterRuntimeConfig() {
       process.env.OPENROUTER_MODEL?.trim() ||
       DEFAULT_OPENROUTER_MODEL,
     openRouterFallbackModel:
-      process.env.ROASTER_OPENROUTER_FALLBACK_MODEL?.trim() || "",
+      process.env.ROASTER_OPENROUTER_FALLBACK_MODEL?.trim() ||
+      DEFAULT_OPENROUTER_FALLBACK_MODEL,
     enableOpenRouterModelFallback: toBooleanEnv(
       process.env.ROASTER_ENABLE_OPENROUTER_MODEL_FALLBACK,
-      false,
+      DEFAULT_OPENROUTER_MODEL_FALLBACK_ENABLED,
     ),
     promptVersion:
       process.env.ROASTER_PROMPT_VERSION?.trim() || DEFAULT_ROASTER_PROMPT_VERSION,
@@ -3090,22 +3099,10 @@ function createGenerationError(code, message, status = 502, details = {}) {
   return error;
 }
 
-function isRecoverableProviderStatus(status) {
-  return [408, 409, 425, 429, 500, 502, 503, 504, 529].includes(status);
-}
-
 function resolveEscalatedRetryMaxTokens({ provider, primaryMaxTokens, retryMaxTokens }) {
   const providerFloor = provider === "anthropic" ? 3200 : 2600;
   const computed = Math.max(retryMaxTokens, primaryMaxTokens + 800, providerFloor);
   return Math.min(4096, computed);
-}
-
-function shouldFallbackModel(error) {
-  return [
-    "recoverable_provider_error",
-    "truncated_after_retry",
-    "parse_failed_after_retry",
-  ].includes(error?.code);
 }
 
 function logUsage({ provider, model, response, payload, stage }) {
@@ -3132,6 +3129,26 @@ function logUsage({ provider, model, response, payload, stage }) {
             : null,
     }),
   );
+}
+
+function createProviderResponseError({
+  response,
+  payload,
+  provider,
+  model,
+}) {
+  const message = mapProviderErrorMessage(response.status, payload, { provider });
+  const code = classifyProviderFailure({
+    provider,
+    status: response.status,
+    message: extractErrorMessage(payload, ""),
+  });
+
+  return createGenerationError(code, message, 502, {
+    status: response.status,
+    model,
+    provider,
+  });
 }
 
 async function runStructuredGenerationWithModel({
@@ -3192,23 +3209,14 @@ async function runStructuredGenerationWithModel({
   logUsage({ provider, model: modelInUse, response, payload, stage: "initial" });
 
   if (!response.ok) {
-    const message = mapProviderErrorMessage(response.status, payload, { provider });
     console.error(`${provider} status:`, response.status);
     console.error(`${provider} error:`, JSON.stringify(payload, null, 2));
 
-    if (isRecoverableProviderStatus(response.status)) {
-      throw createGenerationError(
-        "recoverable_provider_error",
-        message,
-        502,
-        { status: response.status, model: modelInUse, provider },
-      );
-    }
-
-    throw createGenerationError("provider_error", message, 502, {
-      status: response.status,
-      model: modelInUse,
+    throw createProviderResponseError({
+      response,
+      payload,
       provider,
+      model: modelInUse,
     });
   }
 
@@ -3262,22 +3270,11 @@ async function runStructuredGenerationWithModel({
       });
 
       if (!truncationRetryResponse.ok) {
-        const retryMessage = mapProviderErrorMessage(
-          truncationRetryResponse.status,
-          truncationRetryPayload,
-          { provider },
-        );
-        if (isRecoverableProviderStatus(truncationRetryResponse.status)) {
-          throw createGenerationError("recoverable_provider_error", retryMessage, 502, {
-            status: truncationRetryResponse.status,
-            model: modelInUse,
-            provider,
-          });
-        }
-        throw createGenerationError("provider_error", retryMessage, 502, {
-          status: truncationRetryResponse.status,
-          model: modelInUse,
+        throw createProviderResponseError({
+          response: truncationRetryResponse,
+          payload: truncationRetryPayload,
           provider,
+          model: modelInUse,
         });
       }
 
@@ -3328,20 +3325,11 @@ async function runStructuredGenerationWithModel({
     });
 
     if (!retryResponse.ok) {
-      const retryMessage = mapProviderErrorMessage(retryResponse.status, retryPayload, {
+      throw createProviderResponseError({
+        response: retryResponse,
+        payload: retryPayload,
         provider,
-      });
-      if (isRecoverableProviderStatus(retryResponse.status)) {
-        throw createGenerationError("recoverable_provider_error", retryMessage, 502, {
-          status: retryResponse.status,
-          model: modelInUse,
-          provider,
-        });
-      }
-      throw createGenerationError("provider_error", retryMessage, 502, {
-        status: retryResponse.status,
         model: modelInUse,
-        provider,
       });
     }
 
@@ -3394,11 +3382,12 @@ async function runStructuredGeneration({
       parseResponse,
     });
   } catch (error) {
-    const canFallback =
-      enableModelFallback &&
-      fallbackModel &&
-      fallbackModel !== primaryModel &&
-      shouldFallbackModel(error);
+    const canFallback = canUseModelFallback({
+      enabled: enableModelFallback,
+      primaryModel,
+      fallbackModel,
+      errorCode: error?.code,
+    });
 
     if (!canFallback) {
       throw error;
@@ -3945,8 +3934,11 @@ export async function POST(request) {
     });
   } catch (err) {
     console.error("Roast API error:", err);
+    const isOpenRouterFailure = err?.details?.provider === "openrouter";
     return sendErrorResponse({
-      error: err?.message || "Server error",
+      error: isOpenRouterFailure
+        ? OPENROUTER_PUBLIC_ERROR
+        : err?.message || "Server error",
       status: err?.status || 500,
     });
   }
