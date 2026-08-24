@@ -378,6 +378,7 @@
   "ims": {
     "title": "IMS Agency",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Web design e sviluppo",
     "image": "main.webp",
     "headerImage": "header.webp",
     "link": "https://www.imsagency.it",
@@ -388,7 +389,9 @@
     "blackText": true,
     "year": 2022,
     "description": "Guiding businesses with expertise, integrity, and vision.<br />OBM & Associati unites certified professionals in tax, finance, and labor consultancy to empower growth and resilience.<br /><br />From international tax to corporate restructuring, every solution is crafted with precision and trust.",
-    "slogan": "Expertise that protects,<br>strategy that drives."
+    "descriptionIt": "Guidare le imprese con competenza, integrità e visione.<br />OBM & Associati riunisce professionisti qualificati nella consulenza fiscale, finanziaria e del lavoro, favorendo crescita e resilienza.<br /><br />Dalla fiscalità internazionale alla ristrutturazione aziendale, ogni soluzione nasce da precisione e affidabilità.",
+    "slogan": "Expertise that protects,<br>strategy that drives.",
+    "sloganIt": "Competenza che tutela,<br>strategia che guida."
   },
   "bioli": {
     "title": "Bioli",
