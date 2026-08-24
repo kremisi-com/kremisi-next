@@ -470,6 +470,7 @@
   "naturalia": {
     "title": "Naturalia",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Web Design & Sviluppo",
     "image": "main.webp",
     "headerImage": "frutta-secca-1.webp",
     "link": "https://naturaliafood.ch/index.html",
@@ -479,7 +480,9 @@
     "carousel": ["Home.mp4"],
     "year": 2021,
     "description": "Nourishing life with natural goodness.<br />Naturalia Food brings authentic, healthy, and sustainable products to your table, celebrating taste and well-being in harmony.<br /><br />From organic essentials to mindful choices, every flavor tells a story of care and nature.",
-    "slogan": "Pure taste,<br>natural living."
+    "descriptionIt": "Nutriamo la vita con la bontà della natura.<br />Naturalia Food porta sulla tua tavola prodotti autentici, sani e sostenibili, celebrando gusto e benessere in perfetta armonia.<br /><br />Dagli alimenti biologici essenziali alle scelte più consapevoli, ogni sapore racconta una storia di cura e natura.",
+    "slogan": "Pure taste,<br>natural living.",
+    "sloganIt": "Gusto puro,<br>vita al naturale."
   },
   "beyond-reiki": {
     "title": "Beyond Reiki",
