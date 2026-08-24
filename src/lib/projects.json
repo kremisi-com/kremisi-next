@@ -32,9 +32,11 @@
   "fleder": {
     "title": "Fleder",
     "subtitle": "App Development",
+    "subtitleIt": "Sviluppo app",
     "image": "concat_3_2.webp",
     "headerImage": "mockup.webp",
     "headerImageAlt": "Fleder healthcare app hero mockup",
+    "headerImageAltIt": "Mockup principale dell’app sanitaria Fleder",
     "images": ["infermieri.webp", "mockup.webp", "concat.webp"],
     "link": "https://kremisi.com/assets/documents/fleder_screens.pdf",
     "customer": "",
@@ -60,6 +62,17 @@
       "2a-Account.webp": "Fleder account setup screen",
       "2-Prelievi.webp": "Fleder blood test booking screen"
     },
+    "carouselImageAltsIt": {
+      "Home.webp": "Schermata iniziale dell’app Fleder",
+      "Prenota.webp": "Schermata di prenotazione di Fleder",
+      "Storico.webp": "Schermata dello storico degli appuntamenti di Fleder",
+      "Menu.webp": "Menu di navigazione dell’app Fleder",
+      "Famiglia.webp": "Schermata di gestione della famiglia di Fleder",
+      "Calendario.webp": "Calendario per la pianificazione degli appuntamenti di Fleder",
+      "1a-DatiPersonali.webp": "Schermata del modulo per i dati personali di Fleder",
+      "2a-Account.webp": "Schermata di configurazione dell’account Fleder",
+      "2-Prelievi.webp": "Schermata di prenotazione dei prelievi del sangue di Fleder"
+    },
     "imagesCarousel": true,
     "tags": ["app", "benessere", "farmaceutica"],
     "tasks": ["DEV"],
@@ -67,7 +80,9 @@
     "blackText": true,
     "year": 2021,
     "description": "Bringing healthcare home with precision and care.<br />Fleder delivers blood tests directly to your doorstep—fast, personalized, and barrier-free.<br /><br />With streamlined tech and a network of trusted caregivers, every moment is built on safety, dignity, and empathy.",
-    "slogan": "Your health, delivered.<br>No lines, no wait."
+    "descriptionIt": "Portare l’assistenza sanitaria a domicilio, con precisione e attenzione.<br />Fleder offre prelievi del sangue direttamente a casa—rapidi, personalizzati e senza barriere.<br /><br />Grazie a una tecnologia intuitiva e a una rete di professionisti sanitari di fiducia, ogni fase del servizio mette al centro sicurezza, dignità ed empatia.",
+    "slogan": "Your health, delivered.<br>No lines, no wait.",
+    "sloganIt": "La tua salute, a domicilio.<br>Niente code, niente attese."
   },
   "glapix": {
     "title": "Glapix",
