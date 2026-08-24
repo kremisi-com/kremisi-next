@@ -315,6 +315,7 @@
   "itaca": {
     "title": "Itaca Engineering",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Progettazione e sviluppo web",
     "image": "main.webp",
     "headerImage": "cantiere.webp",
     "link": "https://www.itaca-eng.com/",
@@ -325,7 +326,9 @@
     "carousel": ["Home.mp4"],
     "year": 2025,
     "description": "Building the future with innovation and integrity.<br />Itaca Engineering delivers cutting-edge solutions in civil engineering, energy, and environmental consulting, driving sustainable progress.<br /><br />From visionary projects to meticulous execution, every endeavor is shaped by expertise and commitment.",
-    "slogan": "Engineering tomorrow,<br>building with purpose."
+    "descriptionIt": "Costruire il futuro con innovazione e integrità.<br />Itaca Engineering offre soluzioni all'avanguardia nell'ingegneria civile, nell'energia e nella consulenza ambientale, contribuendo a un progresso sostenibile.<br /><br />Dalla visione progettuale alla precisione esecutiva, ogni intervento prende forma grazie a competenza e impegno.",
+    "slogan": "Engineering tomorrow,<br>building with purpose.",
+    "sloganIt": "Progettare il domani,<br>costruire con responsabilità."
   },
   "cybest": {
     "title": "Cybest",
