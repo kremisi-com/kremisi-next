@@ -363,6 +363,7 @@
   "narai": {
     "title": "Narai Thai Massages",
     "subtitle": "Web Development",
+    "subtitleIt": "Sviluppo Web",
     "image": "main.webp",
     "headerImage": "massaggio.webp",
     "link": "https://naraithaimassage.com",
@@ -372,7 +373,9 @@
     "carousel": ["Home.mp4", "Massaggi.mp4", "Contatti.mp4", "About.mp4"],
     "year": 2021,
     "description": "Experience the art of authentic Thai wellness.<br />Narai Thai Massage blends tradition, touch, and tranquility to release tension and restore energy.<br /><br />From deep relaxation to holistic balance, every session is crafted to heal body and spirit.",
-    "slogan": "Relax, restore,<br>renew your energy."
+    "descriptionIt": "Scopri l'arte dell'autentico benessere thailandese.<br />Narai Thai Massage unisce tradizione, manualità e quiete per sciogliere le tensioni e ritrovare energia.<br /><br />Dal rilassamento profondo all'equilibrio olistico, ogni trattamento è pensato per rigenerare corpo e spirito.",
+    "slogan": "Relax, restore,<br>renew your energy.",
+    "sloganIt": "Rilassati, rigenerati,<br>rinnova la tua energia."
   },
   "crystal-beauty": {
     "title": "Crystal Beauty",
