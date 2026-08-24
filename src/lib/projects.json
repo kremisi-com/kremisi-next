@@ -276,6 +276,7 @@
   "progetto-commercio": {
     "title": "Progetto Commercio",
     "subtitle": "App Design & Development",
+    "subtitleIt": "Design e sviluppo di app",
     "image": "mockup-rev.webp",
     "headerImage": "mockup.webp",
     "link": "https://www.prolocolimbiate.org/progetto-commercio.html",
@@ -288,7 +289,9 @@
     "disabled": false,
     "year": 2019,
     "description": "Reviving local commerce with innovation and unity.<br />Progetto Commercio connects Limbiate’s shops and professionals through a dynamic app with offers, e-commerce, and home deliveries.<br /><br />Every feature supports community growth, bringing neighbors and businesses closer together.",
-    "slogan": "Stronger together,<br>commerce reimagined."
+    "descriptionIt": "Rilanciare il commercio locale attraverso innovazione e coesione.<br />Progetto Commercio mette in rete i negozi e i professionisti di Limbiate con un’app dinamica che integra offerte, e-commerce e consegne a domicilio.<br /><br />Ogni funzionalità sostiene la crescita della comunità, avvicinando cittadini e attività locali.",
+    "slogan": "Stronger together,<br>commerce reimagined.",
+    "sloganIt": "Più forti insieme,<br>un nuovo modo di fare commercio."
   },
   "lucrezia-curto": {
     "title": "Lucrezia Curto - Commercialista",
