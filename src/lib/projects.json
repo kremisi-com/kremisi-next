@@ -72,6 +72,7 @@
   "glapix": {
     "title": "Glapix",
     "subtitle": "Web Development",
+    "subtitleIt": "Sviluppo web",
     "image": "header.webp",
     "headerImage": "slab.webp",
     "link": "https://glapixsa.com",
@@ -91,7 +92,9 @@
     ],
     "year": 2021,
     "slogan": "The new element.<br>Unique, eternal, unchangeable.",
-    "description": "Redefining surfaces through innovation and design.<br />Glapix merges art, technology, and sustainability to create next-generation materials that are unique, durable, and eco-friendly.<br /><br />From immersive interiors to limitless textures, every detail transforms imagination into tangible excellence."
+    "sloganIt": "Il nuovo elemento.<br>Unico, eterno, immutabile.",
+    "description": "Redefining surfaces through innovation and design.<br />Glapix merges art, technology, and sustainability to create next-generation materials that are unique, durable, and eco-friendly.<br /><br />From immersive interiors to limitless textures, every detail transforms imagination into tangible excellence.",
+    "descriptionIt": "Ridefinire le superfici attraverso innovazione e design.<br />Glapix unisce arte, tecnologia e sostenibilità per creare materiali di nuova generazione: unici, resistenti ed ecosostenibili.<br /><br />Dagli interni immersivi alle texture senza confini, ogni dettaglio trasforma l’immaginazione in eccellenza concreta."
   },
   "vecchi360": {
     "title": "Vecchi360",
