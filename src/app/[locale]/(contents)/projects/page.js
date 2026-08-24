@@ -35,7 +35,7 @@ export default async function ProjectsPage({ params }) {
   const imageAlts = [];
   const links = [];
 
-  const projectsDataArray = getProjectsArray();
+  const projectsDataArray = getProjectsArray(locale);
 
   projectsDataArray.forEach((project) => {
     let tmpImage = `/projects/${project.id}/${project.image}`;

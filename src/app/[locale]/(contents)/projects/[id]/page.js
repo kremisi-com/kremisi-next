@@ -27,8 +27,9 @@ export async function generateStaticParams() {
     }));
 }
 
-function getProjectStructuredData(projectData) {
-    const canonicalUrl = new URL(projectData.path, BASE_URL).toString();
+function getProjectStructuredData(projectData, locale) {
+    const canonicalPath = `/${locale}${projectData.path}`;
+    const canonicalUrl = new URL(canonicalPath, BASE_URL).toString();
     const imageUrl = projectData.headerImage
         ? new URL(
               `/projects/${projectData.id}/${projectData.headerImage}`,
@@ -47,13 +48,13 @@ function getProjectStructuredData(projectData) {
                         "@type": "ListItem",
                         position: 1,
                         name: "Home",
-                        item: BASE_URL,
+                        item: `${BASE_URL}/${locale}`,
                     },
                     {
                         "@type": "ListItem",
                         position: 2,
-                        name: "Projects",
-                        item: `${BASE_URL}/projects`,
+                        name: locale === "it" ? "Progetti" : "Projects",
+                        item: `${BASE_URL}/${locale}/projects`,
                     },
                     {
                         "@type": "ListItem",
@@ -72,14 +73,14 @@ function getProjectStructuredData(projectData) {
                 url: canonicalUrl,
                 mainEntityOfPage: canonicalUrl,
                 image: imageUrl,
-                inLanguage: "en",
+                inLanguage: locale,
                 author: {
                     "@id": ORGANIZATION_ID,
                 },
                 publisher: {
                     "@id": ORGANIZATION_ID,
                 },
-                isPartOf: `${BASE_URL}/projects`,
+                isPartOf: `${BASE_URL}/${locale}/projects`,
                 datePublished: projectData.year
                     ? `${projectData.year}-01-01`
                     : undefined,
@@ -94,9 +95,8 @@ function getProjectStructuredData(projectData) {
 }
 
 export async function generateMetadata({ params }) {
-    params = await params;
-    const id = params.id;
-    const projectData = getProjectData(id);
+    const { id, locale } = await params;
+    const projectData = getProjectData(id, locale);
 
     if (!projectData) {
         return {
@@ -115,7 +115,7 @@ export async function generateMetadata({ params }) {
     const year = projectData.year ? ` (${projectData.year})` : "";
     const title = `${projectTitle}${subtitle}${year}`;
     const description = getProjectMetaDescription(projectData);
-    const canonical = projectData.path;
+    const canonical = `/${locale}${projectData.path}`;
     const image = projectData.headerImage
         ? `/projects/${projectData.id}/${projectData.headerImage}`
         : "/og-image.jpg";
@@ -149,14 +149,14 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ProjectPage({ params }) {
-    params = await params;
-    const id = await params.id;
+    const { id, locale } = await params;
 
-    const projectData = getProjectData(id);
+    const projectData = getProjectData(id, locale);
 
     if (!projectData) notFound();
 
-    const projectStructuredData = getProjectStructuredData(projectData);
+    const projectStructuredData = getProjectStructuredData(projectData, locale);
+    const isItalian = locale === "it";
 
     return (
         <>
@@ -175,8 +175,9 @@ export default async function ProjectPage({ params }) {
                 />
                 <h1 dangerouslySetInnerHTML={{ __html: projectData.slogan }} />
                 <p className={style.disclaimer}>
-                    All rights to the images are retained by the respective
-                    owner
+                    {isItalian
+                        ? "Tutti i diritti sulle immagini appartengono ai rispettivi proprietari"
+                        : "All rights to the images are retained by the respective owner"}
                 </p>
             </div>
             <div className={`${style.overview}`}>
@@ -184,14 +185,14 @@ export default async function ProjectPage({ params }) {
                     <div className="col mb-0 no-wrap">
                         <div className={style.client}>
                             <div className={style.clientName}>
-                                Client: {projectData.title}
+                                {isItalian ? "Cliente" : "Client"}: {projectData.title}
                             </div>
                         </div>
                     </div>
                     <div className="col mb-0 no-wrap">
                         <div className={style.client}>
                             <div className={style.clientYear}>
-                                Year: {projectData.year}
+                                {isItalian ? "Anno" : "Year"}: {projectData.year}
                             </div>
                         </div>
                     </div>
@@ -199,14 +200,14 @@ export default async function ProjectPage({ params }) {
                 <div className="row">
                     <div className="col-1-3">
                         <h3 style={{ textTransform: "uppercase" }}>
-                            Project Overview
+                            {isItalian ? "Panoramica del progetto" : "Project Overview"}
                         </h3>
                         <AnimatedLink
                             className={`${style.link} onlyDesktop`}
                             href={projectData.link}
                             target="_blank"
                         >
-                            <GitButton text="Live Demo" />
+                            <GitButton text={isItalian ? "Visita il sito" : "Live Demo"} />
                         </AnimatedLink>
                     </div>
                     <div className="col-2-3">
@@ -229,7 +230,9 @@ export default async function ProjectPage({ params }) {
                                 href={projectData.link}
                                 target="_blank"
                             >
-                                <GitButton text="Live Demo" />
+                                <GitButton
+                                    text={isItalian ? "Visita il sito" : "Live Demo"}
+                                />
                             </AnimatedLink>
                         </div>
                     </div>
@@ -270,14 +273,14 @@ export default async function ProjectPage({ params }) {
             <div className={style.moreProjects}>
                 <AnimatedLink className={style.link} href={"/projects"}>
                     <GitButton
-                        text="More Projects"
+                        text={isItalian ? "Altri progetti" : "More Projects"}
                         revertColor={true}
                         leftShift={-35}
                     />
                 </AnimatedLink>
             </div>
             <div className={style.nextProject}>
-                <h4>Next Project</h4>
+                <h4>{isItalian ? "Progetto successivo" : "Next Project"}</h4>
                 <h2
                     className={style.nextProjectTitle}
                     dangerouslySetInnerHTML={{
@@ -288,7 +291,10 @@ export default async function ProjectPage({ params }) {
                     className={style.link}
                     href={projectData.nextProject?.path || "/projects"}
                 >
-                    <GitButton text="Next Project" leftShift={-20} />
+                    <GitButton
+                        text={isItalian ? "Progetto successivo" : "Next Project"}
+                        leftShift={-20}
+                    />
                 </AnimatedLink>
             </div>
         </>

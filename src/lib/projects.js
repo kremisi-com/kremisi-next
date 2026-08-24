@@ -62,6 +62,17 @@ function getProjectPreviewImageAlt(projectData) {
     return `${projectData?.title || "Project"} project preview`;
 }
 
+function getLocalizedProject(projectData, locale = "en") {
+    if (!projectData || locale !== "it") return projectData;
+
+    return {
+        ...projectData,
+        subtitle: projectData.subtitleIt || projectData.subtitle,
+        description: projectData.descriptionIt || projectData.description,
+        slogan: projectData.sloganIt || projectData.slogan,
+    };
+}
+
 function withProjectSeoData(projectId, projectData) {
     if (!projectData) return null;
 
@@ -81,9 +92,9 @@ function withProjectSeoData(projectId, projectData) {
     };
 }
 
-function getProjectsArray() {
+function getProjectsArray(locale = "en") {
     return getEnabledProjectEntries().map(([projectId, project]) => ({
-        ...withProjectSeoData(projectId, project),
+        ...getLocalizedProject(withProjectSeoData(projectId, project), locale),
         externalLink: project.link,
         link: getProjectPath(projectId, project),
     }));
@@ -137,7 +148,7 @@ function getSortedProjects(projectsDict) {
     // ];
 }
 
-function getProjectData(projectIdentifier) {
+function getProjectData(projectIdentifier, locale = "en") {
     const projectId = resolveProjectKey(projectIdentifier);
     const project = projectId ? projectsData[projectId] : null;
 
@@ -151,12 +162,15 @@ function getProjectData(projectIdentifier) {
     const nextProjectEntry =
         nextProjectIndex >= 0 ? enabledProjects[nextProjectIndex] : null;
 
-    return {
+    return getLocalizedProject({
         ...withProjectSeoData(projectId, project),
         nextProject: nextProjectEntry
-            ? withProjectSeoData(nextProjectEntry[0], nextProjectEntry[1])
+            ? getLocalizedProject(
+                  withProjectSeoData(nextProjectEntry[0], nextProjectEntry[1]),
+                  locale
+              )
             : null,
-    };
+    }, locale);
 }
 
 export {
@@ -169,6 +183,7 @@ export {
     getProjectHeaderImageAlt,
     getProjectCarouselImageAlt,
     getProjectPreviewImageAlt,
+    getLocalizedProject,
     normalizeProjectSlug,
     resolveProjectKey,
 };
