@@ -96,6 +96,7 @@
   "vecchi360": {
     "title": "Vecchi360",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Web Design e Sviluppo",
     "image": "main.webp",
     "headerImage": "property.webp",
     "link": "https://vecchi360immobiliare.it/",
@@ -108,7 +109,9 @@
     "carousel": ["Vendita.mp4", "Home.mp4", "Chi-Siamo.mp4"],
     "year": 2023,
     "slogan": "Turning visions into reality,<br>where elegance meets home.",
-    "description": "Transforming the way you live and dream.<br />Every property is more than a place—it’s a story of elegance, trust, and possibility.<br /><br />From urban skylines to coastal horizons, we craft experiences that inspire and endure."
+    "sloganIt": "Trasformiamo le visioni in realtà,<br>dove l’eleganza incontra la casa.",
+    "description": "Transforming the way you live and dream.<br />Every property is more than a place—it’s a story of elegance, trust, and possibility.<br /><br />From urban skylines to coastal horizons, we craft experiences that inspire and endure.",
+    "descriptionIt": "Trasformiamo il tuo modo di vivere e sognare.<br />Ogni immobile è più di un luogo: è una storia di eleganza, fiducia e possibilità.<br /><br />Dagli skyline urbani agli orizzonti costieri, creiamo esperienze capaci di ispirare e durare nel tempo."
   },
   "casa-palmi": {
     "title": "Casa Palmi",
