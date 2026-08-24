@@ -137,9 +137,11 @@
   "casa-palmi": {
     "title": "Casa Palmi",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Design e sviluppo web",
     "image": "hero.webp",
     "headerImage": "bg-1.webp",
     "headerImageAlt": "Casa Palmi villa booking experience hero section",
+    "headerImageAltIt": "Sezione hero dell’esperienza di prenotazione della villa Casa Palmi",
     "link": "https://casapalmi.it/",
     "customer": "",
     "tags": ["benessere", "immobiliare", "sito"],
@@ -156,7 +158,9 @@
     "carousel": ["booking-start.mp4", "email-ver.mp4", "booking-end.mp4"],
     "year": 2026,
     "description": "Designing a slower, more refined way to book a seaside escape.<br />Casa Palmi pairs a premium villa experience with a clear digital journey, showcasing a private pool, outdoor living, curated amenities, and the atmosphere of Triscina di Selinunte.<br /><br />From discovery to reservation, every page is shaped to turn hospitality into confidence, guiding guests through the location, the stay, and a direct booking flow with clarity and ease.",
-    "slogan": "Where time slows,<br>and every stay feels curated."
+    "descriptionIt": "Un modo più lento e raffinato di prenotare una fuga al mare.<br />Casa Palmi unisce l’esperienza di una villa esclusiva a un percorso digitale chiaro, valorizzando la piscina privata, gli spazi all’aperto, i servizi selezionati e l’atmosfera di Triscina di Selinunte.<br /><br />Dalla scoperta alla prenotazione, ogni pagina è pensata per trasformare l’ospitalità in fiducia, accompagnando gli ospiti alla scoperta del luogo, del soggiorno e di un percorso di prenotazione diretta semplice e intuitivo.",
+    "slogan": "Where time slows,<br>and every stay feels curated.",
+    "sloganIt": "Dove il tempo rallenta,<br>e ogni soggiorno è curato nei dettagli."
   },
   "makuda": {
     "title": "Makuda",
