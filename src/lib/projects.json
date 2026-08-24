@@ -163,6 +163,7 @@
   "gamelia": {
     "title": "Gamelia",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Web design e sviluppo",
     "image": "main-2.webp",
     "headerImage": "carousel-2.webp",
     "link": "https://gameliaassistenza.com",
@@ -174,7 +175,9 @@
     "carousel": ["Ricerca.mp4", "Cliente.mp4", "Madre.mp4", "Landing.mp4"],
     "year": 2022,
     "description": "Matching compassion with professionalism to care for your loved ones.<br />Gamelia finds the perfect caregiver tailored to your needs, forging support that goes beyond duty.<br /><br />Every service is built on trust, respect, and heartfelt dedication.",
-    "slogan": "Care that understands you,<br>support that empowers."
+    "descriptionIt": "Unire empatia e professionalità per prendersi cura dei tuoi cari.<br />Gamelia trova l’assistente familiare più adatto alle tue esigenze, creando un sostegno che va oltre il semplice dovere.<br /><br />Ogni servizio nasce dalla fiducia, dal rispetto e da una dedizione autentica.",
+    "slogan": "Care that understands you,<br>support that empowers.",
+    "sloganIt": "La cura che ti comprende,<br>il sostegno che ti dà forza."
   },
   "e2l": {
     "title": "Easy2Learn",
