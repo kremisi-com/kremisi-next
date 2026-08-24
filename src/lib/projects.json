@@ -595,6 +595,7 @@
   "echinadi": {
     "title": "Residenza Echinadi",
     "subtitle": "Web Development",
+    "subtitleIt": "Sviluppo web",
     "image": "main.webp",
     "headerImage": "casa.webp",
     "link": "https://residenzaechinadi.koshomesolution.com/",
@@ -604,6 +605,8 @@
     "carousel": ["Home.mp4"],
     "year": 2024,
     "description": "Embracing the beauty of modern Mediterranean living.<br />Residenza Echinadi combines elegant architecture with natural harmony, offering refined spaces designed for comfort and style.<br /><br />From bright interiors to serene surroundings, every detail inspires balance and timeless well-being.",
-    "slogan": "Mediterranean elegance,<br>modern comfort."
+    "descriptionIt": "Un progetto che abbraccia la bellezza dell'abitare mediterraneo contemporaneo.<br />Residenza Echinadi unisce un'architettura elegante all'armonia della natura, offrendo spazi raffinati, pensati per il comfort e lo stile.<br /><br />Dagli interni luminosi al contesto sereno, ogni dettaglio trasmette equilibrio e un benessere senza tempo.",
+    "slogan": "Mediterranean elegance,<br>modern comfort.",
+    "sloganIt": "Eleganza mediterranea,<br>comfort contemporaneo."
   }
 }
