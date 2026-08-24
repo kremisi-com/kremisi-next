@@ -550,6 +550,7 @@
   "theorica": {
     "title": "Theorica Holdings",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Web design e sviluppo",
     "image": "main.webp",
     "headerImage": "muro.webp",
     "link": "https://theoricaholdings.com",
@@ -559,7 +560,9 @@
     "carousel": ["Home.mp4"],
     "year": 2022,
     "description": "Driving growth through vision and resilience.<br />Theorica Holdings blends investment strategy, innovation, and global insight to build enduring value.<br /><br />From strategic ventures to sustainable opportunities, every move reflects precision, strength, and long-term perspective.",
-    "slogan": "Shaping tomorrow,<br>investing with purpose."
+    "descriptionIt": "Promuovere la crescita attraverso visione e resilienza.<br />Theorica Holdings unisce strategia d’investimento, innovazione e prospettiva globale per generare valore duraturo.<br /><br />Dalle iniziative strategiche alle opportunità sostenibili, ogni scelta riflette precisione, solidità e una visione di lungo periodo.",
+    "slogan": "Shaping tomorrow,<br>investing with purpose.",
+    "sloganIt": "Plasmare il domani,<br>investire con uno scopo."
   },
   "chora": {
     "title": "Residenza Chora",
