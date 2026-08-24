@@ -500,9 +500,11 @@
     "title": "C.COM",
     "slug": "c-com",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Web design e sviluppo",
     "image": "main.webp",
     "headerImage": "cartellone.avif",
     "headerImageAlt": "C.COM outdoor advertising billboard showcase",
+    "headerImageAltIt": "Maxi affissione pubblicitaria outdoor di C.COM",
     "link": "https://www.c-com.it/",
     "customer": "makuda",
     "tags": ["comunicazione", "sito"],
@@ -510,7 +512,9 @@
     "carousel": ["Home.mp4"],
     "year": 2022,
     "description": "Transforming Milan’s skyline into a canvas of creativity.<br />C.COM delivers bold outdoor advertising with maxi billboards, digital screens, and exclusive ArtWalls in the city’s most iconic spots.<br /><br />Every campaign is designed to captivate, inspire, and remain unforgettable.",
-    "slogan": "Dream big,<br>go bold outdoors."
+    "descriptionIt": "Trasformare lo skyline di Milano in una tela per la creatività.<br />C.COM firma campagne di comunicazione outdoor di forte impatto, tra maxi affissioni, schermi digitali ed esclusive ArtWall nei luoghi più iconici della città.<br /><br />Ogni campagna nasce per catturare l’attenzione, ispirare e lasciare un segno indelebile.",
+    "slogan": "Dream big,<br>go bold outdoors.",
+    "sloganIt": "Sogna in grande,<br>comunica senza limiti."
   },
   "sportsalutebellezza": {
     "title": "Sport Salute Bellezza",
