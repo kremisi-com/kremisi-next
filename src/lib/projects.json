@@ -345,6 +345,7 @@
   "obm": {
     "title": "OBM Associati",
     "subtitle": "Web Development",
+    "subtitleIt": "Sviluppo web",
     "image": "main.webp",
     "headerImage": "mondo.webp",
     "link": "https://obmassociati.com",
@@ -354,7 +355,9 @@
     "carousel": ["Home.mp4"],
     "year": 2022,
     "description": "Guiding businesses with expertise, integrity, and vision.<br />OBM & Associati unites certified professionals in tax, finance, and labor consultancy to empower growth and resilience.<br /><br />From international tax to corporate restructuring, every solution is crafted with precision and trust.",
-    "slogan": "Expertise that protects,<br>strategy that drives."
+    "descriptionIt": "Al fianco delle imprese con competenza, integrità e visione.<br />OBM & Associati riunisce professionisti abilitati nella consulenza fiscale, finanziaria e del lavoro, sostenendo crescita e solidità.<br /><br />Dalla fiscalità internazionale alla ristrutturazione aziendale, ogni soluzione nasce da precisione e fiducia.",
+    "slogan": "Expertise that protects,<br>strategy that drives.",
+    "sloganIt": "Competenza che tutela,<br>strategia che guida."
   },
   "ims": {
     "title": "IMS Agency",
