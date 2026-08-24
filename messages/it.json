@@ -1,6 +1,6 @@
 {
   "metadata": {"home": {"title": "Kremisi | Agenzia di Web Design, Sviluppo e Data Analytics", "description": "Kremisi è un'agenzia distribuita che realizza siti veloci e scalabili, prodotti digitali e soluzioni data & analytics per PMI e aziende consolidate."}},
-  "navigation": {"home": "Home", "about": "Chi siamo", "projects": "Progetti", "contacts": "Contatti", "switchTo": "Passa all'inglese"},
+  "navigation": {"home": "Home", "about": "Chi siamo", "services": "Servizi", "projects": "Progetti", "contacts": "Contatti", "switchTo": "Passa all'inglese"},
   "projects": {"kicker": "Progetti recenti", "titleStart": "Una selezione dei nostri", "titleHighlight": "lavori", "subtitle": "Piattaforme, siti web e applicazioni progettati per essere efficaci, chiari e performanti."},
   "overview": {"line1": "progettiamo e sviluppiamo i vostri", "highlight": "prodotti digitali", "line3": "che generano", "emphasis": "risultati misurabili"},
   "services": {"eyebrow": "I nostri servizi", "titleStart": "Costruiamo la tecnologia", "titleHighlight": "intorno al tuo", "titleEnd": "business.", "description": "Dalla prima idea al prodotto in produzione, progettiamo soluzioni pensate per essere usate, evolvere e generare valore.", "items": [

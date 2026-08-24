@@ -45,6 +45,12 @@
     color: var(--primary);
 }
 
+.siteLinks {
+    display: flex;
+    gap: 18px;
+    white-space: nowrap;
+}
+
 .footer:global(.onlyMobile) address {
     left: 25px;
 }

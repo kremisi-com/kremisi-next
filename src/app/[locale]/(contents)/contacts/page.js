@@ -8,23 +8,28 @@ const BASE_URL = "https://kremisi.com";
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
 const WEBSITE_ID = `${BASE_URL}/#website`;
 const EN_DESCRIPTION =
-  "Contact Kremisi to discuss development, design & development, and data & analytics projects. We work internationally and reply within 24 business hours.";
+  "Contact Kremisi to discuss web development, product design, AI, or data analytics projects. We work internationally and reply within 24 business hours.";
 const IT_DESCRIPTION =
   "Contatta Kremisi per parlare del tuo progetto di sviluppo, design, AI o Data. Lavoriamo in Italia e all'estero e rispondiamo entro 24 ore lavorative.";
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
   const isItalian = locale === "it";
-  const title = isItalian
-    ? "Contatti per sviluppo web, design, AI e Data"
-    : "Contact for Web Development, Design & Data Analytics";
+  const title = isItalian ? "Contatti" : "Contact";
   const description = isItalian ? IT_DESCRIPTION : EN_DESCRIPTION;
   const url = `/${locale}/contacts`;
 
   return {
     title,
     description,
-    alternates: { canonical: url },
+    alternates: {
+      canonical: url,
+      languages: {
+        en: "/en/contacts",
+        it: "/it/contacts",
+        "x-default": "/en/contacts",
+      },
+    },
     openGraph: {
       title,
       description,

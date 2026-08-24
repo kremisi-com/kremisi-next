@@ -4,8 +4,9 @@ import { animate } from 'framer-motion';
 import { useTranslations } from "next-intl";
 import styles from './services.module.css';
 
-export default function Services() {
+export default function Services({ titleAs = "h2" }) {
     const t = useTranslations("services");
+    const Title = titleAs;
     const [activeIndex, setActiveIndex] = useState(null);
     const itemRefs = useRef([]);
 
@@ -124,10 +125,10 @@ export default function Services() {
                         <span className={styles.subtitleLine}></span>
                         {t("eyebrow")}
                     </p>
-                    <h2 className={styles.title}>
+                    <Title className={styles.title}>
                         {t("titleStart")} <span className={styles.highlight}>{t("titleHighlight")}</span><br/>
                         {t("titleEnd")}
-                    </h2>
+                    </Title>
                 </div>
                 <div className={styles.headerRight}>
                     <p className={styles.headerDescription}>

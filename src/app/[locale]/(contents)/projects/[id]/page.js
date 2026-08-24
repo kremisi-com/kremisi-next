@@ -126,6 +126,11 @@ export async function generateMetadata({ params }) {
         keywords: [...(projectData.tags || []), ...(projectData.tasks || [])],
         alternates: {
             canonical,
+            languages: {
+                en: `/en${projectData.path}`,
+                it: `/it${projectData.path}`,
+                "x-default": `/en${projectData.path}`,
+            },
         },
         openGraph: {
             title,

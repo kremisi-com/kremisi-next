@@ -11,7 +11,7 @@ export async function generateMetadata({ params }) {
     description: t("description"),
     alternates: {
       canonical: pathname,
-      languages: { en: "/en", it: "/it" },
+      languages: { en: "/en", it: "/it", "x-default": "/en" },
     },
     openGraph: {
       title: t("title"),

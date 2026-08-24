@@ -9,6 +9,7 @@ export default function sitemap() {
     const staticPaths = [
         "/",
         "/about",
+        "/services",
         "/projects",
         "/contacts",
         "/case-studies/brand-identity/lucrezia-curto",
@@ -19,10 +20,16 @@ export default function sitemap() {
             lastModified,
             alternates: {
                 languages: Object.fromEntries(
-                    LOCALES.map((locale) => [
-                        locale,
-                        new URL(`/${locale}${path}`, BASE_URL).toString(),
-                    ])
+                    [
+                        ...LOCALES.map((locale) => [
+                            locale,
+                            new URL(`/${locale}${path}`, BASE_URL).toString(),
+                        ]),
+                        [
+                            "x-default",
+                            new URL(`/en${path}`, BASE_URL).toString(),
+                        ],
+                    ]
                 ),
             },
         }));

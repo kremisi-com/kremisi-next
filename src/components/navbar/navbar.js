@@ -55,6 +55,7 @@ export default function Navbar() {
                         {t("home")}
                     </Button>
                     <Button href="/about">{t("about")}</Button>
+                    <Button href="/services">{t("services")}</Button>
                     <Button href="/projects">{t("projects")}</Button>
                 </div>
                 <AnimatedLink href="/" onClick={handleHomeClick} className={styles.logoWrapper}>
@@ -131,19 +132,6 @@ export default function Navbar() {
                     </li>
                     <li>
                         <Link
-                            href="/projects"
-                            onClick={() =>
-                                setTimeout(
-                                    () => setMenuOpen(false),
-                                    animationDelay
-                                )
-                            }
-                        >
-                            {t("projects")}
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
                             href="/about"
                             onClick={() =>
                                 setTimeout(
@@ -153,6 +141,32 @@ export default function Navbar() {
                             }
                         >
                             {t("about")}
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            href="/services"
+                            onClick={() =>
+                                setTimeout(
+                                    () => setMenuOpen(false),
+                                    animationDelay
+                                )
+                            }
+                        >
+                            {t("services")}
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            href="/projects"
+                            onClick={() =>
+                                setTimeout(
+                                    () => setMenuOpen(false),
+                                    animationDelay
+                                )
+                            }
+                        >
+                            {t("projects")}
                         </Link>
                     </li>
                     <li>

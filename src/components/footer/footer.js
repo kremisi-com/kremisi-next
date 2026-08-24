@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useTranslations } from "next-intl";
-import { usePathname } from "@/i18n/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 import { MessageCircleMore } from "lucide-react";
 import toast from "react-hot-toast";
 import styles from "./footer.module.css";
@@ -13,6 +13,7 @@ const CONTACT_EMAIL_HREF = `mailto:${CONTACT_EMAIL}`;
 export default function Footer() {
     const pathname = usePathname();
     const t = useTranslations("footer");
+    const navigation = useTranslations("navigation");
     const [isHomeSliderActive, setIsHomeSliderActive] = useState(pathname === "/");
 
     async function handleEmailClick(event) {
@@ -56,7 +57,12 @@ export default function Footer() {
                         {CONTACT_EMAIL}
                     </a>
                 </address>
-                <span className={styles.info}></span>
+                <nav className={`${styles.info} ${styles.siteLinks}`} aria-label="Footer">
+                    <Link href="/about">{navigation("about")}</Link>
+                    <Link href="/services">{navigation("services")}</Link>
+                    <Link href="/projects">{navigation("projects")}</Link>
+                    <Link href="/contacts">{navigation("contacts")}</Link>
+                </nav>
                 <span
                     className={`${styles.info} ${styles.vatInfo} ${
                         isHomeSliderActive ? styles.vatHidden : ""

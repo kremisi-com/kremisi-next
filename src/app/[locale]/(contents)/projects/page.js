@@ -4,28 +4,41 @@ import ColoredTable from "@/components/colored-table/colored-table";
 import { getProjectsArray } from "@/lib/projects";
 import { getTranslations } from "next-intl/server";
 
-export const metadata = {
-  title: "Projects",
-  description:
-    "Explore Kremisi projects in web design and web development, including websites, apps, and digital platforms built for performance.",
-  alternates: {
-    canonical: "/projects",
-  },
-  openGraph: {
-    title: "Projects",
-    description:
-      "Explore Kremisi projects in web design and web development, including websites, apps, and digital platforms built for performance.",
-    url: "/projects",
-    images: ["/og-image.jpg"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Projects",
-    description:
-      "Explore Kremisi projects in web design and web development, including websites, apps, and digital platforms built for performance.",
-    images: ["/og-image.jpg"],
-  },
-};
+export async function generateMetadata({ params }) {
+  const { locale } = await params;
+  const isItalian = locale === "it";
+  const title = isItalian ? "Progetti" : "Projects";
+  const description = isItalian
+    ? "Scopri i progetti Kremisi: siti web, applicazioni e piattaforme digitali progettati per essere chiari, veloci e performanti."
+    : "Explore Kremisi projects: websites, applications, and digital platforms designed for clarity, speed, and performance.";
+  const canonical = `/${locale}/projects`;
+
+  return {
+    title,
+    description,
+    alternates: {
+      canonical,
+      languages: {
+        en: "/en/projects",
+        it: "/it/projects",
+        "x-default": "/en/projects",
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: canonical,
+      locale: isItalian ? "it_IT" : "en_US",
+      images: ["/og-image.jpg"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: ["/og-image.jpg"],
+    },
+  };
+}
 
 export default async function ProjectsPage({ params }) {
   const { locale } = await params;
