@@ -215,6 +215,7 @@
   "jester": {
     "title": "Jester",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Design e sviluppo web",
     "image": "main.webp",
     "headerImage": "frame-aereo.webp",
     "link": "https://www.jester.school",
@@ -235,7 +236,9 @@
     ],
     "year": 2021,
     "description": "Launching your aviation career through precision and passion.<br />Jester crafts elite training, from flight dispatch to security, with expert instructors and global standards.<br /><br />Every lesson lifts you higher—ready to dispatch flights, master communication, and command safety.",
-    "slogan": "Fly beyond limits,<br>train for excellence."
+    "descriptionIt": "Diamo slancio alla tua carriera nell’aviazione con precisione e passione.<br />Jester offre una formazione d’eccellenza, dalle operazioni di volo alla sicurezza, con docenti esperti e standard internazionali.<br /><br />Ogni lezione ti porta più in alto, preparandoti a coordinare i voli, padroneggiare la comunicazione e garantire la sicurezza.",
+    "slogan": "Fly beyond limits,<br>train for excellence.",
+    "sloganIt": "Vola oltre ogni limite,<br>formati per l’eccellenza."
   },
   "bpmn2petrinet": {
     "title": "BPMN2Petri",
