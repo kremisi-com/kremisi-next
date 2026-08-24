@@ -570,6 +570,7 @@
   "chora": {
     "title": "Residenza Chora",
     "subtitle": "Web Development",
+    "subtitleIt": "Sviluppo web",
     "image": "main.webp",
     "headerImage": "casa.webp",
     "link": "https://residenzachora.koshomesolution.com/",
@@ -579,7 +580,9 @@
     "carousel": ["Home.mp4"],
     "year": 2023,
     "description": "Where contemporary living meets timeless elegance.<br />Residenza Chora offers refined spaces designed with comfort, style, and innovation in mind.<br /><br />From architectural detail to lifestyle amenities, every home reflects harmony, sophistication, and a new way of living.",
-    "slogan": "Live the elegance,<br>embrace the future."
+    "descriptionIt": "Dove l'abitare contemporaneo incontra un'eleganza senza tempo.<br />Residenza Chora propone spazi raffinati, progettati all'insegna del comfort, dello stile e dell'innovazione.<br /><br />Dalla cura dei dettagli architettonici ai servizi dedicati al benessere quotidiano, ogni casa esprime armonia, ricercatezza e un nuovo modo di vivere.",
+    "slogan": "Live the elegance,<br>embrace the future.",
+    "sloganIt": "Vivi l'eleganza,<br>abbraccia il futuro."
   },
   "hydra": {
     "title": "Residenza Hydra",
