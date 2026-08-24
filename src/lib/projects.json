@@ -333,6 +333,7 @@
   "cybest": {
     "title": "Cybest",
     "subtitle": "Development",
+    "subtitleIt": "Sviluppo",
     "image": "header.webp",
     "headerImage": "bg.webp",
     "images": ["header.webp"],
@@ -342,7 +343,9 @@
     "carousel": ["Home.mp4"],
     "year": 2024,
     "description": "Securing your digital world with expertise and innovation.<br />Cybest offers comprehensive cybersecurity solutions, from risk assessment to incident response, protecting businesses in an evolving threat landscape.<br /><br />Every strategy is tailored to safeguard data, ensure compliance, and foster resilience.",
-    "slogan": "The Social Engineering<br>Antidote."
+    "descriptionIt": "Proteggiamo il tuo mondo digitale con competenza e innovazione.<br />Cybest offre soluzioni complete di sicurezza informatica, dalla valutazione dei rischi alla risposta agli incidenti, tutelando le aziende in uno scenario di minacce in continua evoluzione.<br /><br />Ogni strategia è studiata su misura per proteggere i dati, garantire la conformità normativa e rafforzare la resilienza.",
+    "slogan": "The Social Engineering<br>Antidote.",
+    "sloganIt": "L’antidoto al<br>Social Engineering."
   },
   "saramartelli": {
     "title": "Sara Martelli",
