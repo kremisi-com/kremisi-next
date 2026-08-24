@@ -478,6 +478,7 @@
   "studylux": {
     "title": "StudyLux",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Web design e sviluppo",
     "image": "main.webp",
     "headerImage": "lavagna.webp",
     "link": "https://studylux.it",
@@ -488,7 +489,9 @@
     "blackText": true,
     "year": 2019,
     "description": "Unlocking potential through excellence in education.<br />StudyLux connects students with top-tier teachers, blending passion, expertise, and innovation to achieve outstanding results.<br /><br />From personalized tutoring to advanced courses, every lesson is designed to inspire, empower, and transform learning.",
-    "slogan": "Better teachers,<br>Better results."
+    "descriptionIt": "Liberare il potenziale attraverso l’eccellenza nell’istruzione.<br />StudyLux mette in contatto gli studenti con docenti di altissimo livello, unendo passione, competenza e innovazione per raggiungere risultati straordinari.<br /><br />Dalle lezioni personalizzate ai corsi avanzati, ogni lezione è pensata per ispirare, valorizzare e trasformare l’apprendimento.",
+    "slogan": "Better teachers,<br>Better results.",
+    "sloganIt": "Insegnanti migliori,<br>risultati migliori."
   },
   "C.COM": {
     "title": "C.COM",
