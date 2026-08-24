@@ -165,6 +165,7 @@
   "makuda": {
     "title": "Makuda",
     "subtitle": "Web Development",
+    "subtitleIt": "Sviluppo web",
     "image": "main.webp",
     "headerImage": "dark.webp",
     "link": "https://makuda.black",
@@ -183,7 +184,9 @@
     ],
     "year": 2021,
     "description": "Igniting creativity through bold visuals and fearless storytelling.<br />Makuda shapes brand identities, film & 3D experiences that break boundaries and linger in memory.<br /><br />From cinematic spots to immersive VFX, every frame pulses with emotion and craftsmanship.",
-    "slogan": "Ideas that move you,<br>stories that stay."
+    "descriptionIt": "Accendere la creatività attraverso immagini audaci e una narrazione senza compromessi.<br />Makuda plasma identità di marca ed esperienze cinematografiche e 3D capaci di superare i confini e imprimersi nella memoria.<br /><br />Dagli spot cinematografici agli effetti visivi immersivi, ogni fotogramma vibra di emozione e maestria.",
+    "slogan": "Ideas that move you,<br>stories that stay.",
+    "sloganIt": "Idee che emozionano,<br>storie che restano."
   },
   "gamelia": {
     "title": "Gamelia",
