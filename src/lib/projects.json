@@ -263,9 +263,11 @@
   "lucrezia-curto": {
     "title": "Lucrezia Curto - Commercialista",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Web design e sviluppo",
     "image": "hero-2.webp",
     "headerImage": "bg.webp",
     "headerImageAlt": "Lucrezia Curto accounting website hero background",
+    "headerImageAltIt": "Sfondo della sezione principale del sito dello studio di Lucrezia Curto",
     "images": ["hero.webp", "why.webp"],
     "link": "https://www.lucreziacurto.com/",
     "tags": ["comunicazione", "sito"],
@@ -273,7 +275,9 @@
     "carousel": ["home-optimized.mp4"],
     "year": 2026,
     "description": "Brand identity and digital presence for a trusted accounting studio.<br />Lucrezia Curto offers tax, accounting and business consulting services, guiding individuals and companies with clarity, precision and reliable advice.<br /><br />From fiscal planning to day-to-day accounting support, every touchpoint is designed to communicate professionalism and trust.",
-    "slogan": "Accounting clarity,<br>professional trust."
+    "descriptionIt": "Identità di marca e presenza digitale per uno studio professionale di fiducia.<br />Lucrezia Curto offre servizi fiscali, contabili e di consulenza aziendale, affiancando privati e imprese con chiarezza, precisione e competenza.<br /><br />Dalla pianificazione fiscale al supporto contabile quotidiano, ogni punto di contatto è pensato per comunicare professionalità e affidabilità.",
+    "slogan": "Accounting clarity,<br>professional trust.",
+    "sloganIt": "Chiarezza contabile,<br>fiducia professionale."
   },
   "itaca": {
     "title": "Itaca Engineering",
