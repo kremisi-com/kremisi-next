@@ -265,6 +265,7 @@
   "bpmn2petrinet": {
     "title": "BPMN2Petri",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Progettazione e sviluppo web",
     "image": "home.webp",
     "headerImage": "conversion-2.webp",
     "images": ["home.webp", "conversion-2.webp"],
@@ -275,7 +276,9 @@
     "blackText": true,
     "year": 2025,
     "description": "Bridging the gap between business processes and formal analysis.<br />BPMN2Petri transforms BPMN diagrams into Petri nets, enabling precise modeling, verification, and optimization.<br /><br />From seamless conversion to insightful analysis, every feature empowers clarity and efficiency in process management.",
-    "slogan": "From process to precision,<br>model with confidence."
+    "descriptionIt": "Colmare il divario tra processi aziendali e analisi formale.<br />BPMN2Petri trasforma i diagrammi BPMN in reti di Petri, consentendo una modellazione, una verifica e un’ottimizzazione precise.<br /><br />Dalla conversione fluida all’analisi approfondita, ogni funzionalità offre maggiore chiarezza ed efficienza nella gestione dei processi.",
+    "slogan": "From process to precision,<br>model with confidence.",
+    "sloganIt": "Dal processo alla precisione,<br>modella con sicurezza."
   },
   "progetto-commercio": {
     "title": "Progetto Commercio",
