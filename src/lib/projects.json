@@ -354,6 +354,7 @@
   "saramartelli": {
     "title": "Sara Martelli",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Web design e sviluppo",
     "image": "main.webp",
     "headerImage": "header-1.webp",
     "link": "https://www.saramartelli.com",
@@ -362,7 +363,9 @@
     "carousel": ["Home.mp4"],
     "year": 2025,
     "description": "Guiding you to inner peace and holistic well-being.<br />Sara Martelli blends yoga, mindfulness, and energy healing to nurture balance, strength, and serenity.<br /><br />From personalized sessions to transformative retreats, every practice is a journey toward harmony and self-discovery.",
-    "slogan": "Healing starts from<br>a personal choice."
+    "descriptionIt": "Un percorso verso la pace interiore e il benessere olistico.<br />Sara Martelli unisce yoga, mindfulness e pratiche energetiche per coltivare equilibrio, forza e serenità.<br /><br />Dalle sessioni personalizzate ai ritiri trasformativi, ogni pratica diventa un viaggio verso l’armonia e la scoperta di sé.",
+    "slogan": "Healing starts from<br>a personal choice.",
+    "sloganIt": "La guarigione inizia da<br>una scelta personale."
   },
   "narai": {
     "title": "Narai Thai Massages",
