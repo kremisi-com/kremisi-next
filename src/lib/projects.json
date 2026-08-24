@@ -439,6 +439,7 @@
   "sgs": {
     "title": "SGS Capital",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Progettazione e sviluppo web",
     "image": "main.webp",
     "headerImage": "stanza.webp",
     "link": "https://sgscapital.kremisi.com",
@@ -448,7 +449,9 @@
     "carousel": ["Home.mp4"],
     "year": 2021,
     "description": "Building value through trust, innovation, and strategy.<br />SGS Capital empowers investors with tailored financial solutions that balance security and growth.<br /><br />From wealth management to strategic advisory, every decision is guided by precision and long-term vision.",
-    "slogan": "Invest with confidence,<br>grow with purpose."
+    "descriptionIt": "Creare valore attraverso fiducia, innovazione e strategia.<br />SGS Capital affianca gli investitori con soluzioni finanziarie su misura, capaci di coniugare sicurezza e crescita.<br /><br />Dalla gestione patrimoniale alla consulenza strategica, ogni decisione nasce da rigore e da una visione di lungo periodo.",
+    "slogan": "Invest with confidence,<br>grow with purpose.",
+    "sloganIt": "Investi con fiducia,<br>cresci con uno scopo."
   },
   "naturalia": {
     "title": "Naturalia",
