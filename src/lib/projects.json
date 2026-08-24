@@ -182,6 +182,7 @@
   "e2l": {
     "title": "Easy2Learn",
     "subtitle": "App Design & Development",
+    "subtitleIt": "Design e sviluppo di app",
     "image": "mockup-login.webp",
     "images": ["mockup.webp", "mockup-2.webp"],
     "carousel": [
@@ -204,7 +205,9 @@
     "disabled": false,
     "year": 2020,
     "description": "Reinventing study through smart interactivity and insight.<br />Easy2Learn turns exams into opportunities with quizzes, analytics, and adaptive content built for growth and confidence.<br /><br />From topic mastery to exam readiness, every feature elevates your learning journey.",
-    "slogan": "Learn smarter,<br>ace every test."
+    "descriptionIt": "Reinventare lo studio con interattività intelligente e analisi mirate.<br />Easy2Learn trasforma gli esami in opportunità con quiz, statistiche e contenuti adattivi pensati per favorire la crescita e acquisire sicurezza.<br /><br />Dalla padronanza degli argomenti alla preparazione d’esame, ogni funzionalità rende più efficace il tuo percorso di apprendimento.",
+    "slogan": "Learn smarter,<br>ace every test.",
+    "sloganIt": "Studia con metodo,<br>supera ogni esame."
   },
   "jester": {
     "title": "Jester",
