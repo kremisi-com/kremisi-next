@@ -2,6 +2,7 @@
   "allavelli": {
     "title": "Allavelli",
     "subtitle": "Web Development",
+    "subtitleIt": "Sviluppo web",
     "image": "header-2-en.webp",
     "headerImage": "frame-alla.webp",
     "link": "https://allavellilegal.com/en/",
@@ -27,7 +28,9 @@
     ],
     "year": 2023,
     "description": "Delivering legal excellence with clarity and precision.<br />Allavelli Legal assists clients across corporate, tax, and international law with tailored strategies and trusted expertise.<br /><br />From complex transactions to cross-border matters, every case is guided by insight and integrity.",
-    "slogan": "Your vision,<br>our legal strength."
+    "descriptionIt": "Eccellenza legale, con chiarezza e precisione.<br />Allavelli Legal assiste i clienti nel diritto societario, tributario e internazionale, offrendo strategie su misura e una consulenza affidabile.<br /><br />Dalle operazioni complesse alle questioni transfrontaliere, ogni incarico è guidato da competenza e integrità.",
+    "slogan": "Your vision,<br>our legal strength.",
+    "sloganIt": "La vostra visione,<br>la nostra forza legale."
   },
   "fleder": {
     "title": "Fleder",
