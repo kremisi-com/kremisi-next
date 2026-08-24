@@ -14,7 +14,54 @@ import {
   trackLead,
 } from "@/lib/analytics";
 
-export default function ContactForm({}) {
+const COPY = {
+  en: {
+    success: "Message sent successfully!",
+    serviceTitle: "What you need",
+    services: [
+      "Development",
+      "Design & Development",
+      "AI Integration & Data",
+      "Other",
+    ],
+    budgetTitle: "Project Budget",
+    timelineTitle: "Preferred Timeline",
+    timelines: ["1-2 months", "2-4 months", "4-6 months"],
+    detailsTitle: "Details About The Project",
+    detailsPlaceholder:
+      "What are you building? Goals, timeline, current problems, references...",
+    contactsTitle: "Your Contact Details",
+    name: "Full Name*",
+    company: "Company",
+    phone: "Phone",
+    privacy: "I have read and accept the",
+    submit: "Request Proposal",
+    sending: "Sending...",
+    reply: "Usually reply within 24h.",
+  },
+  it: {
+    success: "Richiesta inviata con successo!",
+    serviceTitle: "Di cosa hai bisogno",
+    services: ["Sviluppo", "Design e sviluppo", "AI e Data", "Altro"],
+    budgetTitle: "Budget del progetto",
+    timelineTitle: "Tempistiche",
+    timelines: ["1–2 mesi", "2–4 mesi", "4–6 mesi"],
+    detailsTitle: "Dettagli del progetto",
+    detailsPlaceholder:
+      "Cosa vuoi realizzare? Obiettivi, tempistiche, esigenze attuali, riferimenti...",
+    contactsTitle: "I tuoi contatti",
+    name: "Nome e cognome*",
+    company: "Azienda",
+    phone: "Telefono",
+    privacy: "Ho letto e accetto la",
+    submit: "Invia la richiesta",
+    sending: "Invio in corso...",
+    reply: "Rispondiamo solitamente entro 24 ore lavorative.",
+  },
+};
+
+export default function ContactForm({ locale = "en" }) {
+  const copy = COPY[locale] || COPY.en;
   const [state, formAction, pending] = useActionState(submitContact, {
     success: null,
     error: null,
@@ -40,7 +87,7 @@ export default function ContactForm({}) {
 
   useEffect(() => {
     if (state?.success) {
-      toast.success("Message sent successfully!");
+      toast.success(copy.success);
       if (!state?.silentDrop) {
         trackLead({
           service: serviceRef.current?.getValue?.() || "unknown",
@@ -70,11 +117,12 @@ export default function ContactForm({}) {
     if (state?.message) {
       console.log(state.message);
     }
-  }, [state]);
+  }, [copy.success, state]);
 
   return (
     <form className={styles.form} action={formAction}>
       <input type="hidden" name="formStartedAt" value={formStartedAt} />
+      <input type="hidden" name="locale" value={locale} />
       <input
         type="hidden"
         name="cf-turnstile-response"
@@ -96,22 +144,22 @@ export default function ContactForm({}) {
       />
       <div className="row">
         <div className="col">
-          <h3>What you need</h3>
+          <h3>{copy.serviceTitle}</h3>
           <RadioOptions
             ref={serviceRef}
             options={[
-              { value: "development", label: "Development" },
+              { value: "development", label: copy.services[0] },
               {
                 value: "design-development",
-                label: "Design & Development",
+                label: copy.services[1],
               },
               {
                 value: "data-analytics",
-                label: "AI Integration & Data",
+                label: copy.services[2],
               },
               {
                 value: "other",
-                label: "Other",
+                label: copy.services[3],
               },
             ]}
             name="service"
@@ -120,26 +168,26 @@ export default function ContactForm({}) {
       </div>
       <div className="row">
         <div className="col">
-          <h3>Project Budget</h3>
+          <h3>{copy.budgetTitle}</h3>
           <RadioOptions
             ref={budgetRef}
             options={[
               { value: "low", label: "< €2k" },
-              { value: "medium", label: "€2k - 6k" },
-              { value: "high", label: "€6k - 12k" },
+              { value: "medium", label: "€2k – 6k" },
+              { value: "high", label: "€6k – 12k" },
               { value: "very-high", label: "€12k+" },
             ]}
             name="budget"
           />
         </div>
         <div className="col">
-          <h3>Preferred Timeline</h3>
+          <h3>{copy.timelineTitle}</h3>
           <RadioOptions
             ref={deliveryRef}
             options={[
-              { value: "1-2", label: "1-2 months" },
-              { value: "2-4", label: "2-4 months" },
-              { value: "4-6", label: "4-6 months" },
+              { value: "1-2", label: copy.timelines[0] },
+              { value: "2-4", label: copy.timelines[1] },
+              { value: "4-6", label: copy.timelines[2] },
             ]}
             name="delivery"
           />
@@ -147,11 +195,11 @@ export default function ContactForm({}) {
       </div>
       <div className="row">
         <div className="col">
-          <h3>Details About The Project</h3>
+          <h3>{copy.detailsTitle}</h3>
           <textarea
             name="details"
             rows="5"
-            placeholder="What are you building? Goals, timeline, current problems, references..."
+            placeholder={copy.detailsPlaceholder}
             value={details}
             onChange={(e) => setDetails(e.target.value)}
           ></textarea>
@@ -159,13 +207,13 @@ export default function ContactForm({}) {
       </div>
       <div className="row">
         <div className="col">
-          <h3>Your Contact Details</h3>
+          <h3>{copy.contactsTitle}</h3>
         </div>
         <div className="col"></div>
         <div className="col">
           <input
             type="text"
-            placeholder="Full Name*"
+            placeholder={copy.name}
             name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -175,7 +223,7 @@ export default function ContactForm({}) {
         <div className="col">
           <input
             type="text"
-            placeholder="Company"
+            placeholder={copy.company}
             name="company"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
@@ -195,7 +243,7 @@ export default function ContactForm({}) {
         <div className="col">
           <input
             type="tel"
-            placeholder="Phone"
+            placeholder={copy.phone}
             name="phone"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
@@ -212,7 +260,7 @@ export default function ContactForm({}) {
               style={{ paddingRight: "12px" }}
             />
             <span style={{ marginLeft: 10, marginRight: 10 }}>
-              I have read and accept the
+              {copy.privacy}
             </span>
             <a
               href="https://www.iubenda.com/privacy-policy/87027585"
@@ -242,10 +290,12 @@ export default function ContactForm({}) {
       <div className="row">
         <div className="col">
           <div className={styles.submitWrapper}>
-            <GitButton isSubmit={true} disabled={pending || !turnstileToken}>
-              {pending ? "Sending..." : "Send"}
-            </GitButton>
-            <span className={styles.replyNote}>Usually reply within 24h.</span>
+            <GitButton
+              isSubmit={true}
+              submitText={pending ? copy.sending : copy.submit}
+              disabled={pending || !turnstileToken}
+            />
+            <span className={styles.replyNote}>{copy.reply}</span>
           </div>
         </div>
       </div>

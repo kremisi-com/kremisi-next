@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import style from "./transition-context.module.css";
 import { usePathname } from "next/navigation";
 
@@ -7,28 +7,45 @@ const TransitionContext = createContext();
 
 export function TransitionProvider({ children }) {
     const [isAnimating, setIsAnimating] = useState(false);
-    const [isClosable, setIsClosable] = useState(false);
+    const [isCovered, setIsCovered] = useState(false);
+    const [isRouteReady, setIsRouteReady] = useState(false);
+    const navigationStartPath = useRef(null);
     const path = usePathname();
 
     function triggerAnimation() {
-        setIsAnimating(true);
-    }
-    function openLoader() {
-        setIsAnimating(true);
-        setIsClosable(false);
-        setTimeout(() => setIsClosable(true), 600);
-    }
-    function closeLoader() {
-        setIsAnimating(false);
+        openLoader();
     }
 
-    useEffect(
-        function () {
-            if (!isClosable) return;
-            closeLoader();
-        },
-        [path, isClosable]
-    );
+    function openLoader() {
+        navigationStartPath.current = path;
+        setIsCovered(false);
+        setIsRouteReady(false);
+        setIsAnimating(true);
+    }
+
+    function closeLoader() {
+        setIsAnimating(false);
+        setIsCovered(false);
+        setIsRouteReady(false);
+        navigationStartPath.current = null;
+    }
+
+    useEffect(() => {
+        if (!isAnimating || navigationStartPath.current === path) return;
+
+        // usePathname changes only after Next.js has committed the new route.
+        setIsRouteReady(true);
+    }, [isAnimating, path]);
+
+    useEffect(() => {
+        if (!isCovered || !isRouteReady) return;
+        setIsAnimating(false);
+    }, [isCovered, isRouteReady]);
+
+    function handleTransitionEnd(event) {
+        if (event.propertyName !== "transform" || !isAnimating) return;
+        setIsCovered(true);
+    }
 
     return (
         <TransitionContext.Provider
@@ -39,6 +56,8 @@ export function TransitionProvider({ children }) {
                 className={`${style.transitionOverlay} ${
                     isAnimating ? style.active : ""
                 }`}
+                onTransitionEnd={handleTransitionEnd}
+                aria-hidden="true"
             ></div>
         </TransitionContext.Provider>
     );

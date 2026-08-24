@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import Link from 'next/link';
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import styles from './testimonials.module.css';
 
 const TESTIMONIALS = [
@@ -56,6 +57,11 @@ const TESTIMONIALS = [
 ];
 
 export default function Testimonials() {
+    const t = useTranslations("testimonials");
+    const testimonials = TESTIMONIALS.map((item, index) => ({
+        ...item,
+        ...t.raw("items")[index]
+    }));
     const [activeIndex, setActiveIndex] = useState(1);
     const [isMobile, setIsMobile] = useState(false);
 
@@ -65,7 +71,7 @@ export default function Testimonials() {
         window.addEventListener('resize', checkMobile);
         
         const interval = setInterval(() => {
-            setActiveIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+            setActiveIndex((prev) => (prev + 1) % testimonials.length);
         }, 5000);
 
         return () => {
@@ -82,7 +88,7 @@ export default function Testimonials() {
     };
 
     const getPosition = (index) => {
-        const n = TESTIMONIALS.length;
+        const n = testimonials.length;
         const offset = (index - activeIndex + n) % n;
         if (offset === 0) return 'middle';
         if (offset === 1) return 'bottom';
@@ -100,11 +106,11 @@ export default function Testimonials() {
                         </svg>
                         <div className={styles.subtitle}>
                             <span className={styles.subtitleLine}></span>
-                            WHAT CLIENTS SAY
+                            {t("eyebrow")}
                         </div>
                         
                         <div className={styles.reviewsList}>
-                            {TESTIMONIALS.map((item, index) => {
+                            {testimonials.map((item, index) => {
                                 const position = getPosition(index);
                                 const isActive = position === 'middle';
                                 return (
@@ -159,15 +165,15 @@ export default function Testimonials() {
                                     <div className={styles.quoteRating}>
                                         <div className={styles.ratingRow}>
                                             <span className={styles.star}>★</span>
-                                            <span className={styles.ratingText}>{TESTIMONIALS[activeIndex].rating} on {TESTIMONIALS[activeIndex].date}</span>
+                                            <span className={styles.ratingText}>{testimonials[activeIndex].rating} {t("on")} {testimonials[activeIndex].date}</span>
                                         </div>
                                     </div>
                                     <p className={styles.quoteText}>
-                                        <span className={styles.firstLetter}>{TESTIMONIALS[activeIndex].text.charAt(0)}</span>
-                                        {TESTIMONIALS[activeIndex].text.slice(1)}
+                                        <span className={styles.firstLetter}>{testimonials[activeIndex].text.charAt(0)}</span>
+                                        {testimonials[activeIndex].text.slice(1)}
                                     </p>
                                     <div className={styles.quoteTasks}>
-                                        {TESTIMONIALS[activeIndex].tasks.map((task, i) => (
+                                        {testimonials[activeIndex].tasks.map((task, i) => (
                                             <span key={i} className={styles.taskTag}>{task}</span>
                                         ))}
                                     </div>

@@ -3,17 +3,19 @@
 import Image from "next/image";
 import styles from "./navbar.module.css";
 import Button from "@/components/button/button";
-import Link from "next/link";
 import ThemeToggle from "./theme-toggler";
+import LanguageToggle from "./language-toggle";
 import React from "react";
 import AnimatedLink from "@/components/animated-link/animated-link";
 import { GalleryVerticalEnd } from "lucide-react";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { Link, usePathname } from "@/i18n/navigation";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
     const animationDelay = 300;
     const pathname = usePathname();
+    const t = useTranslations("navigation");
     
     React.useEffect(() => {
         window.dispatchEvent(new CustomEvent("mobile-menu-visibility", {
@@ -50,10 +52,10 @@ export default function Navbar() {
                         onClick={handleHomeClick}
                         href={pathname === "/" ? "" : "/"}
                     >
-                        Home
+                        {t("home")}
                     </Button>
-                    <Button href="/about">About</Button>
-                    <Button href="/projects">Projects</Button>
+                    <Button href="/about">{t("about")}</Button>
+                    <Button href="/projects">{t("projects")}</Button>
                 </div>
                 <AnimatedLink href="/" onClick={handleHomeClick} className={styles.logoWrapper}>
                     <Image
@@ -66,8 +68,9 @@ export default function Navbar() {
                     />
                 </AnimatedLink>
                 <div className={`${styles.buttons} ${styles.right}`}>
-                    <Button href="/contacts">Contacts</Button>
+                    <Button href="/contacts">{t("contacts")}</Button>
                     <ThemeToggle styles={styles} />
+                    <LanguageToggle styles={styles} />
                 </div>
             </nav>
 
@@ -78,6 +81,7 @@ export default function Navbar() {
             >
                 <div className={`${styles.buttons} ${styles.themeToggle}`}>
                     <ThemeToggle styles={styles} />
+                    <LanguageToggle styles={styles} />
                 </div>
                 <AnimatedLink
                     href="/"
@@ -122,7 +126,7 @@ export default function Navbar() {
                                 )
                             }
                         >
-                            Home
+                            {t("home")}
                         </Link>
                     </li>
                     <li>
@@ -135,7 +139,7 @@ export default function Navbar() {
                                 )
                             }
                         >
-                            Projects
+                            {t("projects")}
                         </Link>
                     </li>
                     <li>
@@ -148,7 +152,7 @@ export default function Navbar() {
                                 )
                             }
                         >
-                            About
+                            {t("about")}
                         </Link>
                     </li>
                     <li>
@@ -161,7 +165,7 @@ export default function Navbar() {
                                 )
                             }
                         >
-                            Contacts
+                            {t("contacts")}
                         </Link>
                     </li>
                 </ul>

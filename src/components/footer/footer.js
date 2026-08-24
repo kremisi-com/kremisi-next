@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { usePathname } from "@/i18n/navigation";
 import { MessageCircleMore } from "lucide-react";
 import toast from "react-hot-toast";
 import styles from "./footer.module.css";
@@ -11,6 +12,7 @@ const CONTACT_EMAIL_HREF = `mailto:${CONTACT_EMAIL}`;
 
 export default function Footer() {
     const pathname = usePathname();
+    const t = useTranslations("footer");
     const [isHomeSliderActive, setIsHomeSliderActive] = useState(pathname === "/");
 
     async function handleEmailClick(event) {
@@ -18,9 +20,9 @@ export default function Footer() {
 
         try {
             await navigator.clipboard.writeText(CONTACT_EMAIL);
-            toast.success("Email copied to clipboard");
+            toast.success(t("copied"));
         } catch {
-            toast.error("Could not copy email");
+            toast.error(t("copyFailed"));
             window.location.href = CONTACT_EMAIL_HREF;
         }
     }
@@ -76,7 +78,7 @@ export default function Footer() {
                         className={`${styles.whatsappButton} ${
                             isHomeSliderActive ? styles.whatsappHidden : ""
                         }`}
-                        href="https://wa.me/393517444749?text=Can%20I%20have%20more%20informations%3F"
+                        href={`https://wa.me/393517444749?text=${encodeURIComponent(t("whatsapp"))}`}
                         target="_blank"
                     >
                         <MessageCircleMore />

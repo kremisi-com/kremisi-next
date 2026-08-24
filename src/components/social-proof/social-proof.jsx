@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect, useMemo, useRef } from 'react';
-import Link from 'next/link';
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import styles from './social-proof.module.css';
 import GitButton from '../git-button/git-button';
 
@@ -107,10 +108,11 @@ const LogoCard = ({ className, initialIndex }) => {
 
 
 export default function SocialProof() {
+    const t = useTranslations("socialProof");
     return (
         <section className={styles.socialProofSection} id="social-proof">
             <div className={styles.container}>
-                <div className={styles.badge}>Customers</div>
+                <div className={styles.badge}>{t("badge")}</div>
                 
                 <div className={styles.galleryTop}>
                     <div className={styles.galleryInner}>
@@ -124,8 +126,8 @@ export default function SocialProof() {
                 </div>
 
                 <h2 className={styles.title}>
-                    Trusted by founders<br/>
-                    <span className={styles.titleLight}>building real products</span>
+                    {t("title")}<br/>
+                    <span className={styles.titleLight}>{t("titleLight")}</span>
                 </h2>
 
                 <div className={styles.galleryBottom}>
@@ -137,11 +139,11 @@ export default function SocialProof() {
                 </div>
                 
                 <p className={styles.description}>
-                    We design, build and scale<br/>digital products end-to-end.
+                    {t("description")}
                 </p>
                 
                 <Link href="/contacts" className={styles.buttonWrapper}>
-                    <GitButton text="Let's Meet" className={styles.socialProofGitButton} leftShift="-20px" />
+                    <GitButton text={t("cta")} className={styles.socialProofGitButton} leftShift="-20px" />
                 </Link>
             </div>
         </section>

@@ -54,6 +54,26 @@
     color: var(--white);
 }
 
+.buttons .languageToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-top: 0;
+}
+
+.languageFlag {
+    display: block;
+    filter: grayscale(1) invert(1);
+}
+
+.languageFlagItalian {
+    filter: grayscale(1);
+}
+
+:global(.light) .languageFlag {
+    filter: grayscale(1);
+}
+
 .menuIcon {
     position: absolute;
     display: flex;

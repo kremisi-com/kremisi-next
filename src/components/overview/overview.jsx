@@ -1,11 +1,13 @@
 import RevelatingText from "@/components/revelating-text/revelating-text";
 import styles from "./overview.module.css";
+import { useTranslations } from "next-intl";
 
 export default function Overview({
     isVisible = true,
     textShouldAnimate,
     onFadeInComplete,
 }) {
+    const t = useTranslations("overview");
     function handleTransitionEnd(event) {
         if (
             !isVisible ||
@@ -33,9 +35,10 @@ export default function Overview({
             
             <div className={styles.content}>
                 <RevelatingText play={textShouldAnimate}>
-                    <span className={styles.line1}>We design, build and scale</span><br/>
-                    <span className={`highlight ${styles.line2}`}>digital products</span><br/>
-                    <span className={styles.line3}>that drive <span className={styles.line3Emph}>real results.</span></span>
+                    <span className={styles.line1}>{t("line1")}</span><br/>
+                    <span className={`highlight ${styles.line2}`}>{t("highlight")}</span><br/>
+                    <span className={styles.line3}>{t("line3")}</span><br/>
+                    <span className={styles.line3Emph}>{t("emphasis")}</span>
                 </RevelatingText>
             </div>
         </section>

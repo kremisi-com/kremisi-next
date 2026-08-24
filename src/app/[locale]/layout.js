@@ -1,5 +1,5 @@
-import "./fonts.css";
-import "./globals.css";
+import "../fonts.css";
+import "../globals.css";
 import { Schibsted_Grotesk } from "next/font/google";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
@@ -11,6 +11,9 @@ import Scripts from "@/components/scripts/scripts";
 import { TransitionProvider } from "@/context/transition-context/transition-context";
 import { Analytics } from "@vercel/analytics/next";
 import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
+import { NextIntlClientProvider, hasLocale } from "next-intl";
+import { notFound } from "next/navigation";
+import { routing } from "@/i18n/routing";
 
 const BASE_URL = "https://kremisi.com";
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
@@ -85,9 +88,6 @@ export const metadata = {
   description:
     "Kremisi is a distributed agency building fast, scalable websites, digital products, and data & analytics solutions for SMEs and established companies worldwide.",
   metadataBase: new URL(BASE_URL),
-  alternates: {
-    canonical: "/",
-  },
   openGraph: {
     title: "Kremisi | Web Design, Development & Data Analytics Agency",
     description:
@@ -112,9 +112,17 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }) {
+export function generateStaticParams() {
+  return routing.locales.map((locale) => ({ locale }));
+}
+
+export default async function RootLayout({ children, params }) {
+  const { locale } = await params;
+
+  if (!hasLocale(routing.locales, locale)) notFound();
+
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
       <body className={schibstedGrotesk.variable}>
         <CursorTrailCanvas />
         <ThemeProvider
@@ -123,13 +131,15 @@ export default function RootLayout({ children }) {
           enableSystem
           disableTransitionOnChange
         >
-          <TransitionProvider>
-            <Navbar />
-            {children}
-            <Footer />
-            <Toaster position="bottom-center" reverseOrder={false} />
-            <Scripts />
-          </TransitionProvider>
+          <NextIntlClientProvider>
+            <TransitionProvider>
+              <Navbar />
+              {children}
+              <Footer />
+              <Toaster position="bottom-center" reverseOrder={false} />
+              <Scripts />
+            </TransitionProvider>
+          </NextIntlClientProvider>
         </ThemeProvider>
 
         <Analytics />

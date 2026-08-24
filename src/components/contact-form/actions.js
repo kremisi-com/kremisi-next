@@ -5,6 +5,28 @@ import { verifyTurnstileToken } from "@/lib/turnstile";
 export async function submitContact(prevState, formData) {
     const getVal = (key) => (formData.get(key) ?? "").toString().trim();
     const MIN_FORM_FILL_TIME_MS = 3000;
+    const locale = getVal("locale") === "it" ? "it" : "en";
+    const errors = locale === "it"
+        ? {
+            security: "Verifica di sicurezza non riuscita. Ricarica la pagina e riprova.",
+            privacy: "Devi accettare la Privacy Policy.",
+            details: "I dettagli sono troppo brevi (minimo 5 caratteri).",
+            name: "Inserisci un nome valido.",
+            emailRequired: "Inserisci un indirizzo email.",
+            emailInvalid: "Inserisci un indirizzo email valido.",
+            phone: "Inserisci un numero di telefono valido.",
+            send: "Non è stato possibile inviare il modulo.",
+        }
+        : {
+            security: "Security check failed. Refresh the page and try again.",
+            privacy: "You must accept the privacy policy.",
+            details: "Details too short (minimum 5 characters).",
+            name: "Enter a valid name.",
+            emailRequired: "Enter an email address.",
+            emailInvalid: "Invalid email.",
+            phone: "Invalid phone number.",
+            send: "Unable to send the form",
+        };
 
     const service = getVal("service");
     const budget = getVal("budget");
@@ -34,12 +56,12 @@ export async function submitContact(prevState, formData) {
     if (!turnstileResult.success) {
         return {
             success: false,
-            error: "Security check failed. Refresh the page and try again.",
+            error: errors.security,
         };
     }
 
     if (!privacy) {
-        return { success: false, error: "You must accept the privacy policy." };
+        return { success: false, error: errors.privacy };
     }
 
     // Validazioni
@@ -47,28 +69,28 @@ export async function submitContact(prevState, formData) {
     if (details && details.length < 5) {
         return {
             success: false,
-            error: "Details too short (minimum 5 characters).",
+            error: errors.details,
         };
     }
 
     if (!name || name.length < 2) {
-        return { success: false, error: "Enter a valid name." };
+        return { success: false, error: errors.name };
     }
 
     if (!email) {
-        return { success: false, error: "Enter an email address." };
+        return { success: false, error: errors.emailRequired };
     }
 
     const emailRe = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRe.test(email)) {
-        return { success: false, error: "Invalid email." };
+        return { success: false, error: errors.emailInvalid };
     }
 
     // Telefono opzionale ma, se presente, deve essere plausibile
     if (phone) {
         const phoneRe = /^[+\d\s().-]{6,30}$/;
         if (!phoneRe.test(phone)) {
-            return { success: false, error: "Invalid phone number." };
+            return { success: false, error: errors.phone };
         }
     }
 
@@ -100,6 +122,6 @@ export async function submitContact(prevState, formData) {
         return { success: result.success, message: result.message ?? null };
     } catch (error) {
         console.error("Error during sending:", error);
-        return { success: false, error: "Unable to send the form" };
+        return { success: false, error: errors.send };
     }
 }

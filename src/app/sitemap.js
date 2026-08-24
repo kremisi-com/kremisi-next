@@ -1,6 +1,7 @@
 import { getProjectsArray } from "@/lib/projects";
 
 const BASE_URL = "https://kremisi.com";
+const LOCALES = ["en", "it"];
 
 export default function sitemap() {
     const lastModified = new Date();
@@ -12,15 +13,24 @@ export default function sitemap() {
         "/contacts",
         "/case-studies/brand-identity/lucrezia-curto",
     ];
-    const staticUrls = staticPaths.map((path) => ({
-        url: new URL(path, BASE_URL).toString(),
-        lastModified,
-    }));
-
-    const projectUrls = getProjectsArray().map((project) => ({
-            url: new URL(project.path, BASE_URL).toString(),
+    const localize = (path) =>
+        LOCALES.map((locale) => ({
+            url: new URL(`/${locale}${path}`, BASE_URL).toString(),
             lastModified,
+            alternates: {
+                languages: Object.fromEntries(
+                    LOCALES.map((locale) => [
+                        locale,
+                        new URL(`/${locale}${path}`, BASE_URL).toString(),
+                    ])
+                ),
+            },
         }));
+
+    const staticUrls = staticPaths.flatMap(localize);
+    const projectUrls = getProjectsArray().flatMap((project) =>
+        localize(project.path)
+    );
 
     return [...staticUrls, ...projectUrls];
 }

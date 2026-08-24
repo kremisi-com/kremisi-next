@@ -13,13 +13,15 @@ import Slide from "./slide/slide";
 import Loader from "@/components/loader/loader";
 import { trackViewItemList } from "@/lib/analytics";
 import { ArrowRight } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 export default function MainSlider({
   projectsData,
   onDiscoverMoreClick,
-  slideByScroll = true,
   reopenSignal = 0,
+  sessionMode = "initial",
 }) {
+  const t = useTranslations("cta");
   const duplicatedProjectsData = useMemo(
     () => [...projectsData, ...projectsData],
     [projectsData],
@@ -34,7 +36,7 @@ export default function MainSlider({
   const relativeChunkSize = 1 / chunksNumber;
   const speed = 30;
   const touchMultiplier = 1.2;
-  const autoScrollSpeed = 5;
+  const autoScrollSpeed = 120;
   const baseWidth = 450;
   const baseHeight = 275;
   const scaleFactor = 1;
@@ -89,6 +91,8 @@ export default function MainSlider({
   );
   const [slope, setSlope] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [hasManualInteraction, setHasManualInteraction] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
   const [, startTransition] = useTransition();
 
   const initialChunk = findActualChunk(animationTargetScroll);
@@ -110,6 +114,8 @@ export default function MainSlider({
   const animationStartTimeoutRef = useRef(null);
   const animationTimeoutRef = useRef(null);
   const leaveAnimationFrameRef = useRef(null);
+  const autoScrollAnimationFrameRef = useRef(null);
+  const autoScrollLastTimestampRef = useRef(null);
   const reopenAnimationTimeoutRef = useRef(null);
   const handledReopenSignalRef = useRef(0);
 
@@ -123,6 +129,19 @@ export default function MainSlider({
       window.removeEventListener("mobile-menu-visibility", handleMenuVisibility);
     };
   }, []);
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const updatePreference = () => setPrefersReducedMotion(mediaQuery.matches);
+
+    updatePreference();
+    mediaQuery.addEventListener("change", updatePreference);
+    return () => mediaQuery.removeEventListener("change", updatePreference);
+  }, []);
+
+  useEffect(() => {
+    setHasManualInteraction(false);
+  }, [reopenSignal, sessionMode]);
 
   useEffect(() => {
     trackViewItemList("Project Slider");
@@ -337,70 +356,6 @@ export default function MainSlider({
     [setScrollValue],
   );
 
-  const handleScroll = useCallback(
-    (e) => {
-      applyScrollShift(e.deltaY > 0 ? -speed : speed);
-    },
-    [applyScrollShift, speed],
-  );
-
-  const handlePointerDown = useCallback((e) => {
-    if (e.pointerType !== "touch") return;
-
-    touchStateRef.current = {
-      active: true,
-      pointerId: e.pointerId,
-      lastY: e.clientY,
-    };
-
-    try {
-      e.currentTarget.setPointerCapture(e.pointerId);
-    } catch (_) {
-      // Some browsers might not support setPointerCapture on this element.
-    }
-  }, []);
-
-  const handlePointerMove = useCallback(
-    (e) => {
-      const state = touchStateRef.current;
-      if (!state.active || state.pointerId !== e.pointerId) return;
-
-      e.preventDefault();
-      const deltaY = e.clientY - state.lastY;
-      state.lastY = e.clientY;
-      applyScrollShift(deltaY * touchMultiplier);
-    },
-    [applyScrollShift, touchMultiplier],
-  );
-
-  const endTouch = useCallback((pointerId, currentTarget) => {
-    const state = touchStateRef.current;
-    if (!state.active || state.pointerId !== pointerId) return;
-
-    state.active = false;
-    state.pointerId = null;
-
-    try {
-      currentTarget.releasePointerCapture(pointerId);
-    } catch (_) {
-      // Ignore if release is not supported.
-    }
-  }, []);
-
-  const handlePointerUp = useCallback(
-    (e) => {
-      endTouch(e.pointerId, e.currentTarget);
-    },
-    [endTouch],
-  );
-
-  const handlePointerCancel = useCallback(
-    (e) => {
-      endTouch(e.pointerId, e.currentTarget);
-    },
-    [endTouch],
-  );
-
   const updateTitleData = useCallback(
     (newTitle, isDarkText) => {
       if (
@@ -513,6 +468,105 @@ export default function MainSlider({
     onDiscoverMoreClick?.(leaveAnimationDuration);
   }, [leaveAnimationDuration, onDiscoverMoreClick, runLeaveAnimation]);
 
+  const isInitialSession = sessionMode === "initial";
+
+  const handleScroll = useCallback(
+    (e) => {
+      if (!animationEnded || isLeaving) return;
+
+      if (isInitialSession) {
+        if (e.deltaY > 0) handleDiscoverMore();
+        return;
+      }
+
+      setHasManualInteraction(true);
+      applyScrollShift(e.deltaY > 0 ? -speed : speed);
+    },
+    [
+      animationEnded,
+      applyScrollShift,
+      handleDiscoverMore,
+      isInitialSession,
+      isLeaving,
+      speed,
+    ],
+  );
+
+  const handlePointerDown = useCallback((e) => {
+    if (e.pointerType !== "touch") return;
+
+    touchStateRef.current = {
+      active: true,
+      pointerId: e.pointerId,
+      lastY: e.clientY,
+    };
+
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch (_) {
+      // Some browsers might not support setPointerCapture on this element.
+    }
+  }, []);
+
+  const handlePointerMove = useCallback(
+    (e) => {
+      const state = touchStateRef.current;
+      if (!state.active || state.pointerId !== e.pointerId || !animationEnded) {
+        return;
+      }
+
+      e.preventDefault();
+      const deltaY = e.clientY - state.lastY;
+      state.lastY = e.clientY;
+
+      if (isInitialSession) {
+        if (deltaY < 0) {
+          state.active = false;
+          handleDiscoverMore();
+        }
+        return;
+      }
+
+      setHasManualInteraction(true);
+      applyScrollShift(deltaY * touchMultiplier);
+    },
+    [
+      animationEnded,
+      applyScrollShift,
+      handleDiscoverMore,
+      isInitialSession,
+      touchMultiplier,
+    ],
+  );
+
+  const endTouch = useCallback((pointerId, currentTarget) => {
+    const state = touchStateRef.current;
+    if (!state.active || state.pointerId !== pointerId) return;
+
+    state.active = false;
+    state.pointerId = null;
+
+    try {
+      currentTarget.releasePointerCapture(pointerId);
+    } catch (_) {
+      // Ignore if release is not supported.
+    }
+  }, []);
+
+  const handlePointerUp = useCallback(
+    (e) => {
+      endTouch(e.pointerId, e.currentTarget);
+    },
+    [endTouch],
+  );
+
+  const handlePointerCancel = useCallback(
+    (e) => {
+      endTouch(e.pointerId, e.currentTarget);
+    },
+    [endTouch],
+  );
+
   const resetSliderState = useCallback(() => {
     actualChunkRef.current = findActualChunk(animationTargetScroll);
     animationStartedRef.current = false;
@@ -549,14 +603,52 @@ export default function MainSlider({
   }, [syncTitleContent]);
 
   useEffect(() => {
-    if (slideByScroll || !animationEnded) return;
+    const shouldAutoScroll =
+      animationEnded &&
+      !isLeaving &&
+      !isHidden &&
+      !prefersReducedMotion &&
+      (isInitialSession || !hasManualInteraction);
 
-    const interval = window.setInterval(() => {
-      applyScrollShift(autoScrollSpeed);
-    }, 10);
+    if (!shouldAutoScroll) return;
 
-    return () => window.clearInterval(interval);
-  }, [animationEnded, applyScrollShift, autoScrollSpeed, slideByScroll]);
+    const animateAutoScroll = (timestamp) => {
+      const previousTimestamp = autoScrollLastTimestampRef.current;
+      autoScrollLastTimestampRef.current = timestamp;
+
+      if (previousTimestamp !== null) {
+        const elapsed = Math.min(timestamp - previousTimestamp, 100);
+        setScrollValue(
+          scrollRef.current + (autoScrollSpeed * elapsed) / 1000,
+        );
+      }
+
+      autoScrollAnimationFrameRef.current =
+        window.requestAnimationFrame(animateAutoScroll);
+    };
+
+    autoScrollLastTimestampRef.current = null;
+    autoScrollAnimationFrameRef.current = window.requestAnimationFrame(
+      animateAutoScroll,
+    );
+
+    return () => {
+      if (autoScrollAnimationFrameRef.current) {
+        window.cancelAnimationFrame(autoScrollAnimationFrameRef.current);
+        autoScrollAnimationFrameRef.current = null;
+      }
+      autoScrollLastTimestampRef.current = null;
+    };
+  }, [
+    animationEnded,
+    autoScrollSpeed,
+    hasManualInteraction,
+    isHidden,
+    isInitialSession,
+    isLeaving,
+    prefersReducedMotion,
+    setScrollValue,
+  ]);
 
   useEffect(() => {
     if (!reopenSignal || reopenSignal === handledReopenSignalRef.current) {
@@ -609,6 +701,9 @@ export default function MainSlider({
       if (leaveAnimationFrameRef.current) {
         window.cancelAnimationFrame(leaveAnimationFrameRef.current);
       }
+      if (autoScrollAnimationFrameRef.current) {
+        window.cancelAnimationFrame(autoScrollAnimationFrameRef.current);
+      }
       if (reopenAnimationTimeoutRef.current) {
         window.cancelAnimationFrame(reopenAnimationTimeoutRef.current);
       }
@@ -617,20 +712,20 @@ export default function MainSlider({
 
   return (
     <div
-      onWheel={slideByScroll && !isLeaving ? handleScroll : undefined}
-      onMouseMove={slideByScroll && !isLeaving ? handleMouseMove : undefined}
+      onWheel={!isLeaving ? handleScroll : undefined}
+      onMouseMove={!isLeaving ? handleMouseMove : undefined}
       onPointerDown={
-        slideByScroll && !isLeaving ? handlePointerDown : undefined
+        !isLeaving ? handlePointerDown : undefined
       }
       onPointerMove={
-        slideByScroll && !isLeaving ? handlePointerMove : undefined
+        !isLeaving ? handlePointerMove : undefined
       }
-      onPointerUp={slideByScroll && !isLeaving ? handlePointerUp : undefined}
+      onPointerUp={!isLeaving ? handlePointerUp : undefined}
       onPointerCancel={
-        slideByScroll && !isLeaving ? handlePointerCancel : undefined
+        !isLeaving ? handlePointerCancel : undefined
       }
       style={{
-        touchAction: slideByScroll && !isLeaving ? "none" : "auto",
+        touchAction: !isLeaving ? "none" : "auto",
         overflow: "hidden",
         pointerEvents: isHidden ? "none" : "auto",
       }}
@@ -683,7 +778,7 @@ export default function MainSlider({
         onClick={handleDiscoverMore}
         disabled={isLeaving || isMenuOpen}
       >
-        <p>Discover More</p>
+        <p>{t("discover")}</p>
         <ArrowRight size={30} />
       </button>
     </div>

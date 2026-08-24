@@ -1,7 +1,6 @@
 "use client";
-import Link from "next/link";
 import { useTransitionContext } from "@/context/transition-context/transition-context";
-import { usePathname } from "next/navigation";
+import { Link, usePathname } from "@/i18n/navigation";
 
 export default function AnimatedLink({ href, children, ...props }) {
     const { openLoader } = useTransitionContext();

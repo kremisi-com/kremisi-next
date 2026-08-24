@@ -2,9 +2,11 @@
 import React from 'react';
 import styles from './videos-cta.module.css';
 import GitButton from '../git-button/git-button';
-import Link from 'next/link';
+import { useTranslations } from "next-intl";
+import { Link as LocalizedLink } from "@/i18n/navigation";
 
 export default function VideosCta() {
+    const t = useTranslations("cta");
     const videos = [
         "/projects/allavelli/carousel/Opening.mp4",
         "/projects/gamelia/sensibilizzazione.mp4",
@@ -24,6 +26,7 @@ export default function VideosCta() {
                                 <video 
                                     src={src} 
                                     className={styles.video} 
+                                    suppressHydrationWarning
                                     autoPlay 
                                     loop 
                                     muted 
@@ -35,9 +38,9 @@ export default function VideosCta() {
                     
                     {/* Centered CTA Button */}
                     <div className={styles.ctaCenter}>
-                        <Link href="/contacts" className={styles.buttonWrapper}>
-                            <GitButton text="Let's Connect" className={styles.ctaGitButton} />
-                        </Link>
+                        <LocalizedLink href="/contacts" className={styles.buttonWrapper}>
+                            <GitButton text={t("connect")} className={styles.ctaGitButton} />
+                        </LocalizedLink>
                     </div>
                 </div>
             </div>

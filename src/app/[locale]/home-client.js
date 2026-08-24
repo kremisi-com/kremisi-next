@@ -25,7 +25,9 @@ function isOverviewViewInUrl() {
 function syncHomeViewInUrl(isOverviewVisible) {
   if (typeof window === "undefined") return;
 
-  const nextUrl = isOverviewVisible ? "/?view=overview" : "/";
+  const nextUrl = isOverviewVisible
+    ? window.location.pathname + "?view=overview"
+    : window.location.pathname;
   const currentUrl = `${window.location.pathname}${window.location.search}`;
 
   if (currentUrl === nextUrl) return;
@@ -54,6 +56,7 @@ export default function Home() {
   const [shouldAnimateOverviewText, setShouldAnimateOverviewText] =
     useState(false);
   const [sliderReopenSignal, setSliderReopenSignal] = useState(0);
+  const [sliderSessionMode, setSliderSessionMode] = useState("initial");
 
   useEffect(() => {
     if (isOverviewViewInUrl()) {
@@ -165,6 +168,7 @@ export default function Home() {
       sequenceTimeoutsRef.current = [];
       discoverAnimationRef.current = false;
       setShouldAnimateOverviewText(false);
+      setSliderSessionMode("reopened");
       setIsOverviewVisible(false);
       setSliderReopenSignal((current) => current + 1);
     };
@@ -255,9 +259,9 @@ export default function Home() {
         <div className={styles.sliderWrapper}>
           <MainSlider
             projectsData={sortedProjects}
-            slideByScroll={true}
             onDiscoverMoreClick={handleDiscoverMoreClick}
             reopenSignal={sliderReopenSignal}
+            sessionMode={sliderSessionMode}
           />
         </div>
       )}

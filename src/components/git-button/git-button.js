@@ -4,6 +4,7 @@ import { LucideArrowRight, LucideArrowUpRight } from "lucide-react";
 export default function GitButton({
   isSubmit = false,
   text = "Get in touch",
+  submitText = "Request Proposal",
   disabled = false,
   leftShift = 0,
   revertColor = false,
@@ -23,10 +24,10 @@ export default function GitButton({
           type={isSubmit ? "submit" : "button"}
         >
           <span className={`${styles.text} ${styles.top}`}>
-            {isSubmit ? "Request Proposal" : text}
+            {isSubmit ? submitText : text}
           </span>
           <span className={`${styles.text} ${styles.bottom}`}>
-            {isSubmit ? "Request Proposal" : text}
+            {isSubmit ? submitText : text}
           </span>
         </button>
         <div className={`${styles.right} ${styles.arrow}`}>

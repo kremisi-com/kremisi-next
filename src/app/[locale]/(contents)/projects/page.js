@@ -2,7 +2,7 @@ import styles from "./page.module.css";
 import ColoredTable from "@/components/colored-table/colored-table";
 
 import { getProjectsArray } from "@/lib/projects";
-import { useMemo } from "react";
+import { getTranslations } from "next-intl/server";
 
 export const metadata = {
   title: "Projects",
@@ -27,13 +27,15 @@ export const metadata = {
   },
 };
 
-export default function ProjectsPage() {
+export default async function ProjectsPage({ params }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "projects" });
   const items = [];
   const images = [];
   const imageAlts = [];
   const links = [];
 
-  const projectsDataArray = useMemo(() => getProjectsArray(), []);
+  const projectsDataArray = getProjectsArray();
 
   projectsDataArray.forEach((project) => {
     let tmpImage = `/projects/${project.id}/${project.image}`;
@@ -62,13 +64,12 @@ export default function ProjectsPage() {
     <main className="page-content-simple">
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <p className={styles.kicker}>Recent Work</p>
+          <p className={styles.kicker}>{t("kicker")}</p>
           <h1 className={styles.pageTitle}>
-            Selected <span className={styles.accent}>Projects</span>
+            {t("titleStart")} <span className={styles.accent}>{t("titleHighlight")}</span>
           </h1>
           <p className={styles.subtitle}>
-            A selection of platforms, websites and applications built for
-            performance and clarity.
+            {t("subtitle")}
           </p>
         </div>
       </section>

@@ -1,9 +1,11 @@
 "use client";
 import { useState, useRef, useEffect } from 'react';
 import { animate } from 'framer-motion';
+import { useTranslations } from "next-intl";
 import styles from './services.module.css';
 
 export default function Services() {
+    const t = useTranslations("services");
     const [activeIndex, setActiveIndex] = useState(null);
     const itemRefs = useRef([]);
 
@@ -33,7 +35,7 @@ export default function Services() {
         setActiveIndex(activeIndex === index ? null : index);
     };
 
-    const servicesList = [
+    const legacyServicesList = [
         {
             title: "Product & UX",
             description: "Product design, UX flows and interface definition based on real use cases and business goals.",
@@ -107,22 +109,29 @@ export default function Services() {
         }
     ];
 
+    const servicesList = t.raw("items").map(
+        ({ intro, supporting, bullets, ...service }) => ({
+            ...service,
+            expandedDetails: { intro, supporting, bullets }
+        })
+    );
+
     return (
         <section className={styles.servicesSection} id="services">
             <div className={styles.header}>
                 <div className={styles.headerLeft}>
                     <p className={styles.subtitle}>
                         <span className={styles.subtitleLine}></span>
-                        Our Services
+                        {t("eyebrow")}
                     </p>
                     <h2 className={styles.title}>
-                        We Build <span className={styles.highlight}>Digital Products</span><br/>
-                        That Actually Work
+                        {t("titleStart")} <span className={styles.highlight}>{t("titleHighlight")}</span><br/>
+                        {t("titleEnd")}
                     </h2>
                 </div>
                 <div className={styles.headerRight}>
                     <p className={styles.headerDescription}>
-                        From idea to scalable platforms,<br/>we build systems that run your business.
+                        {t("description")}
                     </p>
                 </div>
             </div>
@@ -192,4 +201,3 @@ export default function Services() {
         </section>
     );
 }
-

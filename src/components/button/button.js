@@ -9,16 +9,25 @@ export default function Button({
     animation = true,
     href = "",
     target = "_self",
+    ...buttonProps
 }) {
     const button = animation ? (
-        <button className={`${styles.button} ${className}`} onClick={onClick}>
+        <button
+            className={`${styles.button} ${className}`}
+            onClick={onClick}
+            {...buttonProps}
+        >
             <span className={`${styles.text} ${styles.top}`}>{children}</span>
             <span className={`${styles.text} ${styles.bottom}`}>
                 {children}
             </span>
         </button>
     ) : (
-        <button className={`${styles.button} ${className}`} onClick={onClick}>
+        <button
+            className={`${styles.button} ${className}`}
+            onClick={onClick}
+            {...buttonProps}
+        >
             {children}
         </button>
     );
