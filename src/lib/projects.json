@@ -525,6 +525,7 @@
   "sportsalutebellezza": {
     "title": "Sport Salute Bellezza",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Web design e sviluppo",
     "image": "main.webp",
     "headerImage": "corsa.webp",
     "link": "https://sportsalutebellezza.com/",
@@ -534,7 +535,9 @@
     "carousel": ["Home.mp4"],
     "year": 2023,
     "description": "Celebrating harmony of body and mind.<br />Sport Salute Bellezza offers training, wellness, and beauty paths designed to energize, inspire, and renew.<br /><br />From fitness programs to holistic treatments, every experience blends vitality with elegance.",
-    "slogan": "Move, glow,<br>live your balance."
+    "descriptionIt": "Celebrare l’armonia tra corpo e mente.<br />Sport Salute Bellezza propone percorsi di allenamento, benessere e bellezza pensati per dare energia, ispirare e rigenerare.<br /><br />Dai programmi fitness ai trattamenti olistici, ogni esperienza unisce vitalità ed eleganza.",
+    "slogan": "Move, glow,<br>live your balance.",
+    "sloganIt": "Muoviti, risplendi,<br>vivi il tuo equilibrio."
   },
   "theorica": {
     "title": "Theorica Holdings",
