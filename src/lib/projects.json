@@ -508,6 +508,7 @@
   "hydra": {
     "title": "Residenza Hydra",
     "subtitle": "Web Development",
+    "subtitleIt": "Sviluppo Web",
     "image": "main.webp",
     "headerImage": "casa.webp",
     "link": "https://residenzahydra.koshomesolution.com/",
@@ -517,7 +518,9 @@
     "carousel": ["Home.mp4"],
     "year": 2023,
     "description": "An exclusive concept of living shaped by design and comfort.<br />Residenza Hydra blends modern architecture with refined details to create spaces that inspire and endure.<br /><br />From interiors to lifestyle amenities, every home redefines contemporary elegance.",
-    "slogan": "Refined living,<br>designed for you."
+    "descriptionIt": "Un concetto abitativo esclusivo, plasmato dal design e dal comfort.<br />Residenza Hydra fonde architettura moderna e dettagli ricercati per creare spazi capaci di ispirare e durare nel tempo.<br /><br />Dagli interni ai servizi dedicati allo stile di vita, ogni abitazione ridefinisce l’eleganza contemporanea.",
+    "slogan": "Refined living,<br>designed for you.",
+    "sloganIt": "Abitare con raffinatezza,<br>su misura per te."
   },
   "echinadi": {
     "title": "Residenza Echinadi",
