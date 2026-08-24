@@ -412,6 +412,7 @@
   "beyond-reiki": {
     "title": "Beyond Reiki",
     "subtitle": "Web Design & Development",
+    "subtitleIt": "Progettazione e sviluppo web",
     "image": "main.webp",
     "headerImage": "tavolo.webp",
     "link": "https://www.beyond-reiki.com",
@@ -421,7 +422,9 @@
     "carousel": ["Home.mp4"],
     "year": 2023,
     "description": "Healing more than energy—transforming spirit, mind, and presence.<br />Beyond Reiki guides you through personalized sessions & soulful practices to release, restore, and awaken.<br /><br />Step into deeper balance and inner harmony.",
-    "slogan": "Awaken peace,<br>feel yourself whole."
+    "descriptionIt": "Un percorso di guarigione che va oltre l’energia, trasformando spirito, mente e presenza.<br />Beyond Reiki ti accompagna attraverso sessioni personalizzate e pratiche profonde per liberare, rigenerare e risvegliare.<br /><br />Entra in una dimensione di equilibrio più profondo e armonia interiore.",
+    "slogan": "Awaken peace,<br>feel yourself whole.",
+    "sloganIt": "Risveglia la pace,<br>ritrova la tua pienezza."
   },
   "studylux": {
     "title": "StudyLux",
