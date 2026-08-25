@@ -90,6 +90,10 @@
   left: 0;
 }
 
+.imageContainer img {
+  object-fit: cover;
+}
+
 @media (max-width: 768px) {
   .desktopCells {
     display: none;
