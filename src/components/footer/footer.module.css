@@ -23,11 +23,7 @@
     left: 60px;
 }
 
-.footer .info:nth-child(2) {
-    left: 50%;
-    transform: translateX(-50%);
-}
-.footer .info:nth-child(3) {
+.footer .vatInfo {
     right: 60px;
     left: unset;
 }
@@ -43,12 +39,6 @@
 
 .footer a:hover {
     color: var(--primary);
-}
-
-.siteLinks {
-    display: flex;
-    gap: 18px;
-    white-space: nowrap;
 }
 
 .footer:global(.onlyMobile) address {
