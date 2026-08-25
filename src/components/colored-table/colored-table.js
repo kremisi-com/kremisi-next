@@ -127,6 +127,7 @@ export default function ColoredTable({ items, images, imageAlts = [], links, cla
                     }}
                 >
                     <Image
+                        key={images[imageIndexShown]}
                         src={images[imageIndexShown]}
                         alt={
                             imageAlts[imageIndexShown] ||
@@ -134,6 +135,8 @@ export default function ColoredTable({ items, images, imageAlts = [], links, cla
                         }
                         width={imageWidth}
                         height={imageHeight}
+                        loading="eager"
+                        unoptimized
                     />
                 </div>
             )}

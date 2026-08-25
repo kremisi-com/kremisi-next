@@ -163,6 +163,8 @@ export default async function ProjectPage({ params }) {
 
     const projectStructuredData = getProjectStructuredData(projectData, locale);
     const isItalian = locale === "it";
+    const isLucreziaBrandIdentity =
+        projectData.caseStudy === "lucrezia-curto-brand-identity";
 
     return (
         <>
@@ -172,21 +174,25 @@ export default async function ProjectPage({ params }) {
                     __html: JSON.stringify(projectStructuredData),
                 }}
             />
-            <div className={style.header}>
-                <Image
-                    src={`/projects/${projectData.assetFolder}/${projectData.headerImage}`}
-                    alt={projectData.headerImageAlt}
-                    fill
-                    priority
-                />
-                <h1 dangerouslySetInnerHTML={{ __html: projectData.slogan }} />
-                <p className={style.disclaimer}>
-                    {isItalian
-                        ? "Tutti i diritti sulle immagini appartengono ai rispettivi proprietari"
-                        : "All rights to the images are retained by the respective owner"}
-                </p>
-            </div>
-            <div className={`${style.overview}`}>
+            {!isLucreziaBrandIdentity && (
+                <>
+                    <div className={style.header}>
+                        <Image
+                            src={`/projects/${projectData.assetFolder}/${projectData.headerImage}`}
+                            alt={projectData.headerImageAlt}
+                            fill
+                            priority
+                        />
+                        <h1
+                            dangerouslySetInnerHTML={{ __html: projectData.slogan }}
+                        />
+                        <p className={style.disclaimer}>
+                            {isItalian
+                                ? "Tutti i diritti sulle immagini appartengono ai rispettivi proprietari"
+                                : "All rights to the images are retained by the respective owner"}
+                        </p>
+                    </div>
+                    <div className={`${style.overview}`}>
                 <div className="row">
                     <div className="col mb-0 no-wrap">
                         <div className={style.client}>
@@ -243,8 +249,10 @@ export default async function ProjectPage({ params }) {
                         </div>
                     </div>
                 </div>
-            </div>
-            {projectData.caseStudy === "lucrezia-curto-brand-identity" ? (
+                    </div>
+                </>
+            )}
+            {isLucreziaBrandIdentity ? (
                 <LucreziaCurtoBrandIdentity locale={locale} />
             ) : (
                 <div
