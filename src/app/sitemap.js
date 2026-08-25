@@ -12,7 +12,6 @@ export default function sitemap() {
         "/services",
         "/projects",
         "/contacts",
-        "/case-studies/brand-identity/lucrezia-curto",
     ];
     const localize = (path) =>
         LOCALES.map((locale) => ({

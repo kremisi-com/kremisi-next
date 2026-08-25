@@ -51,7 +51,7 @@ export default async function ProjectsPage({ params }) {
   const projectsDataArray = getProjectsArray(locale);
 
   projectsDataArray.forEach((project) => {
-    let tmpImage = `/projects/${project.id}/${project.image}`;
+    let tmpImage = `/projects/${project.assetFolder}/${project.image}`;
 
     let tmpCustomer = project.customer;
     if (tmpCustomer === undefined || tmpCustomer === "")

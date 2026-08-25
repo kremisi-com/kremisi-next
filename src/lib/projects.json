@@ -322,6 +322,27 @@
     "slogan": "Accounting clarity,<br>professional trust.",
     "sloganIt": "Chiarezza contabile,<br>fiducia professionale."
   },
+  "lucrezia-curto-brand-identity": {
+    "title": "Lucrezia Curto - Brand Identity",
+    "subtitle": "Brand Identity",
+    "subtitleIt": "Brand identity",
+    "image": "hero.webp",
+    "headerImage": "hero-2.webp",
+    "headerImageAlt": "Lucrezia Curto brand identity presentation",
+    "headerImageAltIt": "Presentazione della brand identity di Lucrezia Curto",
+    "previewImageAlt": "Lucrezia Curto brand identity project preview",
+    "previewImageAltIt": "Anteprima del progetto di brand identity di Lucrezia Curto",
+    "assetFolder": "lucrezia-curto",
+    "link": "https://www.lucreziacurto.com/",
+    "tags": ["comunicazione", "brand identity"],
+    "tasks": ["BRAND", "DESIGN"],
+    "year": 2026,
+    "description": "A complete visual identity for a trusted accounting studio.<br />From positioning and colour palette to logo exploration and physical applications, the system was designed to communicate clarity, professionalism and trust across every touchpoint.",
+    "descriptionIt": "Un'identità visiva completa per uno studio commercialista di fiducia.<br />Dal posizionamento e dalla palette cromatica allo studio del logo e alle applicazioni fisiche, il sistema è pensato per comunicare chiarezza, professionalità e affidabilità in ogni punto di contatto.",
+    "slogan": "A visual identity<br>built on trust.",
+    "sloganIt": "Un'identità visiva<br>costruita sulla fiducia.",
+    "caseStudy": "lucrezia-curto-brand-identity"
+  },
   "itaca": {
     "title": "Itaca Engineering",
     "subtitle": "Web Design & Development",

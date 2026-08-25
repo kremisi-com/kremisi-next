@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 import style from "./page.module.css";
 import GitButton from "@/components/git-button/git-button";
 import AnimatedLink from "@/components/animated-link/animated-link";
+import LucreziaCurtoBrandIdentity from "@/components/case-studies/lucrezia-curto-brand-identity";
 
 const BASE_URL = "https://kremisi.com";
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
@@ -32,7 +33,7 @@ function getProjectStructuredData(projectData, locale) {
     const canonicalUrl = new URL(canonicalPath, BASE_URL).toString();
     const imageUrl = projectData.headerImage
         ? new URL(
-              `/projects/${projectData.id}/${projectData.headerImage}`,
+              `/projects/${projectData.assetFolder}/${projectData.headerImage}`,
               BASE_URL
           ).toString()
         : `${BASE_URL}/og-image.jpg`;
@@ -117,7 +118,7 @@ export async function generateMetadata({ params }) {
     const description = getProjectMetaDescription(projectData);
     const canonical = `/${locale}${projectData.path}`;
     const image = projectData.headerImage
-        ? `/projects/${projectData.id}/${projectData.headerImage}`
+        ? `/projects/${projectData.assetFolder}/${projectData.headerImage}`
         : "/og-image.jpg";
 
     return {
@@ -173,7 +174,7 @@ export default async function ProjectPage({ params }) {
             />
             <div className={style.header}>
                 <Image
-                    src={`/projects/${projectData.id}/${projectData.headerImage}`}
+                    src={`/projects/${projectData.assetFolder}/${projectData.headerImage}`}
                     alt={projectData.headerImageAlt}
                     fill
                     priority
@@ -243,17 +244,20 @@ export default async function ProjectPage({ params }) {
                     </div>
                 </div>
             </div>
-            <div
-                className={`${style.carousel} ${
-                    projectData.imagesCarousel ? style.imagesCarousel : ""
-                }`}
-            >
-                {!projectData.imagesCarousel
+            {projectData.caseStudy === "lucrezia-curto-brand-identity" ? (
+                <LucreziaCurtoBrandIdentity locale={locale} />
+            ) : (
+                <div
+                    className={`${style.carousel} ${
+                        projectData.imagesCarousel ? style.imagesCarousel : ""
+                    }`}
+                >
+                    {!projectData.imagesCarousel
                     ? projectData.carousel.map((video, index) => (
                           <div key={index} className={style.carouselItem}>
                               <video autoPlay loop muted playsInline>
                                   <source
-                                      src={`/projects/${projectData.id}/carousel/${video}`}
+                                      src={`/projects/${projectData.assetFolder}/carousel/${video}`}
                                       type="video/mp4"
                                   />
                                   Your browser does not support the video tag.
@@ -263,7 +267,7 @@ export default async function ProjectPage({ params }) {
                     : projectData.carousel.map((image, index) => (
                           <div key={index} className={style.carouselItem}>
                               <Image
-                                  src={`/projects/${projectData.id}/carousel/${image}`}
+                                  src={`/projects/${projectData.assetFolder}/carousel/${image}`}
                                   alt={getProjectCarouselImageAlt(
                                       projectData,
                                       image,
@@ -274,7 +278,8 @@ export default async function ProjectPage({ params }) {
                               />
                           </div>
                       ))}
-            </div>
+                </div>
+            )}
             <div className={style.moreProjects}>
                 <AnimatedLink className={style.link} href={"/projects"}>
                     <GitButton

@@ -70,6 +70,8 @@ function getLocalizedProject(projectData, locale = "en") {
         subtitle: projectData.subtitleIt || projectData.subtitle,
         description: projectData.descriptionIt || projectData.description,
         slogan: projectData.sloganIt || projectData.slogan,
+        previewImageAlt: projectData.previewImageAltIt || projectData.previewImageAlt,
+        headerImageAlt: projectData.headerImageAltIt || projectData.headerImageAlt,
     };
 }
 
@@ -83,6 +85,7 @@ function withProjectSeoData(projectId, projectData) {
     return {
         ...projectData,
         id: projectId,
+        assetFolder: projectData.assetFolder || projectId,
         slug,
         path,
         color: projectData.color || "#FFFFFF",
@@ -107,7 +110,7 @@ function getOrganizedProjects(projectsArray) {
         for (const img of project.images) {
             let projCopy = {
                 ...project,
-                image: `/projects/${project.id}/${img}`,
+                image: `/projects/${project.assetFolder}/${img}`,
                 id: `${project.id}-${img}`,
             };
             ret[project.id].push(projCopy);
