@@ -255,16 +255,14 @@ export default function Home() {
         </div>
       </div>
 
-      {!isOverviewVisible && (
-        <div className={styles.sliderWrapper}>
-          <MainSlider
-            projectsData={sortedProjects}
-            onDiscoverMoreClick={handleDiscoverMoreClick}
-            reopenSignal={sliderReopenSignal}
-            sessionMode={sliderSessionMode}
-          />
-        </div>
-      )}
+      <div className={styles.sliderWrapper}>
+        <MainSlider
+          projectsData={sortedProjects}
+          onDiscoverMoreClick={handleDiscoverMoreClick}
+          reopenSignal={sliderReopenSignal}
+          sessionMode={sliderSessionMode}
+        />
+      </div>
     </div>
   );
 }

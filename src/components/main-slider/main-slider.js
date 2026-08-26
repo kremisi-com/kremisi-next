@@ -654,23 +654,26 @@ export default function MainSlider({
     if (!reopenSignal || reopenSignal === handledReopenSignalRef.current) {
       return;
     }
-    if (!isHidden) return;
 
     if (leaveAnimationFrameRef.current) {
       window.cancelAnimationFrame(leaveAnimationFrameRef.current);
+      leaveAnimationFrameRef.current = null;
     }
     if (reopenAnimationTimeoutRef.current) {
       window.cancelAnimationFrame(reopenAnimationTimeoutRef.current);
+      reopenAnimationTimeoutRef.current = null;
     }
 
     handledReopenSignalRef.current = reopenSignal;
     setIsHidden(false);
+    resetSliderState();
     reopenAnimationTimeoutRef.current = window.requestAnimationFrame(() => {
       window.requestAnimationFrame(() => {
+        reopenAnimationTimeoutRef.current = null;
         scheduleRunAnimation();
       });
     });
-  }, [isHidden, reopenSignal, scheduleRunAnimation]);
+  }, [reopenSignal, resetSliderState, scheduleRunAnimation]);
 
   useEffect(() => {
     if (!isLeaving) return;
