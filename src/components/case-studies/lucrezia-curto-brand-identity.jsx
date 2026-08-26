@@ -1,4 +1,3 @@
-import { ArrowUpRight, FileText } from "lucide-react";
 import Image from "next/image";
 import styles from "@/app/[locale]/(contents)/case-studies/brand-identity/lucrezia-curto/page.module.css";
 
@@ -119,8 +118,6 @@ const copy = {
         goalTitle: "Una direzione visiva solida.",
         identityLabel: "Sistema visivo",
         identityTitle: "Dal posizionamento alle applicazioni.",
-        materialsLabel: "Approfondisci",
-        materialsTitle: "Il progetto, documento per documento.",
         resultLabel: "Risultato finale",
         resultTitle: "Un'identità elegante, professionale e coerente.",
         resultText: "Il viola diventa il filo conduttore di un sistema distintivo e flessibile. Monogramma, tipografia, palette e applicazioni costruiscono una presenza capace di funzionare con la stessa chiarezza online e offline.",
@@ -138,8 +135,6 @@ const copy = {
         goalTitle: "A strong visual direction.",
         identityLabel: "Visual system",
         identityTitle: "From positioning to application.",
-        materialsLabel: "Explore",
-        materialsTitle: "The project, document by document.",
         resultLabel: "Final result",
         resultTitle: "An elegant, professional and coherent identity.",
         resultText: "Purple becomes the thread running through a distinctive, flexible system. Monogram, typography, palette and applications create a presence that works with equal clarity online and offline.",
@@ -167,7 +162,7 @@ export default function LucreziaCurtoBrandIdentity({ locale = "en" }) {
                     <p className={styles.heroSubtitle}>{text.subtitle}</p>
                     <p className={styles.heroText}>{text.heroText}</p>
                 </div>
-                <div className={styles.heroVisual} aria-label={text.materialsTitle}>
+                <div className={styles.heroVisual} aria-label={text.identityTitle}>
                     {documents.map((document, index) => (
                         <a
                             className={styles.previewCard}
@@ -238,27 +233,6 @@ export default function LucreziaCurtoBrandIdentity({ locale = "en" }) {
                                 <p>{localize(item.text, locale)}</p>
                             </figcaption>
                         </figure>
-                    ))}
-                </div>
-            </section>
-
-            <section className={styles.section}>
-                <div className={styles.sectionHeader}>
-                    <p className={styles.sectionEyebrow}>{text.materialsLabel}</p>
-                    <h2 className={styles.sectionTitle}>{text.materialsTitle}</h2>
-                </div>
-                <div className={styles.documentsGrid}>
-                    {documents.map((document) => (
-                        <article className={styles.documentCard} key={document.fileName}>
-                            <div className={styles.documentIconWrap}><FileText size={22} strokeWidth={1.5} /></div>
-                            <div>
-                                <h3 className={styles.cardTitle}>{localize(document.title, locale)}</h3>
-                                <p className={styles.cardText}>{localize(document.description, locale)}</p>
-                            </div>
-                            <a className={styles.documentLink} href={documentHref(document.fileName)} target="_blank" rel="noopener noreferrer">
-                                {text.open}<ArrowUpRight size={17} strokeWidth={1.7} />
-                            </a>
-                        </article>
                     ))}
                 </div>
             </section>
