@@ -4,7 +4,6 @@ import { verifyTurnstileToken } from "@/lib/turnstile";
 
 export async function submitContact(prevState, formData) {
     const getVal = (key) => (formData.get(key) ?? "").toString().trim();
-    const MIN_FORM_FILL_TIME_MS = 3000;
     const locale = getVal("locale") === "it" ? "it" : "en";
     const errors = locale === "it"
         ? {
@@ -45,15 +44,11 @@ export async function submitContact(prevState, formData) {
     const privacy = getVal("privacy") === "on";
     const website = getVal("website");
     const turnstileToken = getVal("cf-turnstile-response");
-    const formStartedAt = Number(getVal("formStartedAt"));
-    const elapsedMs = Date.now() - formStartedAt;
-    const isTooFast =
-        !Number.isFinite(formStartedAt) ||
-        formStartedAt <= 0 ||
-        elapsedMs < MIN_FORM_FILL_TIME_MS;
-    const isSpam = Boolean(website) || isTooFast;
 
-    if (isSpam) {
+    // Turnstile already evaluates automated traffic. A minimum completion time
+    // can silently discard legitimate submissions completed with autofill.
+    if (website) {
+        console.info("Contact form honeypot triggered; submission discarded.");
         return { success: true, silentDrop: true };
     }
 

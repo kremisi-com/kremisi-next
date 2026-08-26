@@ -74,7 +74,6 @@ export default function ContactForm({ locale = "en" }) {
   const [phone, setPhone] = useState("");
   const [details, setDetails] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
-  const [formStartedAt] = useState(() => Date.now().toString());
 
   const serviceRef = useRef();
   const budgetRef = useRef();
@@ -121,7 +120,6 @@ export default function ContactForm({ locale = "en" }) {
 
   return (
     <form className={styles.form} action={formAction}>
-      <input type="hidden" name="formStartedAt" value={formStartedAt} />
       <input type="hidden" name="locale" value={locale} />
       <input
         type="hidden"
