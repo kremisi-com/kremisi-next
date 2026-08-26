@@ -129,10 +129,15 @@ export default function ContactForm({ locale = "en" }) {
       />
       <input
         type="text"
-        name="website"
+        name="krs_x9q4"
+        defaultValue=""
+        readOnly
         tabIndex={-1}
         autoComplete="off"
         aria-hidden="true"
+        data-1p-ignore="true"
+        data-lpignore="true"
+        data-bwignore="true"
         style={{
           position: "absolute",
           left: "-9999px",

@@ -63,17 +63,25 @@ export async function submitContact(prevState, formData) {
         const email = getVal("email");
         const phone = getVal("phone");
         const privacy = getVal("privacy") === "on";
-        const website = getVal("website");
+        const honeypotValue = getVal("krs_x9q4");
         const turnstileToken = getVal("cf-turnstile-response");
+
+        console.info("[ContactEmail] Honeypot diagnostic", {
+            requestId,
+            hasValue: Boolean(honeypotValue),
+            valueLength: honeypotValue.length,
+        });
 
         // Turnstile already evaluates automated traffic. A minimum completion time
         // can silently discard legitimate submissions completed with autofill.
-        if (website) {
+        if (honeypotValue) {
             console.warn("[ContactEmail] Honeypot triggered; submission discarded.", {
                 requestId,
             });
             return { success: true, silentDrop: true };
         }
+
+        console.info("[ContactEmail] Honeypot passed.", { requestId });
 
         stage = "turnstile-verification";
         console.info("[ContactEmail] Turnstile verification started.", {
