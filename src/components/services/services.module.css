@@ -11,21 +11,21 @@
     justify-content: space-between;
     align-items: center;
     margin-bottom: 80px;
-    gap: clamp(80px, 8vw, 120px);
-    max-width: 1400px;
+    gap: clamp(60px, 5vw, 100px);
+    max-width: 1800px;
     margin-left: auto;
     margin-right: auto;
 }
 
 .headerLeft {
-    flex: 1 1 0;
+    flex: 1 1 900px;
     min-width: 0;
-    max-width: 750px;
+    max-width: 1000px;
 }
 
 .headerRight {
-    flex: 0 1 640px;
-    max-width: 640px;
+    flex: 0 1 520px;
+    max-width: 520px;
     transform: translateY(30px);
 }
 

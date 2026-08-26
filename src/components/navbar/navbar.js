@@ -55,7 +55,6 @@ export default function Navbar() {
                         {t("home")}
                     </Button>
                     <Button href="/about">{t("about")}</Button>
-                    <Button href="/services">{t("services")}</Button>
                     <Button href="/projects">{t("projects")}</Button>
                 </div>
                 <AnimatedLink href="/" onClick={handleHomeClick} className={styles.logoWrapper}>
@@ -69,6 +68,7 @@ export default function Navbar() {
                     />
                 </AnimatedLink>
                 <div className={`${styles.buttons} ${styles.right}`}>
+                    <Button href="/services">{t("services")}</Button>
                     <Button href="/contacts">{t("contacts")}</Button>
                     <ThemeToggle styles={styles} />
                     <LanguageToggle styles={styles} />
@@ -145,19 +145,6 @@ export default function Navbar() {
                     </li>
                     <li>
                         <Link
-                            href="/services"
-                            onClick={() =>
-                                setTimeout(
-                                    () => setMenuOpen(false),
-                                    animationDelay
-                                )
-                            }
-                        >
-                            {t("services")}
-                        </Link>
-                    </li>
-                    <li>
-                        <Link
                             href="/projects"
                             onClick={() =>
                                 setTimeout(
@@ -167,6 +154,19 @@ export default function Navbar() {
                             }
                         >
                             {t("projects")}
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            href="/services"
+                            onClick={() =>
+                                setTimeout(
+                                    () => setMenuOpen(false),
+                                    animationDelay
+                                )
+                            }
+                        >
+                            {t("services")}
                         </Link>
                     </li>
                     <li>

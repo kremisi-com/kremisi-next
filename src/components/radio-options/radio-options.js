@@ -2,7 +2,10 @@
 import styles from "./radio-options.module.css";
 import React, { useState, useImperativeHandle, forwardRef } from "react";
 
-const RadioOptions = forwardRef(function RadioOptions({ options, name }, ref) {
+const RadioOptions = forwardRef(function RadioOptions(
+    { options, name, required = false },
+    ref,
+) {
     const [selectedOption, setSelectedOption] = useState(null);
 
     const onOptionChange = (e) => {
@@ -17,7 +20,7 @@ const RadioOptions = forwardRef(function RadioOptions({ options, name }, ref) {
 
     return (
         <div className={styles.options}>
-            {options.map((option) => (
+            {options.map((option, index) => (
                 <label
                     key={option.value}
                     className={
@@ -32,6 +35,7 @@ const RadioOptions = forwardRef(function RadioOptions({ options, name }, ref) {
                         value={option.value}
                         checked={selectedOption === option.value}
                         onChange={onOptionChange}
+                        required={required && index === 0}
                     />
                     {option.label}
                 </label>

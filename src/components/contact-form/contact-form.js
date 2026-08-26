@@ -163,6 +163,7 @@ export default function ContactForm({ locale = "en" }) {
               },
             ]}
             name="service"
+            required
           />
         </div>
       </div>
@@ -178,6 +179,7 @@ export default function ContactForm({ locale = "en" }) {
               { value: "very-high", label: "€12k+" },
             ]}
             name="budget"
+            required
           />
         </div>
         <div className="col">
@@ -190,6 +192,7 @@ export default function ContactForm({ locale = "en" }) {
               { value: "4-6", label: copy.timelines[2] },
             ]}
             name="delivery"
+            required
           />
         </div>
       </div>
@@ -202,6 +205,8 @@ export default function ContactForm({ locale = "en" }) {
             placeholder={copy.detailsPlaceholder}
             value={details}
             onChange={(e) => setDetails(e.target.value)}
+            minLength={5}
+            required
           ></textarea>
         </div>
       </div>

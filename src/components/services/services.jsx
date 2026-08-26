@@ -126,8 +126,8 @@ export default function Services({ titleAs = "h2" }) {
                         {t("eyebrow")}
                     </p>
                     <Title className={styles.title}>
-                        {t("titleStart")} <span className={styles.highlight}>{t("titleHighlight")}</span><br/>
-                        {t("titleEnd")}
+                        {t("titleStart")}<br />
+                        <span className={styles.highlight}>{t("titleHighlight")}</span> {t("titleEnd")}
                     </Title>
                 </div>
                 <div className={styles.headerRight}>

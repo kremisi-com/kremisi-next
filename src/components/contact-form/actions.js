@@ -10,7 +10,10 @@ export async function submitContact(prevState, formData) {
         ? {
             security: "Verifica di sicurezza non riuscita. Ricarica la pagina e riprova.",
             privacy: "Devi accettare la Privacy Policy.",
-            details: "I dettagli sono troppo brevi (minimo 5 caratteri).",
+            service: "Seleziona il servizio richiesto.",
+            budget: "Seleziona il budget del progetto.",
+            delivery: "Seleziona le tempistiche desiderate.",
+            details: "Inserisci almeno 5 caratteri nei dettagli del progetto.",
             name: "Inserisci un nome valido.",
             emailRequired: "Inserisci un indirizzo email.",
             emailInvalid: "Inserisci un indirizzo email valido.",
@@ -20,7 +23,10 @@ export async function submitContact(prevState, formData) {
         : {
             security: "Security check failed. Refresh the page and try again.",
             privacy: "You must accept the privacy policy.",
-            details: "Details too short (minimum 5 characters).",
+            service: "Select the service you need.",
+            budget: "Select the project budget.",
+            delivery: "Select the preferred timeline.",
+            details: "Enter at least 5 characters in the project details.",
             name: "Enter a valid name.",
             emailRequired: "Enter an email address.",
             emailInvalid: "Invalid email.",
@@ -66,7 +72,19 @@ export async function submitContact(prevState, formData) {
 
     // Validazioni
 
-    if (details && details.length < 5) {
+    if (!service) {
+        return { success: false, error: errors.service };
+    }
+
+    if (!budget) {
+        return { success: false, error: errors.budget };
+    }
+
+    if (!delivery) {
+        return { success: false, error: errors.delivery };
+    }
+
+    if (details.length < 5) {
         return {
             success: false,
             error: errors.details,
@@ -116,10 +134,14 @@ export async function submitContact(prevState, formData) {
             },
         });
 
-        const result = await response.json();
-        console.log("Risposta da PHP:", result);
+        const result = await response.json().catch(() => null);
 
-        return { success: result.success, message: result.message ?? null };
+        if (!response.ok || !result?.success) {
+            console.error("Contact form endpoint rejected the request:", result);
+            return { success: false, error: errors.send };
+        }
+
+        return { success: true, message: result.message ?? null };
     } catch (error) {
         console.error("Error during sending:", error);
         return { success: false, error: errors.send };
