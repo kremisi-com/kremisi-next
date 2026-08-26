@@ -5,7 +5,7 @@ function normalizeToken(token) {
   return typeof token === "string" ? token.trim() : "";
 }
 
-export async function verifyTurnstileToken({ token, ip } = {}) {
+export async function verifyTurnstileToken({ token, ip, requestId } = {}) {
   const secretKey = process.env.CLOUDFLARE_TURNSTILE_SECRET_KEY?.trim();
   const normalizedToken = normalizeToken(token);
 
@@ -44,7 +44,24 @@ export async function verifyTurnstileToken({ token, ip } = {}) {
       cache: "no-store",
     });
 
-    const payload = await response.json().catch(() => null);
+    let payload;
+
+    try {
+      payload = await response.json();
+    } catch (error) {
+      const logPrefix = requestId ? "[ContactEmail]" : "[Turnstile]";
+      console.error(`${logPrefix} Turnstile returned an invalid response.`, {
+        requestId,
+        httpStatus: response.status,
+        message: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+      return {
+        success: false,
+        reason: "invalid-verification-response",
+        errorCodes: ["invalid-verification-response"],
+      };
+    }
 
     return {
       success: Boolean(payload?.success),
@@ -54,7 +71,13 @@ export async function verifyTurnstileToken({ token, ip } = {}) {
         : [],
       payload,
     };
-  } catch {
+  } catch (error) {
+    const logPrefix = requestId ? "[ContactEmail]" : "[Turnstile]";
+    console.error(`${logPrefix} Turnstile verification exception.`, {
+      requestId,
+      message: error instanceof Error ? error.message : String(error),
+      stack: error instanceof Error ? error.stack : undefined,
+    });
     return {
       success: false,
       reason: "verification-request-failed",
