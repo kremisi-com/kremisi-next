@@ -1,6 +1,7 @@
 "use server";
 
 import { verifyTurnstileToken } from "@/lib/turnstile";
+import { sendContactEmail } from "@/lib/contact-email";
 
 export async function submitContact(prevState, formData) {
     const getVal = (key) => (formData.get(key) ?? "").toString().trim();
@@ -120,25 +121,11 @@ export async function submitContact(prevState, formData) {
     };
 
     try {
-        // Invia la richiesta al tuo server PHP
-        const response = await fetch("https://api.kremisi.com/send-mail.php", {
-            method: "POST",
-            body: new URLSearchParams(payload), // invio come form-urlencoded
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-        });
-
-        const result = await response.json().catch(() => null);
-
-        if (!response.ok || !result?.success) {
-            console.error("Contact form endpoint rejected the request:", result);
-            return { success: false, error: errors.send };
-        }
-
-        return { success: true, message: result.message ?? null };
+        const emailId = await sendContactEmail(payload);
+        console.info("Contact email accepted by Resend.", { emailId });
+        return { success: true };
     } catch (error) {
-        console.error("Error during sending:", error);
+        console.error("Unable to send contact email:", error);
         return { success: false, error: errors.send };
     }
 }
