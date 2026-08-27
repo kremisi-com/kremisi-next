@@ -18,6 +18,8 @@ function getProjectSlug(projectId, projectData = projectsData[projectId]) {
 }
 
 function getProjectPath(projectId, projectData = projectsData[projectId]) {
+    if (projectData?.directPath) return projectData.directPath;
+
     const slug = getProjectSlug(projectId, projectData);
 
     return slug ? `/projects/${slug}` : null;
@@ -155,7 +157,7 @@ function getProjectData(projectIdentifier, locale = "en") {
     const projectId = resolveProjectKey(projectIdentifier);
     const project = projectId ? projectsData[projectId] : null;
 
-    if (!project || project.disabled) return null;
+    if (!project || project.disabled || project.directPath) return null;
 
     const enabledProjects = getEnabledProjectEntries();
     const projectIndex = enabledProjects.findIndex(([id]) => id === projectId);

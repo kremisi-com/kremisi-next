@@ -23,9 +23,11 @@ function getProjectMetaDescription(projectData) {
 }
 
 export async function generateStaticParams() {
-    return getProjectsArray().map((project) => ({
-        id: project.slug,
-    }));
+    return getProjectsArray()
+        .filter((project) => !project.directPath)
+        .map((project) => ({
+            id: project.slug,
+        }));
 }
 
 function getProjectStructuredData(projectData, locale) {

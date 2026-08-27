@@ -1,4 +1,18 @@
 {
+  "website-roaster": {
+    "title": "Website Roaster",
+    "subtitle": "AI Integration",
+    "subtitleIt": "AI Integration",
+    "image": "main.webp",
+    "images": ["main.webp"],
+    "previewImageAlt": "Website Roaster AI website review interface",
+    "previewImageAltIt": "Interfaccia AI di Website Roaster per l’analisi dei siti web",
+    "directPath": "/website-roaster",
+    "customer": "",
+    "year": 2026,
+    "slogan": "Sharp AI insight,<br>built to convert.",
+    "sloganIt": "Analisi AI precise,<br>pensate per convertire."
+  },
   "allavelli": {
     "title": "Allavelli",
     "subtitle": "Web Development",
