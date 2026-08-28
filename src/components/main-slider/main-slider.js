@@ -117,6 +117,7 @@ export default function MainSlider({
   const autoScrollAnimationFrameRef = useRef(null);
   const autoScrollLastTimestampRef = useRef(null);
   const reopenAnimationTimeoutRef = useRef(null);
+  const imageLoadTimeoutRef = useRef(null);
   const handledReopenSignalRef = useRef(0);
 
   useEffect(() => {
@@ -310,6 +311,11 @@ export default function MainSlider({
   const runAnimation = useCallback(() => {
     if (animationStartedRef.current) return;
 
+    if (imageLoadTimeoutRef.current) {
+      window.clearTimeout(imageLoadTimeoutRef.current);
+      imageLoadTimeoutRef.current = null;
+    }
+
     if (animationTimeoutRef.current) {
       window.clearTimeout(animationTimeoutRef.current);
     }
@@ -339,6 +345,22 @@ export default function MainSlider({
       runAnimation();
     }, animationStartDelayMs);
   }, [animationStartDelayMs, runAnimation]);
+
+  useEffect(() => {
+    if (animationEnded) return;
+
+    imageLoadTimeoutRef.current = window.setTimeout(() => {
+      imageLoadTimeoutRef.current = null;
+      scheduleRunAnimation();
+    }, 4000);
+
+    return () => {
+      if (imageLoadTimeoutRef.current) {
+        window.clearTimeout(imageLoadTimeoutRef.current);
+        imageLoadTimeoutRef.current = null;
+      }
+    };
+  }, [animationEnded, scheduleRunAnimation]);
 
   const applyScrollShift = useCallback(
     (shift) => {
@@ -755,6 +777,7 @@ export default function MainSlider({
               style={slideStyles[index]}
               updateTitleData={updateTitleData}
               onImageLoad={onImageLoad}
+              onImageError={onImageLoad}
               width={imageWidth}
               height={imageHeight}
             />

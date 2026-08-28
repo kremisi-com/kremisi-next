@@ -14,6 +14,7 @@ export default React.memo(function Slide({
     style,
     updateTitleData,
     onImageLoad,
+    onImageError,
     width,
     height,
 }) {
@@ -46,6 +47,7 @@ export default React.memo(function Slide({
                         style={{ "--image-width": `${height}px` }}
                         priority={true}
                         onLoad={onImageLoad}
+                        onError={onImageError}
                     />
                 </div>
             </AnimatedLink>
