@@ -26,7 +26,12 @@ export default function Overview({
             id="overview"
             onTransitionEnd={handleTransitionEnd}
         >
-            <div className={styles.background}>
+            <div
+                className={`${styles.background} ${
+                    isVisible ? styles.backgroundActive : ""
+                }`}
+                aria-hidden="true"
+            >
                 <div className={styles.blob1}></div>
                 <div className={styles.blob2}></div>
                 <div className={styles.blob3}></div>

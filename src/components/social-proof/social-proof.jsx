@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect, useMemo, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import styles from './social-proof.module.css';
@@ -18,33 +18,63 @@ const LOGO_CYCLE_DELAY = 6000;
 const LOGO_FADE_DURATION = 1400;
 const LOGO_FADE_BUFFER = 120;
 
-const LogoCard = ({ className, initialIndex }) => {
-    const startDelay = useMemo(() => Math.random() * 8000, []);
+const preloadedLogoUrls = new Set();
+
+function preloadLogo(index) {
+    const url = `/projects-logos/${LOGOS[index]}`;
+
+    if (preloadedLogoUrls.has(url)) return;
+
+    preloadedLogoUrls.add(url);
+    const image = new window.Image();
+    const releaseImage = () => {
+        image.onload = null;
+        image.onerror = null;
+    };
+
+    image.onload = releaseImage;
+    image.onerror = releaseImage;
+    image.src = url;
+}
+
+function usePrefersReducedMotion() {
+    const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+        const updatePreference = () => setPrefersReducedMotion(mediaQuery.matches);
+
+        updatePreference();
+        mediaQuery.addEventListener("change", updatePreference);
+        return () => mediaQuery.removeEventListener("change", updatePreference);
+    }, []);
+
+    return prefersReducedMotion;
+}
+
+const LogoCard = ({ className, initialIndex, shouldAnimate }) => {
+    const [startDelay, setStartDelay] = useState(null);
     const [indices, setIndices] = useState([
+        initialIndex,
+        (initialIndex + 1) % LOGOS.length
+    ]);
+    const indicesRef = useRef([
         initialIndex,
         (initialIndex + 1) % LOGOS.length
     ]);
     const [activeSlot, setActiveSlot] = useState(0);
     const activeSlotRef = useRef(0);
+    const hasBegunCyclingRef = useRef(false);
     const cycleTimeoutRef = useRef(null);
     const swapTimeoutRef = useRef(null);
 
     useEffect(() => {
-        const preloadedImages = LOGOS.map((logo) => {
-            const image = new window.Image();
-            image.src = `/projects-logos/${logo}`;
-            return image;
-        });
-
-        return () => {
-            preloadedImages.forEach((image) => {
-                image.onload = null;
-                image.onerror = null;
-            });
-        };
+        setStartDelay(Math.random() * 8000);
     }, []);
 
     useEffect(() => {
+        if (!shouldAnimate || startDelay === null) return;
+
         const clearTimers = () => {
             if (cycleTimeoutRef.current) {
                 window.clearTimeout(cycleTimeoutRef.current);
@@ -61,6 +91,7 @@ const LogoCard = ({ className, initialIndex }) => {
             clearTimers();
 
             cycleTimeoutRef.current = window.setTimeout(() => {
+                hasBegunCyclingRef.current = true;
                 const currentActiveSlot = activeSlotRef.current;
                 const nextActiveSlot = currentActiveSlot === 0 ? 1 : 0;
 
@@ -68,23 +99,27 @@ const LogoCard = ({ className, initialIndex }) => {
                 activeSlotRef.current = nextActiveSlot;
 
                 swapTimeoutRef.current = window.setTimeout(() => {
-                    setIndices((prevIndices) => {
-                        const nextIndices = [...prevIndices];
-                        nextIndices[currentActiveSlot] = (nextIndices[currentActiveSlot] + 2) % LOGOS.length;
-                        return nextIndices;
-                    });
+                    const nextIndices = [...indicesRef.current];
+                    nextIndices[currentActiveSlot] = (nextIndices[currentActiveSlot] + 2) % LOGOS.length;
+                    indicesRef.current = nextIndices;
+                    setIndices(nextIndices);
+
+                    // Preload only the logo that will be revealed after the next cross-fade.
+                    preloadLogo((nextIndices[nextActiveSlot] + 2) % LOGOS.length);
 
                     scheduleCycle();
                 }, LOGO_FADE_DURATION + LOGO_FADE_BUFFER);
-            }, activeSlotRef.current === 0 ? startDelay : LOGO_CYCLE_DELAY);
+            }, hasBegunCyclingRef.current ? LOGO_CYCLE_DELAY : startDelay);
         };
 
+        // The first swap replaces slot 0, so warm just that upcoming logo.
+        preloadLogo((initialIndex + 2) % LOGOS.length);
         scheduleCycle();
 
         return () => {
             clearTimers();
         };
-    }, [startDelay]);
+    }, [initialIndex, shouldAnimate, startDelay]);
 
     return (
         <div className={`${styles.placeholder} ${className}`}>
@@ -107,36 +142,50 @@ const LogoCard = ({ className, initialIndex }) => {
 };
 
 
-export default function SocialProof() {
+export default function SocialProof({ isActive }) {
     const t = useTranslations("socialProof");
+    const prefersReducedMotion = usePrefersReducedMotion();
+    const shouldAnimate = isActive && !prefersReducedMotion;
+
+    const renderLogoCard = (className, initialIndex) => (
+        <LogoCard
+            className={className}
+            initialIndex={initialIndex}
+            shouldAnimate={shouldAnimate}
+        />
+    );
     return (
         <section className={styles.socialProofSection} id="social-proof">
             <div className={styles.container}>
                 <div className={styles.badge}>{t("badge")}</div>
                 
-                <div className={styles.galleryTop}>
-                    <div className={styles.galleryInner}>
-                        <LogoCard className={styles.p1} initialIndex={0} />
-                        <LogoCard className={styles.p2} initialIndex={3} />
-                        <LogoCard className={styles.p3} initialIndex={6} />
-                        <LogoCard className={styles.p4} initialIndex={9} />
-                        <LogoCard className={styles.p5} initialIndex={12} />
-                        <LogoCard className={styles.p6} initialIndex={15} />
+                {isActive && (
+                    <div className={styles.galleryTop}>
+                        <div className={styles.galleryInner}>
+                            {renderLogoCard(styles.p1, 0)}
+                            {renderLogoCard(styles.p2, 3)}
+                            {renderLogoCard(styles.p3, 6)}
+                            {renderLogoCard(styles.p4, 9)}
+                            {renderLogoCard(styles.p5, 12)}
+                            {renderLogoCard(styles.p6, 15)}
+                        </div>
                     </div>
-                </div>
+                )}
 
                 <h2 className={styles.title}>
                     {t("title")}<br/>
                     <span className={styles.titleLight}>{t("titleLight")}</span>
                 </h2>
 
-                <div className={styles.galleryBottom}>
-                    <div className={styles.galleryInner}>
-                        <LogoCard className={styles.p7} initialIndex={18} />
-                        <LogoCard className={styles.p8} initialIndex={21} />
-                        <LogoCard className={styles.p9} initialIndex={24} />
+                {isActive && (
+                    <div className={styles.galleryBottom}>
+                        <div className={styles.galleryInner}>
+                            {renderLogoCard(styles.p7, 18)}
+                            {renderLogoCard(styles.p8, 21)}
+                            {renderLogoCard(styles.p9, 24)}
+                        </div>
                     </div>
-                </div>
+                )}
                 
                 <p className={styles.description}>
                     {t("description")}

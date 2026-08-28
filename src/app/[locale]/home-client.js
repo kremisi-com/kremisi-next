@@ -248,7 +248,7 @@ export default function Home() {
           }}
         >
           <Services />
-          <SocialProof />
+          <SocialProof isActive={isOverviewVisible} />
           <Testimonials />
           <VideosCta />
 

@@ -11,6 +11,13 @@
     align-items: center;
 }
 
+@media (prefers-reduced-motion: reduce) {
+    .placeholder,
+    .logoImage {
+        transition: none;
+    }
+}
+
 .container {
     display: flex;
     flex-direction: column;

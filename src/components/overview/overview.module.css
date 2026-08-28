@@ -11,7 +11,6 @@
     transition:
         opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1),
         transform 1.4s cubic-bezier(0.22, 1, 0.36, 1);
-    will-change: opacity, transform;
 }
 
 .hidden {
@@ -33,6 +32,13 @@
     overflow: hidden;
     z-index: 0;
     pointer-events: none;
+    visibility: hidden;
+    transition: visibility 0s linear 1.4s;
+}
+
+.backgroundActive {
+    visibility: visible;
+    transition-delay: 0s;
 }
 
 .blob1, .blob2, .blob3 {
@@ -40,6 +46,13 @@
     border-radius: 50%;
     filter: blur(80px);
     opacity: 0.75;
+    animation-play-state: paused;
+}
+
+.backgroundActive .blob1,
+.backgroundActive .blob2,
+.backgroundActive .blob3 {
+    animation-play-state: running;
 }
 
 .blob1 {
@@ -70,6 +83,7 @@
     left: 40%;
     animation: float3 26s infinite alternate ease-in-out;
     animation-delay: -10s;
+    display: none;
 }
 
 .noise {
@@ -227,16 +241,38 @@
     }
 }
 
-@media (max-width: 768px) {
-    .blob1, .blob2, .blob3 {
-        filter: blur(50px);
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+    .blob1 {
+        width: 110vw;
+        height: 110vw;
+        top: -20%;
+        left: -20%;
+        filter: blur(36px);
+        opacity: 0.68;
+        animation: none;
     }
-    .blob1 { width: 80vw; height: 80vw; }
-    .blob2 { width: 90vw; height: 90vw; }
-    .blob3 { width: 60vw; height: 60vw; }
+
+    .blob2, .blob3 {
+        display: none;
+    }
     
     .content p {
         font-size: 3.5rem !important;
         letter-spacing: -0.02em;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .blob1, .blob2, .blob3 {
+        animation: none;
+        filter: blur(40px);
+    }
+
+    .blob3 {
+        display: none;
+    }
+
+    .noise {
+        display: none;
     }
 }
