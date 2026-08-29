@@ -14,6 +14,7 @@ import Loader from "@/components/loader/loader";
 import { trackViewItemList } from "@/lib/analytics";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { SLIDER_IMAGE_LOADING_CONFIG } from "./image-loading-config.mjs";
 
 export default function MainSlider({
   projectsData,
@@ -352,7 +353,7 @@ export default function MainSlider({
     imageLoadTimeoutRef.current = window.setTimeout(() => {
       imageLoadTimeoutRef.current = null;
       scheduleRunAnimation();
-    }, 4000);
+    }, SLIDER_IMAGE_LOADING_CONFIG.initialPreviewLoadTimeoutMs);
 
     return () => {
       if (imageLoadTimeoutRef.current) {
@@ -776,8 +777,8 @@ export default function MainSlider({
               data={slideData}
               style={slideStyles[index]}
               updateTitleData={updateTitleData}
-              onImageLoad={onImageLoad}
-              onImageError={onImageLoad}
+              onPreviewLoad={onImageLoad}
+              onPreviewError={onImageLoad}
               width={imageWidth}
               height={imageHeight}
             />

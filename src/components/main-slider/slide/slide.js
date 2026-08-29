@@ -2,55 +2,69 @@
 
 import Image from "next/image";
 import styles from "./slide.module.css";
-import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import AnimatedLink from "@/components/animated-link/animated-link";
 import { trackSelectItem } from "@/lib/analytics";
+import { SLIDER_IMAGE_LOADING_CONFIG } from "../image-loading-config.mjs";
 
-let n = 0;
 export default React.memo(function Slide({
-    data,
-    style,
-    updateTitleData,
-    onImageLoad,
-    onImageError,
-    width,
-    height,
+  data,
+  style,
+  updateTitleData,
+  onPreviewLoad,
+  onPreviewError,
+  width,
+  height,
 }) {
-    function handleMouseEnter() {
-        updateTitleData(data.title, data.blackText);
-    }
+  const [isFullImageLoaded, setIsFullImageLoaded] = useState(false);
 
-    // console.log("render slide", data.title, n++);
+  function handleMouseEnter() {
+    updateTitleData(data.title, data.blackText);
+  }
 
-    return (
-        <>
-            <AnimatedLink
-                href={data.link}
-                onClick={() => trackSelectItem(data.title, data.id)}
-            >
-                <div
-                    className={`${styles.ortho} ${styles.slide}`}
-                    style={{
-                        ...style,
-                        width: `${width}px`,
-                        height: `${height}px`,
-                    }}
-                    onMouseEnter={handleMouseEnter}
-                >
-                    <Image
-                        src={data.image}
-                        width={width}
-                        height={height}
-                        alt={data.previewImageAlt || data.title}
-                        style={{ "--image-width": `${height}px` }}
-                        priority={true}
-                        onLoad={onImageLoad}
-                        onError={onImageError}
-                    />
-                </div>
-            </AnimatedLink>
-        </>
-    );
+  return (
+    <AnimatedLink
+      href={data.link}
+      onClick={() => trackSelectItem(data.title, data.id)}
+    >
+      <div
+        className={`${styles.ortho} ${styles.slide}`}
+        style={{
+          ...style,
+          width: `${width}px`,
+          height: `${height}px`,
+          backgroundColor: data.color,
+          "--image-width": `${height}px`,
+          "--full-image-fade-duration": `${SLIDER_IMAGE_LOADING_CONFIG.fullImageFadeDurationMs}ms`,
+        }}
+        onMouseEnter={handleMouseEnter}
+      >
+        <Image
+          className={`${styles.slideImage} ${styles.previewImage}`}
+          src={data.image}
+          width={width}
+          height={height}
+          sizes={SLIDER_IMAGE_LOADING_CONFIG.previewSizes}
+          quality={SLIDER_IMAGE_LOADING_CONFIG.previewQuality}
+          alt=""
+          aria-hidden="true"
+          loading="eager"
+          onLoad={onPreviewLoad}
+          onError={onPreviewError}
+        />
+        <Image
+          className={`${styles.slideImage} ${styles.fullImage} ${
+            isFullImageLoaded ? styles.fullImageLoaded : ""
+          }`}
+          src={data.image}
+          width={width}
+          height={height}
+          sizes={SLIDER_IMAGE_LOADING_CONFIG.fullImageSizes}
+          alt={data.previewImageAlt || data.title}
+          loading="lazy"
+          onLoad={() => setIsFullImageLoaded(true)}
+        />
+      </div>
+    </AnimatedLink>
+  );
 });

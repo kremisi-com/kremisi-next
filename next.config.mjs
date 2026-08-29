@@ -2,6 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import createNextIntlPlugin from "next-intl/plugin";
+import { SLIDER_IMAGE_LOADING_CONFIG } from "./src/components/main-slider/image-loading-config.mjs";
 
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.js");
 
@@ -40,6 +41,11 @@ const projectRedirects = Object.entries(projectsData)
 const nextConfig = {
   turbopack: {
     root: projectRoot,
+  },
+  images: {
+    qualities: Array.from(
+      new Set([SLIDER_IMAGE_LOADING_CONFIG.previewQuality, 75]),
+    ).sort((a, b) => a - b),
   },
   async redirects() {
     return projectRedirects;
