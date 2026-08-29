@@ -16,12 +16,6 @@ import {
 } from "@/lib/projects";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-function isOverviewViewInUrl() {
-  if (typeof window === "undefined") return false;
-
-  return new URLSearchParams(window.location.search).get("view") === "overview";
-}
-
 function syncHomeViewInUrl(isOverviewVisible) {
   if (typeof window === "undefined") return;
 
@@ -35,7 +29,7 @@ function syncHomeViewInUrl(isOverviewVisible) {
   window.history.replaceState({}, "", nextUrl);
 }
 
-export default function Home() {
+export default function Home({ initialOverviewVisible = false }) {
   const overviewRevealAdvanceMs = 500;
   const overviewFadeDurationMs = 1400;
   const overviewTextRevealAdvanceMs = 500;
@@ -52,18 +46,13 @@ export default function Home() {
   const sequenceTimeoutsRef = useRef([]);
   const initialPageStylesRef = useRef(null);
   const hasMountedRef = useRef(false);
-  const [isOverviewVisible, setIsOverviewVisible] = useState(false);
+  const [isOverviewVisible, setIsOverviewVisible] = useState(
+    initialOverviewVisible,
+  );
   const [shouldAnimateOverviewText, setShouldAnimateOverviewText] =
-    useState(false);
+    useState(initialOverviewVisible);
   const [sliderReopenSignal, setSliderReopenSignal] = useState(0);
   const [sliderSessionMode, setSliderSessionMode] = useState("initial");
-
-  useEffect(() => {
-    if (isOverviewViewInUrl()) {
-      setIsOverviewVisible(true);
-      setShouldAnimateOverviewText(true);
-    }
-  }, []);
 
   useEffect(() => {
     const html = document.documentElement;
@@ -261,6 +250,7 @@ export default function Home() {
           onDiscoverMoreClick={handleDiscoverMoreClick}
           reopenSignal={sliderReopenSignal}
           sessionMode={sliderSessionMode}
+          isActive={!isOverviewVisible}
         />
       </div>
     </div>

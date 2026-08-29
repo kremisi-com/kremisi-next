@@ -21,6 +21,7 @@ export default function MainSlider({
   onDiscoverMoreClick,
   reopenSignal = 0,
   sessionMode = "initial",
+  isActive = true,
 }) {
   const t = useTranslations("cta");
   const duplicatedProjectsData = useMemo(
@@ -80,7 +81,6 @@ export default function MainSlider({
   const [animationEnded, setAnimationEnded] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
-  const [animationDuration, setAnimationDuration] = useState("0s");
   const [percentageLoaded, setPercentageLoaded] = useState(0);
   const [slidesPositions, setSlidesPositions] = useState(
     initialSlidesPositions,
@@ -99,6 +99,7 @@ export default function MainSlider({
   const sliderRef = useRef(null);
   const titleRef = useRef(null);
   const titlePointerRef = useRef({ x: -9999, y: -9999 });
+  const titlePointerAnimationFrameRef = useRef(null);
   const titleStateRef = useRef({ text: "", darkText: false });
   const actualChunkRef = useRef(initialChunk);
   const slidesPositionsRef = useRef(initialSlidesPositions);
@@ -110,6 +111,7 @@ export default function MainSlider({
     lastY: 0,
   });
   const animationStartedRef = useRef(false);
+  const animationEndedRef = useRef(false);
   const animationStartTimeoutRef = useRef(null);
   const introAnimationFrameRef = useRef(null);
   const leaveAnimationFrameRef = useRef(null);
@@ -118,6 +120,7 @@ export default function MainSlider({
   const reopenAnimationTimeoutRef = useRef(null);
   const imageLoadTimeoutRef = useRef(null);
   const handledReopenSignalRef = useRef(0);
+  const hasManualInteractionRef = useRef(false);
 
   useEffect(() => {
     const handleMenuVisibility = (e) => {
@@ -140,6 +143,7 @@ export default function MainSlider({
   }, []);
 
   useEffect(() => {
+    hasManualInteractionRef.current = false;
     setHasManualInteraction(false);
   }, [reopenSignal, sessionMode]);
 
@@ -289,13 +293,13 @@ export default function MainSlider({
 
   const syncChunkForScroll = useCallback(
     (scroll) => {
-      if (!animationEnded) return;
+      if (!animationEndedRef.current) return;
       const newChunk = findActualChunk(scroll);
       if (newChunk !== actualChunkRef.current) {
         onChunkChange(actualChunkRef.current, newChunk);
       }
     },
-    [animationEnded, findActualChunk, onChunkChange],
+    [findActualChunk, onChunkChange],
   );
 
   const setScrollValue = useCallback(
@@ -305,6 +309,24 @@ export default function MainSlider({
       syncChunkForScroll(scroll);
     },
     [syncChunkForScroll, syncSliderTransform],
+  );
+
+  const animateAutoScroll = useCallback(
+    (timestamp) => {
+      const previousTimestamp = autoScrollLastTimestampRef.current;
+      autoScrollLastTimestampRef.current = timestamp;
+
+      if (previousTimestamp !== null) {
+        const elapsed = Math.min(timestamp - previousTimestamp, 100);
+        setScrollValue(
+          scrollRef.current + (autoScrollSpeed * elapsed) / 1000,
+        );
+      }
+
+      autoScrollAnimationFrameRef.current =
+        window.requestAnimationFrame(animateAutoScroll);
+    },
+    [autoScrollSpeed, setScrollValue],
   );
 
   const runAnimation = useCallback(() => {
@@ -323,7 +345,6 @@ export default function MainSlider({
     setPercentageLoaded(100);
     animationStartedRef.current = true;
     setIsLeaving(false);
-    setAnimationDuration("0s");
 
     const startScroll = scrollRef.current;
     const scrollDistance = animationTargetScroll - startScroll;
@@ -358,7 +379,7 @@ export default function MainSlider({
       autoScrollLastTimestampRef.current = timestamp;
       introAnimationFrameRef.current = null;
       animationStartedRef.current = false;
-      setAnimationDuration(".1s");
+      animationEndedRef.current = true;
       setAnimationEnded(true);
     };
 
@@ -371,7 +392,7 @@ export default function MainSlider({
   ]);
 
   const scheduleRunAnimation = useCallback(() => {
-    if (animationStartedRef.current) return;
+    if (animationStartedRef.current || !isActive) return;
 
     if (animationStartTimeoutRef.current) {
       window.clearTimeout(animationStartTimeoutRef.current);
@@ -381,10 +402,10 @@ export default function MainSlider({
       animationStartTimeoutRef.current = null;
       runAnimation();
     }, animationStartDelayMs);
-  }, [animationStartDelayMs, runAnimation]);
+  }, [animationStartDelayMs, isActive, runAnimation]);
 
   useEffect(() => {
-    if (animationEnded) return;
+    if (animationEnded || !isActive) return;
 
     imageLoadTimeoutRef.current = window.setTimeout(() => {
       imageLoadTimeoutRef.current = null;
@@ -397,7 +418,7 @@ export default function MainSlider({
         imageLoadTimeoutRef.current = null;
       }
     };
-  }, [animationEnded, scheduleRunAnimation]);
+  }, [animationEnded, isActive, scheduleRunAnimation]);
 
   const applyScrollShift = useCallback(
     (shift) => {
@@ -433,20 +454,28 @@ export default function MainSlider({
     [syncTitleContent],
   );
 
-  const handleMouseMove = useCallback(
-    (e) => {
-      const nextPosition = {
-        x: e.clientX + 15,
-        y: e.clientY + 2,
-      };
+  const scheduleTitlePosition = useCallback((clientX, clientY) => {
+    titlePointerRef.current = {
+      x: clientX + 15,
+      y: clientY + 2,
+    };
 
-      titlePointerRef.current = nextPosition;
+    if (titlePointerAnimationFrameRef.current) return;
 
+    titlePointerAnimationFrameRef.current = window.requestAnimationFrame(() => {
+      titlePointerAnimationFrameRef.current = null;
       if (!titleRef.current) return;
-      titleRef.current.style.transform = `translate3d(${nextPosition.x}px, ${nextPosition.y}px, 0)`;
-    },
-    [],
-  );
+
+      const { x, y } = titlePointerRef.current;
+      titleRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+    });
+  }, []);
+
+  const markManualInteraction = useCallback(() => {
+    if (hasManualInteractionRef.current) return;
+    hasManualInteractionRef.current = true;
+    setHasManualInteraction(true);
+  }, []);
 
   const onImageLoad = useCallback(() => {
     if (animationStartedRef.current) return;
@@ -472,7 +501,9 @@ export default function MainSlider({
         top: `${slidesPositions[index]}px`,
         right: `${slidesPositions[index]}px`,
         zIndex: slidesPositions[index],
-        transition: areSlidesDisplayed[index] ? "all .2s ease" : "0s",
+        transition: areSlidesDisplayed[index]
+          ? "top .2s ease, right .2s ease"
+          : "0s",
         display: areSlidesDisplayed[index] ? "block" : "none",
       })),
     [areSlidesDisplayed, duplicatedProjectsData, slidesPositions],
@@ -486,7 +517,6 @@ export default function MainSlider({
     }
 
     const startScroll = scrollRef.current;
-    setAnimationDuration("0s");
     setIsLeaving(true);
     animationStartedRef.current = true;
 
@@ -538,7 +568,7 @@ export default function MainSlider({
         return;
       }
 
-      setHasManualInteraction(true);
+      markManualInteraction();
       applyScrollShift(e.deltaY > 0 ? -speed : speed);
     },
     [
@@ -547,6 +577,7 @@ export default function MainSlider({
       handleDiscoverMore,
       isInitialSession,
       isLeaving,
+      markManualInteraction,
       speed,
     ],
   );
@@ -569,6 +600,11 @@ export default function MainSlider({
 
   const handlePointerMove = useCallback(
     (e) => {
+      if (e.pointerType === "mouse") {
+        scheduleTitlePosition(e.clientX, e.clientY);
+        return;
+      }
+
       const state = touchStateRef.current;
       if (!state.active || state.pointerId !== e.pointerId || !animationEnded) {
         return;
@@ -586,7 +622,7 @@ export default function MainSlider({
         return;
       }
 
-      setHasManualInteraction(true);
+      markManualInteraction();
       applyScrollShift(deltaY * touchMultiplier);
     },
     [
@@ -594,6 +630,8 @@ export default function MainSlider({
       applyScrollShift,
       handleDiscoverMore,
       isInitialSession,
+      markManualInteraction,
+      scheduleTitlePosition,
       touchMultiplier,
     ],
   );
@@ -629,14 +667,18 @@ export default function MainSlider({
   const resetSliderState = useCallback(() => {
     actualChunkRef.current = findActualChunk(animationTargetScroll);
     animationStartedRef.current = false;
+    animationEndedRef.current = false;
     if (introAnimationFrameRef.current) {
       window.cancelAnimationFrame(introAnimationFrameRef.current);
       introAnimationFrameRef.current = null;
     }
+    if (autoScrollAnimationFrameRef.current) {
+      window.cancelAnimationFrame(autoScrollAnimationFrameRef.current);
+      autoScrollAnimationFrameRef.current = null;
+    }
     autoScrollLastTimestampRef.current = null;
     setAnimationEnded(false);
     setIsLeaving(false);
-    setAnimationDuration("0s");
     slidesPositionsRef.current = initialSlidesPositions;
     areSlidesDisplayedRef.current = initialSlidesDisplayed;
     setSlidesPositions(initialSlidesPositions);
@@ -670,29 +712,17 @@ export default function MainSlider({
       animationEnded &&
       !isLeaving &&
       !isHidden &&
+      isActive &&
       !prefersReducedMotion &&
       (isInitialSession || !hasManualInteraction);
 
     if (!shouldAutoScroll) return;
 
-    const animateAutoScroll = (timestamp) => {
-      const previousTimestamp = autoScrollLastTimestampRef.current;
-      autoScrollLastTimestampRef.current = timestamp;
-
-      if (previousTimestamp !== null) {
-        const elapsed = Math.min(timestamp - previousTimestamp, 100);
-        setScrollValue(
-          scrollRef.current + (autoScrollSpeed * elapsed) / 1000,
-        );
-      }
-
-      autoScrollAnimationFrameRef.current =
-        window.requestAnimationFrame(animateAutoScroll);
-    };
-
-    autoScrollAnimationFrameRef.current = window.requestAnimationFrame(
-      animateAutoScroll,
-    );
+    if (!autoScrollAnimationFrameRef.current) {
+      autoScrollAnimationFrameRef.current = window.requestAnimationFrame(
+        animateAutoScroll,
+      );
+    }
 
     return () => {
       if (autoScrollAnimationFrameRef.current) {
@@ -703,13 +733,13 @@ export default function MainSlider({
     };
   }, [
     animationEnded,
-    autoScrollSpeed,
+    animateAutoScroll,
     hasManualInteraction,
     isHidden,
+    isActive,
     isInitialSession,
     isLeaving,
     prefersReducedMotion,
-    setScrollValue,
   ]);
 
   useEffect(() => {
@@ -769,6 +799,9 @@ export default function MainSlider({
       if (autoScrollAnimationFrameRef.current) {
         window.cancelAnimationFrame(autoScrollAnimationFrameRef.current);
       }
+      if (titlePointerAnimationFrameRef.current) {
+        window.cancelAnimationFrame(titlePointerAnimationFrameRef.current);
+      }
       if (reopenAnimationTimeoutRef.current) {
         window.cancelAnimationFrame(reopenAnimationTimeoutRef.current);
       }
@@ -777,8 +810,8 @@ export default function MainSlider({
 
   return (
     <div
+      aria-hidden={!isActive}
       onWheel={!isLeaving ? handleScroll : undefined}
-      onMouseMove={!isLeaving ? handleMouseMove : undefined}
       onPointerDown={
         !isLeaving ? handlePointerDown : undefined
       }
@@ -792,7 +825,8 @@ export default function MainSlider({
       style={{
         touchAction: !isLeaving ? "none" : "auto",
         overflow: "hidden",
-        pointerEvents: isHidden ? "none" : "auto",
+        visibility: isActive ? "visible" : "hidden",
+        pointerEvents: isActive && !isHidden ? "auto" : "none",
       }}
     >
       {percentageLoaded < 99.9 && <Loader percentage={percentageLoaded} />}
@@ -804,7 +838,7 @@ export default function MainSlider({
           className={styles.slider}
           style={{
             transform: getSliderTransform(scrollRef.current),
-            "--animation-duration": animationDuration,
+            "--animation-duration": "0s",
             "--animation-easing": isLeaving
               ? "cubic-bezier(0.22, 1, 0.36, 1)"
               : "cubic-bezier(0.16, 1, 0.3, 1)",
@@ -830,7 +864,7 @@ export default function MainSlider({
         ref={titleRef}
         style={{
           color: titleStateRef.current.darkText ? "black" : "white",
-          opacity: animationEnded && !isLeaving ? 1 : 0,
+          opacity: isActive && animationEnded && !isLeaving ? 1 : 0,
         }}
       >
         {titleStateRef.current.text}
@@ -838,8 +872,9 @@ export default function MainSlider({
       <button
         className={`${styles.scrollIndicator} ${isLeaving ? styles.scrollIndicatorLeaving : ""} ${isMenuOpen ? styles.menuOpen : ""}`}
         style={{ 
-          opacity: animationEnded && !isLeaving ? 1 : 0,
-          pointerEvents: animationEnded && !isLeaving ? "auto" : "none"
+          opacity: isActive && animationEnded && !isLeaving ? 1 : 0,
+          pointerEvents:
+            isActive && animationEnded && !isLeaving ? "auto" : "none",
         }}
         onClick={handleDiscoverMore}
         disabled={isLeaving || isMenuOpen}

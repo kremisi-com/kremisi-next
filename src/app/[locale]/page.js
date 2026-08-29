@@ -23,6 +23,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function HomePage() {
-  return <HomeClient />;
+export default async function HomePage({ searchParams }) {
+  const { view } = await searchParams;
+
+  return <HomeClient initialOverviewVisible={view === "overview"} />;
 }
