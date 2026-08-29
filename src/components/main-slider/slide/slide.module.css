@@ -3,7 +3,13 @@
     transition: all 0.5s ease;
     cursor: pointer;
     overflow: visible;
+}
+
+.imageStack {
+    position: absolute;
+    inset: 0;
     box-shadow: 1px -1px 0px rgba(255, 255, 255, 0.35);
+    transition: transform 0.4s cubic-bezier(0.79, 0.17, 0.28, 0.89);
 }
 
 .slideImage {
@@ -12,9 +18,7 @@
     position: absolute;
     inset: 0;
     object-fit: cover;
-    transition:
-        transform 0.4s cubic-bezier(0.79, 0.17, 0.28, 0.89),
-        opacity var(--full-image-fade-duration) ease;
+    transition: opacity var(--full-image-fade-duration) ease;
 }
 
 .previewImage {
@@ -30,7 +34,7 @@
     opacity: 1;
 }
 
-.slide:hover .slideImage {
+.slide:hover .imageStack {
     transform: translateX(calc(var(--image-width) * 0.7));
 }
 

@@ -80,9 +80,7 @@ export default function MainSlider({
   const [animationEnded, setAnimationEnded] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
-  const [animationDuration, setAnimationDuration] = useState(
-    `${animationDurationInitial}ms`,
-  );
+  const [animationDuration, setAnimationDuration] = useState("0s");
   const [percentageLoaded, setPercentageLoaded] = useState(0);
   const [slidesPositions, setSlidesPositions] = useState(
     initialSlidesPositions,
@@ -113,7 +111,7 @@ export default function MainSlider({
   });
   const animationStartedRef = useRef(false);
   const animationStartTimeoutRef = useRef(null);
-  const animationTimeoutRef = useRef(null);
+  const introAnimationFrameRef = useRef(null);
   const leaveAnimationFrameRef = useRef(null);
   const autoScrollAnimationFrameRef = useRef(null);
   const autoScrollLastTimestampRef = useRef(null);
@@ -317,22 +315,60 @@ export default function MainSlider({
       imageLoadTimeoutRef.current = null;
     }
 
-    if (animationTimeoutRef.current) {
-      window.clearTimeout(animationTimeoutRef.current);
+    if (introAnimationFrameRef.current) {
+      window.cancelAnimationFrame(introAnimationFrameRef.current);
+      introAnimationFrameRef.current = null;
     }
 
     setPercentageLoaded(100);
     animationStartedRef.current = true;
     setIsLeaving(false);
-    setScrollValue(animationTargetScroll);
+    setAnimationDuration("0s");
 
-    animationTimeoutRef.current = window.setTimeout(() => {
-      setAnimationEnded(true);
-      setAnimationDuration(".1s");
+    const startScroll = scrollRef.current;
+    const scrollDistance = animationTargetScroll - startScroll;
+    const durationSeconds = animationDurationInitial / 1000;
+    const continuousSpeedBlend =
+      scrollDistance === 0
+        ? 1
+        : Math.min(
+            Math.max((autoScrollSpeed * durationSeconds) / scrollDistance, 0),
+            1,
+          );
+    let startTime = null;
+
+    const animateIntro = (timestamp) => {
+      if (startTime === null) startTime = timestamp;
+
+      const elapsed = timestamp - startTime;
+      const progress = Math.min(elapsed / animationDurationInitial, 1);
+      const easeOutProgress = 1 - Math.pow(1 - progress, 3);
+      const blendedProgress =
+        easeOutProgress * (1 - continuousSpeedBlend) +
+        progress * continuousSpeedBlend;
+
+      setScrollValue(startScroll + scrollDistance * blendedProgress);
+
+      if (progress < 1) {
+        introAnimationFrameRef.current =
+          window.requestAnimationFrame(animateIntro);
+        return;
+      }
+
+      autoScrollLastTimestampRef.current = timestamp;
+      introAnimationFrameRef.current = null;
       animationStartedRef.current = false;
-      animationTimeoutRef.current = null;
-    }, animationDurationInitial);
-  }, [animationDurationInitial, animationTargetScroll, setScrollValue]);
+      setAnimationDuration(".1s");
+      setAnimationEnded(true);
+    };
+
+    introAnimationFrameRef.current = window.requestAnimationFrame(animateIntro);
+  }, [
+    animationDurationInitial,
+    animationTargetScroll,
+    autoScrollSpeed,
+    setScrollValue,
+  ]);
 
   const scheduleRunAnimation = useCallback(() => {
     if (animationStartedRef.current) return;
@@ -593,9 +629,14 @@ export default function MainSlider({
   const resetSliderState = useCallback(() => {
     actualChunkRef.current = findActualChunk(animationTargetScroll);
     animationStartedRef.current = false;
+    if (introAnimationFrameRef.current) {
+      window.cancelAnimationFrame(introAnimationFrameRef.current);
+      introAnimationFrameRef.current = null;
+    }
+    autoScrollLastTimestampRef.current = null;
     setAnimationEnded(false);
     setIsLeaving(false);
-    setAnimationDuration(`${animationDurationInitial}ms`);
+    setAnimationDuration("0s");
     slidesPositionsRef.current = initialSlidesPositions;
     areSlidesDisplayedRef.current = initialSlidesDisplayed;
     setSlidesPositions(initialSlidesPositions);
@@ -603,7 +644,6 @@ export default function MainSlider({
     scrollRef.current = starterScrollPosition;
     syncSliderTransform(starterScrollPosition);
   }, [
-    animationDurationInitial,
     animationTargetScroll,
     findActualChunk,
     initialSlidesDisplayed,
@@ -650,7 +690,6 @@ export default function MainSlider({
         window.requestAnimationFrame(animateAutoScroll);
     };
 
-    autoScrollLastTimestampRef.current = null;
     autoScrollAnimationFrameRef.current = window.requestAnimationFrame(
       animateAutoScroll,
     );
@@ -721,8 +760,8 @@ export default function MainSlider({
       if (animationStartTimeoutRef.current) {
         window.clearTimeout(animationStartTimeoutRef.current);
       }
-      if (animationTimeoutRef.current) {
-        window.clearTimeout(animationTimeoutRef.current);
+      if (introAnimationFrameRef.current) {
+        window.cancelAnimationFrame(introAnimationFrameRef.current);
       }
       if (leaveAnimationFrameRef.current) {
         window.cancelAnimationFrame(leaveAnimationFrameRef.current);

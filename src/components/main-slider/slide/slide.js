@@ -33,37 +33,41 @@ export default React.memo(function Slide({
           ...style,
           width: `${width}px`,
           height: `${height}px`,
-          backgroundColor: data.color,
           "--image-width": `${height}px`,
           "--full-image-fade-duration": `${SLIDER_IMAGE_LOADING_CONFIG.fullImageFadeDurationMs}ms`,
         }}
         onMouseEnter={handleMouseEnter}
       >
-        <Image
-          className={`${styles.slideImage} ${styles.previewImage}`}
-          src={data.image}
-          width={width}
-          height={height}
-          sizes={SLIDER_IMAGE_LOADING_CONFIG.previewSizes}
-          quality={SLIDER_IMAGE_LOADING_CONFIG.previewQuality}
-          alt=""
-          aria-hidden="true"
-          loading="eager"
-          onLoad={onPreviewLoad}
-          onError={onPreviewError}
-        />
-        <Image
-          className={`${styles.slideImage} ${styles.fullImage} ${
-            isFullImageLoaded ? styles.fullImageLoaded : ""
-          }`}
-          src={data.image}
-          width={width}
-          height={height}
-          sizes={SLIDER_IMAGE_LOADING_CONFIG.fullImageSizes}
-          alt={data.previewImageAlt || data.title}
-          loading="lazy"
-          onLoad={() => setIsFullImageLoaded(true)}
-        />
+        <div
+          className={styles.imageStack}
+          style={{ backgroundColor: data.color }}
+        >
+          <Image
+            className={`${styles.slideImage} ${styles.previewImage}`}
+            src={data.image}
+            width={width}
+            height={height}
+            sizes={SLIDER_IMAGE_LOADING_CONFIG.previewSizes}
+            quality={SLIDER_IMAGE_LOADING_CONFIG.previewQuality}
+            alt=""
+            aria-hidden="true"
+            loading="eager"
+            onLoad={onPreviewLoad}
+            onError={onPreviewError}
+          />
+          <Image
+            className={`${styles.slideImage} ${styles.fullImage} ${
+              isFullImageLoaded ? styles.fullImageLoaded : ""
+            }`}
+            src={data.image}
+            width={width}
+            height={height}
+            sizes={SLIDER_IMAGE_LOADING_CONFIG.fullImageSizes}
+            alt={data.previewImageAlt || data.title}
+            loading="lazy"
+            onLoad={() => setIsFullImageLoaded(true)}
+          />
+        </div>
       </div>
     </AnimatedLink>
   );
