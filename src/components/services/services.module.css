@@ -332,6 +332,14 @@
         margin-bottom: 60px;
         gap: 36px;
     }
+    .headerLeft,
+    .headerRight {
+        flex: none;
+        width: 100%;
+    }
+    .headerRight {
+        transform: none;
+    }
     .title {
         font-size: 4rem;
     }

@@ -38,7 +38,8 @@
   position: relative;
   inset: auto;
   height: auto;
-  min-height: 100dvh;
+  /* Keep the document height stable while mobile browser chrome opens/closes. */
+  min-height: 100svh;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -1,6 +1,7 @@
 .overview {
     position: relative;
-    min-height: 100dvh;
+    /* `dvh` changes during a mobile scroll and shifts every section below this one. */
+    min-height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -154,12 +155,6 @@
     .line3 { font-size: 6.5rem !important; }
 }
 
-@media (max-width: 768px) {
-    .line1 { font-size: 2.5rem !important; }
-    .line2 { font-size: 4rem !important; }
-    .line3 { font-size: 4rem !important; }
-}
-
 @media (max-width: 1400px) {
     .line1 { font-size: 4rem !important; }
     .line2 { font-size: 6.5rem !important; }
@@ -170,6 +165,48 @@
     .line1 { font-size: 3.5rem !important; }
     .line2 { font-size: 5rem !important; }
     .line3 { font-size: 5rem !important; }
+}
+
+@media (max-width: 768px) {
+    .overview {
+        padding-inline: clamp(1rem, 5vw, 1.5rem);
+    }
+
+    .content {
+        width: 100%;
+    }
+
+    .content p {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+        font-size: inherit !important;
+        line-height: 0.92 !important;
+        letter-spacing: -0.025em;
+    }
+
+    .content p br {
+        display: none;
+    }
+
+    .line1,
+    .line3 {
+        font-size: clamp(30px, 9.4vw, 36px) !important;
+        line-height: 0.94;
+    }
+
+    .line2,
+    .line3Emph {
+        display: inline-block;
+        font-size: clamp(40px, 12vw, 48px) !important;
+        font-weight: 600;
+        line-height: 0.88;
+    }
+
+    .line1 {
+        margin-bottom: 0;
+    }
 }
 
 .subtitle {
@@ -256,10 +293,6 @@
         display: none;
     }
     
-    .content p {
-        font-size: 3.5rem !important;
-        letter-spacing: -0.02em;
-    }
 }
 
 @media (prefers-reduced-motion: reduce) {

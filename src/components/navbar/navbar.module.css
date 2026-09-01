@@ -2,8 +2,11 @@
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    right: 0;
+    width: auto;
     z-index: 100;
+    transform: translateZ(0);
+    backface-visibility: hidden;
 }
 .navbar::before {
     content: "";
