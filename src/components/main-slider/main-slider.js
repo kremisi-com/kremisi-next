@@ -4,6 +4,7 @@ import React, {
   useState,
   useRef,
   useEffect,
+  useLayoutEffect,
   useCallback,
   useMemo,
   useTransition,
@@ -151,7 +152,7 @@ export default function MainSlider({
     trackViewItemList("Project Slider");
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     function updateSlope() {
       setSlope(window.innerHeight / window.innerWidth);
     }
