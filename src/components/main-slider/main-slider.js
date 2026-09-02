@@ -32,6 +32,7 @@ export default function MainSlider({
 
   const animationDurationInitial = 2000;
   const animationStartDelayMs = 500;
+  const fullImageUpgradeDelayMs = 500;
   const leaveAnimationDuration = 3200;
   const animationTargetScroll = 0;
   const slideSize = 120;
@@ -49,8 +50,13 @@ export default function MainSlider({
 
   const sliderSize = slideSize * duplicatedProjectsData.length;
   const sliderCenter = -slideSize * (duplicatedProjectsData.length / 2);
-  const starterScrollPosition = sliderCenter * 4;
-  const leaveTargetScroll = Math.abs(starterScrollPosition) + sliderSize * 0.4;
+  const maximumIntroTravelDistance = slideSize * 60;
+  const introTravelDistance = Math.min(
+    maximumIntroTravelDistance,
+    sliderSize * 2,
+  );
+  const starterScrollPosition = animationTargetScroll - introTravelDistance;
+  const leaveTargetScroll = sliderSize * 2.4;
 
   const initialSlidesPositions = useMemo(
     () =>
@@ -127,6 +133,24 @@ export default function MainSlider({
   const imageLoadTimeoutRef = useRef(null);
   const handledReopenSignalRef = useRef(0);
   const hasManualInteractionRef = useRef(false);
+  const fullImageUpgradeEnabledRef = useRef(false);
+  const fullImageUpgradeSubscribersRef = useRef(new Set());
+
+  const updateFullImageUpgradeEnabled = useCallback((isEnabled) => {
+    fullImageUpgradeEnabledRef.current = isEnabled;
+    fullImageUpgradeSubscribersRef.current.forEach((subscriber) => {
+      subscriber(isEnabled);
+    });
+  }, []);
+
+  const subscribeToFullImageUpgrade = useCallback((subscriber) => {
+    fullImageUpgradeSubscribersRef.current.add(subscriber);
+    subscriber(fullImageUpgradeEnabledRef.current);
+
+    return () => {
+      fullImageUpgradeSubscribersRef.current.delete(subscriber);
+    };
+  }, []);
 
   useEffect(() => {
     const handleMenuVisibility = (e) => {
@@ -781,6 +805,26 @@ export default function MainSlider({
   ]);
 
   useEffect(() => {
+    if (!animationEnded || isLeaving || isHidden || !isActive) {
+      updateFullImageUpgradeEnabled(false);
+      return;
+    }
+
+    const upgradeTimer = window.setTimeout(() => {
+      updateFullImageUpgradeEnabled(true);
+    }, fullImageUpgradeDelayMs);
+
+    return () => window.clearTimeout(upgradeTimer);
+  }, [
+    animationEnded,
+    fullImageUpgradeDelayMs,
+    isActive,
+    isHidden,
+    isLeaving,
+    updateFullImageUpgradeEnabled,
+  ]);
+
+  useEffect(() => {
     if (!reopenSignal || reopenSignal === handledReopenSignalRef.current) {
       return;
     }
@@ -896,6 +940,7 @@ export default function MainSlider({
               }
               onPreviewLoad={onImageLoad}
               onPreviewError={onImageLoad}
+              subscribeToFullImageUpgrade={subscribeToFullImageUpgrade}
               width={imageWidth}
               height={imageHeight}
             />
