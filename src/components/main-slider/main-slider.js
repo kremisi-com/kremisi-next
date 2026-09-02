@@ -16,6 +16,7 @@ import { trackViewItemList } from "@/lib/analytics";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { SLIDER_IMAGE_LOADING_CONFIG } from "./image-loading-config.mjs";
+import { normalizeLoopIndex } from "./slider-math.mjs";
 
 export default function MainSlider({
   projectsData,
@@ -83,9 +84,11 @@ export default function MainSlider({
   const findActualChunk = useCallback(
     (scroll) => {
       const mod = -(sliderCenter + scroll) / sliderSize;
-      return Math.floor(mod / relativeChunkSize);
+      const rawChunk = Math.floor(mod / relativeChunkSize);
+
+      return normalizeLoopIndex(rawChunk, chunksNumber);
     },
-    [relativeChunkSize, sliderCenter, sliderSize],
+    [chunksNumber, relativeChunkSize, sliderCenter, sliderSize],
   );
 
   const [animationEnded, setAnimationEnded] = useState(false);
