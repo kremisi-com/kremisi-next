@@ -40,6 +40,9 @@ export default function MainSlider({
   const speed = 30;
   const touchMultiplier = 1.2;
   const autoScrollSpeed = 120;
+  const isHoverBrakeEnabled = false;
+  const autoScrollBrakeDuration = 500;
+  const autoScrollResumeDuration = 700;
   const baseWidth = 450;
   const baseHeight = 275;
   const scaleFactor = 1;
@@ -118,6 +121,8 @@ export default function MainSlider({
   const leaveAnimationFrameRef = useRef(null);
   const autoScrollAnimationFrameRef = useRef(null);
   const autoScrollLastTimestampRef = useRef(null);
+  const autoScrollCurrentSpeedRef = useRef(autoScrollSpeed);
+  const autoScrollTargetSpeedRef = useRef(autoScrollSpeed);
   const reopenAnimationTimeoutRef = useRef(null);
   const imageLoadTimeoutRef = useRef(null);
   const handledReopenSignalRef = useRef(0);
@@ -319,16 +324,45 @@ export default function MainSlider({
 
       if (previousTimestamp !== null) {
         const elapsed = Math.min(timestamp - previousTimestamp, 100);
-        setScrollValue(
-          scrollRef.current + (autoScrollSpeed * elapsed) / 1000,
-        );
+        const currentSpeed = autoScrollCurrentSpeedRef.current;
+        const targetSpeed = autoScrollTargetSpeedRef.current;
+        const speedTransitionDuration =
+          targetSpeed < currentSpeed
+            ? autoScrollBrakeDuration
+            : autoScrollResumeDuration;
+        const maximumSpeedChange =
+          (autoScrollSpeed * elapsed) / speedTransitionDuration;
+        const speedDifference = targetSpeed - currentSpeed;
+        const nextSpeed =
+          Math.abs(speedDifference) <= maximumSpeedChange
+            ? targetSpeed
+            : currentSpeed + Math.sign(speedDifference) * maximumSpeedChange;
+
+        autoScrollCurrentSpeedRef.current = nextSpeed;
+
+        if (nextSpeed !== 0) {
+          setScrollValue(scrollRef.current + (nextSpeed * elapsed) / 1000);
+        }
       }
 
       autoScrollAnimationFrameRef.current =
         window.requestAnimationFrame(animateAutoScroll);
     },
-    [autoScrollSpeed, setScrollValue],
+    [
+      autoScrollBrakeDuration,
+      autoScrollResumeDuration,
+      autoScrollSpeed,
+      setScrollValue,
+    ],
   );
+
+  const handleSlideHoverStart = useCallback(() => {
+    autoScrollTargetSpeedRef.current = 0;
+  }, []);
+
+  const handleSlideHoverEnd = useCallback(() => {
+    autoScrollTargetSpeedRef.current = autoScrollSpeed;
+  }, [autoScrollSpeed]);
 
   const runAnimation = useCallback(() => {
     if (animationStartedRef.current) return;
@@ -678,6 +712,8 @@ export default function MainSlider({
       autoScrollAnimationFrameRef.current = null;
     }
     autoScrollLastTimestampRef.current = null;
+    autoScrollCurrentSpeedRef.current = autoScrollSpeed;
+    autoScrollTargetSpeedRef.current = autoScrollSpeed;
     setAnimationEnded(false);
     setIsLeaving(false);
     slidesPositionsRef.current = initialSlidesPositions;
@@ -688,6 +724,7 @@ export default function MainSlider({
     syncSliderTransform(starterScrollPosition);
   }, [
     animationTargetScroll,
+    autoScrollSpeed,
     findActualChunk,
     initialSlidesDisplayed,
     initialSlidesPositions,
@@ -851,6 +888,12 @@ export default function MainSlider({
               data={slideData}
               style={slideStyles[index]}
               updateTitleData={updateTitleData}
+              onHoverStart={
+                isHoverBrakeEnabled ? handleSlideHoverStart : undefined
+              }
+              onHoverEnd={
+                isHoverBrakeEnabled ? handleSlideHoverEnd : undefined
+              }
               onPreviewLoad={onImageLoad}
               onPreviewError={onImageLoad}
               width={imageWidth}

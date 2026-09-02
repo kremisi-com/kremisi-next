@@ -11,6 +11,8 @@ export default React.memo(function Slide({
   data,
   style,
   updateTitleData,
+  onHoverStart,
+  onHoverEnd,
   onPreviewLoad,
   onPreviewError,
   width,
@@ -31,6 +33,7 @@ export default React.memo(function Slide({
 
   function handleMouseEnter() {
     updateTitleData(data.title, data.blackText);
+    onHoverStart?.();
   }
 
   function handleFullImageTransitionEnd(event) {
@@ -58,6 +61,7 @@ export default React.memo(function Slide({
           "--full-image-fade-duration": `${SLIDER_IMAGE_LOADING_CONFIG.fullImageFadeDurationMs}ms`,
         }}
         onMouseEnter={handleMouseEnter}
+        onMouseLeave={onHoverEnd}
       >
         <div
           className={styles.imageStack}
