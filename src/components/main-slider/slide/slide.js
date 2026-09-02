@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import styles from "./slide.module.css";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import AnimatedLink from "@/components/animated-link/animated-link";
 import { trackSelectItem } from "@/lib/analytics";
 import { SLIDER_IMAGE_LOADING_CONFIG } from "../image-loading-config.mjs";
@@ -17,9 +17,30 @@ export default React.memo(function Slide({
   height,
 }) {
   const [isFullImageLoaded, setIsFullImageLoaded] = useState(false);
+  const [isPreviewVisible, setIsPreviewVisible] = useState(true);
+
+  useEffect(() => {
+    if (!isFullImageLoaded) return;
+
+    const previewRemovalTimeout = window.setTimeout(() => {
+      setIsPreviewVisible(false);
+    }, SLIDER_IMAGE_LOADING_CONFIG.fullImageFadeDurationMs + 100);
+
+    return () => window.clearTimeout(previewRemovalTimeout);
+  }, [isFullImageLoaded]);
 
   function handleMouseEnter() {
     updateTitleData(data.title, data.blackText);
+  }
+
+  function handleFullImageTransitionEnd(event) {
+    if (
+      isFullImageLoaded &&
+      event.target === event.currentTarget &&
+      event.propertyName === "opacity"
+    ) {
+      setIsPreviewVisible(false);
+    }
   }
 
   return (
@@ -42,19 +63,21 @@ export default React.memo(function Slide({
           className={styles.imageStack}
           style={{ backgroundColor: data.color }}
         >
-          <Image
-            className={`${styles.slideImage} ${styles.previewImage}`}
-            src={data.image}
-            width={width}
-            height={height}
-            sizes={SLIDER_IMAGE_LOADING_CONFIG.previewSizes}
-            quality={SLIDER_IMAGE_LOADING_CONFIG.previewQuality}
-            alt=""
-            aria-hidden="true"
-            loading="eager"
-            onLoad={onPreviewLoad}
-            onError={onPreviewError}
-          />
+          {isPreviewVisible && (
+            <Image
+              className={`${styles.slideImage} ${styles.previewImage}`}
+              src={data.image}
+              width={width}
+              height={height}
+              sizes={SLIDER_IMAGE_LOADING_CONFIG.previewSizes}
+              quality={SLIDER_IMAGE_LOADING_CONFIG.previewQuality}
+              alt=""
+              aria-hidden="true"
+              loading="eager"
+              onLoad={onPreviewLoad}
+              onError={onPreviewError}
+            />
+          )}
           <Image
             className={`${styles.slideImage} ${styles.fullImage} ${
               isFullImageLoaded ? styles.fullImageLoaded : ""
@@ -66,6 +89,7 @@ export default React.memo(function Slide({
             alt={data.previewImageAlt || data.title}
             loading="lazy"
             onLoad={() => setIsFullImageLoaded(true)}
+            onTransitionEnd={handleFullImageTransitionEnd}
           />
         </div>
       </div>
