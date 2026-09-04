@@ -2,19 +2,22 @@
 
 import Image from "next/image";
 import styles from "./slide.module.css";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import AnimatedLink from "@/components/animated-link/animated-link";
 import { trackSelectItem } from "@/lib/analytics";
 import { SLIDER_IMAGE_LOADING_CONFIG } from "../image-loading-config.mjs";
+import { getSlideTransform } from "../slider-math.mjs";
 
 export default React.memo(function Slide({
   data,
-  style,
+  logicalIndex,
+  itemStep,
+  eagerPreview,
+  initialLoadSlotId,
   updateTitleData,
   onHoverStart,
   onHoverEnd,
-  onPreviewLoad,
-  onPreviewError,
+  onInitialPreviewSettled,
   subscribeToFullImageUpgrade,
   width,
   height,
@@ -25,6 +28,21 @@ export default React.memo(function Slide({
   const [isFullImageLoaded, setIsFullImageLoaded] = useState(false);
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
   const [shouldLoadFullImage, setShouldLoadFullImage] = useState(false);
+  const positionStyle = useMemo(
+    () => ({
+      transform: getSlideTransform(logicalIndex, itemStep),
+      zIndex: -logicalIndex,
+    }),
+    [itemStep, logicalIndex],
+  );
+
+  useEffect(() => {
+    setIsFullImageLoaded(false);
+    setIsPreviewVisible(true);
+    setShouldLoadFullImage(
+      fullImageUpgradeEnabledRef.current && isNearViewportRef.current,
+    );
+  }, [data.image]);
 
   useEffect(() => {
     if (!slideRef.current) return;
@@ -92,60 +110,72 @@ export default React.memo(function Slide({
     }
   }
 
+  function handlePreviewSettled() {
+    if (!eagerPreview) return;
+    onInitialPreviewSettled(initialLoadSlotId);
+  }
+
   return (
-    <AnimatedLink
-      href={data.link}
-      onClick={() => trackSelectItem(data.title, data.id)}
+    <div
+      className={styles.slidePositioner}
+      style={positionStyle}
+      data-slider-logical-index={logicalIndex}
     >
-      <div
-        ref={slideRef}
-        className={`${styles.ortho} ${styles.slide}`}
-        style={{
-          ...style,
-          width: `${width}px`,
-          height: `${height}px`,
-          "--image-width": `${height}px`,
-          "--full-image-fade-duration": `${SLIDER_IMAGE_LOADING_CONFIG.fullImageFadeDurationMs}ms`,
-        }}
-        onMouseEnter={handleMouseEnter}
-        onMouseLeave={onHoverEnd}
+      <AnimatedLink
+        href={data.link}
+        aria-label={data.previewImageAlt || data.title}
+        onClick={() => trackSelectItem(data.title, data.id)}
       >
         <div
-          className={styles.imageStack}
-          style={{ backgroundColor: data.color }}
+          ref={slideRef}
+          className={`${styles.ortho} ${styles.slide}`}
+          style={{
+            width: `${width}px`,
+            height: `${height}px`,
+            "--image-width": `${height}px`,
+            "--full-image-fade-duration": `${SLIDER_IMAGE_LOADING_CONFIG.fullImageFadeDurationMs}ms`,
+          }}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={onHoverEnd}
         >
-          {(!shouldLoadFullImage || isPreviewVisible) && (
-            <Image
-              className={`${styles.slideImage} ${styles.previewImage}`}
-              src={data.image}
-              width={width}
-              height={height}
-              sizes={SLIDER_IMAGE_LOADING_CONFIG.previewSizes}
-              quality={SLIDER_IMAGE_LOADING_CONFIG.previewQuality}
-              alt=""
-              aria-hidden="true"
-              loading="eager"
-              onLoad={onPreviewLoad}
-              onError={onPreviewError}
-            />
-          )}
-          {shouldLoadFullImage && (
-            <Image
-              className={`${styles.slideImage} ${styles.fullImage} ${
-                isFullImageLoaded ? styles.fullImageLoaded : ""
-              }`}
-              src={data.image}
-              width={width}
-              height={height}
-              sizes={SLIDER_IMAGE_LOADING_CONFIG.fullImageSizes}
-              alt={data.previewImageAlt || data.title}
-              loading="lazy"
-              onLoad={() => setIsFullImageLoaded(true)}
-              onTransitionEnd={handleFullImageTransitionEnd}
-            />
-          )}
+          <div
+            className={styles.imageStack}
+            style={{ backgroundColor: data.color }}
+          >
+            {(!shouldLoadFullImage || isPreviewVisible) && (
+              <Image
+                className={`${styles.slideImage} ${styles.previewImage}`}
+                src={data.image}
+                width={width}
+                height={height}
+                sizes={SLIDER_IMAGE_LOADING_CONFIG.previewSizes}
+                quality={SLIDER_IMAGE_LOADING_CONFIG.previewQuality}
+                alt=""
+                aria-hidden="true"
+                loading={eagerPreview ? "eager" : "lazy"}
+                onLoad={handlePreviewSettled}
+                onError={handlePreviewSettled}
+              />
+            )}
+            {shouldLoadFullImage && (
+              <Image
+                className={`${styles.slideImage} ${styles.fullImage} ${
+                  isFullImageLoaded ? styles.fullImageLoaded : ""
+                }`}
+                src={data.image}
+                width={width}
+                height={height}
+                sizes={SLIDER_IMAGE_LOADING_CONFIG.fullImageSizes}
+                alt=""
+                aria-hidden="true"
+                loading="eager"
+                onLoad={() => setIsFullImageLoaded(true)}
+                onTransitionEnd={handleFullImageTransitionEnd}
+              />
+            )}
+          </div>
         </div>
-      </div>
-    </AnimatedLink>
+      </AnimatedLink>
+    </div>
   );
 });

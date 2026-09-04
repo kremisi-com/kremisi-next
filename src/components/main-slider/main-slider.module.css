@@ -48,6 +48,7 @@
     left: 0;
     transition: transform var(--animation-duration) var(--animation-easing);
     will-change: transform;
+    isolation: isolate;
 }
 
 .cinematicVeil {

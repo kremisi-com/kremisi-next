@@ -7,7 +7,6 @@ import React, {
   useLayoutEffect,
   useCallback,
   useMemo,
-  useTransition,
 } from "react";
 import styles from "./main-slider.module.css";
 import Slide from "./slide/slide";
@@ -16,7 +15,34 @@ import { trackViewItemList } from "@/lib/analytics";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { SLIDER_IMAGE_LOADING_CONFIG } from "./image-loading-config.mjs";
-import { normalizeLoopIndex } from "./slider-math.mjs";
+import {
+  createVirtualPool,
+  getProjectIndexForLogicalIndex,
+  getVirtualPoolRange,
+  getVirtualPoolSize,
+  reconcileVirtualPool,
+} from "./slider-math.mjs";
+
+const SLIDE_STEP = 120;
+const MINIMUM_POOL_SIZE = 15;
+const MAXIMUM_POOL_SIZE = 25;
+const INITIAL_EAGER_IMAGES = 5;
+const BASE_WIDTH = 450;
+const BASE_HEIGHT = 275;
+const SCALE_FACTOR = 1;
+
+function getImageDimensions(slope) {
+  return {
+    width: Math.max(
+      Math.round((BASE_WIDTH * SCALE_FACTOR) / (slope * 1.3)),
+      BASE_WIDTH * 0.8,
+    ),
+    height: Math.max(
+      Math.round((BASE_HEIGHT * SCALE_FACTOR) / (slope * 1.3)),
+      BASE_HEIGHT * 0.8,
+    ),
+  };
+}
 
 export default function MainSlider({
   projectsData,
@@ -26,97 +52,72 @@ export default function MainSlider({
   isActive = true,
 }) {
   const t = useTranslations("cta");
-  const duplicatedProjectsData = useMemo(
-    () => [...projectsData, ...projectsData],
-    [projectsData],
-  );
 
   const animationDurationInitial = 2000;
   const animationStartDelayMs = 500;
   const fullImageUpgradeDelayMs = 500;
   const leaveAnimationDuration = 3200;
   const animationTargetScroll = 0;
-  const slideSize = 120;
-  const chunksNumber = 5;
-  const relativeChunkSize = 1 / chunksNumber;
   const speed = 30;
   const touchMultiplier = 1.2;
   const autoScrollSpeed = 120;
   const isHoverBrakeEnabled = false;
   const autoScrollBrakeDuration = 500;
   const autoScrollResumeDuration = 700;
-  const baseWidth = 450;
-  const baseHeight = 275;
-  const scaleFactor = 1;
-
-  const sliderSize = slideSize * duplicatedProjectsData.length;
-  const sliderCenter = -slideSize * (duplicatedProjectsData.length / 2);
-  const maximumIntroTravelDistance = slideSize * 60;
+  const loopSpan = SLIDE_STEP * projectsData.length;
+  const maximumIntroTravelDistance = SLIDE_STEP * 60;
   const introTravelDistance = Math.min(
     maximumIntroTravelDistance,
-    sliderSize * 2,
+    loopSpan * 4,
   );
   const starterScrollPosition = animationTargetScroll - introTravelDistance;
-  const leaveTargetScroll = sliderSize * 2.4;
-
-  const initialSlidesPositions = useMemo(
+  const leaveTargetScroll = loopSpan * 4.8;
+  const initialVirtualPool = useMemo(
     () =>
-      duplicatedProjectsData.map(
-        (_, index) =>
-          (duplicatedProjectsData.length - 1) * slideSize - index * slideSize,
-      ),
-    [duplicatedProjectsData, slideSize],
-  );
-
-  const initialSlidesDisplayed = useMemo(
-    () => duplicatedProjectsData.map(() => true),
-    [duplicatedProjectsData],
-  );
-
-  const chunks = useMemo(() => {
-    const nextChunks = Array.from({ length: chunksNumber }, (_, i) =>
-      Math.round(relativeChunkSize * (i + 1) * duplicatedProjectsData.length),
-    );
-    nextChunks.unshift(0);
-    return nextChunks;
-  }, [chunksNumber, duplicatedProjectsData.length, relativeChunkSize]);
-
-  const findActualChunk = useCallback(
-    (scroll) => {
-      const mod = -(sliderCenter + scroll) / sliderSize;
-      const rawChunk = Math.floor(mod / relativeChunkSize);
-
-      return normalizeLoopIndex(rawChunk, chunksNumber);
-    },
-    [chunksNumber, relativeChunkSize, sliderCenter, sliderSize],
+      createVirtualPool({
+        scroll: starterScrollPosition,
+        itemStep: SLIDE_STEP,
+        poolSize: MINIMUM_POOL_SIZE,
+      }),
+    [starterScrollPosition],
   );
 
   const [animationEnded, setAnimationEnded] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [percentageLoaded, setPercentageLoaded] = useState(0);
-  const [slidesPositions, setSlidesPositions] = useState(
-    initialSlidesPositions,
-  );
-  const [areSlidesDisplayed, setAreSlidesDisplayed] = useState(
-    initialSlidesDisplayed,
-  );
+  const [virtualPool, setVirtualPool] = useState(initialVirtualPool);
+  const [poolSize, setPoolSize] = useState(MINIMUM_POOL_SIZE);
   const [slope, setSlope] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasManualInteraction, setHasManualInteraction] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
-  const [, startTransition] = useTransition();
 
-  const initialChunk = findActualChunk(animationTargetScroll);
   const scrollRef = useRef(starterScrollPosition);
   const sliderRef = useRef(null);
   const titleRef = useRef(null);
   const titlePointerRef = useRef({ x: -9999, y: -9999 });
   const titlePointerAnimationFrameRef = useRef(null);
   const titleStateRef = useRef({ text: "", darkText: false });
-  const actualChunkRef = useRef(initialChunk);
-  const slidesPositionsRef = useRef(initialSlidesPositions);
-  const areSlidesDisplayedRef = useRef(initialSlidesDisplayed);
+  const virtualPoolAnchorRef = useRef(
+    getVirtualPoolRange(
+      starterScrollPosition,
+      SLIDE_STEP,
+      MINIMUM_POOL_SIZE,
+    ).anchor,
+  );
+  const initialPreviewSettledSlotsRef = useRef(new Set());
+  const initialEagerSlotIds = useMemo(() => {
+    const centerSlot = Math.floor(poolSize / 2);
+    const eagerRadius = Math.floor(INITIAL_EAGER_IMAGES / 2);
+
+    return new Set(
+      Array.from(
+        { length: INITIAL_EAGER_IMAGES },
+        (_, index) => centerSlot - eagerRadius + index,
+      ),
+    );
+  }, [poolSize]);
   const tickingRef = useRef(false);
   const touchStateRef = useRef({
     active: false,
@@ -186,7 +187,18 @@ export default function MainSlider({
 
   useLayoutEffect(() => {
     function updateSlope() {
-      setSlope(window.innerHeight / window.innerWidth);
+      const nextSlope = window.innerHeight / window.innerWidth;
+      const { height } = getImageDimensions(nextSlope);
+      const nextPoolSize = getVirtualPoolSize({
+        viewportHeight: window.innerHeight,
+        itemHeight: height,
+        itemStep: SLIDE_STEP,
+        minimumItems: MINIMUM_POOL_SIZE,
+        maximumItems: MAXIMUM_POOL_SIZE,
+      });
+
+      setSlope(nextSlope);
+      setPoolSize(nextPoolSize);
     }
 
     updateSlope();
@@ -195,29 +207,26 @@ export default function MainSlider({
   }, []);
 
   useEffect(() => {
-    slidesPositionsRef.current = slidesPositions;
-  }, [slidesPositions]);
-
-  useEffect(() => {
-    areSlidesDisplayedRef.current = areSlidesDisplayed;
-  }, [areSlidesDisplayed]);
+    const nextPool = createVirtualPool({
+      scroll: scrollRef.current,
+      itemStep: SLIDE_STEP,
+      poolSize,
+    });
+    virtualPoolAnchorRef.current = getVirtualPoolRange(
+      scrollRef.current,
+      SLIDE_STEP,
+      poolSize,
+    ).anchor;
+    setVirtualPool(nextPool);
+  }, [poolSize]);
 
   const horizontalShift = (slope - 1.2) * 350;
-  const minWidth = baseWidth * 0.8;
-  const minHeight = baseHeight * 0.8;
-  const imageWidth = Math.max(
-    Math.round((baseWidth * scaleFactor) / (slope * 1.3)),
-    minWidth,
-  );
-  const imageHeight = Math.max(
-    Math.round((baseHeight * scaleFactor) / (slope * 1.3)),
-    minHeight,
-  );
+  const { width: imageWidth, height: imageHeight } = getImageDimensions(slope);
 
   const getSliderTransform = useCallback(
     (scroll) =>
-      `translate(${-scroll + sliderSize / 2 + horizontalShift}px, ${scroll - sliderSize / 2}px)`,
-    [horizontalShift, sliderSize],
+      `translate3d(${-scroll + horizontalShift}px, ${scroll}px, 0)`,
+    [horizontalShift],
   );
 
   const syncSliderTransform = useCallback(
@@ -234,114 +243,34 @@ export default function MainSlider({
     titleRef.current.style.color = isDarkText ? "black" : "white";
   }, []);
 
-  const shiftChunkLayout = useCallback(
-    (fromChunk, direction, basePositions) => {
-      const nextChunk = (fromChunk + direction + chunksNumber) % chunksNumber;
-      let chunkToMove = (nextChunk + 3 * -direction) % chunksNumber;
-      if (chunkToMove < 0) chunkToMove = chunksNumber + chunkToMove;
-
-      let indexesToMove = [];
-      for (let i = chunks[chunkToMove]; i < chunks[chunkToMove + 1]; i += 1) {
-        indexesToMove.push(i);
-      }
-      indexesToMove = indexesToMove.map(
-        (i) => duplicatedProjectsData.length - 1 - i,
-      );
-
-      const newDisplay = Array(duplicatedProjectsData.length).fill(true);
-      indexesToMove.forEach((i) => {
-        newDisplay[i] = false;
-      });
-
-      const newPositions = [...basePositions];
-      const chunkPositions = indexesToMove.map((i) => newPositions[i]);
-      const chunkMin = Math.min(...chunkPositions);
-      const chunkMax = Math.max(...chunkPositions);
-      const chunkSpan = chunkMax - chunkMin;
-      const offsets = chunkPositions.map((pos) => pos - chunkMin);
-
-      const indexesSet = new Set(indexesToMove);
-      const remainingPositions = newPositions.filter(
-        (_, idx) => !indexesSet.has(idx),
-      );
-      const globalMax =
-        remainingPositions.length > 0
-          ? Math.max(...remainingPositions)
-          : chunkMax;
-      const globalMin =
-        remainingPositions.length > 0
-          ? Math.min(...remainingPositions)
-          : chunkMin;
-
-      const newStartPosition =
-        direction === 1
-          ? globalMax + slideSize
-          : globalMin - slideSize - chunkSpan;
-
-      indexesToMove.forEach((i, idx) => {
-        newPositions[i] = newStartPosition + offsets[idx];
-      });
-
-      return {
-        chunk: nextChunk,
-        display: newDisplay,
-        positions: newPositions,
-      };
-    },
-    [chunks, chunksNumber, duplicatedProjectsData.length, slideSize],
-  );
-
-  const onChunkChange = useCallback(
-    (oldChunk, chunk) => {
-      const forwardDistance = (chunk - oldChunk + chunksNumber) % chunksNumber;
-      const backwardDistance = (oldChunk - chunk + chunksNumber) % chunksNumber;
-
-      if (forwardDistance === 0) return;
-
-      const direction = forwardDistance <= backwardDistance ? 1 : -1;
-      const steps = Math.min(forwardDistance, backwardDistance);
-
-      let nextChunk = oldChunk;
-      let nextPositions = slidesPositionsRef.current;
-      let nextDisplay = areSlidesDisplayedRef.current;
-
-      for (let step = 0; step < steps; step += 1) {
-        const layout = shiftChunkLayout(nextChunk, direction, nextPositions);
-        nextChunk = layout.chunk;
-        nextPositions = layout.positions;
-        nextDisplay = layout.display;
-      }
-
-      actualChunkRef.current = nextChunk;
-      slidesPositionsRef.current = nextPositions;
-      areSlidesDisplayedRef.current = nextDisplay;
-
-      startTransition(() => {
-        setAreSlidesDisplayed(nextDisplay);
-        setSlidesPositions(nextPositions);
-      });
-    },
-    [chunksNumber, shiftChunkLayout, startTransition],
-  );
-
-  const syncChunkForScroll = useCallback(
+  const syncVirtualPoolForScroll = useCallback(
     (scroll) => {
-      if (!animationEndedRef.current) return;
-      const newChunk = findActualChunk(scroll);
-      if (newChunk !== actualChunkRef.current) {
-        onChunkChange(actualChunkRef.current, newChunk);
-      }
+      const nextAnchor = getVirtualPoolRange(
+        scroll,
+        SLIDE_STEP,
+        poolSize,
+      ).anchor;
+      if (nextAnchor === virtualPoolAnchorRef.current) return;
+
+      virtualPoolAnchorRef.current = nextAnchor;
+      setVirtualPool((currentPool) =>
+        reconcileVirtualPool({
+          pool: currentPool,
+          scroll,
+          itemStep: SLIDE_STEP,
+        }),
+      );
     },
-    [findActualChunk, onChunkChange],
+    [poolSize],
   );
 
   const setScrollValue = useCallback(
     (scroll) => {
       scrollRef.current = scroll;
       syncSliderTransform(scroll);
-      syncChunkForScroll(scroll);
+      syncVirtualPoolForScroll(scroll);
     },
-    [syncChunkForScroll, syncSliderTransform],
+    [syncSliderTransform, syncVirtualPoolForScroll],
   );
 
   const animateAutoScroll = useCallback(
@@ -539,37 +468,25 @@ export default function MainSlider({
     setHasManualInteraction(true);
   }, []);
 
-  const onImageLoad = useCallback(() => {
+  const onInitialPreviewSettled = useCallback((slotId) => {
     if (animationStartedRef.current) return;
+    if (initialPreviewSettledSlotsRef.current.has(slotId)) return;
 
-    setPercentageLoaded((prev) => {
-      if (animationStartedRef.current) return prev;
+    initialPreviewSettledSlotsRef.current.add(slotId);
+    const settledCount = initialPreviewSettledSlotsRef.current.size;
+    const nextPercentage = Math.min(
+      (settledCount / INITIAL_EAGER_IMAGES) * 100,
+      100,
+    );
 
-      const increment = (1 / duplicatedProjectsData.length) * 100;
-      const nextValue = Math.min(prev + increment, 100);
+    if (settledCount >= INITIAL_EAGER_IMAGES) {
+      setPercentageLoaded(99);
+      scheduleRunAnimation();
+      return;
+    }
 
-      if (nextValue >= 99.99) {
-        scheduleRunAnimation();
-        return 99;
-      }
-
-      return nextValue;
-    });
-  }, [duplicatedProjectsData.length, scheduleRunAnimation]);
-
-  const slideStyles = useMemo(
-    () =>
-      duplicatedProjectsData.map((_, index) => ({
-        top: `${slidesPositions[index]}px`,
-        right: `${slidesPositions[index]}px`,
-        zIndex: slidesPositions[index],
-        transition: areSlidesDisplayed[index]
-          ? "top .2s ease, right .2s ease"
-          : "0s",
-        display: areSlidesDisplayed[index] ? "block" : "none",
-      })),
-    [areSlidesDisplayed, duplicatedProjectsData, slidesPositions],
-  );
+    setPercentageLoaded(nextPercentage);
+  }, [scheduleRunAnimation]);
 
   const easeOutCubic = useCallback((value) => 1 - Math.pow(1 - value, 3), []);
 
@@ -727,7 +644,6 @@ export default function MainSlider({
   );
 
   const resetSliderState = useCallback(() => {
-    actualChunkRef.current = findActualChunk(animationTargetScroll);
     animationStartedRef.current = false;
     animationEndedRef.current = false;
     if (introAnimationFrameRef.current) {
@@ -743,18 +659,22 @@ export default function MainSlider({
     autoScrollTargetSpeedRef.current = autoScrollSpeed;
     setAnimationEnded(false);
     setIsLeaving(false);
-    slidesPositionsRef.current = initialSlidesPositions;
-    areSlidesDisplayedRef.current = initialSlidesDisplayed;
-    setSlidesPositions(initialSlidesPositions);
-    setAreSlidesDisplayed(initialSlidesDisplayed);
+    const nextPool = createVirtualPool({
+      scroll: starterScrollPosition,
+      itemStep: SLIDE_STEP,
+      poolSize,
+    });
+    virtualPoolAnchorRef.current = getVirtualPoolRange(
+      starterScrollPosition,
+      SLIDE_STEP,
+      poolSize,
+    ).anchor;
+    setVirtualPool(nextPool);
     scrollRef.current = starterScrollPosition;
     syncSliderTransform(starterScrollPosition);
   }, [
-    animationTargetScroll,
     autoScrollSpeed,
-    findActualChunk,
-    initialSlidesDisplayed,
-    initialSlidesPositions,
+    poolSize,
     starterScrollPosition,
     syncSliderTransform,
   ]);
@@ -921,6 +841,7 @@ export default function MainSlider({
         <div
           ref={sliderRef}
           className={styles.slider}
+          data-slider-pool-size={virtualPool.length}
           style={{
             transform: getSliderTransform(scrollRef.current),
             "--animation-duration": "0s",
@@ -929,25 +850,37 @@ export default function MainSlider({
               : "cubic-bezier(0.16, 1, 0.3, 1)",
           }}
         >
-          {duplicatedProjectsData.map((slideData, index) => (
-            <Slide
-              key={slideData.id + index}
-              data={slideData}
-              style={slideStyles[index]}
-              updateTitleData={updateTitleData}
-              onHoverStart={
-                isHoverBrakeEnabled ? handleSlideHoverStart : undefined
-              }
-              onHoverEnd={
-                isHoverBrakeEnabled ? handleSlideHoverEnd : undefined
-              }
-              onPreviewLoad={onImageLoad}
-              onPreviewError={onImageLoad}
-              subscribeToFullImageUpgrade={subscribeToFullImageUpgrade}
-              width={imageWidth}
-              height={imageHeight}
-            />
-          ))}
+          {virtualPool.map(({ slotId, logicalIndex }) => {
+            const projectIndex = getProjectIndexForLogicalIndex(
+              logicalIndex,
+              projectsData.length,
+            );
+            const slideData = projectsData[projectIndex];
+
+            if (!slideData) return null;
+
+            return (
+              <Slide
+                key={slotId}
+                data={slideData}
+                logicalIndex={logicalIndex}
+                itemStep={SLIDE_STEP}
+                eagerPreview={initialEagerSlotIds.has(slotId)}
+                initialLoadSlotId={slotId}
+                updateTitleData={updateTitleData}
+                onHoverStart={
+                  isHoverBrakeEnabled ? handleSlideHoverStart : undefined
+                }
+                onHoverEnd={
+                  isHoverBrakeEnabled ? handleSlideHoverEnd : undefined
+                }
+                onInitialPreviewSettled={onInitialPreviewSettled}
+                subscribeToFullImageUpgrade={subscribeToFullImageUpgrade}
+                width={imageWidth}
+                height={imageHeight}
+              />
+            );
+          })}
         </div>
         <div className={styles.cinematicVeil} />
       </div>
