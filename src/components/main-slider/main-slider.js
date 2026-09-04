@@ -22,6 +22,7 @@ import {
   getVirtualPoolSize,
   reconcileVirtualPool,
 } from "./slider-math.mjs";
+import { createFullImageObserverController } from "./full-image-observer.mjs";
 
 const SLIDE_STEP = 120;
 const MINIMUM_POOL_SIZE = 15;
@@ -137,23 +138,15 @@ export default function MainSlider({
   const imageLoadTimeoutRef = useRef(null);
   const handledReopenSignalRef = useRef(0);
   const hasManualInteractionRef = useRef(false);
-  const fullImageUpgradeEnabledRef = useRef(false);
-  const fullImageUpgradeSubscribersRef = useRef(new Set());
+  const sliderProfileRef = useRef(null);
+  const fullImageObserverControllerRef = useRef(null);
+  if (!fullImageObserverControllerRef.current) {
+    fullImageObserverControllerRef.current =
+      createFullImageObserverController();
+  }
 
-  const updateFullImageUpgradeEnabled = useCallback((isEnabled) => {
-    fullImageUpgradeEnabledRef.current = isEnabled;
-    fullImageUpgradeSubscribersRef.current.forEach((subscriber) => {
-      subscriber(isEnabled);
-    });
-  }, []);
-
-  const subscribeToFullImageUpgrade = useCallback((subscriber) => {
-    fullImageUpgradeSubscribersRef.current.add(subscriber);
-    subscriber(fullImageUpgradeEnabledRef.current);
-
-    return () => {
-      fullImageUpgradeSubscribersRef.current.delete(subscriber);
-    };
+  const registerForFullImageUpgrade = useCallback((element, notify) => {
+    return fullImageObserverControllerRef.current.register(element, notify);
   }, []);
 
   useEffect(() => {
@@ -348,9 +341,51 @@ export default function MainSlider({
             1,
           );
     let startTime = null;
+    let previousProfileTimestamp = null;
+
+    if (window.location.search.includes("sliderProfile=1")) {
+      sliderProfileRef.current = {
+        introGaps: [],
+        introLongTasks: [],
+        introStart: null,
+        upgradeActivationDelayMs: null,
+        upgradeFullImageCounts: [],
+        upgradeGaps: [],
+      };
+      window.__sliderProfile = sliderProfileRef.current;
+
+      try {
+        const longTaskObserver = new PerformanceObserver((list) => {
+          list.getEntries().forEach((entry) => {
+            sliderProfileRef.current?.introLongTasks.push({
+              startTime: entry.startTime,
+              duration: entry.duration,
+            });
+          });
+        });
+        longTaskObserver.observe({ type: "longtask", buffered: true });
+      } catch (_) {
+        // Long-task entries are not supported in every browser.
+      }
+    }
 
     const animateIntro = (timestamp) => {
       if (startTime === null) startTime = timestamp;
+
+      if (sliderProfileRef.current) {
+        if (sliderProfileRef.current.introStart === null) {
+          sliderProfileRef.current.introStart = timestamp;
+        }
+        if (
+          previousProfileTimestamp !== null &&
+          timestamp - startTime <= 700
+        ) {
+          sliderProfileRef.current.introGaps.push(
+            timestamp - previousProfileTimestamp,
+          );
+        }
+        previousProfileTimestamp = timestamp;
+      }
 
       const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / animationDurationInitial, 1);
@@ -729,12 +764,44 @@ export default function MainSlider({
 
   useEffect(() => {
     if (!animationEnded || isLeaving || isHidden || !isActive) {
-      updateFullImageUpgradeEnabled(false);
+      fullImageObserverControllerRef.current.deactivate();
       return;
     }
 
     const upgradeTimer = window.setTimeout(() => {
-      updateFullImageUpgradeEnabled(true);
+      fullImageObserverControllerRef.current.activate();
+
+      if (sliderProfileRef.current) {
+        sliderProfileRef.current.upgradeActivationDelayMs =
+          performance.now() - sliderProfileRef.current.introStart;
+        let upgradeStart = null;
+        let previousTimestamp = null;
+
+        const sampleUpgrade = (timestamp) => {
+          if (upgradeStart === null) upgradeStart = timestamp;
+          if (previousTimestamp !== null) {
+            sliderProfileRef.current?.upgradeGaps.push(
+              timestamp - previousTimestamp,
+            );
+          }
+          sliderProfileRef.current?.upgradeFullImageCounts.push(
+            sliderRef.current?.querySelectorAll(
+              'img:not([aria-hidden="true"])',
+            ).length ?? 0,
+          );
+          previousTimestamp = timestamp;
+
+          if (timestamp - upgradeStart < 700) {
+            window.requestAnimationFrame(sampleUpgrade);
+          } else if (sliderRef.current && sliderProfileRef.current) {
+            sliderRef.current.dataset.sliderProfile = JSON.stringify(
+              sliderProfileRef.current,
+            );
+          }
+        };
+
+        window.requestAnimationFrame(sampleUpgrade);
+      }
     }, fullImageUpgradeDelayMs);
 
     return () => window.clearTimeout(upgradeTimer);
@@ -744,7 +811,6 @@ export default function MainSlider({
     isActive,
     isHidden,
     isLeaving,
-    updateFullImageUpgradeEnabled,
   ]);
 
   useEffect(() => {
@@ -792,6 +858,7 @@ export default function MainSlider({
 
   useEffect(() => {
     return () => {
+      fullImageObserverControllerRef.current?.destroy();
       if (animationStartTimeoutRef.current) {
         window.clearTimeout(animationStartTimeoutRef.current);
       }
@@ -875,7 +942,7 @@ export default function MainSlider({
                   isHoverBrakeEnabled ? handleSlideHoverEnd : undefined
                 }
                 onInitialPreviewSettled={onInitialPreviewSettled}
-                subscribeToFullImageUpgrade={subscribeToFullImageUpgrade}
+                registerForFullImageUpgrade={registerForFullImageUpgrade}
                 width={imageWidth}
                 height={imageHeight}
               />

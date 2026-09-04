@@ -2,11 +2,18 @@
 
 import Image from "next/image";
 import styles from "./slide.module.css";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import AnimatedLink from "@/components/animated-link/animated-link";
 import { trackSelectItem } from "@/lib/analytics";
 import { SLIDER_IMAGE_LOADING_CONFIG } from "../image-loading-config.mjs";
 import { getSlideTransform } from "../slider-math.mjs";
+import { FULL_IMAGE_OBSERVER_ACTIONS } from "../full-image-observer.mjs";
 
 export default React.memo(function Slide({
   data,
@@ -18,13 +25,11 @@ export default React.memo(function Slide({
   onHoverStart,
   onHoverEnd,
   onInitialPreviewSettled,
-  subscribeToFullImageUpgrade,
+  registerForFullImageUpgrade,
   width,
   height,
 }) {
   const slideRef = useRef(null);
-  const isNearViewportRef = useRef(false);
-  const fullImageUpgradeEnabledRef = useRef(false);
   const [isFullImageLoaded, setIsFullImageLoaded] = useState(false);
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
   const [shouldLoadFullImage, setShouldLoadFullImage] = useState(false);
@@ -39,50 +44,30 @@ export default React.memo(function Slide({
   useEffect(() => {
     setIsFullImageLoaded(false);
     setIsPreviewVisible(true);
-    setShouldLoadFullImage(
-      fullImageUpgradeEnabledRef.current && isNearViewportRef.current,
-    );
+    setShouldLoadFullImage(false);
   }, [data.image]);
+
+  const handleFullImageUpgrade = useCallback((action) => {
+    if (action === FULL_IMAGE_OBSERVER_ACTIONS.load) {
+      setShouldLoadFullImage(true);
+      return;
+    }
+
+    if (action === FULL_IMAGE_OBSERVER_ACTIONS.reset) {
+      setShouldLoadFullImage(false);
+      setIsFullImageLoaded(false);
+      setIsPreviewVisible(true);
+    }
+  }, []);
 
   useEffect(() => {
     if (!slideRef.current) return;
 
-    if (!("IntersectionObserver" in window)) {
-      isNearViewportRef.current = true;
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        isNearViewportRef.current = entry.isIntersecting;
-
-        if (entry.isIntersecting && fullImageUpgradeEnabledRef.current) {
-          setShouldLoadFullImage(true);
-        }
-      },
-      { rootMargin: "300px" },
+    return registerForFullImageUpgrade(
+      slideRef.current,
+      handleFullImageUpgrade,
     );
-
-    observer.observe(slideRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(
-    () =>
-      subscribeToFullImageUpgrade((isEnabled) => {
-        fullImageUpgradeEnabledRef.current = isEnabled;
-
-        if (isEnabled) {
-          if (isNearViewportRef.current) setShouldLoadFullImage(true);
-          return;
-        }
-
-        setShouldLoadFullImage(false);
-        setIsFullImageLoaded(false);
-        setIsPreviewVisible(true);
-      }),
-    [subscribeToFullImageUpgrade],
-  );
+  }, [data.image, handleFullImageUpgrade, registerForFullImageUpgrade]);
 
   useEffect(() => {
     if (!shouldLoadFullImage || !isFullImageLoaded) return;
