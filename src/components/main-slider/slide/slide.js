@@ -107,6 +107,7 @@ export default React.memo(function Slide({
       data-slider-logical-index={logicalIndex}
     >
       <AnimatedLink
+        className={styles.slideLink}
         href={data.link}
         aria-label={data.previewImageAlt || data.title}
         onClick={() => trackSelectItem(data.title, data.id)}
@@ -120,8 +121,6 @@ export default React.memo(function Slide({
             "--image-width": `${height}px`,
             "--full-image-fade-duration": `${SLIDER_IMAGE_LOADING_CONFIG.fullImageFadeDurationMs}ms`,
           }}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={onHoverEnd}
         >
           <div
             className={styles.imageStack}
@@ -159,6 +158,13 @@ export default React.memo(function Slide({
               />
             )}
           </div>
+          <span
+            className={styles.hitArea}
+            data-slider-hit-area
+            aria-hidden="true"
+            onMouseEnter={handleMouseEnter}
+            onMouseLeave={onHoverEnd}
+          />
         </div>
       </AnimatedLink>
     </div>

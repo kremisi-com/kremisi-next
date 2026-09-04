@@ -240,7 +240,6 @@ export default function Home({ initialOverviewVisible = false }) {
           <SocialProof isActive={isOverviewVisible} />
           <Testimonials />
           <VideosCta />
-
         </div>
       </div>
 

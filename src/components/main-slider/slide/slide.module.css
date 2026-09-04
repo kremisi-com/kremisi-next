@@ -2,19 +2,34 @@
     position: absolute;
     top: 0;
     right: 0;
+    pointer-events: none;
+}
+
+.slideLink {
+    pointer-events: none;
 }
 
 .slide {
     position: relative;
     cursor: pointer;
     overflow: visible;
+    pointer-events: none;
 }
 
 .imageStack {
     position: absolute;
     inset: 0;
+    pointer-events: none;
     box-shadow: 1px -1px 0px rgba(255, 255, 255, 0.35);
     transition: transform 0.4s cubic-bezier(0.79, 0.17, 0.28, 0.89);
+    will-change: transform;
+}
+
+.hitArea {
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    pointer-events: auto;
 }
 
 .slideImage {

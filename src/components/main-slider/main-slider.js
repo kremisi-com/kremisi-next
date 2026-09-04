@@ -389,9 +389,11 @@ export default function MainSlider({
 
       const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / animationDurationInitial, 1);
-      const easeOutProgress = 1 - Math.pow(1 - progress, 3);
+      // A sine curve removes the abrupt early acceleration of the old
+      // ease-out curve and eases gently into the matched continuous speed.
+      const easedProgress = (1 - Math.cos(Math.PI * progress)) / 2;
       const blendedProgress =
-        easeOutProgress * (1 - continuousSpeedBlend) +
+        easedProgress * (1 - continuousSpeedBlend) +
         progress * continuousSpeedBlend;
 
       setScrollValue(startScroll + scrollDistance * blendedProgress);
@@ -407,13 +409,24 @@ export default function MainSlider({
       animationStartedRef.current = false;
       animationEndedRef.current = true;
       setAnimationEnded(true);
+
+      // Start the continuous motion in the same frame that concludes the
+      // intro. Waiting for the state-driven effect below leaves a visible
+      // pause while React commits the animation-ended state.
+      if (!prefersReducedMotion && !autoScrollAnimationFrameRef.current) {
+        autoScrollAnimationFrameRef.current = window.requestAnimationFrame(
+          animateAutoScroll,
+        );
+      }
     };
 
     introAnimationFrameRef.current = window.requestAnimationFrame(animateIntro);
   }, [
     animationDurationInitial,
     animationTargetScroll,
+    animateAutoScroll,
     autoScrollSpeed,
+    prefersReducedMotion,
     setScrollValue,
   ]);
 
