@@ -93,6 +93,7 @@ export default function MainSlider({
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [hasManualInteraction, setHasManualInteraction] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [isEntering, setIsEntering] = useState(true);
 
   const scrollRef = useRef(starterScrollPosition);
   const sliderRef = useRef(null);
@@ -127,6 +128,7 @@ export default function MainSlider({
   });
   const animationStartedRef = useRef(false);
   const animationEndedRef = useRef(false);
+  const isEnteringRef = useRef(true);
   const animationStartTimeoutRef = useRef(null);
   const introAnimationFrameRef = useRef(null);
   const leaveAnimationFrameRef = useRef(null);
@@ -215,6 +217,8 @@ export default function MainSlider({
 
   const horizontalShift = (slope - 1.2) * 350;
   const { width: imageWidth, height: imageHeight } = getImageDimensions(slope);
+  const entranceOffset =
+    Math.floor(poolSize / 2) * SLIDE_STEP + imageWidth + SLIDE_STEP;
 
   const getSliderTransform = useCallback(
     (scroll) =>
@@ -321,12 +325,18 @@ export default function MainSlider({
       imageLoadTimeoutRef.current = null;
     }
 
+    setPercentageLoaded(100);
+
+    if (isEnteringRef.current) {
+      isEnteringRef.current = false;
+      setIsEntering(false);
+    }
+
     if (introAnimationFrameRef.current) {
       window.cancelAnimationFrame(introAnimationFrameRef.current);
       introAnimationFrameRef.current = null;
     }
 
-    setPercentageLoaded(100);
     animationStartedRef.current = true;
     setIsLeaving(false);
 
@@ -707,6 +717,8 @@ export default function MainSlider({
     autoScrollTargetSpeedRef.current = autoScrollSpeed;
     setAnimationEnded(false);
     setIsLeaving(false);
+    isEnteringRef.current = true;
+    setIsEntering(true);
     const nextPool = createVirtualPool({
       scroll: starterScrollPosition,
       itemStep: SLIDE_STEP,
@@ -916,7 +928,14 @@ export default function MainSlider({
     >
       {percentageLoaded < 99.9 && <Loader percentage={percentageLoaded} />}
       <div
-        className={`${styles.sliderScene} ${isLeaving ? styles.sliderSceneLeaving : ""} ${isHidden ? styles.sliderSceneHidden : ""}`}
+        className={`${styles.sliderScene} ${isEntering ? styles.sliderSceneEntering : ""} ${isLeaving ? styles.sliderSceneLeaving : ""} ${isHidden ? styles.sliderSceneHidden : ""}`}
+        style={{
+          "--scene-transition-duration": isEntering
+            ? "0ms"
+            : `${animationDurationInitial}ms`,
+          "--scene-entrance-x": `${entranceOffset}px`,
+          "--scene-entrance-y": `${-entranceOffset}px`,
+        }}
       >
         <div
           ref={sliderRef}
