@@ -1,11 +1,11 @@
 "use client";
-import React from 'react';
+import React, { memo } from 'react';
 import styles from './videos-cta.module.css';
 import GitButton from '../git-button/git-button';
 import { useTranslations } from "next-intl";
 import { Link as LocalizedLink } from "@/i18n/navigation";
 
-export default function VideosCta() {
+function VideosCta() {
     const t = useTranslations("cta");
     const videos = [
         "/projects/allavelli/carousel/Opening.mp4",
@@ -47,3 +47,5 @@ export default function VideosCta() {
         </section>
     );
 }
+
+export default memo(VideosCta);

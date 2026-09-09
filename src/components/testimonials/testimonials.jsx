@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from 'react';
+import React, { memo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
@@ -56,7 +56,7 @@ const TESTIMONIALS = [
     }
 ];
 
-export default function Testimonials() {
+function Testimonials() {
     const t = useTranslations("testimonials");
     const testimonials = TESTIMONIALS.map((item, index) => ({
         ...item,
@@ -186,3 +186,5 @@ export default function Testimonials() {
         </section>
     );
 }
+
+export default memo(Testimonials);

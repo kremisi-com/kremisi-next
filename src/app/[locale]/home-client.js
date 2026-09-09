@@ -14,7 +14,18 @@ import {
   getOrganizedProjects,
   getSortedProjects,
 } from "@/lib/projects";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  memo,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
+
+const OVERVIEW_REVEAL_ADVANCE_MS = 500;
+const OVERVIEW_FADE_DURATION_MS = 1400;
+const OVERVIEW_TEXT_REVEAL_ADVANCE_MS = 500;
 
 function syncHomeViewInUrl(isOverviewVisible) {
   if (typeof window === "undefined") return;
@@ -29,10 +40,25 @@ function syncHomeViewInUrl(isOverviewVisible) {
   window.history.replaceState({}, "", nextUrl);
 }
 
+const OverviewContent = memo(function OverviewContent({ isOverviewVisible }) {
+  return (
+    <div
+      style={{
+        opacity: isOverviewVisible ? 1 : 0,
+        transform: isOverviewVisible ? "translateY(0)" : "translateY(40px)",
+        transition:
+          "opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), transform 1.4s cubic-bezier(0.22, 1, 0.36, 1)",
+      }}
+    >
+      <Services />
+      <SocialProof isActive={isOverviewVisible} />
+      <Testimonials />
+      <VideosCta />
+    </div>
+  );
+});
+
 export default function Home({ initialOverviewVisible = false }) {
-  const overviewRevealAdvanceMs = 500;
-  const overviewFadeDurationMs = 1400;
-  const overviewTextRevealAdvanceMs = 500;
   const projectsDataArray = useMemo(() => getProjectsArray(), []);
   const organizedProjects = useMemo(
     () => getOrganizedProjects(projectsDataArray),
@@ -180,13 +206,13 @@ export default function Home({ initialOverviewVisible = false }) {
 
     const overviewRevealDelay = Math.max(
       0,
-      Math.round(duration * 0.62) - overviewRevealAdvanceMs,
+      Math.round(duration * 0.62) - OVERVIEW_REVEAL_ADVANCE_MS,
     );
     const overviewTextRevealDelay = Math.max(
       0,
       overviewRevealDelay +
-        overviewFadeDurationMs -
-        overviewTextRevealAdvanceMs,
+        OVERVIEW_FADE_DURATION_MS -
+        OVERVIEW_TEXT_REVEAL_ADVANCE_MS,
     );
 
     sequenceTimeoutsRef.current.forEach((timeoutId) =>
@@ -203,11 +229,7 @@ export default function Home({ initialOverviewVisible = false }) {
 
     sequenceTimeoutsRef.current.push(startOverviewFade);
     sequenceTimeoutsRef.current.push(startOverviewTextAnimation);
-  }, [
-    overviewFadeDurationMs,
-    overviewRevealAdvanceMs,
-    overviewTextRevealAdvanceMs,
-  ]);
+  }, []);
 
   return (
     <div
@@ -228,19 +250,7 @@ export default function Home({ initialOverviewVisible = false }) {
           textShouldAnimate={shouldAnimateOverviewText}
           onFadeInComplete={handleOverviewFadeComplete}
         />
-        <div
-          style={{
-            opacity: isOverviewVisible ? 1 : 0,
-            transform: isOverviewVisible ? "translateY(0)" : "translateY(40px)",
-            transition:
-              "opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), transform 1.4s cubic-bezier(0.22, 1, 0.36, 1)",
-          }}
-        >
-          <Services />
-          <SocialProof isActive={isOverviewVisible} />
-          <Testimonials />
-          <VideosCta />
-        </div>
+        <OverviewContent isOverviewVisible={isOverviewVisible} />
       </div>
 
       <div className={styles.sliderWrapper}>

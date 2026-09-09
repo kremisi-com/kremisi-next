@@ -1,10 +1,10 @@
 "use client";
-import { useState, useRef, useEffect } from 'react';
+import { memo, useState, useRef, useEffect } from 'react';
 import { animate } from 'framer-motion';
 import { useTranslations } from "next-intl";
 import styles from './services.module.css';
 
-export default function Services({ titleAs = "h2" }) {
+function Services({ titleAs = "h2" }) {
     const t = useTranslations("services");
     const Title = titleAs;
     const [activeIndex, setActiveIndex] = useState(null);
@@ -202,3 +202,5 @@ export default function Services({ titleAs = "h2" }) {
         </section>
     );
 }
+
+export default memo(Services);

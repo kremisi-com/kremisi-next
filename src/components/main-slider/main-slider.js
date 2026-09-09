@@ -48,7 +48,7 @@ function getImageDimensions(slope) {
   };
 }
 
-export default function MainSlider({
+function MainSlider({
   projectsData,
   onDiscoverMoreClick,
   reopenSignal = 0,
@@ -1010,3 +1010,5 @@ export default function MainSlider({
     </div>
   );
 }
+
+export default React.memo(MainSlider);

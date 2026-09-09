@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from 'react';
+import { memo, useEffect, useRef, useState } from 'react';
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import styles from './social-proof.module.css';
@@ -142,7 +142,7 @@ const LogoCard = ({ className, initialIndex, shouldAnimate }) => {
 };
 
 
-export default function SocialProof({ isActive }) {
+function SocialProof({ isActive }) {
     const t = useTranslations("socialProof");
     const prefersReducedMotion = usePrefersReducedMotion();
     const shouldAnimate = isActive && !prefersReducedMotion;
@@ -198,3 +198,5 @@ export default function SocialProof({ isActive }) {
         </section>
     );
 }
+
+export default memo(SocialProof);
