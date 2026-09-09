@@ -34,6 +34,7 @@ const INITIAL_EAGER_IMAGES = 5;
 const BASE_WIDTH = 450;
 const BASE_HEIGHT = 275;
 const SCALE_FACTOR = 1;
+const HIGH_SPEED_VIRTUAL_POOL_SYNC_INTERVAL_MS = 60;
 
 function getImageDimensions(slope) {
   return {
@@ -111,6 +112,7 @@ function MainSlider({
       MINIMUM_POOL_SIZE,
     ).anchor,
   );
+  const lastVirtualPoolSyncTimestampRef = useRef(null);
   const initialPreviewSettledSlotsRef = useRef(new Set());
   const initialEagerSlotIds = useMemo(() => {
     const centerSlot = Math.floor(poolSize / 2);
@@ -248,7 +250,7 @@ function MainSlider({
   }, []);
 
   const syncVirtualPoolForScroll = useCallback(
-    (scroll) => {
+    (scroll, { throttleVirtualPool = false, forceVirtualPoolSync = false, timestamp = null } = {}) => {
       const nextAnchor = getVirtualPoolRange(
         scroll,
         SLIDE_STEP,
@@ -256,7 +258,19 @@ function MainSlider({
       ).anchor;
       if (nextAnchor === virtualPoolAnchorRef.current) return;
 
+      if (
+        throttleVirtualPool &&
+        !forceVirtualPoolSync &&
+        lastVirtualPoolSyncTimestampRef.current !== null &&
+        timestamp !== null &&
+        timestamp - lastVirtualPoolSyncTimestampRef.current <
+          HIGH_SPEED_VIRTUAL_POOL_SYNC_INTERVAL_MS
+      ) {
+        return;
+      }
+
       virtualPoolAnchorRef.current = nextAnchor;
+      lastVirtualPoolSyncTimestampRef.current = timestamp;
       setVirtualPool((currentPool) =>
         reconcileVirtualPool({
           pool: currentPool,
@@ -269,10 +283,10 @@ function MainSlider({
   );
 
   const setScrollValue = useCallback(
-    (scroll) => {
+    (scroll, options) => {
       scrollRef.current = scroll;
       syncSliderTransform(scroll);
-      syncVirtualPoolForScroll(scroll);
+      syncVirtualPoolForScroll(scroll, options);
     },
     [syncSliderTransform, syncVirtualPoolForScroll],
   );
@@ -348,6 +362,7 @@ function MainSlider({
     setIsLeaving(false);
 
     const startScroll = scrollRef.current;
+    lastVirtualPoolSyncTimestampRef.current = null;
     const scrollDistance = animationTargetScroll - startScroll;
     const durationSeconds = animationDurationInitial / 1000;
     const continuousSpeedBlend =
@@ -414,13 +429,21 @@ function MainSlider({
         easedProgress * (1 - continuousSpeedBlend) +
         progress * continuousSpeedBlend;
 
-      setScrollValue(startScroll + scrollDistance * blendedProgress);
+      setScrollValue(startScroll + scrollDistance * blendedProgress, {
+        throttleVirtualPool: true,
+        timestamp,
+      });
 
       if (progress < 1) {
         introAnimationFrameRef.current =
           window.requestAnimationFrame(animateIntro);
         return;
       }
+
+      setScrollValue(scrollRef.current, {
+        forceVirtualPoolSync: true,
+        timestamp,
+      });
 
       autoScrollLastTimestampRef.current = timestamp;
       introAnimationFrameRef.current = null;
@@ -578,6 +601,7 @@ function MainSlider({
     }
 
     const startScroll = scrollRef.current;
+    lastVirtualPoolSyncTimestampRef.current = null;
     setIsLeaving(true);
     animationStartedRef.current = true;
 
@@ -589,13 +613,21 @@ function MainSlider({
       const nextScroll =
         startScroll + (leaveTargetScroll - startScroll) * easedProgress;
 
-      setScrollValue(nextScroll);
+      setScrollValue(nextScroll, {
+        throttleVirtualPool: true,
+        timestamp,
+      });
 
       if (progress < 1) {
         leaveAnimationFrameRef.current =
           window.requestAnimationFrame(animateLeave);
         return;
       }
+
+      setScrollValue(scrollRef.current, {
+        forceVirtualPoolSync: true,
+        timestamp,
+      });
 
       animationStartedRef.current = false;
       leaveAnimationFrameRef.current = null;
@@ -741,6 +773,7 @@ function MainSlider({
       autoScrollAnimationFrameRef.current = null;
     }
     autoScrollLastTimestampRef.current = null;
+    lastVirtualPoolSyncTimestampRef.current = null;
     autoScrollCurrentSpeedRef.current = autoScrollSpeed;
     autoScrollTargetSpeedRef.current = autoScrollSpeed;
     setAnimationEnded(false);
