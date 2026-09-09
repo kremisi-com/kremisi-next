@@ -38,7 +38,6 @@
     position: absolute;
     inset: 0;
     object-fit: cover;
-    transition: opacity var(--full-image-fade-duration) ease;
 }
 
 .previewImage {
@@ -48,6 +47,7 @@
 .fullImage {
     z-index: 1;
     opacity: 0;
+    transition: opacity var(--full-image-fade-duration) ease;
 }
 
 .fullImageLoaded {

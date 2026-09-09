@@ -14,7 +14,10 @@ import Loader from "@/components/loader/loader";
 import { trackViewItemList } from "@/lib/analytics";
 import { ArrowRight } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { SLIDER_IMAGE_LOADING_CONFIG } from "./image-loading-config.mjs";
+import {
+  ENABLE_COMPRESSION,
+  SLIDER_IMAGE_LOADING_CONFIG,
+} from "./image-loading-config.mjs";
 import {
   createVirtualPool,
   getProjectIndexForLogicalIndex,
@@ -54,8 +57,8 @@ export default function MainSlider({
 }) {
   const t = useTranslations("cta");
 
-  const animationDurationInitial = 2000;
-  const animationStartDelayMs = 500;
+  const animationDurationInitial = 1150;
+  const animationStartDelayMs = 1000;
   const fullImageUpgradeDelayMs = 500;
   const leaveAnimationDuration = 3200;
   const animationTargetScroll = 0;
@@ -130,6 +133,7 @@ export default function MainSlider({
   const animationEndedRef = useRef(false);
   const isEnteringRef = useRef(true);
   const animationStartTimeoutRef = useRef(null);
+  const loaderDismissAnimationFrameRef = useRef(null);
   const introAnimationFrameRef = useRef(null);
   const leaveAnimationFrameRef = useRef(null);
   const autoScrollAnimationFrameRef = useRef(null);
@@ -142,13 +146,16 @@ export default function MainSlider({
   const hasManualInteractionRef = useRef(false);
   const sliderProfileRef = useRef(null);
   const fullImageObserverControllerRef = useRef(null);
-  if (!fullImageObserverControllerRef.current) {
+  if (
+    ENABLE_COMPRESSION === "start" &&
+    !fullImageObserverControllerRef.current
+  ) {
     fullImageObserverControllerRef.current =
       createFullImageObserverController();
   }
 
   const registerForFullImageUpgrade = useCallback((element, notify) => {
-    return fullImageObserverControllerRef.current.register(element, notify);
+    return fullImageObserverControllerRef.current?.register(element, notify);
   }, []);
 
   useEffect(() => {
@@ -399,9 +406,10 @@ export default function MainSlider({
 
       const elapsed = timestamp - startTime;
       const progress = Math.min(elapsed / animationDurationInitial, 1);
-      // A sine curve removes the abrupt early acceleration of the old
-      // ease-out curve and eases gently into the matched continuous speed.
-      const easedProgress = (1 - Math.cos(Math.PI * progress)) / 2;
+      // The slider has to feel as if it is arriving from far away: most of
+      // the travel happens immediately, then it settles into the continuous
+      // motion without a visible stop.
+      const easedProgress = 1 - Math.pow(1 - progress, 6);
       const blendedProgress =
         easedProgress * (1 - continuousSpeedBlend) +
         progress * continuousSpeedBlend;
@@ -453,12 +461,29 @@ export default function MainSlider({
     }, animationStartDelayMs);
   }, [animationStartDelayMs, isActive, runAnimation]);
 
+  const dismissLoaderAndScheduleAnimation = useCallback(() => {
+    if (animationStartedRef.current || loaderDismissAnimationFrameRef.current) {
+      return;
+    }
+
+    // Remove the loading overlay first. Two frames ensure React has committed
+    // the new state and the browser has painted the slider before its pause
+    // begins, rather than counting while the loading bar is still visible.
+    setPercentageLoaded(100);
+    loaderDismissAnimationFrameRef.current = window.requestAnimationFrame(() => {
+      loaderDismissAnimationFrameRef.current = window.requestAnimationFrame(() => {
+        loaderDismissAnimationFrameRef.current = null;
+        scheduleRunAnimation();
+      });
+    });
+  }, [scheduleRunAnimation]);
+
   useEffect(() => {
     if (animationEnded || !isActive) return;
 
     imageLoadTimeoutRef.current = window.setTimeout(() => {
       imageLoadTimeoutRef.current = null;
-      scheduleRunAnimation();
+      dismissLoaderAndScheduleAnimation();
     }, SLIDER_IMAGE_LOADING_CONFIG.initialPreviewLoadTimeoutMs);
 
     return () => {
@@ -467,7 +492,7 @@ export default function MainSlider({
         imageLoadTimeoutRef.current = null;
       }
     };
-  }, [animationEnded, isActive, scheduleRunAnimation]);
+  }, [animationEnded, dismissLoaderAndScheduleAnimation, isActive]);
 
   const applyScrollShift = useCallback(
     (shift) => {
@@ -538,13 +563,12 @@ export default function MainSlider({
     );
 
     if (settledCount >= INITIAL_EAGER_IMAGES) {
-      setPercentageLoaded(99);
-      scheduleRunAnimation();
+      dismissLoaderAndScheduleAnimation();
       return;
     }
 
     setPercentageLoaded(nextPercentage);
-  }, [scheduleRunAnimation]);
+  }, [dismissLoaderAndScheduleAnimation]);
 
   const easeOutCubic = useCallback((value) => 1 - Math.pow(1 - value, 3), []);
 
@@ -708,6 +732,10 @@ export default function MainSlider({
       window.cancelAnimationFrame(introAnimationFrameRef.current);
       introAnimationFrameRef.current = null;
     }
+    if (loaderDismissAnimationFrameRef.current) {
+      window.cancelAnimationFrame(loaderDismissAnimationFrameRef.current);
+      loaderDismissAnimationFrameRef.current = null;
+    }
     if (autoScrollAnimationFrameRef.current) {
       window.cancelAnimationFrame(autoScrollAnimationFrameRef.current);
       autoScrollAnimationFrameRef.current = null;
@@ -788,45 +816,15 @@ export default function MainSlider({
   ]);
 
   useEffect(() => {
+    if (ENABLE_COMPRESSION !== "start") return;
+
     if (!animationEnded || isLeaving || isHidden || !isActive) {
-      fullImageObserverControllerRef.current.deactivate();
+      fullImageObserverControllerRef.current?.deactivate();
       return;
     }
 
     const upgradeTimer = window.setTimeout(() => {
-      fullImageObserverControllerRef.current.activate();
-
-      if (sliderProfileRef.current) {
-        sliderProfileRef.current.upgradeActivationDelayMs =
-          performance.now() - sliderProfileRef.current.introStart;
-        let upgradeStart = null;
-        let previousTimestamp = null;
-
-        const sampleUpgrade = (timestamp) => {
-          if (upgradeStart === null) upgradeStart = timestamp;
-          if (previousTimestamp !== null) {
-            sliderProfileRef.current?.upgradeGaps.push(
-              timestamp - previousTimestamp,
-            );
-          }
-          sliderProfileRef.current?.upgradeFullImageCounts.push(
-            sliderRef.current?.querySelectorAll(
-              'img:not([aria-hidden="true"])',
-            ).length ?? 0,
-          );
-          previousTimestamp = timestamp;
-
-          if (timestamp - upgradeStart < 700) {
-            window.requestAnimationFrame(sampleUpgrade);
-          } else if (sliderRef.current && sliderProfileRef.current) {
-            sliderRef.current.dataset.sliderProfile = JSON.stringify(
-              sliderProfileRef.current,
-            );
-          }
-        };
-
-        window.requestAnimationFrame(sampleUpgrade);
-      }
+      fullImageObserverControllerRef.current?.activate();
     }, fullImageUpgradeDelayMs);
 
     return () => window.clearTimeout(upgradeTimer);
@@ -886,6 +884,9 @@ export default function MainSlider({
       fullImageObserverControllerRef.current?.destroy();
       if (animationStartTimeoutRef.current) {
         window.clearTimeout(animationStartTimeoutRef.current);
+      }
+      if (loaderDismissAnimationFrameRef.current) {
+        window.cancelAnimationFrame(loaderDismissAnimationFrameRef.current);
       }
       if (introAnimationFrameRef.current) {
         window.cancelAnimationFrame(introAnimationFrameRef.current);

@@ -2,16 +2,13 @@
 
 import Image from "next/image";
 import styles from "./slide.module.css";
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import AnimatedLink from "@/components/animated-link/animated-link";
 import { trackSelectItem } from "@/lib/analytics";
-import { SLIDER_IMAGE_LOADING_CONFIG } from "../image-loading-config.mjs";
+import {
+  ENABLE_COMPRESSION,
+  SLIDER_IMAGE_LOADING_CONFIG,
+} from "../image-loading-config.mjs";
 import { getSlideTransform } from "../slider-math.mjs";
 import { FULL_IMAGE_OBSERVER_ACTIONS } from "../full-image-observer.mjs";
 
@@ -29,6 +26,7 @@ export default React.memo(function Slide({
   width,
   height,
 }) {
+  const compressionEnabled = ENABLE_COMPRESSION === "start";
   const slideRef = useRef(null);
   const [isFullImageLoaded, setIsFullImageLoaded] = useState(false);
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
@@ -42,10 +40,11 @@ export default React.memo(function Slide({
   );
 
   useEffect(() => {
+    if (!compressionEnabled) return;
     setIsFullImageLoaded(false);
     setIsPreviewVisible(true);
     setShouldLoadFullImage(false);
-  }, [data.image]);
+  }, [compressionEnabled, data.image]);
 
   const handleFullImageUpgrade = useCallback((action) => {
     if (action === FULL_IMAGE_OBSERVER_ACTIONS.load) {
@@ -61,27 +60,34 @@ export default React.memo(function Slide({
   }, []);
 
   useEffect(() => {
-    if (!slideRef.current) return;
+    if (!compressionEnabled || !slideRef.current) return;
 
     return registerForFullImageUpgrade(
       slideRef.current,
       handleFullImageUpgrade,
     );
-  }, [data.image, handleFullImageUpgrade, registerForFullImageUpgrade]);
+  }, [compressionEnabled, data.image, handleFullImageUpgrade, registerForFullImageUpgrade]);
 
   useEffect(() => {
-    if (!shouldLoadFullImage || !isFullImageLoaded) return;
+    if (!compressionEnabled || !shouldLoadFullImage || !isFullImageLoaded) {
+      return;
+    }
 
     const previewRemovalTimeout = window.setTimeout(() => {
       setIsPreviewVisible(false);
     }, SLIDER_IMAGE_LOADING_CONFIG.fullImageFadeDurationMs + 100);
 
     return () => window.clearTimeout(previewRemovalTimeout);
-  }, [isFullImageLoaded, shouldLoadFullImage]);
+  }, [compressionEnabled, isFullImageLoaded, shouldLoadFullImage]);
 
   function handleMouseEnter() {
     updateTitleData(data.title, data.blackText);
     onHoverStart?.();
+  }
+
+  function handlePreviewSettled() {
+    if (!eagerPreview) return;
+    onInitialPreviewSettled(initialLoadSlotId);
   }
 
   function handleFullImageTransitionEnd(event) {
@@ -93,11 +99,6 @@ export default React.memo(function Slide({
     ) {
       setIsPreviewVisible(false);
     }
-  }
-
-  function handlePreviewSettled() {
-    if (!eagerPreview) return;
-    onInitialPreviewSettled(initialLoadSlotId);
   }
 
   return (
@@ -126,35 +127,52 @@ export default React.memo(function Slide({
             className={styles.imageStack}
             style={{ backgroundColor: data.color }}
           >
-            {(!shouldLoadFullImage || isPreviewVisible) && (
+            {compressionEnabled ? (
+              <>
+                {(!shouldLoadFullImage || isPreviewVisible) && (
+                  <Image
+                    className={`${styles.slideImage} ${styles.previewImage}`}
+                    src={data.image}
+                    width={width}
+                    height={height}
+                    sizes={SLIDER_IMAGE_LOADING_CONFIG.previewSizes}
+                    quality={SLIDER_IMAGE_LOADING_CONFIG.previewQuality}
+                    alt=""
+                    aria-hidden="true"
+                    loading={eagerPreview ? "eager" : "lazy"}
+                    onLoad={handlePreviewSettled}
+                    onError={handlePreviewSettled}
+                  />
+                )}
+                {shouldLoadFullImage && (
+                  <Image
+                    className={`${styles.slideImage} ${styles.fullImage} ${
+                      isFullImageLoaded ? styles.fullImageLoaded : ""
+                    }`}
+                    src={data.image}
+                    width={width}
+                    height={height}
+                    sizes={SLIDER_IMAGE_LOADING_CONFIG.fullImageSizes}
+                    alt=""
+                    aria-hidden="true"
+                    loading="eager"
+                    onLoad={() => setIsFullImageLoaded(true)}
+                    onTransitionEnd={handleFullImageTransitionEnd}
+                  />
+                )}
+              </>
+            ) : (
               <Image
-                className={`${styles.slideImage} ${styles.previewImage}`}
+                className={styles.slideImage}
                 src={data.image}
                 width={width}
                 height={height}
-                sizes={SLIDER_IMAGE_LOADING_CONFIG.previewSizes}
-                quality={SLIDER_IMAGE_LOADING_CONFIG.previewQuality}
                 alt=""
                 aria-hidden="true"
+                unoptimized
                 loading={eagerPreview ? "eager" : "lazy"}
                 onLoad={handlePreviewSettled}
                 onError={handlePreviewSettled}
-              />
-            )}
-            {shouldLoadFullImage && (
-              <Image
-                className={`${styles.slideImage} ${styles.fullImage} ${
-                  isFullImageLoaded ? styles.fullImageLoaded : ""
-                }`}
-                src={data.image}
-                width={width}
-                height={height}
-                sizes={SLIDER_IMAGE_LOADING_CONFIG.fullImageSizes}
-                alt=""
-                aria-hidden="true"
-                loading="eager"
-                onLoad={() => setIsFullImageLoaded(true)}
-                onTransitionEnd={handleFullImageTransitionEnd}
               />
             )}
           </div>

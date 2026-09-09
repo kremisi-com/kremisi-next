@@ -183,7 +183,8 @@ export default async function ProjectPage({ params }) {
                             src={`/projects/${projectData.assetFolder}/${projectData.headerImage}`}
                             alt={projectData.headerImageAlt}
                             fill
-                            priority
+                            loading="eager"
+                            sizes="100vw"
                         />
                         <h1
                             dangerouslySetInnerHTML={{ __html: projectData.slogan }}
