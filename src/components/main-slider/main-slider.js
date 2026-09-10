@@ -6,7 +6,6 @@ import React, {
   useEffect,
   useLayoutEffect,
   useCallback,
-  useMemo,
 } from "react";
 import styles from "./main-slider.module.css";
 import Slide from "./slide/slide";
@@ -19,22 +18,24 @@ import {
   SLIDER_IMAGE_LOADING_CONFIG,
 } from "./image-loading-config.mjs";
 import {
-  createVirtualPool,
+  createSliderRangePool,
+  getVisibleSliderRange,
+  isSliderRangeCovered,
   getProjectIndexForLogicalIndex,
   getVirtualPoolRange,
   getVirtualPoolSize,
-  reconcileVirtualPool,
 } from "./slider-math.mjs";
 import { createFullImageObserverController } from "./full-image-observer.mjs";
 
 const SLIDE_STEP = 120;
+// Preserve the original scene entrance distance independently of the new
+// viewport window. Changing these would change the visible entrance effect.
 const MINIMUM_POOL_SIZE = 15;
 const MAXIMUM_POOL_SIZE = 25;
-const INITIAL_EAGER_IMAGES = 5;
+const LOOP_OVERSCAN_ITEMS = 3;
 const BASE_WIDTH = 450;
 const BASE_HEIGHT = 275;
 const SCALE_FACTOR = 1;
-const HIGH_SPEED_VIRTUAL_POOL_SYNC_INTERVAL_MS = 60;
 
 function getImageDimensions(slope) {
   return {
@@ -77,21 +78,21 @@ function MainSlider({
   );
   const starterScrollPosition = animationTargetScroll - introTravelDistance;
   const leaveTargetScroll = loopSpan * 4.8;
-  const initialVirtualPool = useMemo(
-    () =>
-      createVirtualPool({
-        scroll: starterScrollPosition,
-        itemStep: SLIDE_STEP,
-        poolSize: MINIMUM_POOL_SIZE,
-      }),
-    [starterScrollPosition],
-  );
 
   const [animationEnded, setAnimationEnded] = useState(false);
   const [isLeaving, setIsLeaving] = useState(false);
   const [isHidden, setIsHidden] = useState(false);
   const [percentageLoaded, setPercentageLoaded] = useState(0);
-  const [virtualPool, setVirtualPool] = useState(initialVirtualPool);
+  const [viewport, setViewport] = useState({ width: 1024, height: 768, dpr: 1 });
+  const [virtualPool, setVirtualPool] = useState(() =>
+    createSliderRangePool({
+      start: Math.round(starterScrollPosition / SLIDE_STEP) - 7,
+      end: 7,
+    }),
+  );
+  const virtualPoolRef = useRef(virtualPool);
+  const introPoolActiveRef = useRef(true);
+  const initialLoadingDoneRef = useRef(false);
   const [poolSize, setPoolSize] = useState(MINIMUM_POOL_SIZE);
   const [slope, setSlope] = useState(1);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -105,26 +106,8 @@ function MainSlider({
   const titlePointerRef = useRef({ x: -9999, y: -9999 });
   const titlePointerAnimationFrameRef = useRef(null);
   const titleStateRef = useRef({ text: "", darkText: false });
-  const virtualPoolAnchorRef = useRef(
-    getVirtualPoolRange(
-      starterScrollPosition,
-      SLIDE_STEP,
-      MINIMUM_POOL_SIZE,
-    ).anchor,
-  );
-  const lastVirtualPoolSyncTimestampRef = useRef(null);
   const initialPreviewSettledSlotsRef = useRef(new Set());
-  const initialEagerSlotIds = useMemo(() => {
-    const centerSlot = Math.floor(poolSize / 2);
-    const eagerRadius = Math.floor(INITIAL_EAGER_IMAGES / 2);
-
-    return new Set(
-      Array.from(
-        { length: INITIAL_EAGER_IMAGES },
-        (_, index) => centerSlot - eagerRadius + index,
-      ),
-    );
-  }, [poolSize]);
+  const initialEagerSlotIdsRef = useRef(new Set(virtualPool.map(({ slotId }) => slotId)));
   const tickingRef = useRef(false);
   const touchStateRef = useRef({
     active: false,
@@ -147,6 +130,7 @@ function MainSlider({
   const handledReopenSignalRef = useRef(0);
   const hasManualInteractionRef = useRef(false);
   const sliderProfileRef = useRef(null);
+  const profileObserverRef = useRef(null);
   const fullImageObserverControllerRef = useRef(null);
   if (
     ENABLE_COMPRESSION === "start" &&
@@ -201,6 +185,8 @@ function MainSlider({
         maximumItems: MAXIMUM_POOL_SIZE,
       });
 
+      setViewport({ width: window.innerWidth, height: window.innerHeight,
+        dpr: window.devicePixelRatio || 1 });
       setSlope(nextSlope);
       setPoolSize(nextPoolSize);
     }
@@ -209,20 +195,6 @@ function MainSlider({
     window.addEventListener("resize", updateSlope);
     return () => window.removeEventListener("resize", updateSlope);
   }, []);
-
-  useEffect(() => {
-    const nextPool = createVirtualPool({
-      scroll: scrollRef.current,
-      itemStep: SLIDE_STEP,
-      poolSize,
-    });
-    virtualPoolAnchorRef.current = getVirtualPoolRange(
-      scrollRef.current,
-      SLIDE_STEP,
-      poolSize,
-    ).anchor;
-    setVirtualPool(nextPool);
-  }, [poolSize]);
 
   const horizontalShift = (slope - 1.2) * 350;
   const { width: imageWidth, height: imageHeight } = getImageDimensions(slope);
@@ -249,44 +221,49 @@ function MainSlider({
     titleRef.current.style.color = isDarkText ? "black" : "white";
   }, []);
 
-  const syncVirtualPoolForScroll = useCallback(
-    (scroll, { throttleVirtualPool = false, forceVirtualPoolSync = false, timestamp = null } = {}) => {
-      const nextAnchor = getVirtualPoolRange(
-        scroll,
-        SLIDE_STEP,
-        poolSize,
-      ).anchor;
-      if (nextAnchor === virtualPoolAnchorRef.current) return;
+  const getVisibleRange = useCallback((scroll, overscanItems = 0) =>
+    getVisibleSliderRange({
+      scroll, viewportWidth: viewport.width, viewportHeight: viewport.height,
+      itemWidth: imageWidth, itemHeight: imageHeight, horizontalShift,
+      itemStep: SLIDE_STEP, overscanItems,
+    }), [viewport.width, viewport.height, imageWidth, imageHeight, horizontalShift]);
 
-      if (
-        throttleVirtualPool &&
-        !forceVirtualPoolSync &&
-        lastVirtualPoolSyncTimestampRef.current !== null &&
-        timestamp !== null &&
-        timestamp - lastVirtualPoolSyncTimestampRef.current <
-          HIGH_SPEED_VIRTUAL_POOL_SYNC_INTERVAL_MS
-      ) {
-        return;
-      }
+  const createIntroPool = useCallback(() => {
+    const initialRange = getVirtualPoolRange(starterScrollPosition, SLIDE_STEP, poolSize);
+    const finalRange = getVisibleRange(animationTargetScroll, LOOP_OVERSCAN_ITEMS);
+    return createSliderRangePool({
+      start: Math.min(initialRange.start, finalRange.start),
+      end: Math.max(initialRange.end, finalRange.end),
+    });
+  }, [starterScrollPosition, poolSize, getVisibleRange]);
 
-      virtualPoolAnchorRef.current = nextAnchor;
-      lastVirtualPoolSyncTimestampRef.current = timestamp;
-      setVirtualPool((currentPool) =>
-        reconcileVirtualPool({
-          pool: currentPool,
-          scroll,
-          itemStep: SLIDE_STEP,
-        }),
-      );
-    },
-    [poolSize],
-  );
+  const commitPool = useCallback((nextPool) => {
+    virtualPoolRef.current = nextPool;
+    if (introPoolActiveRef.current) {
+      initialEagerSlotIdsRef.current = new Set(nextPool.map(({ slotId }) => slotId));
+    }
+    if (sliderProfileRef.current) sliderProfileRef.current.poolCommits += 1;
+    setVirtualPool(nextPool);
+  }, []);
+
+  useLayoutEffect(() => {
+    // Resize changes coverage, never the visual dimensions/timing of the intro.
+    commitPool(introPoolActiveRef.current ? createIntroPool() :
+      createSliderRangePool(getVisibleRange(scrollRef.current, LOOP_OVERSCAN_ITEMS)));
+  }, [commitPool, createIntroPool, getVisibleRange]);
+
+  const syncVirtualPoolForScroll = useCallback((scroll) => {
+    if (introPoolActiveRef.current) return;
+    const visibleRange = getVisibleRange(scroll);
+    if (isSliderRangeCovered(virtualPoolRef.current, visibleRange)) return;
+    commitPool(createSliderRangePool(getVisibleRange(scroll, LOOP_OVERSCAN_ITEMS)));
+  }, [getVisibleRange, commitPool]);
 
   const setScrollValue = useCallback(
-    (scroll, options) => {
+    (scroll) => {
       scrollRef.current = scroll;
       syncSliderTransform(scroll);
-      syncVirtualPoolForScroll(scroll, options);
+      syncVirtualPoolForScroll(scroll);
     },
     [syncSliderTransform, syncVirtualPoolForScroll],
   );
@@ -297,6 +274,9 @@ function MainSlider({
       autoScrollLastTimestampRef.current = timestamp;
 
       if (previousTimestamp !== null) {
+        if (sliderProfileRef.current?.loopGaps.length < 1800) {
+          sliderProfileRef.current.loopGaps.push(timestamp - previousTimestamp);
+        }
         const elapsed = Math.min(timestamp - previousTimestamp, 100);
         const currentSpeed = autoScrollCurrentSpeedRef.current;
         const targetSpeed = autoScrollTargetSpeedRef.current;
@@ -362,7 +342,6 @@ function MainSlider({
     setIsLeaving(false);
 
     const startScroll = scrollRef.current;
-    lastVirtualPoolSyncTimestampRef.current = null;
     const scrollDistance = animationTargetScroll - startScroll;
     const durationSeconds = animationDurationInitial / 1000;
     const continuousSpeedBlend =
@@ -378,11 +357,11 @@ function MainSlider({
     if (window.location.search.includes("sliderProfile=1")) {
       sliderProfileRef.current = {
         introGaps: [],
+        loopGaps: [],
+        poolCommits: 0,
         introLongTasks: [],
         introStart: null,
-        upgradeActivationDelayMs: null,
-        upgradeFullImageCounts: [],
-        upgradeGaps: [],
+
       };
       window.__sliderProfile = sliderProfileRef.current;
 
@@ -395,7 +374,9 @@ function MainSlider({
             });
           });
         });
-        longTaskObserver.observe({ type: "longtask", buffered: true });
+        profileObserverRef.current?.disconnect();
+        profileObserverRef.current = longTaskObserver;
+        longTaskObserver.observe({ type: "longtask" });
       } catch (_) {
         // Long-task entries are not supported in every browser.
       }
@@ -408,10 +389,7 @@ function MainSlider({
         if (sliderProfileRef.current.introStart === null) {
           sliderProfileRef.current.introStart = timestamp;
         }
-        if (
-          previousProfileTimestamp !== null &&
-          timestamp - startTime <= 700
-        ) {
+        if (previousProfileTimestamp !== null) {
           sliderProfileRef.current.introGaps.push(
             timestamp - previousProfileTimestamp,
           );
@@ -429,10 +407,7 @@ function MainSlider({
         easedProgress * (1 - continuousSpeedBlend) +
         progress * continuousSpeedBlend;
 
-      setScrollValue(startScroll + scrollDistance * blendedProgress, {
-        throttleVirtualPool: true,
-        timestamp,
-      });
+      setScrollValue(startScroll + scrollDistance * blendedProgress);
 
       if (progress < 1) {
         introAnimationFrameRef.current =
@@ -440,11 +415,11 @@ function MainSlider({
         return;
       }
 
-      setScrollValue(scrollRef.current, {
-        forceVirtualPoolSync: true,
-        timestamp,
-      });
+      introPoolActiveRef.current = false;
+      setScrollValue(scrollRef.current);
+      commitPool(createSliderRangePool(getVisibleRange(scrollRef.current, LOOP_OVERSCAN_ITEMS)));
 
+      profileObserverRef.current?.disconnect();
       autoScrollLastTimestampRef.current = timestamp;
       introAnimationFrameRef.current = null;
       animationStartedRef.current = false;
@@ -465,6 +440,8 @@ function MainSlider({
   }, [
     animationDurationInitial,
     animationTargetScroll,
+    commitPool,
+    getVisibleRange,
     animateAutoScroll,
     autoScrollSpeed,
     prefersReducedMotion,
@@ -492,6 +469,7 @@ function MainSlider({
     // Remove the loading overlay first. Two frames ensure React has committed
     // the new state and the browser has painted the slider before its pause
     // begins, rather than counting while the loading bar is still visible.
+    initialLoadingDoneRef.current = true;
     setPercentageLoaded(100);
     loaderDismissAnimationFrameRef.current = window.requestAnimationFrame(() => {
       loaderDismissAnimationFrameRef.current = window.requestAnimationFrame(() => {
@@ -575,22 +553,17 @@ function MainSlider({
   }, []);
 
   const onInitialPreviewSettled = useCallback((slotId) => {
-    if (animationStartedRef.current) return;
-    if (initialPreviewSettledSlotsRef.current.has(slotId)) return;
-
+    if (initialLoadingDoneRef.current || animationStartedRef.current || animationEndedRef.current) return;
     initialPreviewSettledSlotsRef.current.add(slotId);
-    const settledCount = initialPreviewSettledSlotsRef.current.size;
-    const nextPercentage = Math.min(
-      (settledCount / INITIAL_EAGER_IMAGES) * 100,
-      100,
-    );
-
-    if (settledCount >= INITIAL_EAGER_IMAGES) {
+    const settledCount = [...initialEagerSlotIdsRef.current].filter(
+      id => initialPreviewSettledSlotsRef.current.has(id),
+    ).length;
+    const total = initialEagerSlotIdsRef.current.size;
+    if (settledCount >= total) {
       dismissLoaderAndScheduleAnimation();
       return;
     }
-
-    setPercentageLoaded(nextPercentage);
+    setPercentageLoaded(total ? (settledCount / total) * 100 : 100);
   }, [dismissLoaderAndScheduleAnimation]);
 
   const easeOutCubic = useCallback((value) => 1 - Math.pow(1 - value, 3), []);
@@ -601,7 +574,6 @@ function MainSlider({
     }
 
     const startScroll = scrollRef.current;
-    lastVirtualPoolSyncTimestampRef.current = null;
     setIsLeaving(true);
     animationStartedRef.current = true;
 
@@ -613,10 +585,7 @@ function MainSlider({
       const nextScroll =
         startScroll + (leaveTargetScroll - startScroll) * easedProgress;
 
-      setScrollValue(nextScroll, {
-        throttleVirtualPool: true,
-        timestamp,
-      });
+      setScrollValue(nextScroll);
 
       if (progress < 1) {
         leaveAnimationFrameRef.current =
@@ -624,10 +593,7 @@ function MainSlider({
         return;
       }
 
-      setScrollValue(scrollRef.current, {
-        forceVirtualPoolSync: true,
-        timestamp,
-      });
+      setScrollValue(scrollRef.current);
 
       animationStartedRef.current = false;
       leaveAnimationFrameRef.current = null;
@@ -773,29 +739,20 @@ function MainSlider({
       autoScrollAnimationFrameRef.current = null;
     }
     autoScrollLastTimestampRef.current = null;
-    lastVirtualPoolSyncTimestampRef.current = null;
     autoScrollCurrentSpeedRef.current = autoScrollSpeed;
     autoScrollTargetSpeedRef.current = autoScrollSpeed;
     setAnimationEnded(false);
     setIsLeaving(false);
     isEnteringRef.current = true;
     setIsEntering(true);
-    const nextPool = createVirtualPool({
-      scroll: starterScrollPosition,
-      itemStep: SLIDE_STEP,
-      poolSize,
-    });
-    virtualPoolAnchorRef.current = getVirtualPoolRange(
-      starterScrollPosition,
-      SLIDE_STEP,
-      poolSize,
-    ).anchor;
-    setVirtualPool(nextPool);
+    introPoolActiveRef.current = true;
+    commitPool(createIntroPool());
     scrollRef.current = starterScrollPosition;
     syncSliderTransform(starterScrollPosition);
   }, [
     autoScrollSpeed,
-    poolSize,
+    commitPool,
+    createIntroPool,
     starterScrollPosition,
     syncSliderTransform,
   ]);
@@ -915,6 +872,7 @@ function MainSlider({
   useEffect(() => {
     return () => {
       fullImageObserverControllerRef.current?.destroy();
+      profileObserverRef.current?.disconnect();
       if (animationStartTimeoutRef.current) {
         window.clearTimeout(animationStartTimeoutRef.current);
       }
@@ -975,6 +933,7 @@ function MainSlider({
           ref={sliderRef}
           className={styles.slider}
           data-slider-pool-size={virtualPool.length}
+          data-slider-phase={animationEnded ? (isLeaving ? "leave" : "loop") : "intro"}
           style={{
             transform: getSliderTransform(scrollRef.current),
             "--animation-duration": "0s",
@@ -998,7 +957,7 @@ function MainSlider({
                 data={slideData}
                 logicalIndex={logicalIndex}
                 itemStep={SLIDE_STEP}
-                eagerPreview={initialEagerSlotIds.has(slotId)}
+                eagerPreview={true}
                 initialLoadSlotId={slotId}
                 updateTitleData={updateTitleData}
                 onHoverStart={
@@ -1011,6 +970,7 @@ function MainSlider({
                 registerForFullImageUpgrade={registerForFullImageUpgrade}
                 width={imageWidth}
                 height={imageHeight}
+                pixelRatio={viewport.dpr}
               />
             );
           })}

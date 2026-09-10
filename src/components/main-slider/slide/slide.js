@@ -11,6 +11,7 @@ import {
 } from "../image-loading-config.mjs";
 import { getSlideTransform } from "../slider-math.mjs";
 import { FULL_IMAGE_OBSERVER_ACTIONS } from "../full-image-observer.mjs";
+import previewManifest from "../preview-manifest.json";
 
 export default React.memo(function Slide({
   data,
@@ -25,8 +26,12 @@ export default React.memo(function Slide({
   registerForFullImageUpgrade,
   width,
   height,
+  pixelRatio = 1,
 }) {
   const compressionEnabled = ENABLE_COMPRESSION === "start";
+  const staticPreview = previewManifest[data.image];
+  // Keep real slide geometry, but cap texture density at 2x on 3x/4x phones.
+  const fullImageSizes = `${Math.ceil(width * Math.min(pixelRatio, 2) / pixelRatio)}px`;
   const slideRef = useRef(null);
   const [isFullImageLoaded, setIsFullImageLoaded] = useState(false);
   const [isPreviewVisible, setIsPreviewVisible] = useState(true);
@@ -110,6 +115,7 @@ export default React.memo(function Slide({
       <AnimatedLink
         className={styles.slideLink}
         href={data.link}
+        prefetch={false}
         aria-label={data.previewImageAlt || data.title}
         onClick={() => trackSelectItem(data.title, data.id)}
       >
@@ -132,11 +138,12 @@ export default React.memo(function Slide({
                 {(!shouldLoadFullImage || isPreviewVisible) && (
                   <Image
                     className={`${styles.slideImage} ${styles.previewImage}`}
-                    src={data.image}
+                    src={staticPreview || data.image}
                     width={width}
                     height={height}
                     sizes={SLIDER_IMAGE_LOADING_CONFIG.previewSizes}
                     quality={SLIDER_IMAGE_LOADING_CONFIG.previewQuality}
+                    unoptimized={!!staticPreview}
                     alt=""
                     aria-hidden="true"
                     loading={eagerPreview ? "eager" : "lazy"}
@@ -152,7 +159,7 @@ export default React.memo(function Slide({
                     src={data.image}
                     width={width}
                     height={height}
-                    sizes={SLIDER_IMAGE_LOADING_CONFIG.fullImageSizes}
+                    sizes={fullImageSizes}
                     alt=""
                     aria-hidden="true"
                     loading="eager"

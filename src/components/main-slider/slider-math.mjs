@@ -102,3 +102,38 @@ export function getSlideTransform(logicalIndex, itemStep) {
   const offset = logicalIndex * itemStep;
   return `translate3d(${offset}px, ${-offset}px, 0)`;
 }
+
+// Bounds of rotateX(25deg) rotateY(30deg), including both viewport axes.
+// The slides are right-aligned; their visible range is not centered on scroll.
+export function getVisibleSliderRange({
+  scroll, viewportWidth, viewportHeight, itemWidth, itemHeight,
+  horizontalShift, itemStep = 120, overscanItems = 0,
+}) {
+  const projectedWidth = itemWidth * Math.cos(Math.PI / 6);
+  const projectedHeight = itemHeight * Math.cos(25 * Math.PI / 180) +
+    itemWidth * Math.sin(Math.PI / 6) * Math.sin(25 * Math.PI / 180);
+  const left = viewportWidth - itemWidth + horizontalShift +
+    (itemWidth - projectedWidth) / 2;
+  const top = (itemHeight - projectedHeight) / 2;
+  const lower = Math.max(-left - projectedWidth, top - viewportHeight);
+  const upper = Math.min(viewportWidth - left, top + projectedHeight);
+  return {
+    start: Math.floor((scroll + lower) / itemStep) - overscanItems,
+    end: Math.ceil((scroll + upper) / itemStep) + overscanItems,
+  };
+}
+
+export function createSliderRangePool({ start, end }) {
+  return Array.from({ length: Math.max(0, end - start + 1) }, (_, index) => ({
+    // Identity follows the content. Moving a window never changes an image
+    // underneath a mounted Slide or restarts its decode/fade effects.
+    slotId: start + index,
+    logicalIndex: start + index,
+  }));
+}
+
+export function isSliderRangeCovered(pool, range, safetyItems = 1) {
+  return pool.length > 0 &&
+    pool[0].logicalIndex <= range.start - safetyItems &&
+    pool[pool.length - 1].logicalIndex >= range.end + safetyItems;
+}
