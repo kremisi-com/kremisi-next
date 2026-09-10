@@ -71,6 +71,14 @@
   width: fit-content;
 }
 
+/* Safari on iOS can clip or detach SVG-filtered elements during compositing.
+   The CTA remains fully legible and tappable there without the decorative goo. */
+@supports (-webkit-touch-callout: none) {
+  .container {
+    filter: none;
+  }
+}
+
 .arrow {
   height: 42px;
   width: 42px;

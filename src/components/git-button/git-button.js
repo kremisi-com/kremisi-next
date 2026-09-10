@@ -9,7 +9,10 @@ export default function GitButton({
   leftShift = 0,
   revertColor = false,
   className = "",
+  isLinkContent = false,
 }) {
+  const ButtonElement = isLinkContent ? "span" : "button";
+
   return (
     <div
       style={{ marginLeft: leftShift }}
@@ -19,9 +22,9 @@ export default function GitButton({
         <div className={`${styles.left} ${styles.arrow}`}>
           <LucideArrowRight />
         </div>
-        <button
+        <ButtonElement
           className={`${styles.button}`}
-          type={isSubmit ? "submit" : "button"}
+          {...(!isLinkContent && { type: isSubmit ? "submit" : "button" })}
         >
           <span className={`${styles.text} ${styles.top}`}>
             {isSubmit ? submitText : text}
@@ -29,7 +32,7 @@ export default function GitButton({
           <span className={`${styles.text} ${styles.bottom}`}>
             {isSubmit ? submitText : text}
           </span>
-        </button>
+        </ButtonElement>
         <div className={`${styles.right} ${styles.arrow}`}>
           <LucideArrowUpRight />
         </div>
