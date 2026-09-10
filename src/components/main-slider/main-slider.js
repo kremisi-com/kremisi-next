@@ -59,7 +59,7 @@ function MainSlider({
   const t = useTranslations("cta");
 
   const animationDurationInitial = 1150;
-  const animationStartDelayMs = 1000;
+  const animationStartDelayMs = 500;
   const fullImageUpgradeDelayMs = 500;
   const leaveAnimationDuration = 3200;
   const animationTargetScroll = 0;
