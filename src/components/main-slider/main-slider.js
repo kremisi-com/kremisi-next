@@ -915,7 +915,7 @@ function MainSlider({
         touchAction: !isLeaving ? "none" : "auto",
         overflow: "hidden",
         visibility: isActive ? "visible" : "hidden",
-        pointerEvents: isActive && !isHidden ? "auto" : "none",
+        pointerEvents: isActive && !isHidden && !isLeaving ? "auto" : "none",
       }}
     >
       {percentageLoaded < 99.9 && <Loader percentage={percentageLoaded} />}

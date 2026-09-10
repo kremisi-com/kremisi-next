@@ -17,6 +17,13 @@
 
 .sliderSceneLeaving {
     animation: scaleDownAndUpAndFade var(--leave-duration, 3.2s) cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    cursor: default;
+    pointer-events: none;
+}
+
+.sliderSceneLeaving * {
+    cursor: default !important;
+    pointer-events: none !important;
 }
 
 @keyframes scaleDownAndUpAndFade {
