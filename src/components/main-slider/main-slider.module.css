@@ -3,24 +3,27 @@
     width: 100svw;
     height: 100dvh;
     transform-origin: center center;
-    transition: transform var(--scene-transition-duration, 1.8s) cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform var(--scene-transition-duration, 1.8s)
+        cubic-bezier(0.22, 1, 0.36, 1);
     will-change: transform;
 }
 
 .sliderSceneEntering {
-    transform: translate3d(
-        var(--scene-entrance-x),
-        var(--scene-entrance-y),
-        0
-    );
+    transform: translate3d(var(--scene-entrance-x), var(--scene-entrance-y), 0);
 }
 
+.sliderSceneIntro,
 .sliderSceneLeaving {
-    animation: scaleDownAndUpAndFade var(--leave-duration, 3.2s) cubic-bezier(0.22, 1, 0.36, 1) forwards;
     cursor: default;
     pointer-events: none;
 }
 
+.sliderSceneLeaving {
+    animation: scaleDownAndUpAndFade var(--leave-duration, 3.2s)
+        cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.sliderSceneIntro *,
 .sliderSceneLeaving * {
     cursor: default !important;
     pointer-events: none !important;
@@ -72,7 +75,11 @@
     pointer-events: none;
     opacity: 0;
     background:
-        radial-gradient(circle at center, transparent 28%, rgba(0, 0, 0, 0.12) 100%),
+        radial-gradient(
+            circle at center,
+            transparent 28%,
+            rgba(0, 0, 0, 0.12) 100%
+        ),
         linear-gradient(180deg, rgba(0, 0, 0, 0.01) 0%, rgba(0, 0, 0, 0.2) 100%);
     transition: opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1);
 }
@@ -118,8 +125,8 @@
     border: none;
     cursor: pointer;
     transition:
-        opacity .3s ease-in-out,
-        transform .6s cubic-bezier(0.22, 1, 0.36, 1);
+        opacity 0.3s ease-in-out,
+        transform 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .scrollIndicator:disabled {
     cursor: default;
@@ -136,7 +143,7 @@
     width: 100%;
     height: 2px;
     background-color: var(--primary);
-    transition: max-width .3s ease-in-out;
+    transition: max-width 0.3s ease-in-out;
 }
 .scrollIndicator:hover::after {
     max-width: 100%;
