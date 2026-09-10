@@ -2,6 +2,8 @@
   display: contents;
 }
 .button {
+  display: inline-grid;
+  align-items: center;
   cursor: pointer;
   font: inherit;
   font-size: 16pt;
@@ -10,7 +12,6 @@
   border: none;
   border-radius: 30px;
   background-color: var(--primary);
-  backdrop-filter: blur(10px);
   transition: background 0.2s ease;
   box-sizing: content-box;
   height: 30px;
@@ -33,50 +34,40 @@
 .button .text {
   display: block;
   transition: transform 0.2s ease-in-out, opacity 0.2s ease-in-out;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
+  grid-area: 1 / 1;
+  position: relative;
   white-space: nowrap;
   color: var(--white);
 }
 
 .button .text.top {
-  top: 50%;
-}
-/* Non su Safari */
-@supports not (-webkit-hyphens: none) {
-  .button .text.top {
-    transform: translate(-50%, -50%);
-  }
+  transform: translateY(0);
 }
 
 .button .text.bottom {
-  top: 50%; /* già centrato verticalmente */
-  transform: translate(-50%, 150%); /* lo tengo sotto col translate */
+  transform: translateY(200%);
   opacity: 0;
 }
 
 .button:hover .text.top {
-  transform: translate(-50%, -250%);
+  transform: translateY(-200%);
 }
 
 .button:hover .text.bottom {
-  transform: translate(-50%, -50%); /* sale al centro */
+  transform: translateY(0);
   opacity: 1;
 }
 
 .container {
+  display: flex;
   position: relative;
-  filter: url("#goo");
+  filter: var(--goo-filter);
   width: fit-content;
 }
 
-/* Safari on iOS can clip or detach SVG-filtered elements during compositing.
-   The CTA remains fully legible and tappable there without the decorative goo. */
-@supports (-webkit-touch-callout: none) {
-  .container {
-    filter: none;
-  }
+.filterDefinitions {
+  position: absolute;
+  pointer-events: none;
 }
 
 .arrow {
@@ -128,7 +119,7 @@
   opacity: 0.6;
   cursor: not-allowed;
   user-select: none;
-  filter: grayscale(1) url("#goo");
+  filter: grayscale(1) var(--goo-filter);
 }
 
 .revert .button,
