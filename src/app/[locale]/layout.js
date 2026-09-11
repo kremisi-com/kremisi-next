@@ -3,7 +3,6 @@ import "../globals.css";
 import { Schibsted_Grotesk } from "next/font/google";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
-import CursorTrailCanvas from "@/components/cursor-trail-canvas";
 import { ThemeProvider } from "next-themes";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "react-hot-toast";
@@ -124,7 +123,6 @@ export default async function RootLayout({ children, params }) {
   return (
     <html lang={locale} suppressHydrationWarning>
       <body className={schibstedGrotesk.variable}>
-        <CursorTrailCanvas />
         <ThemeProvider
           attribute="class"
           defaultTheme="dark"
