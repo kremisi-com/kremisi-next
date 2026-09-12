@@ -62,7 +62,7 @@ function MainSlider({
     const animationDurationInitial = 1150;
     const animationStartDelayMs = 500;
     const fullImageUpgradeDelayMs = 500;
-    const leaveAnimationDuration = 3200;
+    const leaveAnimationDuration = 2400;
     const animationTargetScroll = 0;
     const speed = 30;
     const touchMultiplier = 1.2;
@@ -464,7 +464,7 @@ function MainSlider({
             // The slider has to feel as if it is arriving from far away: most of
             // the travel happens immediately, then it settles into the continuous
             // motion without a visible stop.
-            const easedProgress = 1 - Math.pow(1 - progress, 6);
+            const easedProgress = 1 - Math.pow(1 - progress, 8);
             const blendedProgress =
                 easedProgress * (1 - continuousSpeedBlend) +
                 progress * continuousSpeedBlend;
@@ -1018,6 +1018,7 @@ function MainSlider({
                     "--scene-transition-duration": isEntering
                         ? "0ms"
                         : `${animationDurationInitial}ms`,
+                    "--leave-duration": `${leaveAnimationDuration}ms`,
                     "--scene-entrance-x": `${entranceOffset}px`,
                     "--scene-entrance-y": `${-entranceOffset}px`,
                 }}
