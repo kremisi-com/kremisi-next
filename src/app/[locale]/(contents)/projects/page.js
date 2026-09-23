@@ -1,6 +1,7 @@
 import styles from "./page.module.css";
 import ColoredTable from "@/components/colored-table/colored-table";
 
+import { getCustomerProfile } from "@/lib/customers";
 import { getProjectsArray } from "@/lib/projects";
 import { getTranslations } from "next-intl/server";
 
@@ -47,30 +48,41 @@ export default async function ProjectsPage({ params }) {
   const images = [];
   const imageAlts = [];
   const links = [];
+  const cellLinks = [];
 
   const projectsDataArray = getProjectsArray(locale);
 
   projectsDataArray.forEach((project) => {
     let tmpImage = `/projects/${project.assetFolder}/${project.image}`;
 
-    let tmpCustomer = project.customer;
-    if (tmpCustomer === undefined || tmpCustomer === "")
+    const customerId = project.customer;
+    let customerCellLink = null;
+    let tmpCustomer;
+
+    if (customerId === undefined || customerId === "") {
       tmpCustomer = "Kremisi";
-    else
-      tmpCustomer =
-        "Kremisi for " +
-        project.customer
-          .split("")
-          .map((ch, i, arr) =>
-            i === 0 || arr[i - 1] === " " || arr[i - 1] === "-"
-              ? ch.toUpperCase()
-              : ch,
-          )
-          .join("");
+    } else {
+      const customer = getCustomerProfile(customerId);
+      const customerName = customer.name;
+      const customerWebsite = customer.link;
+
+      tmpCustomer = `Kremisi for ${customerName}`;
+
+      if (customerWebsite) {
+        customerCellLink = {
+          href: customerWebsite,
+          target: "_blank",
+          rel: "nofollow noopener noreferrer",
+          ariaLabel: `${customerName} website`,
+        };
+      }
+    }
+
     items.push([project.title, project.subtitle, tmpCustomer, project.year]);
     images.push(tmpImage);
     imageAlts.push(project.previewImageAlt);
     links.push(project.path);
+    cellLinks.push([null, null, customerCellLink, null]);
   });
 
   return (
@@ -91,6 +103,7 @@ export default async function ProjectsPage({ params }) {
         images={images}
         imageAlts={imageAlts}
         links={links}
+        cellLinks={cellLinks}
         className={styles.projectsTable}
       />
     </main>

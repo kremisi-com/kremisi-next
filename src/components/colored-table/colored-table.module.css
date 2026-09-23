@@ -83,6 +83,31 @@
   cursor: pointer;
 }
 
+.rowLink {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+.linkRow .desktopCells,
+.linkRow .mobileCells {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.cellLink {
+  color: inherit;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.cellLink:hover,
+.cellLink:focus-visible {
+  text-decoration: underline;
+  text-underline-offset: 0.12em;
+}
+
 .imageContainer {
   position: absolute;
   z-index: 100;

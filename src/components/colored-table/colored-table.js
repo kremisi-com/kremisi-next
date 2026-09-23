@@ -4,7 +4,14 @@ import Link from "next/link";
 import style from "./colored-table.module.css";
 import React from "react";
 
-export default function ColoredTable({ items, images, imageAlts = [], links, className }) {
+export default function ColoredTable({
+    items,
+    images,
+    imageAlts = [],
+    links,
+    cellLinks = [],
+    className,
+}) {
     const tableRef = React.useRef(null);
 
     const [imageIndexShown, setImageIndexShown] = React.useState(null);
@@ -40,38 +47,50 @@ export default function ColoredTable({ items, images, imageAlts = [], links, cla
         setTranslate({ x, y });
     }
 
-    function renderDesktopCells(item) {
+    function renderCellContent(cell, rowIndex, cellIndex) {
+        const cellLink = cellLinks[rowIndex]?.[cellIndex];
+
+        if (cellLink?.href) {
+            return (
+                <a
+                    className={style.cellLink}
+                    href={cellLink.href}
+                    target={cellLink.target}
+                    rel={cellLink.rel}
+                    aria-label={cellLink.ariaLabel}
+                    dangerouslySetInnerHTML={{ __html: cell }}
+                />
+            );
+        }
+
+        return <span dangerouslySetInnerHTML={{ __html: cell }} />;
+    }
+
+    function renderDesktopCells(item, rowIndex) {
         return (
             <div
                 className={style.desktopCells}
                 style={{ "--column-count": item.length }}
             >
                 {item.map((cell, cellIndex) => (
-                    <div
-                        key={cellIndex}
-                        className={style.cell}
-                        dangerouslySetInnerHTML={{
-                            __html: cell,
-                        }}
-                    />
+                    <div key={cellIndex} className={style.cell}>
+                        {renderCellContent(cell, rowIndex, cellIndex)}
+                    </div>
                 ))}
             </div>
         );
     }
 
-    function renderMobileCells(item) {
+    function renderMobileCells(item, rowIndex) {
         return (
             <div className={style.mobileCells}>
                 <div className={style.mobileMainCell}>
                     {item
                         .filter((cell, cellIndex) => cellIndex < item.length - 1)
                         .map((cell, cellIndex) => (
-                            <p
-                                key={cellIndex}
-                                dangerouslySetInnerHTML={{
-                                    __html: cell,
-                                }}
-                            />
+                            <p key={cellIndex}>
+                                {renderCellContent(cell, rowIndex, cellIndex)}
+                            </p>
                         ))}
                 </div>
                 <div className={`${style.cell} ${style.mobileYearCell}`}>
@@ -93,8 +112,8 @@ export default function ColoredTable({ items, images, imageAlts = [], links, cla
                     const href = links?.[index];
                     const rowContent = (
                         <>
-                            {renderDesktopCells(item)}
-                            {renderMobileCells(item)}
+                            {renderDesktopCells(item, index)}
+                            {renderMobileCells(item, index)}
                         </>
                     );
                     const rowProps = {
@@ -106,9 +125,14 @@ export default function ColoredTable({ items, images, imageAlts = [], links, cla
 
                     if (href) {
                         return (
-                            <Link key={index} href={href} {...rowProps}>
+                            <div key={index} {...rowProps}>
+                                <Link
+                                    className={style.rowLink}
+                                    href={href}
+                                    aria-label={item[0].replace(/<[^>]*>/g, "")}
+                                />
                                 {rowContent}
-                            </Link>
+                            </div>
                         );
                     }
 

@@ -1,4 +1,5 @@
 import { getProjectCarouselImageAlt, getProjectData, getProjectsArray } from "@/lib/projects";
+import { getCustomerProfile } from "@/lib/customers";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import style from "./page.module.css";
@@ -167,6 +168,7 @@ export default async function ProjectPage({ params }) {
     const isItalian = locale === "it";
     const isLucreziaBrandIdentity =
         projectData.caseStudy === "lucrezia-curto-brand-identity";
+    const projectOwner = getCustomerProfile(projectData.customer);
 
     return (
         <>
@@ -200,7 +202,24 @@ export default async function ProjectPage({ params }) {
                     <div className="col mb-0 no-wrap">
                         <div className={style.client}>
                             <div className={style.clientName}>
-                                {isItalian ? "Cliente" : "Client"}: {projectData.title}
+                                {isItalian ? "Cliente" : "Client"}: {projectOwner && (
+                                    <>
+                                        {projectOwner.link ? (
+                                            <a
+                                                className={style.ownerLink}
+                                                href={projectOwner.link}
+                                                target="_blank"
+                                                rel="nofollow noopener noreferrer"
+                                            >
+                                                {projectOwner.name}
+                                            </a>
+                                        ) : (
+                                            projectOwner.name
+                                        )}{" "}
+                                        for{" "}
+                                    </>
+                                )}
+                                {projectData.title}
                             </div>
                         </div>
                     </div>

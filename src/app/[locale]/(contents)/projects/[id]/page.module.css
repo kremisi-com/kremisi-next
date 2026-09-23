@@ -44,6 +44,17 @@
     margin-left: auto;
 }
 
+.ownerLink {
+    color: inherit;
+    text-decoration: none;
+}
+
+.ownerLink:hover,
+.ownerLink:focus-visible {
+    text-decoration: underline;
+    text-underline-offset: 0.12em;
+}
+
 .overview {
     width: 100%;
     display: flex;
