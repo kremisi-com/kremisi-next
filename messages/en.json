@@ -17,6 +17,6 @@
     {"role":"Caregiver Franchise CEO","date":"24 Aug, 2024","text":"I highly recommend them for their precision, punctuality, and professionalism. They offered great support, always available to listen to our requests and solve every situation. Heartfelt thanks!","tasks":["SaaS","Database Management","1000+ Users"]},
     {"role":"Flight Dispatch Courses Founders","date":"15 Oct, 2025","text":"Friendly, professional, and qualified! Their speed and competence impressed us. The website perfectly reflects our company's needs. They skillfully transformed every request into an effective and efficient tailor-made solution.","tasks":["SaaS","Complex Logic","Educational Platform"]}
   ]},
-  "cta": {"connect":"Let's Connect","discover":"Discover More"},
+  "cta": {"connect":"Let's Connect","discover":"Discover More","closingLabel":"More Kremisi projects: let's discuss your process","pauseVideos":"Pause videos","playVideos":"Resume videos"},
   "footer": {"copied":"Email copied to clipboard","copyFailed":"Could not copy email","whatsapp":"Can I have more information?"}
 }

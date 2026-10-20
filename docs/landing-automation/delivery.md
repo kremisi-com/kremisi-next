@@ -7,7 +7,7 @@ Implementata e pronta per revisione locale. Nessun deploy, nuova dipendenza, mod
 - Italiano: `/it/automazioni-aziendali`.
 - Inglese: `/en/automazioni-aziendali` (anche il toggle lingua mantiene lo slug).
 - Anteprima della build finale: `http://127.0.0.1:3001/it/automazioni-aziendali` finché il processo locale resta attivo.
-- Sezioni: hero → problemi e soluzioni accoppiati → caso BPMN2Petri → metodo in tre passi → contatto.
+- Sezioni: hero → problemi e soluzioni accoppiati → caso BPMN2Petri → metodo in tre passi → clienti → testimonianza Casa Palmi → contatto → fascia video con CTA finale.
 
 ## Scelte e componenti
 
@@ -67,3 +67,23 @@ Modificati:
 - `test/openai-ads-contact.test.mjs`
 
 Documentazione operativa in questa cartella: design-audit.md, conversion-strategy.md, architecture.md, implementation.md, qa-audit.md e questo documento. Anteprime in screenshots/: desktop-dark.png, desktop-light.png, mobile-dark.png. Sono evidenze QA, non asset pubblicati nel frontend.
+
+## Aggiornamento: autorevolezza (20 ottobre 2026)
+
+Su richiesta dell'utente, aggiunte prima del form le sezioni già presenti sul sito: SocialProof e Testimonials. SocialProof espone una variante campaign con nove loghi fissi, alt specifici, Next/Image lazy/responsive e CTA CampaignLink tracciata verso `#contatto`. Nessun asset sorgente aggiunto: l'ottimizzatore immagini Next serve i formati moderni secondo il browser. Testimonials espone featuredProjectId: per Casa Palmi rende una sola recensione statica, con testo, autore e task già presenti nei messaggi IT/EN; non mostra rating o data e non avvia autoplay. Il ramo homepage mantiene collage animato e carousel originali.
+
+File di questo aggiornamento: route page.js, SocialProof JSX/CSS e Testimonials JSX/CSS. Revisione indipendente in social-proof-qa.md. Nessun servizio, segreto, form o deploy modificato.
+
+Verifiche dell'aggiornamento: build finale Next superata; lint mirato route e JSX senza errori (tre warning img preesistenti nei rami homepage, non utilizzati dalla landing); browser desktop 1440px e mobile 320px, IT/EN. A 320px la CTA inglese del blocco clienti misura x16.61→288.38, entro area utile305px; nessun overflow orizzontale. Recensione verificata nel browser e nove immagini logo presenti. Nessun nuovo test per queste varianti di presentazione; i 36 test sopra si riferiscono alla precedente verifica della landing e non sono stati rieseguiti in questo aggiornamento.
+
+Controlli finali sulla build produzione locale: CTA clienti raggiunge `#contatto` con sezione a 110px dal bordo superiore, nessun nuovo warning/errore console. Homepage in modalità overview conserva 18 immagini logo e la recensione originale, senza attivare la variante featured. Screenshot dell'aggiornamento: screenshots/clienti-desktop.png e screenshots/recensione-desktop.png. Anteprima sulla porta 3001 aggiornata; nessuna pubblicazione.
+
+## Aggiornamento: fascia di chiusura (20 ottobre 2026)
+
+Aggiunta dopo il form la fascia VideosCta già presente nella homepage, mediante `variant="campaign"` e slot CTA. “Parliamone”/“Let's Connect” punta al form `#contatto`, tracciata come `closing_contact`; nessuna uscita verso un'altra pagina di contatti. Il comportamento predefinito della homepage rimane invariato.
+
+La variante carica i tre MP4 soltanto al primo ingresso nel viewport, con `preload="none"`; mette in pausa fuori schermo e offre un comando pausa/ripresa tradotto. Con prefers-reduced-motion mantiene i poster WebP esistenti senza assegnare src ai video. Gallery decorativa aria-hidden, CTA e comando pausa esterni accessibili, focus ereditato dalla landing. Conservati i video originali di Allavelli (3,092,427 byte), Gamelia (3,664,983 byte) e Makuda (1,366,489 byte): non sono nuovi video, non sono stati ricompressi. FFmpeg/FFprobe non disponibili né nel PATH né nel runtime bundled controllato; nessun software installato. Nessuna modifica a public/projects o projects.json.
+
+File: VideosCta JSX/CSS, route page.js e tre label nel namespace cta dei messaggi IT/EN. QA statica indipendente: closing-band-qa.md.
+
+Verifiche eseguite per questo aggiornamento: lint esplicito JSX e route senza errori/warning; build Next superata; diff whitespace controllato. Browser sulla build locale produzione: src dei tre video assente sopra la piega, presente entrando nella fascia; comando pausa cambia in ripresa; CTA raggiunge contatto a 110px dal bordo superiore. Ordine DOM finale contatto→videos-cta. Desktop 1280×900 e inglese 320×740: CTA x66.13→238.87 dentro area utile305px, nessun overflow orizzontale; a fondo pagina il comando pausa resta sopra i controlli globali. Reduced-motion controllato nel sorgente, non emulato a livello OS. Nessun nuovo test automatico, invio o deploy. Screenshot: screenshots/fascia-finale-desktop.png.

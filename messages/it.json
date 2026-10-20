@@ -136,7 +136,7 @@
       }
     ]
   },
-  "cta": { "connect": "Parliamone", "discover": "Scopri di più" },
+  "cta": { "connect": "Parliamone", "discover": "Scopri di più", "closingLabel": "Altri progetti Kremisi: parliamo del tuo processo", "pauseVideos": "Metti in pausa i video", "playVideos": "Riprendi i video" },
   "footer": {
     "copied": "Email copiata negli appunti",
     "copyFailed": "Impossibile copiare l'email",

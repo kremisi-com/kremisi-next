@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import styles from './social-proof.module.css';
 import GitButton from '../git-button/git-button';
+import Image from 'next/image';
 
 const LOGOS = [
     "beyond-reiki.png", "bioli.png", "ccom.png", "chora-full.png", "chora.png",
@@ -17,6 +18,18 @@ const LOGOS = [
 const LOGO_CYCLE_DELAY = 6000;
 const LOGO_FADE_DURATION = 1400;
 const LOGO_FADE_BUFFER = 120;
+
+const CAMPAIGN_LOGOS = [
+    { file: 'vecchi360.png', name: 'Vecchi360' },
+    { file: 'chora-full.png', name: 'Residenza Chora' },
+    { file: 'e2l.png', name: 'Easy2Learn' },
+    { file: 'gamelia.png', name: 'Gamelia' },
+    { file: 'ims.png', name: 'IMS Agency' },
+    { file: 'jester.png', name: 'Jester' },
+    { file: 'narai.png', name: 'Narai Thai Massage' },
+    { file: 'beyond-reiki.png', name: 'Beyond Reiki' },
+    { file: 'studylux.png', name: 'StudyLux' },
+];
 
 const preloadedLogoUrls = new Set();
 
@@ -52,7 +65,7 @@ function usePrefersReducedMotion() {
     return prefersReducedMotion;
 }
 
-const LogoCard = ({ className, initialIndex, shouldAnimate }) => {
+const LogoCard = ({ className, initialIndex, shouldAnimate, staticLogo }) => {
     const [startDelay, setStartDelay] = useState(null);
     const [indices, setIndices] = useState([
         initialIndex,
@@ -69,8 +82,9 @@ const LogoCard = ({ className, initialIndex, shouldAnimate }) => {
     const swapTimeoutRef = useRef(null);
 
     useEffect(() => {
+        if (staticLogo) return;
         setStartDelay(Math.random() * 8000);
-    }, []);
+    }, [staticLogo]);
 
     useEffect(() => {
         if (!shouldAnimate || startDelay === null) return;
@@ -123,6 +137,15 @@ const LogoCard = ({ className, initialIndex, shouldAnimate }) => {
 
     return (
         <div className={`${styles.placeholder} ${className}`}>
+            {staticLogo ? (
+                <Image
+                    src={`/projects-logos/${staticLogo.file}`}
+                    alt={staticLogo.name}
+                    fill
+                    sizes="(max-width: 768px) 110px, (max-width: 1024px) 145px, 160px"
+                    className={`${styles.logoImage} ${styles.active}`}
+                />
+            ) : <>
             <img 
                 src={`/projects-logos/${LOGOS[indices[0]]}`} 
                 alt="Logo" 
@@ -137,25 +160,28 @@ const LogoCard = ({ className, initialIndex, shouldAnimate }) => {
                 decoding="async"
                 draggable="false"
             />
+            </>}
         </div>
     );
 };
 
 
-function SocialProof({ isActive }) {
+function SocialProof({ isActive, variant, cta }) {
     const t = useTranslations("socialProof");
     const prefersReducedMotion = usePrefersReducedMotion();
-    const shouldAnimate = isActive && !prefersReducedMotion;
+    const isCampaign = variant === 'campaign';
+    const shouldAnimate = isActive && !prefersReducedMotion && !isCampaign;
 
     const renderLogoCard = (className, initialIndex) => (
         <LogoCard
             className={className}
             initialIndex={initialIndex}
             shouldAnimate={shouldAnimate}
+            staticLogo={isCampaign ? CAMPAIGN_LOGOS[initialIndex / 3] : undefined}
         />
     );
     return (
-        <section className={styles.socialProofSection} id="social-proof">
+        <section className={`${styles.socialProofSection} ${isCampaign ? styles.campaign : ''}`} id="social-proof" aria-labelledby={isCampaign ? 'clients-title' : undefined}>
             <div className={styles.container}>
                 <div className={styles.badge}>{t("badge")}</div>
                 
@@ -172,7 +198,7 @@ function SocialProof({ isActive }) {
                     </div>
                 )}
 
-                <h2 className={styles.title}>
+                <h2 className={styles.title} id={isCampaign ? 'clients-title' : undefined}>
                     {t("title")}<br/>
                     <span className={styles.titleLight}>{t("titleLight")}</span>
                 </h2>
@@ -191,9 +217,9 @@ function SocialProof({ isActive }) {
                     {t("description")}
                 </p>
                 
-                <Link href="/contacts" className={styles.buttonWrapper}>
+                {cta ? <div className={styles.buttonWrapper}>{cta}</div> : <Link href="/contacts" className={styles.buttonWrapper}>
                     <GitButton text={t("cta")} className={styles.socialProofGitButton} leftShift="-20px" />
-                </Link>
+                </Link>}
             </div>
         </section>
     );

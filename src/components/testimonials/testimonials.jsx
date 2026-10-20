@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import styles from './testimonials.module.css';
+import Image from 'next/image';
 
 const TESTIMONIALS = [
     {
@@ -56,7 +57,7 @@ const TESTIMONIALS = [
     }
 ];
 
-function Testimonials() {
+function Testimonials({ featuredProjectId }) {
     const t = useTranslations("testimonials");
     const testimonials = TESTIMONIALS.map((item, index) => ({
         ...item,
@@ -66,10 +67,11 @@ function Testimonials() {
     const [isMobile, setIsMobile] = useState(false);
 
     React.useEffect(() => {
+        if (featuredProjectId) return;
         const checkMobile = () => setIsMobile(window.innerWidth <= 768);
         checkMobile();
         window.addEventListener('resize', checkMobile);
-        
+
         const interval = setInterval(() => {
             setActiveIndex((prev) => (prev + 1) % testimonials.length);
         }, 5000);
@@ -78,7 +80,43 @@ function Testimonials() {
             window.removeEventListener('resize', checkMobile);
             clearInterval(interval);
         };
-    }, []);
+    }, [featuredProjectId, testimonials.length]);
+
+    const featured = testimonials.find((item) => item.projectId === featuredProjectId);
+
+    if (featured) {
+        return (
+            <section id="client-review" className={`${styles.testimonialsSection} ${styles.featured}`} aria-labelledby="featured-review-title">
+                <div className={styles.featuredContainer}>
+                    <h2 id="featured-review-title" className={styles.subtitle}>
+                        <span className={styles.subtitleLine} aria-hidden="true" />
+                        {t('eyebrow')}
+                    </h2>
+                    <figure className={styles.featuredReview}>
+                        <figcaption className={styles.featuredAuthor}>
+                            <Image src={featured.image} alt="" width={120} height={120} sizes="(max-width: 768px) 72px, 120px" className={styles.featuredAvatar} />
+                            <div>
+                                <p className={styles.featuredName}>{featured.name}</p>
+                                <p className={styles.featuredRole}>{featured.role}</p>
+                                <Link href={`/projects/${featured.projectId}`} className={styles.featuredProject}>
+                                    {featured.projectTitle} <span aria-hidden="true">↗</span>
+                                </Link>
+                            </div>
+                        </figcaption>
+                        <div>
+                            <blockquote className={styles.featuredQuote}>
+                                <span className={styles.firstLetter}>{featured.text.charAt(0)}</span>
+                                {featured.text.slice(1)}
+                            </blockquote>
+                            <ul className={styles.featuredTasks} aria-label={featured.projectTitle}>
+                                {featured.tasks.map((task) => <li key={task} className={styles.taskTag}>{task}</li>)}
+                            </ul>
+                        </div>
+                    </figure>
+                </div>
+            </section>
+        );
+    }
 
     const positionVariants = {
         top: { x: -10, y: isMobile ? 50 : 120, scale: 0.82, opacity: 0.35, zIndex: 1 },

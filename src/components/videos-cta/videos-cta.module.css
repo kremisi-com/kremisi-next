@@ -225,3 +225,33 @@
         height: 350px;
     }
 }
+
+.campaign {
+    padding: 0 0 50px;
+    scroll-margin-top: 110px;
+}
+
+.campaign .videoCard:hover .video {
+    opacity: 0.4;
+    filter: brightness(0.8);
+    transform: none;
+}
+
+.playbackToggle {
+    margin: 18px 20px 0;
+    padding: 10px 18px;
+    min-height: 44px;
+    border: 1px solid var(--foreground);
+    border-radius: 24px;
+    font: inherit;
+    font-size: 14px;
+    color: var(--foreground);
+    background: var(--background);
+    cursor: pointer;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .campaign .video {
+        transition: none;
+    }
+}

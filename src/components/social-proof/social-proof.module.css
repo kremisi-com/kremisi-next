@@ -319,3 +319,59 @@
     }
 
 }
+
+/* The campaign uses the same collage with a fixed, lazy-loaded set of logos. */
+.campaign,
+.campaign .container {
+    min-height: 660px;
+}
+
+.campaign {
+    scroll-margin-top: 110px;
+}
+
+.campaign .container {
+    padding: 100px 5vw;
+}
+
+.campaign .badge {
+    font-size: 12px;
+    margin-bottom: 24px;
+}
+
+.campaign .title {
+    font-size: clamp(34px, 4.3vw, 58px);
+    max-width: 650px;
+}
+
+.campaign .description {
+    font-size: 16px;
+    max-width: 560px;
+    opacity: 0.8;
+}
+
+.campaign .buttonWrapper {
+    margin-top: 10px;
+    transform: none;
+    z-index: 5;
+}
+
+@media (max-width: 1024px) {
+    .campaign,
+    .campaign .container {
+        min-height: auto;
+    }
+
+    .campaign .container {
+        padding: 75px 5vw;
+    }
+
+    .campaign .galleryTop,
+    .campaign .galleryBottom {
+        margin-block: 24px;
+    }
+
+    .campaign .title {
+        margin-top: 0;
+    }
+}

@@ -4,6 +4,9 @@ import { getTranslations } from "next-intl/server";
 import Overview from "@/components/overview/overview";
 import GitButton from "@/components/git-button/git-button";
 import ContactForm from "@/components/contact-form/contact-form";
+import SocialProof from "@/components/social-proof/social-proof";
+import Testimonials from "@/components/testimonials/testimonials";
+import VideosCta from "@/components/videos-cta/videos-cta";
 import projects from "@/lib/projects.json";
 import CampaignLink from "./campaign-link";
 import styles from "./page.module.css";
@@ -14,6 +17,7 @@ const caseStudy = projects.bpmn2petrinet;
 export async function generateMetadata({ params }) {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: "automation" });
+
     const title = t("meta.title");
     const description = t("meta.description");
     const url = `/${locale}/${SLUG}`;
@@ -49,6 +53,7 @@ export async function generateMetadata({ params }) {
 export default async function AutomationPage({ params }) {
     const { locale } = await params;
     const t = await getTranslations({ locale, namespace: "automation" });
+    const closing = await getTranslations({ locale, namespace: "cta" });
 
     return (
         <main className={styles.page}>
@@ -143,6 +148,13 @@ export default async function AutomationPage({ params }) {
                 </CampaignLink>
             </section>
 
+            <SocialProof isActive variant="campaign" cta={
+                <CampaignLink href="#contatto" placement="social_proof_contact" className={styles.primaryLink}>
+                    <GitButton text={t("cta")} isLinkContent className={styles.heroButton} />
+                </CampaignLink>
+            } />
+            <Testimonials featuredProjectId="casa-palmi" />
+
             <section className={`${styles.section} ${styles.contactSection}`} id="contatto" aria-labelledby="contact-title">
                 <div className={styles.sectionHeader}>
                     <p className={styles.eyebrow}>{t("contact.eyebrow")}</p>
@@ -159,6 +171,11 @@ export default async function AutomationPage({ params }) {
                     <ContactForm locale={locale} variant="automation" />
                 </div>
             </section>
+            <VideosCta variant="campaign" cta={
+                <CampaignLink href="#contatto" placement="closing_contact" className={styles.primaryLink}>
+                    <GitButton text={closing("connect")} isLinkContent className={styles.heroButton} />
+                </CampaignLink>
+            } />
         </main>
     );
 }
