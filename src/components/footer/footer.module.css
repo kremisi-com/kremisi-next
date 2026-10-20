@@ -41,10 +41,6 @@
     color: var(--primary);
 }
 
-.footer:global(.onlyMobile) address {
-    left: 25px;
-}
-
 .buttons {
     z-index: 10;
     bottom: 30px;
@@ -104,7 +100,10 @@
         position: static;
     }
     .footer:global(.onlyMobile) address {
+        left: 25px;
+        right: 25px;
         bottom: calc(76px + env(safe-area-inset-bottom));
+        text-align: center;
     }
     .buttons {
         bottom: calc(16px + env(safe-area-inset-bottom));

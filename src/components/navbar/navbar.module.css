@@ -47,11 +47,19 @@
 }
 
 .buttons .icon {
-    padding: unset;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    padding: 0;
     width: 32px;
-    height: 29px;
-    padding-top: 2px;
+    height: 32px;
     color: var(--foreground);
+}
+
+.buttons .icon svg {
+    display: block;
+    flex-shrink: 0;
 }
 .buttons .icon:hover {
     color: var(--white);
