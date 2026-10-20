@@ -1,6 +1,6 @@
 "use server";
 
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 import { verifyTurnstileToken } from "@/lib/turnstile";
 import { sendContactEmail } from "@/lib/contact-email";
 import { scheduleOpenAIAdsLead } from "@/server/openai-ads";
@@ -44,7 +44,7 @@ function validationFailure(requestId, field, error) {
 }
 
 export async function submitContact(prevState, formData) {
-    const requestId = createRequestId();
+    let requestId = createRequestId();
     let locale = "en";
     let stage = "request-received";
 
@@ -81,7 +81,7 @@ export async function submitContact(prevState, formData) {
             console.warn("[ContactEmail] Honeypot triggered; submission discarded.", {
                 requestId,
             });
-            return { success: true, silentDrop: true };
+            return { success: false, error: errors.send };
         }
 
         console.info("[ContactEmail] Honeypot passed.", { requestId });
@@ -163,6 +163,14 @@ export async function submitContact(prevState, formData) {
             phone,
             source,
         };
+
+        // Bind one browser submission intent to its normalized mail content.
+        // Retries preserve the provider key and conversion ID; edited requests
+        // get a different key. Older clients without an ID remain compatible.
+        const submissionId = getVal("submissionId");
+        if (/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/i.test(submissionId)) {
+            requestId = `contact-${createHash("sha256").update(JSON.stringify({ submissionId, payload })).digest("hex")}`;
+        }
 
         stage = "resend-send";
         const emailId = await sendContactEmail(payload, { requestId });

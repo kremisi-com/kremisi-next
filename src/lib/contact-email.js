@@ -93,7 +93,7 @@ export async function sendContactEmail(payload, { requestId } = {}) {
       replyTo: payload.email,
       subject,
       text: buildContactEmailText(payload),
-    });
+    }, requestId ? { idempotencyKey: requestId } : undefined);
 
     console.info("[ContactEmail] Resend response received.", {
       requestId,

@@ -1,0 +1,13 @@
+{
+  "envFiles": [
+    ".env.example"
+  ],
+  "configured": {
+    "RESEND_API_KEY": false,
+    "RESEND_FROM_EMAIL": false,
+    "CONTACT_EMAIL_TO": false,
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY": false,
+    "CLOUDFLARE_TURNSTILE_SECRET_KEY": false,
+    "OPENAI_ADS_CONVERSIONS_API_KEY": false
+  }
+}

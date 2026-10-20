@@ -1,0 +1,14 @@
+
+> kremisi@0.1.0 build D:\Projects\github\kremisi-next
+> next build --turbopack
+
+
+> Build error occurred
+Error: EBUSY: resource busy or locked, unlink 'D:\Projects\github\kremisi-next\.next\footer-preview.stderr.log'
+    at ignore-listed frames {
+  errno: -4082,
+  code: 'EBUSY',
+  syscall: 'unlink',
+  path: 'D:\\Projects\\github\\kremisi-next\\.next\\footer-preview.stderr.log'
+}
+ ELIFECYCLE  Command failed with exit code 1.

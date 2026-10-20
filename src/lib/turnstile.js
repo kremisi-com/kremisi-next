@@ -42,6 +42,7 @@ export async function verifyTurnstileToken({ token, ip, requestId } = {}) {
       },
       body,
       cache: "no-store",
+      signal: AbortSignal.timeout(10000),
     });
 
     let payload;
@@ -64,8 +65,8 @@ export async function verifyTurnstileToken({ token, ip, requestId } = {}) {
     }
 
     return {
-      success: Boolean(payload?.success),
-      reason: payload?.success ? null : "verification-failed",
+      success: response.ok && payload?.success === true,
+      reason: response.ok && payload?.success === true ? null : "verification-failed",
       errorCodes: Array.isArray(payload?.["error-codes"])
         ? payload["error-codes"]
         : [],

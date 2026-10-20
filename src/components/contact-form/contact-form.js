@@ -90,7 +90,20 @@ export default function ContactForm({ locale = "en", variant = "default" }) {
   const formRef = useRef(null);
   const formStarted = useRef(false);
   const statusId = useId();
-  const [state, formAction, pending] = useActionState(submitContactWithAds, {
+  const submissionId = useRef(null);
+  const [state, formAction, pending] = useActionState(async (prevState, formData) => {
+    submissionId.current ||= crypto.randomUUID();
+    formData.set("submissionId", submissionId.current);
+    try {
+      return await submitContactWithAds(prevState, formData);
+    } catch {
+      // A lost response can follow provider acceptance. Keep the intent and
+      // fields so retry uses the same email/conversion idempotency key.
+      return { success: false, error: locale === "it"
+        ? "Non è stato possibile inviare il modulo."
+        : "Unable to send the form" };
+    }
+  }, {
     success: null,
     error: null,
   });
@@ -101,6 +114,7 @@ export default function ContactForm({ locale = "en", variant = "default" }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [details, setDetails] = useState("");
+  const [privacyAccepted, setPrivacyAccepted] = useState(false);
   const [service, setService] = useState("information");
   const isInformation = service === "information";
   const [turnstileToken, setTurnstileToken] = useState("");
@@ -127,6 +141,7 @@ export default function ContactForm({ locale = "en", variant = "default" }) {
 
   useEffect(() => {
     if (state?.success) {
+      submissionId.current = null;
       toast.success(copy.success);
       const submittedService = isAutomation ? "information" : serviceRef.current?.getValue?.() || "unknown";
       if (!state?.silentDrop) {
@@ -152,6 +167,7 @@ export default function ContactForm({ locale = "en", variant = "default" }) {
       setEmail("");
       setPhone("");
       setDetails("");
+      setPrivacyAccepted(false);
       setTurnstileToken("");
       turnstileRef.current?.reset?.();
     }
@@ -361,6 +377,8 @@ export default function ContactForm({ locale = "en", variant = "default" }) {
             <input
               type="checkbox"
               name="privacy"
+              checked={privacyAccepted}
+              onChange={(event) => setPrivacyAccepted(event.target.checked)}
               required
               style={{ paddingRight: "12px" }}
             />

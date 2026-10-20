@@ -25,6 +25,8 @@ fs.mkdirSync(path.dirname(output), { recursive: true });
 function trace(record) { fs.appendFileSync(output, JSON.stringify({ at: new Date().toISOString(), ...record }) + '\n'); }
 function json(body, status = 200) { return new Response(JSON.stringify(body), { status, headers: { 'content-type': 'application/json' } }); }
 const originalFetch = globalThis.fetch;
+const acceptedMail = new Map();
+const failingConversions = new Set();
 globalThis.fetch = async function isolatedProviderFetch(input, init) {
   const request = new Request(input, init);
   const url = new URL(request.url);
@@ -40,15 +42,23 @@ globalThis.fetch = async function isolatedProviderFetch(input, init) {
     const recipients = Array.isArray(payload.to) ? payload.to : [payload.to];
     if (recipients.some(email => email !== expected.CONTACT_EMAIL_TO) || payload.from !== expected.RESEND_FROM_EMAIL || !payload.reply_to?.endsWith('@example.invalid')) throw new Error('Only synthetic QA mail is allowed');
     const rejected = payload.subject.includes('QA Provider Error');
-    trace({ provider: 'resend', accepted: !rejected, sourcePreserved: payload.text.includes('Origine: Landing automazioni aziendali'), budgetOmitted: !payload.text.includes('Budget:'), replyToSynthetic: true });
-    return rejected ? json({ name: 'validation_error', message: 'QA simulated provider rejection', statusCode: 422 }, 422) : json({ id: `qa-email-${randomUUID()}` });
+    const key = request.headers.get('idempotency-key');
+    const duplicate = !!key && acceptedMail.has(key);
+    const id = duplicate ? acceptedMail.get(key) : `qa-email-${randomUUID()}`;
+    if (!rejected && key) acceptedMail.set(key, id);
+    if (payload.subject.includes('QA CAPI Error')) failingConversions.add(key);
+    // Delay makes the browser's pending/disabled state observable.
+    await new Promise(resolve => setTimeout(resolve, 200));
+    trace({ provider: 'resend', accepted: !rejected, duplicate, idempotencyKey: key, sourcePreserved: payload.text.includes('Origine: Landing automazioni aziendali'), budgetOmitted: !payload.text.includes('Budget:'), replyToSynthetic: true });
+    return rejected ? json({ name: 'application_error', message: 'QA simulated provider unavailable', statusCode: 503 }, 503) : json({ id });
   }
   if (url.origin === 'https://bzr.openai.com' && url.pathname === '/v1/events') {
     const payload = await request.json();
     if (payload.validate_only !== true) throw new Error('QA conversions must be validate-only');
     const event = payload.events?.[0];
-    trace({ provider: 'openai-capi', eventId: event?.id, type: event?.type, validateOnly: true, hashedEmail: /^[a-f0-9]{64}$/.test(event?.user?.emails_sha256?.[0] || ''), sourceUrl: event?.source_url });
-    return json({ accepted: true }, 202);
+    const rejected = failingConversions.has(event?.id);
+    trace({ provider: 'openai-capi', eventId: event?.id, type: event?.type, accepted: !rejected, validateOnly: true, hashedEmail: /^[a-f0-9]{64}$/.test(event?.user?.emails_sha256?.[0] || ''), sourceUrl: event?.source_url });
+    return rejected ? json({ error: 'QA CAPI unavailable' }, 503) : json({ accepted: true }, 202);
   }
   if (!['GET', 'HEAD'].includes(request.method)) {
     trace({ provider: 'blocked-unexpected-write', origin: url.origin, pathname: url.pathname });

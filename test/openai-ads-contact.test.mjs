@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
 import test from "node:test";
+import { createHash } from "node:crypto";
 import { createContactConversion } from "../src/server/openai-ads-capi.mjs";
 import { ADS_CONSENT_GRANTED } from "../src/lib/openai-ads-config.mjs";
 import { IUBENDA_CONSENT_COOKIE } from "../src/lib/cookie-consent.mjs";
@@ -33,6 +34,7 @@ function contactForm() {
 
 function action(dependencies) {
   return loadModule("../src/components/contact-form/actions.js", {
+    createHash,
     randomUUID: () => "00000000-0000-4000-8000-000000000000",
     verifyTurnstileToken: async () => ({ success: true }),
     sendContactEmail: async () => "accepted-email",
@@ -72,7 +74,7 @@ test("spam, failed security, invalid forms, and rejected emails never schedule a
     if (scenario === "validation") form.set("email", "invalid");
     const result = await submit(null, form);
     assert.equal(conversions, 0, scenario);
-    assert.equal(result.success, scenario === "honeypot", scenario);
+    assert.equal(result.success, false, scenario);
     assert.equal(result.openaiAds, undefined, scenario);
   }
 });
@@ -172,4 +174,48 @@ test("headers, hashing, form-context, and scheduler failures cannot fail an acce
     const result = await submit(null, contactForm());
     assert.equal(result.success, true);
   }
+});
+
+test("same submission intent and payload preserve email and conversion keys across retry; edits and new intents differ", async () => {
+  const keys = [];
+  const events = [];
+  const submit = action({
+    sendContactEmail: async (_payload, { requestId }) => { keys.push(requestId); return "accepted-email"; },
+    scheduleOpenAIAdsLead: async ({ eventId }) => { events.push(eventId); return { eventId }; },
+  });
+  const form = contactForm();
+  form.set("submissionId", "00000000-0000-4000-8000-000000000001");
+  const first = await submit(null, form);
+  form.set("cf-turnstile-response", "fresh-token-on-retry");
+  const retry = await submit(null, form);
+  assert.equal(first.openaiAds.eventId, retry.openaiAds.eventId);
+  assert.equal(keys[0], keys[1]);
+  assert.deepEqual(keys, events);
+  assert.match(keys[0], /^contact-[a-f0-9]{64}$/);
+  form.set("details", "Edited request after provider failure");
+  await submit(null, form);
+  assert.notEqual(keys[1], keys[2]);
+  form.set("submissionId", "00000000-0000-4000-8000-000000000002");
+  await submit(null, form);
+  assert.notEqual(keys[2], keys[3]);
+});
+
+test("ambiguous provider failure can be retried with the same idempotency key and no premature conversion", async () => {
+  const keys = [];
+  let conversions = 0;
+  const submit = action({
+    sendContactEmail: async (_payload, { requestId }) => {
+      keys.push(requestId);
+      if (keys.length === 1) throw new Error("response lost after acceptance");
+      return "accepted-email";
+    },
+    scheduleOpenAIAdsLead: async () => { conversions++; },
+  });
+  const form = contactForm();
+  form.set("submissionId", "00000000-0000-4000-8000-000000000001");
+  assert.equal((await submit(null, form)).success, false);
+  assert.equal(conversions, 0);
+  assert.equal((await submit(null, form)).success, true);
+  assert.equal(keys[0], keys[1]);
+  assert.equal(conversions, 1);
 });

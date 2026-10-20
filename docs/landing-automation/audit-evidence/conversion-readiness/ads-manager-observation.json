@@ -1,0 +1,29 @@
+{
+  "audit_date": "2026-10-20",
+  "mode": "read-only; no synthetic live events generated",
+  "account": "Kremisi",
+  "account_url": "https://kremisi.com/",
+  "source": "Kremisi Pixel",
+  "pixel_id": "XUknsuwioN947vpX5LA4iD",
+  "sources_has_more": false,
+  "event_settings_has_more": false,
+  "settings": [
+    { "name": "Richiesta contatto Kremisi", "event_type": "lead_created", "archived": false, "source": "Kremisi Pixel", "campaigns": [], "click_attribution_days": 30, "view_attribution_days": 1 },
+    { "name": "Form Inviato", "event_type": "custom", "custom_event_name": "form-inviato", "archived": false, "source": "Kremisi Pixel", "campaigns": [] }
+  ],
+  "raw_diagnostics": {
+    "tool": "list_conversion_events",
+    "window": "latest 15 minutes at query time; sampled, at most 50 events",
+    "returned_sample_count": 9,
+    "observed_leads": [
+      { "event_type": "lead_created", "api_channel": "pixel_sdk", "action_source": "web", "event_timestamp_ms": 1792528909857, "received_at_ms": 1792528910841, "received_at_utc": "2026-10-20T20:41:50.841Z", "data_type": "customer_action" },
+      { "event_type": "lead_created", "api_channel": "server_to_server", "action_source": "web", "event_timestamp_ms": 1792528909617, "received_at_ms": 1792528910211, "received_at_utc": "2026-10-20T20:41:50.211Z", "data_type": "customer_action" }
+    ],
+    "limits": [
+      "Existing events only; origin and contact/email provenance not established.",
+      "Response exposes no event ID, sanitized source URL for leads, or deduplication outcome.",
+      "Raw transport receipt does not establish campaign attribution or unique lead counts.",
+      "Sample is not a complete history; absence of campaigns in these settings does not establish account-wide campaign inventory."
+    ]
+  }
+}

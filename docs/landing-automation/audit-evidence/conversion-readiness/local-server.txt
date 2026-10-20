@@ -1,0 +1,842 @@
+▲ Next.js 16.2.4 (Turbopack)
+- Local:         http://127.0.0.1:3102
+- Network:       http://127.0.0.1:3102
+✓ Ready in 769ms
+
+ GET /it/automazioni-aziendali 200 in 1920ms (next.js: 959ms, proxy.ts: 212ms, generate-params: 774ms, application-code: 749ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529368141-09f62560' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529368141-09f62560',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529368141-09f62560' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529368141-09f62560', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529368141-09f62560' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529368141-09f62560' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-bc7fb214ff4b56027e581ad079e3977f7f1ffccecc6c63cfc9f8790e921b01b0'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-bc7fb214ff4b56027e581ad079e3977f7f1ffccecc6c63cfc9f8790e921b01b0',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-bc7fb214ff4b56027e581ad079e3977f7f1ffccecc6c63cfc9f8790e921b01b0'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-bc7fb214ff4b56027e581ad079e3977f7f1ffccecc6c63cfc9f8790e921b01b0',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-bc7fb214ff4b56027e581ad079e3977f7f1ffccecc6c63cfc9f8790e921b01b0',
+  emailId: 'qa-email-25ecb7aa-a612-47e9-92da-412ad8fc98aa'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-bc7fb214ff4b56027e581ad079e3977f7f1ffccecc6c63cfc9f8790e921b01b0',
+  emailId: 'qa-email-25ecb7aa-a612-47e9-92da-412ad8fc98aa'
+}
+ POST /it/automazioni-aziendali 200 in 477ms (next.js: 103ms, proxy.ts: 18ms, generate-params: 30ms, application-code: 356ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 301ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 373ms (next.js: 10ms, proxy.ts: 5ms, generate-params: 43µs, application-code: 358ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529370191-c6650ba6' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529370191-c6650ba6',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529370191-c6650ba6' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529370191-c6650ba6', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529370191-c6650ba6' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529370191-c6650ba6' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-f16a2c4ab0799b59c0fd8832e573a82fb747159d934db732ece10d680cbe5ae5'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-f16a2c4ab0799b59c0fd8832e573a82fb747159d934db732ece10d680cbe5ae5',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-f16a2c4ab0799b59c0fd8832e573a82fb747159d934db732ece10d680cbe5ae5'
+}
+[Resend API Error]: {
+  status: 503,
+  error: {
+    name: 'application_error',
+    message: 'QA simulated provider unavailable',
+    statusCode: 503
+  },
+  path: '/emails'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-f16a2c4ab0799b59c0fd8832e573a82fb747159d934db732ece10d680cbe5ae5',
+  dataReturned: false,
+  errorReturned: true
+}
+[ContactEmail] Resend returned an error. {
+  requestId: 'contact-f16a2c4ab0799b59c0fd8832e573a82fb747159d934db732ece10d680cbe5ae5',
+  error: {
+    name: 'application_error',
+    message: 'QA simulated provider unavailable',
+    statusCode: 503
+  }
+}
+[ContactEmail] Email send exception. {
+  requestId: 'contact-f16a2c4ab0799b59c0fd8832e573a82fb747159d934db732ece10d680cbe5ae5',
+  stage: 'resend-api-call',
+  message: 'Resend rejected the contact email: application_error: QA simulated provider unavailable',
+  stack: 'Error: Resend rejected the contact email: application_error: QA simulated provider unavailable\n' +
+    '    at sendContactEmail (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\[root-of-the-server]__0fb_932._.js:196:19)\n' +
+    '    at async submitContact (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\[root-of-the-server]__0fb_932._.js:664:25)\n' +
+    '    at async executeActionAndPrepareForRender (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:64:5248)\n' +
+    '    at async D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:64:1986\n' +
+    '    at async handleAction (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:62:25378)\n' +
+    '    at async renderToHTMLOrFlightImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:69:55630)\n' +
+    '    at async doRender (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:7349:28)\n' +
+    '    at async AppPageRouteModule.handleResponse (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:71:63567)\n' +
+    '    at async handleResponse (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:7642:32)\n' +
+    '    at async Module.handler (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:8045:20)\n' +
+    '    at async DevServer.renderToResponseWithComponentsImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1454:9)\n' +
+    '    at async DevServer.renderPageComponent (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1506:24)\n' +
+    '    at async DevServer.renderToResponseImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1556:32)\n' +
+    '    at async DevServer.pipeImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1043:25)\n' +
+    '    at async NextNodeServer.handleCatchallRenderRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\next-server.js:338:17)\n' +
+    '    at async DevServer.handleRequestImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:934:17)\n' +
+    '    at async D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:394:20\n' +
+    '    at async Span.traceAsyncFn (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\trace\\trace.js:164:20)\n' +
+    '    at async DevServer.handleRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:390:24)\n' +
+    '    at async invokeRender (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:266:21)\n' +
+    '    at async handleRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:465:24)\n' +
+    '    at async requestHandlerImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:514:13)\n' +
+    '    at async Server.requestListener (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\start-server.js:225:13)'
+}
+[ContactEmail] Unexpected error: {
+  requestId: 'contact-f16a2c4ab0799b59c0fd8832e573a82fb747159d934db732ece10d680cbe5ae5',
+  stage: 'resend-send',
+  message: 'Resend rejected the contact email: application_error: QA simulated provider unavailable',
+  stack: 'Error: Resend rejected the contact email: application_error: QA simulated provider unavailable\n' +
+    '    at sendContactEmail (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\[root-of-the-server]__0fb_932._.js:196:19)\n' +
+    '    at async submitContact (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\[root-of-the-server]__0fb_932._.js:664:25)\n' +
+    '    at async executeActionAndPrepareForRender (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:64:5248)\n' +
+    '    at async D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:64:1986\n' +
+    '    at async handleAction (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:62:25378)\n' +
+    '    at async renderToHTMLOrFlightImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:69:55630)\n' +
+    '    at async doRender (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:7349:28)\n' +
+    '    at async AppPageRouteModule.handleResponse (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:71:63567)\n' +
+    '    at async handleResponse (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:7642:32)\n' +
+    '    at async Module.handler (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:8045:20)\n' +
+    '    at async DevServer.renderToResponseWithComponentsImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1454:9)\n' +
+    '    at async DevServer.renderPageComponent (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1506:24)\n' +
+    '    at async DevServer.renderToResponseImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1556:32)\n' +
+    '    at async DevServer.pipeImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1043:25)\n' +
+    '    at async NextNodeServer.handleCatchallRenderRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\next-server.js:338:17)\n' +
+    '    at async DevServer.handleRequestImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:934:17)\n' +
+    '    at async D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:394:20\n' +
+    '    at async Span.traceAsyncFn (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\trace\\trace.js:164:20)\n' +
+    '    at async DevServer.handleRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:390:24)\n' +
+    '    at async invokeRender (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:266:21)\n' +
+    '    at async handleRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:465:24)\n' +
+    '    at async requestHandlerImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:514:13)\n' +
+    '    at async Server.requestListener (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\start-server.js:225:13)'
+}
+ POST /it/automazioni-aziendali 200 in 286ms (next.js: 35ms, proxy.ts: 8ms, generate-params: 13ms, application-code: 243ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 230ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 267ms (next.js: 13ms, proxy.ts: 5ms, generate-params: 24µs, application-code: 249ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529372214-2cd2631b' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529372214-2cd2631b',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529372214-2cd2631b' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529372214-2cd2631b', tokenPresent: true }
+[ContactEmail] Turnstile verification failed. {
+  requestId: 'contact-1792529372214-2cd2631b',
+  reason: 'verification-failed',
+  errorCodes: [ 'invalid-input-response' ]
+}
+ POST /it/automazioni-aziendali 200 in 43ms (next.js: 17ms, proxy.ts: 8ms, generate-params: 11ms, application-code: 18ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 3ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 320ms (next.js: 6ms, proxy.ts: 6ms, generate-params: 27µs, application-code: 309ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529373814-f014208e' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529373814-f014208e',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529373814-f014208e' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529373814-f014208e', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529373814-f014208e' }
+[ContactEmail] Validation failed. { requestId: 'contact-1792529373814-f014208e', field: 'email-invalid' }
+ POST /it/automazioni-aziendali 200 in 104ms (next.js: 27ms, proxy.ts: 8ms, generate-params: 15ms, application-code: 69ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 26ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 466ms (next.js: 7ms, proxy.ts: 5ms, generate-params: 31µs, application-code: 454ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529375594-60cca719' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529375594-60cca719',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529375594-60cca719' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529375594-60cca719', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529375594-60cca719' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529375594-60cca719' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-b1fffa6183719bddaaf4f3542f3caa8848e958ea829e618912bc1099ccbe667e'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-b1fffa6183719bddaaf4f3542f3caa8848e958ea829e618912bc1099ccbe667e',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-b1fffa6183719bddaaf4f3542f3caa8848e958ea829e618912bc1099ccbe667e'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-b1fffa6183719bddaaf4f3542f3caa8848e958ea829e618912bc1099ccbe667e',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-b1fffa6183719bddaaf4f3542f3caa8848e958ea829e618912bc1099ccbe667e',
+  emailId: 'qa-email-6fa9592c-97a6-4fcd-a155-e3b75ea7d6fa'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-b1fffa6183719bddaaf4f3542f3caa8848e958ea829e618912bc1099ccbe667e',
+  emailId: 'qa-email-6fa9592c-97a6-4fcd-a155-e3b75ea7d6fa'
+}
+ POST /it/automazioni-aziendali 200 in 279ms (next.js: 19ms, proxy.ts: 6ms, generate-params: 9ms, application-code: 255ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 229ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 575ms (next.js: 5ms, proxy.ts: 4ms, generate-params: 24µs, application-code: 566ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529377810-c2497c81' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529377810-c2497c81',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529377810-c2497c81' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529377810-c2497c81', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529377810-c2497c81' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529377810-c2497c81' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-3e9aa59ceee1095e0b18c2d2f2780c48e2d62e379e73761fa3faa8fc45aebc33'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-3e9aa59ceee1095e0b18c2d2f2780c48e2d62e379e73761fa3faa8fc45aebc33',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-3e9aa59ceee1095e0b18c2d2f2780c48e2d62e379e73761fa3faa8fc45aebc33'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-3e9aa59ceee1095e0b18c2d2f2780c48e2d62e379e73761fa3faa8fc45aebc33',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-3e9aa59ceee1095e0b18c2d2f2780c48e2d62e379e73761fa3faa8fc45aebc33',
+  emailId: 'qa-email-924f8059-f5f3-44d1-beb7-061f52c1a9ef'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-3e9aa59ceee1095e0b18c2d2f2780c48e2d62e379e73761fa3faa8fc45aebc33',
+  emailId: 'qa-email-924f8059-f5f3-44d1-beb7-061f52c1a9ef'
+}
+ POST /it/automazioni-aziendali 200 in 403ms (next.js: 37ms, proxy.ts: 4ms, generate-params: 20ms, application-code: 361ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 264ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 520ms (next.js: 10ms, proxy.ts: 4ms, generate-params: 24µs, application-code: 507ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529379860-fcdb90e5' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529379860-fcdb90e5',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529379860-fcdb90e5' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529379860-fcdb90e5', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529379860-fcdb90e5' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529379860-fcdb90e5' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-a83ea3d3f890a26958776bec5d7909259b785df35f7eae5b016d9e5167cbb714'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-a83ea3d3f890a26958776bec5d7909259b785df35f7eae5b016d9e5167cbb714',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-a83ea3d3f890a26958776bec5d7909259b785df35f7eae5b016d9e5167cbb714'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-a83ea3d3f890a26958776bec5d7909259b785df35f7eae5b016d9e5167cbb714',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-a83ea3d3f890a26958776bec5d7909259b785df35f7eae5b016d9e5167cbb714',
+  emailId: 'qa-email-55d8d525-41e6-4de5-995a-4de9a299da04'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-a83ea3d3f890a26958776bec5d7909259b785df35f7eae5b016d9e5167cbb714',
+  emailId: 'qa-email-55d8d525-41e6-4de5-995a-4de9a299da04'
+}
+ POST /it/automazioni-aziendali 200 in 327ms (next.js: 36ms, proxy.ts: 31ms, generate-params: 13ms, application-code: 260ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 235ms src/components/contact-form/actions.js
+[OpenAI Ads] Conversion rejected. { status: 503 }
+ GET /it/automazioni-aziendali 200 in 290ms (next.js: 6ms, proxy.ts: 4ms, generate-params: 16µs, application-code: 280ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529381639-3f3fd07d' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529381639-3f3fd07d',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529381639-3f3fd07d' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529381639-3f3fd07d', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529381639-3f3fd07d' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529381639-3f3fd07d' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6',
+  emailId: 'qa-email-3cb2ec8e-d083-43f8-89d0-91e64e5fd957'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6',
+  emailId: 'qa-email-3cb2ec8e-d083-43f8-89d0-91e64e5fd957'
+}
+ POST /it/automazioni-aziendali 200 in 256ms (next.js: 20ms, proxy.ts: 6ms, generate-params: 10ms, application-code: 230ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 221ms src/components/contact-form/actions.js
+[ContactEmail] Request received. { requestId: 'contact-1792529382263-5c28da8d' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529382263-5c28da8d',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529382263-5c28da8d' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529382263-5c28da8d', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529382263-5c28da8d' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529382263-5c28da8d' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6',
+  emailId: 'qa-email-3cb2ec8e-d083-43f8-89d0-91e64e5fd957'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-8512bfe70a3765790c7e5e619dcbf9eb3e6b856667493882bf0811b25b1a32c6',
+  emailId: 'qa-email-3cb2ec8e-d083-43f8-89d0-91e64e5fd957'
+}
+ POST /it/automazioni-aziendali 200 in 252ms (next.js: 7ms, proxy.ts: 6ms, generate-params: 17µs, application-code: 239ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 225ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 916ms (next.js: 15ms, proxy.ts: 4ms, generate-params: 9ms, application-code: 897ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529385217-1cfde35b' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529385217-1cfde35b',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529385217-1cfde35b' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529385217-1cfde35b', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529385217-1cfde35b' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529385217-1cfde35b' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-9b5fc2d21b53529095b54a317df2e66c797c72bd2fde5ade8344c00c8fb1748a'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-9b5fc2d21b53529095b54a317df2e66c797c72bd2fde5ade8344c00c8fb1748a',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-9b5fc2d21b53529095b54a317df2e66c797c72bd2fde5ade8344c00c8fb1748a'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-9b5fc2d21b53529095b54a317df2e66c797c72bd2fde5ade8344c00c8fb1748a',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-9b5fc2d21b53529095b54a317df2e66c797c72bd2fde5ade8344c00c8fb1748a',
+  emailId: 'qa-email-6439af9c-6dd9-44cd-b47d-18babeb4b6f7'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-9b5fc2d21b53529095b54a317df2e66c797c72bd2fde5ade8344c00c8fb1748a',
+  emailId: 'qa-email-6439af9c-6dd9-44cd-b47d-18babeb4b6f7'
+}
+ POST /it/automazioni-aziendali 200 in 267ms (next.js: 25ms, proxy.ts: 6ms, generate-params: 14ms, application-code: 237ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 229ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 688ms (next.js: 201ms, proxy.ts: 61ms, generate-params: 14ms, application-code: 425ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529428476-9018e723' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529428476-9018e723',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529428476-9018e723' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529428476-9018e723', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529428476-9018e723' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529428476-9018e723' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a',
+  emailId: 'qa-email-aca071c6-3ba1-406b-89ad-51bf04be4dd0'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a',
+  emailId: 'qa-email-aca071c6-3ba1-406b-89ad-51bf04be4dd0'
+}
+ POST /it/automazioni-aziendali 200 in 284ms (next.js: 10ms, proxy.ts: 7ms, generate-params: 46µs, application-code: 266ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 253ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 339ms (next.js: 15ms, proxy.ts: 6ms, generate-params: 10ms, application-code: 318ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529430251-428c51f7' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529430251-428c51f7',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529430251-428c51f7' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529430251-428c51f7', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529430251-428c51f7' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529430251-428c51f7' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-6c173787fb276a3df5b9f1ddfb715c29afc2c4c7e6652929d8579f5ffea5e455'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-6c173787fb276a3df5b9f1ddfb715c29afc2c4c7e6652929d8579f5ffea5e455',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-6c173787fb276a3df5b9f1ddfb715c29afc2c4c7e6652929d8579f5ffea5e455'
+}
+[Resend API Error]: {
+  status: 503,
+  error: {
+    name: 'application_error',
+    message: 'QA simulated provider unavailable',
+    statusCode: 503
+  },
+  path: '/emails'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-6c173787fb276a3df5b9f1ddfb715c29afc2c4c7e6652929d8579f5ffea5e455',
+  dataReturned: false,
+  errorReturned: true
+}
+[ContactEmail] Resend returned an error. {
+  requestId: 'contact-6c173787fb276a3df5b9f1ddfb715c29afc2c4c7e6652929d8579f5ffea5e455',
+  error: {
+    name: 'application_error',
+    message: 'QA simulated provider unavailable',
+    statusCode: 503
+  }
+}
+[ContactEmail] Email send exception. {
+  requestId: 'contact-6c173787fb276a3df5b9f1ddfb715c29afc2c4c7e6652929d8579f5ffea5e455',
+  stage: 'resend-api-call',
+  message: 'Resend rejected the contact email: application_error: QA simulated provider unavailable',
+  stack: 'Error: Resend rejected the contact email: application_error: QA simulated provider unavailable\n' +
+    '    at sendContactEmail (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\[root-of-the-server]__0fb_932._.js:196:19)\n' +
+    '    at async submitContact (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\[root-of-the-server]__0fb_932._.js:664:25)\n' +
+    '    at async executeActionAndPrepareForRender (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:64:5248)\n' +
+    '    at async D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:64:1986\n' +
+    '    at async handleAction (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:62:25378)\n' +
+    '    at async renderToHTMLOrFlightImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:69:55630)\n' +
+    '    at async doRender (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:7349:28)\n' +
+    '    at async AppPageRouteModule.handleResponse (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:71:63567)\n' +
+    '    at async handleResponse (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:7642:32)\n' +
+    '    at async Module.handler (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:8045:20)\n' +
+    '    at async DevServer.renderToResponseWithComponentsImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1454:9)\n' +
+    '    at async DevServer.renderPageComponent (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1506:24)\n' +
+    '    at async DevServer.renderToResponseImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1556:32)\n' +
+    '    at async DevServer.pipeImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1043:25)\n' +
+    '    at async NextNodeServer.handleCatchallRenderRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\next-server.js:338:17)\n' +
+    '    at async DevServer.handleRequestImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:934:17)\n' +
+    '    at async D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:394:20\n' +
+    '    at async Span.traceAsyncFn (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\trace\\trace.js:164:20)\n' +
+    '    at async DevServer.handleRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:390:24)\n' +
+    '    at async invokeRender (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:266:21)\n' +
+    '    at async handleRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:465:24)\n' +
+    '    at async requestHandlerImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:514:13)\n' +
+    '    at async Server.requestListener (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\start-server.js:225:13)'
+}
+[ContactEmail] Unexpected error: {
+  requestId: 'contact-6c173787fb276a3df5b9f1ddfb715c29afc2c4c7e6652929d8579f5ffea5e455',
+  stage: 'resend-send',
+  message: 'Resend rejected the contact email: application_error: QA simulated provider unavailable',
+  stack: 'Error: Resend rejected the contact email: application_error: QA simulated provider unavailable\n' +
+    '    at sendContactEmail (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\[root-of-the-server]__0fb_932._.js:196:19)\n' +
+    '    at async submitContact (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\[root-of-the-server]__0fb_932._.js:664:25)\n' +
+    '    at async executeActionAndPrepareForRender (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:64:5248)\n' +
+    '    at async D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:64:1986\n' +
+    '    at async handleAction (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:62:25378)\n' +
+    '    at async renderToHTMLOrFlightImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:69:55630)\n' +
+    '    at async doRender (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:7349:28)\n' +
+    '    at async AppPageRouteModule.handleResponse (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\compiled\\next-server\\app-page-turbo.runtime.dev.js:71:63567)\n' +
+    '    at async handleResponse (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:7642:32)\n' +
+    '    at async Module.handler (D:\\Projects\\github\\kremisi-next\\.next\\dev\\server\\chunks\\ssr\\node_modules__pnpm_0k7cb_0._.js:8045:20)\n' +
+    '    at async DevServer.renderToResponseWithComponentsImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1454:9)\n' +
+    '    at async DevServer.renderPageComponent (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1506:24)\n' +
+    '    at async DevServer.renderToResponseImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1556:32)\n' +
+    '    at async DevServer.pipeImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:1043:25)\n' +
+    '    at async NextNodeServer.handleCatchallRenderRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\next-server.js:338:17)\n' +
+    '    at async DevServer.handleRequestImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\base-server.js:934:17)\n' +
+    '    at async D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:394:20\n' +
+    '    at async Span.traceAsyncFn (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\trace\\trace.js:164:20)\n' +
+    '    at async DevServer.handleRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\dev\\next-dev-server.js:390:24)\n' +
+    '    at async invokeRender (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:266:21)\n' +
+    '    at async handleRequest (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:465:24)\n' +
+    '    at async requestHandlerImpl (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\router-server.js:514:13)\n' +
+    '    at async Server.requestListener (D:\\Projects\\github\\kremisi-next\\node_modules\\.pnpm\\next@16.2.4_react-dom@19.1.0_react@19.1.0__react@19.1.0\\node_modules\\next\\dist\\server\\lib\\start-server.js:225:13)'
+}
+ POST /it/automazioni-aziendali 200 in 246ms (next.js: 7ms, proxy.ts: 4ms, generate-params: 21µs, application-code: 234ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 227ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 315ms (next.js: 17ms, proxy.ts: 5ms, generate-params: 10ms, application-code: 293ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529431980-38bf3267' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529431980-38bf3267',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529431980-38bf3267' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529431980-38bf3267', tokenPresent: true }
+[ContactEmail] Turnstile verification failed. {
+  requestId: 'contact-1792529431980-38bf3267',
+  reason: 'verification-failed',
+  errorCodes: [ 'invalid-input-response' ]
+}
+ POST /it/automazioni-aziendali 200 in 46ms (next.js: 13ms, proxy.ts: 7ms, generate-params: 32µs, application-code: 26ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 6ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 343ms (next.js: 17ms, proxy.ts: 5ms, generate-params: 11ms, application-code: 321ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529433605-2229e004' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529433605-2229e004',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529433605-2229e004' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529433605-2229e004', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529433605-2229e004' }
+[ContactEmail] Validation failed. { requestId: 'contact-1792529433605-2229e004', field: 'email-invalid' }
+ POST /it/automazioni-aziendali 200 in 31ms (next.js: 11ms, proxy.ts: 8ms, generate-params: 18µs, application-code: 13ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 5ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 271ms (next.js: 16ms, proxy.ts: 4ms, generate-params: 10ms, application-code: 250ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529435045-7900f211' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529435045-7900f211',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529435045-7900f211' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529435045-7900f211', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529435045-7900f211' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529435045-7900f211' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-97bf79939103514c34198c3a377399968b4b9ee2c370761a72fa0554709b112a'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-97bf79939103514c34198c3a377399968b4b9ee2c370761a72fa0554709b112a',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-97bf79939103514c34198c3a377399968b4b9ee2c370761a72fa0554709b112a'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-97bf79939103514c34198c3a377399968b4b9ee2c370761a72fa0554709b112a',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-97bf79939103514c34198c3a377399968b4b9ee2c370761a72fa0554709b112a',
+  emailId: 'qa-email-844781fd-d00d-4270-ab70-6a72234eee86'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-97bf79939103514c34198c3a377399968b4b9ee2c370761a72fa0554709b112a',
+  emailId: 'qa-email-844781fd-d00d-4270-ab70-6a72234eee86'
+}
+ POST /it/automazioni-aziendali 200 in 250ms (next.js: 9ms, proxy.ts: 4ms, generate-params: 23µs, application-code: 237ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 229ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 604ms (next.js: 19ms, proxy.ts: 4ms, generate-params: 11ms, application-code: 581ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529437418-f5d8a9cd' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529437418-f5d8a9cd',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529437418-f5d8a9cd' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529437418-f5d8a9cd', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529437418-f5d8a9cd' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529437418-f5d8a9cd' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-1aa65c04dba9749bcbb869a792c4d51a28da4afbef91dc5d9e2759173add090e'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-1aa65c04dba9749bcbb869a792c4d51a28da4afbef91dc5d9e2759173add090e',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-1aa65c04dba9749bcbb869a792c4d51a28da4afbef91dc5d9e2759173add090e'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-1aa65c04dba9749bcbb869a792c4d51a28da4afbef91dc5d9e2759173add090e',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-1aa65c04dba9749bcbb869a792c4d51a28da4afbef91dc5d9e2759173add090e',
+  emailId: 'qa-email-d47017ac-a0d4-419e-aacb-62807c46cb61'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-1aa65c04dba9749bcbb869a792c4d51a28da4afbef91dc5d9e2759173add090e',
+  emailId: 'qa-email-d47017ac-a0d4-419e-aacb-62807c46cb61'
+}
+ POST /it/automazioni-aziendali 200 in 283ms (next.js: 24ms, proxy.ts: 7ms, generate-params: 10ms, application-code: 252ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 234ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 217ms (next.js: 6ms, proxy.ts: 5ms, generate-params: 22µs, application-code: 206ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529439256-85f6aa46' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529439256-85f6aa46',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529439256-85f6aa46' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529439256-85f6aa46', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529439256-85f6aa46' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529439256-85f6aa46' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574',
+  emailId: 'qa-email-3144587a-2b25-495b-93c6-89dd0ee8d080'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574',
+  emailId: 'qa-email-3144587a-2b25-495b-93c6-89dd0ee8d080'
+}
+ POST /it/automazioni-aziendali 200 in 272ms (next.js: 21ms, proxy.ts: 4ms, generate-params: 14ms, application-code: 247ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 237ms src/components/contact-form/actions.js
+[OpenAI Ads] Conversion rejected. { status: 503 }
+ GET /it/automazioni-aziendali 200 in 706ms (next.js: 8ms, proxy.ts: 5ms, generate-params: 17µs, application-code: 693ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529441687-b6b4d82c' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529441687-b6b4d82c',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529441687-b6b4d82c' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529441687-b6b4d82c', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529441687-b6b4d82c' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529441687-b6b4d82c' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55',
+  emailId: 'qa-email-86adde9b-ac54-45b0-8263-4699f14e4b8a'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55',
+  emailId: 'qa-email-86adde9b-ac54-45b0-8263-4699f14e4b8a'
+}
+ POST /it/automazioni-aziendali 200 in 480ms (next.js: 192ms, proxy.ts: 5ms, generate-params: 183ms, application-code: 284ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 244ms src/components/contact-form/actions.js
+[ContactEmail] Request received. { requestId: 'contact-1792529442355-555c7394' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529442355-555c7394',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529442355-555c7394' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529442355-555c7394', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529442355-555c7394' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529442355-555c7394' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55',
+  emailId: 'qa-email-86adde9b-ac54-45b0-8263-4699f14e4b8a'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55',
+  emailId: 'qa-email-86adde9b-ac54-45b0-8263-4699f14e4b8a'
+}
+ POST /it/automazioni-aziendali 200 in 278ms (next.js: 10ms, proxy.ts: 6ms, generate-params: 17µs, application-code: 262ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 238ms src/components/contact-form/actions.js
+ GET /it/automazioni-aziendali 200 in 535ms (next.js: 14ms, proxy.ts: 4ms, generate-params: 26µs, application-code: 517ms)
+[ContactEmail] Request received. { requestId: 'contact-1792529444347-6dde15e9' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529444347-6dde15e9',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529444347-6dde15e9' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529444347-6dde15e9', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529444347-6dde15e9' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529444347-6dde15e9' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973',
+  emailId: 'qa-email-9e4741a3-46de-4d9a-847c-fc63f34c3eba'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973',
+  emailId: 'qa-email-9e4741a3-46de-4d9a-847c-fc63f34c3eba'
+}
+ POST /it/automazioni-aziendali 200 in 293ms (next.js: 34ms, proxy.ts: 13ms, generate-params: 17ms, application-code: 246ms)
+  └─ ƒ submitContact({"error":null,"success":null}, {}) in 236ms src/components/contact-form/actions.js
+[ContactEmail] Request received. { requestId: 'contact-1792529445097-890f52a1' }
+[ContactEmail] Honeypot diagnostic {
+  requestId: 'contact-1792529445097-890f52a1',
+  hasValue: false,
+  valueLength: 0
+}
+[ContactEmail] Honeypot passed. { requestId: 'contact-1792529445097-890f52a1' }
+[ContactEmail] Turnstile verification started. { requestId: 'contact-1792529445097-890f52a1', tokenPresent: true }
+[ContactEmail] Turnstile verification passed. { requestId: 'contact-1792529445097-890f52a1' }
+[ContactEmail] Validation passed. { requestId: 'contact-1792529445097-890f52a1' }
+[ContactEmail] RESEND_API_KEY configured: true {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973'
+}
+[ContactEmail] Email routing configured. {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973',
+  from: 'QA <sender@example.invalid>',
+  to: 'i***@example.invalid',
+  subject: 'Nuovo contatto Kremisi — [redacted-name]'
+}
+[ContactEmail] Starting Resend API call. {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973'
+}
+[ContactEmail] Resend response received. {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973',
+  dataReturned: true,
+  errorReturned: false
+}
+[ContactEmail] Resend returned email data. {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973',
+  emailId: 'qa-email-9e4741a3-46de-4d9a-847c-fc63f34c3eba'
+}
+[ContactEmail] Email accepted by Resend. {
+  requestId: 'contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973',
+  emailId: 'qa-email-9e4741a3-46de-4d9a-847c-fc63f34c3eba'
+}
+ POST /it/automazioni-aziendali 200 in 257ms (next.js: 7ms, proxy.ts: 4ms, generate-params: 21µs, application-code: 245ms)
+  └─ ƒ submitContact({"error":"Non è stato possibile inviare il modulo.","success":false}, {}) in 225ms src/components/contact-form/actions.js

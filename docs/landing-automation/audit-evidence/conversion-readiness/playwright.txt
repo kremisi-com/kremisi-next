@@ -1,0 +1,116 @@
+PASS success: pending blocks repeated click
+PASS success: expected browser action count
+PASS success: correct response rendered
+PASS success: Turnstile helper executed
+PASS success: email accepted only after validation
+PASS success: CAPI only after accepted consented email
+PASS success: Pixel only after accepted consented email
+PASS success: GA respects analytics purpose
+PASS success: Pixel/CAPI share actual server event ID
+PASS success: CAPI hashes email and uses validate-only
+PASS success: source and simple form contract reach mail adapter
+PASS success: fields reset on success or preserved on error
+PASS success: privacy choice resets only after success
+PASS success: no unexpected external write
+PASS success: no unhandled browser errors
+PASS email-error: pending blocks repeated click
+PASS email-error: expected browser action count
+PASS email-error: correct response rendered
+PASS email-error: Turnstile helper executed
+PASS email-error: email accepted only after validation
+PASS email-error: CAPI only after accepted consented email
+PASS email-error: Pixel only after accepted consented email
+PASS email-error: GA respects analytics purpose
+PASS email-error: fields reset on success or preserved on error
+PASS email-error: privacy choice resets only after success
+PASS email-error: no unexpected external write
+PASS email-error: no unhandled browser errors
+PASS security-error: expected browser action count
+PASS security-error: correct response rendered
+PASS security-error: Turnstile helper executed
+PASS security-error: email accepted only after validation
+PASS security-error: CAPI only after accepted consented email
+PASS security-error: Pixel only after accepted consented email
+PASS security-error: GA respects analytics purpose
+PASS security-error: fields reset on success or preserved on error
+PASS security-error: privacy choice resets only after success
+PASS security-error: no unexpected external write
+PASS security-error: no unhandled browser errors
+PASS invalid-email: expected browser action count
+PASS invalid-email: correct response rendered
+PASS invalid-email: Turnstile helper executed
+PASS invalid-email: email accepted only after validation
+PASS invalid-email: CAPI only after accepted consented email
+PASS invalid-email: Pixel only after accepted consented email
+PASS invalid-email: GA respects analytics purpose
+PASS invalid-email: fields reset on success or preserved on error
+PASS invalid-email: privacy choice resets only after success
+PASS invalid-email: no unexpected external write
+PASS invalid-email: no unhandled browser errors
+PASS consent-denied: pending blocks repeated click
+PASS consent-denied: expected browser action count
+PASS consent-denied: correct response rendered
+PASS consent-denied: Turnstile helper executed
+PASS consent-denied: email accepted only after validation
+PASS consent-denied: CAPI only after accepted consented email
+PASS consent-denied: Pixel only after accepted consented email
+PASS consent-denied: GA respects analytics purpose
+PASS consent-denied: fields reset on success or preserved on error
+PASS consent-denied: privacy choice resets only after success
+PASS consent-denied: no unexpected external write
+PASS consent-denied: no unhandled browser errors
+PASS measurement-only: pending blocks repeated click
+PASS measurement-only: expected browser action count
+PASS measurement-only: correct response rendered
+PASS measurement-only: Turnstile helper executed
+PASS measurement-only: email accepted only after validation
+PASS measurement-only: CAPI only after accepted consented email
+PASS measurement-only: Pixel only after accepted consented email
+PASS measurement-only: GA respects analytics purpose
+PASS measurement-only: fields reset on success or preserved on error
+PASS measurement-only: privacy choice resets only after success
+PASS measurement-only: no unexpected external write
+PASS measurement-only: no unhandled browser errors
+PASS capi-error: pending blocks repeated click
+PASS capi-error: expected browser action count
+PASS capi-error: correct response rendered
+PASS capi-error: Turnstile helper executed
+PASS capi-error: email accepted only after validation
+PASS capi-error: CAPI only after accepted consented email
+PASS capi-error: Pixel only after accepted consented email
+PASS capi-error: GA respects analytics purpose
+PASS CAPI failure: email/UI/Pixel remain successful
+PASS capi-error: fields reset on success or preserved on error
+PASS capi-error: privacy choice resets only after success
+PASS capi-error: no unexpected external write
+PASS capi-error: no unhandled browser errors
+PASS repeated: pending blocks repeated click
+PASS repeated: replay reaches real action
+PASS repeated: expected browser action count
+PASS repeated: correct response rendered
+PASS repeated: Turnstile helper executed
+PASS repeated: email accepted only after validation
+PASS repeated: CAPI only after accepted consented email
+PASS repeated: Pixel only after accepted consented email
+PASS repeated: GA respects analytics purpose
+PASS repeated: fixture provider delivers one logical email
+PASS repeated: conversion retry preserves event ID
+PASS repeated: fields reset on success or preserved on error
+PASS repeated: privacy choice resets only after success
+PASS repeated: no unexpected external write
+PASS repeated: no unhandled browser errors
+PASS response-lost: pending blocks repeated click
+PASS response-lost: transport failure preserves fields and reports error
+PASS response-lost: expected browser action count
+PASS response-lost: correct response rendered
+PASS response-lost: Turnstile helper executed
+PASS response-lost: email accepted only after validation
+PASS response-lost: CAPI only after accepted consented email
+PASS response-lost: Pixel only after accepted consented email
+PASS response-lost: GA respects analytics purpose
+PASS response-lost: fixture provider delivers one logical email
+PASS response-lost: conversion retry preserves event ID
+PASS response-lost: fields reset on success or preserved on error
+PASS response-lost: privacy choice resets only after success
+PASS response-lost: no unexpected external write
+PASS response-lost: no unhandled browser errors

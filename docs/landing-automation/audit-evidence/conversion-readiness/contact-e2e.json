@@ -1,0 +1,1521 @@
+{
+  "base": "http://127.0.0.1:3102",
+  "safety": "Explicitly authorized isolated localhost. Real server actions; Node provider transport intercepted with dummy credentials. No external mail or conversions.",
+  "checks": [
+    {
+      "name": "success: pending blocks repeated click",
+      "pass": true,
+      "evidence": {}
+    },
+    {
+      "name": "success: expected browser action count",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "success: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo."
+      }
+    },
+    {
+      "name": "success: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:28.489Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "success: email accepted only after validation",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:28.712Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "success: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:28.731Z",
+          "provider": "openai-capi",
+          "eventId": "contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "success: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 1
+      }
+    },
+    {
+      "name": "success: GA respects analytics purpose",
+      "pass": true,
+      "evidence": {
+        "count": 1
+      }
+    },
+    {
+      "name": "success: Pixel/CAPI share actual server event ID",
+      "pass": true,
+      "evidence": {
+        "serverId": "contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a",
+        "pixelId": "contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a"
+      }
+    },
+    {
+      "name": "success: CAPI hashes email and uses validate-only",
+      "pass": true,
+      "evidence": {
+        "at": "2026-10-20T20:50:28.731Z",
+        "provider": "openai-capi",
+        "eventId": "contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a",
+        "type": "lead_created",
+        "accepted": true,
+        "validateOnly": true,
+        "hashedEmail": true,
+        "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+      }
+    },
+    {
+      "name": "success: source and simple form contract reach mail adapter",
+      "pass": true,
+      "evidence": {
+        "at": "2026-10-20T20:50:28.712Z",
+        "provider": "resend",
+        "accepted": true,
+        "duplicate": false,
+        "idempotencyKey": "contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a",
+        "sourcePreserved": true,
+        "budgetOmitted": true,
+        "replyToSynthetic": true
+      }
+    },
+    {
+      "name": "success: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "success: privacy choice resets only after success",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "success: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:28.489Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:28.712Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:28.731Z",
+          "provider": "openai-capi",
+          "eventId": "contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "success: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "email-error: pending blocks repeated click",
+      "pass": true,
+      "evidence": {}
+    },
+    {
+      "name": "email-error: expected browser action count",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "email-error: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Non è stato possibile inviare il modulo."
+      }
+    },
+    {
+      "name": "email-error: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:30.253Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "email-error: email accepted only after validation",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:30.463Z",
+          "provider": "resend",
+          "accepted": false,
+          "duplicate": false,
+          "idempotencyKey": "contact-6c173787fb276a3df5b9f1ddfb715c29afc2c4c7e6652929d8579f5ffea5e455",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "email-error: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "email-error: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "email-error: GA respects analytics purpose",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "email-error: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": false
+      }
+    },
+    {
+      "name": "email-error: privacy choice resets only after success",
+      "pass": true,
+      "evidence": {
+        "success": false
+      }
+    },
+    {
+      "name": "email-error: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:30.253Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:30.463Z",
+          "provider": "resend",
+          "accepted": false,
+          "duplicate": false,
+          "idempotencyKey": "contact-6c173787fb276a3df5b9f1ddfb715c29afc2c4c7e6652929d8579f5ffea5e455",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "email-error: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "security-error: expected browser action count",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "security-error: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Verifica di sicurezza non riuscita. Ricarica la pagina e riprova."
+      }
+    },
+    {
+      "name": "security-error: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:31.983Z",
+          "provider": "turnstile",
+          "success": false
+        }
+      ]
+    },
+    {
+      "name": "security-error: email accepted only after validation",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "security-error: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "security-error: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "security-error: GA respects analytics purpose",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "security-error: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": false
+      }
+    },
+    {
+      "name": "security-error: privacy choice resets only after success",
+      "pass": true,
+      "evidence": {
+        "success": false
+      }
+    },
+    {
+      "name": "security-error: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:31.983Z",
+          "provider": "turnstile",
+          "success": false
+        }
+      ]
+    },
+    {
+      "name": "security-error: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "invalid-email: expected browser action count",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "invalid-email: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Inserisci un indirizzo email valido."
+      }
+    },
+    {
+      "name": "invalid-email: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:33.608Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "invalid-email: email accepted only after validation",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "invalid-email: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "invalid-email: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "invalid-email: GA respects analytics purpose",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "invalid-email: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": false
+      }
+    },
+    {
+      "name": "invalid-email: privacy choice resets only after success",
+      "pass": true,
+      "evidence": {
+        "success": false
+      }
+    },
+    {
+      "name": "invalid-email: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:33.608Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "invalid-email: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "consent-denied: pending blocks repeated click",
+      "pass": true,
+      "evidence": {}
+    },
+    {
+      "name": "consent-denied: expected browser action count",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "consent-denied: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo."
+      }
+    },
+    {
+      "name": "consent-denied: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:35.047Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "consent-denied: email accepted only after validation",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:35.259Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-97bf79939103514c34198c3a377399968b4b9ee2c370761a72fa0554709b112a",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "consent-denied: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "consent-denied: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "consent-denied: GA respects analytics purpose",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "consent-denied: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "consent-denied: privacy choice resets only after success",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "consent-denied: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:35.047Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:35.259Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-97bf79939103514c34198c3a377399968b4b9ee2c370761a72fa0554709b112a",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "consent-denied: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "measurement-only: pending blocks repeated click",
+      "pass": true,
+      "evidence": {}
+    },
+    {
+      "name": "measurement-only: expected browser action count",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "measurement-only: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo."
+      }
+    },
+    {
+      "name": "measurement-only: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:37.420Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "measurement-only: email accepted only after validation",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:37.626Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-1aa65c04dba9749bcbb869a792c4d51a28da4afbef91dc5d9e2759173add090e",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "measurement-only: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "measurement-only: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "measurement-only: GA respects analytics purpose",
+      "pass": true,
+      "evidence": {
+        "count": 1
+      }
+    },
+    {
+      "name": "measurement-only: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "measurement-only: privacy choice resets only after success",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "measurement-only: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:37.420Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:37.626Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-1aa65c04dba9749bcbb869a792c4d51a28da4afbef91dc5d9e2759173add090e",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "measurement-only: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "capi-error: pending blocks repeated click",
+      "pass": true,
+      "evidence": {}
+    },
+    {
+      "name": "capi-error: expected browser action count",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "capi-error: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo."
+      }
+    },
+    {
+      "name": "capi-error: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:39.260Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "capi-error: email accepted only after validation",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:39.475Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "capi-error: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:39.499Z",
+          "provider": "openai-capi",
+          "eventId": "contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574",
+          "type": "lead_created",
+          "accepted": false,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "capi-error: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 1
+      }
+    },
+    {
+      "name": "capi-error: GA respects analytics purpose",
+      "pass": true,
+      "evidence": {
+        "count": 1
+      }
+    },
+    {
+      "name": "CAPI failure: email/UI/Pixel remain successful",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:39.499Z",
+          "provider": "openai-capi",
+          "eventId": "contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574",
+          "type": "lead_created",
+          "accepted": false,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "capi-error: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "capi-error: privacy choice resets only after success",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "capi-error: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:39.260Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:39.475Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:39.499Z",
+          "provider": "openai-capi",
+          "eventId": "contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574",
+          "type": "lead_created",
+          "accepted": false,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "capi-error: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "repeated: pending blocks repeated click",
+      "pass": true,
+      "evidence": {}
+    },
+    {
+      "name": "repeated: replay reaches real action",
+      "pass": true,
+      "evidence": {
+        "httpStatus": 200
+      }
+    },
+    {
+      "name": "repeated: expected browser action count",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "repeated: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo."
+      }
+    },
+    {
+      "name": "repeated: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:41.691Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:42.358Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "repeated: email accepted only after validation",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:41.923Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:42.570Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": true,
+          "idempotencyKey": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "repeated: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:41.967Z",
+          "provider": "openai-capi",
+          "eventId": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        },
+        {
+          "at": "2026-10-20T20:50:42.626Z",
+          "provider": "openai-capi",
+          "eventId": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "repeated: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 1
+      }
+    },
+    {
+      "name": "repeated: GA respects analytics purpose",
+      "pass": true,
+      "evidence": {
+        "count": 1
+      }
+    },
+    {
+      "name": "repeated: fixture provider delivers one logical email",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:41.923Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:42.570Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": true,
+          "idempotencyKey": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "repeated: conversion retry preserves event ID",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:41.967Z",
+          "provider": "openai-capi",
+          "eventId": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        },
+        {
+          "at": "2026-10-20T20:50:42.626Z",
+          "provider": "openai-capi",
+          "eventId": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "repeated: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "repeated: privacy choice resets only after success",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "repeated: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:41.691Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:41.923Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:41.967Z",
+          "provider": "openai-capi",
+          "eventId": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        },
+        {
+          "at": "2026-10-20T20:50:42.358Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:42.570Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": true,
+          "idempotencyKey": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:42.626Z",
+          "provider": "openai-capi",
+          "eventId": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "repeated: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "response-lost: pending blocks repeated click",
+      "pass": true,
+      "evidence": {}
+    },
+    {
+      "name": "response-lost: transport failure preserves fields and reports error",
+      "pass": true,
+      "evidence": {}
+    },
+    {
+      "name": "response-lost: expected browser action count",
+      "pass": true,
+      "evidence": {
+        "localActions": 2
+      }
+    },
+    {
+      "name": "response-lost: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo."
+      }
+    },
+    {
+      "name": "response-lost: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:44.354Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:45.099Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "response-lost: email accepted only after validation",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:44.568Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:45.313Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": true,
+          "idempotencyKey": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "response-lost: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:44.595Z",
+          "provider": "openai-capi",
+          "eventId": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        },
+        {
+          "at": "2026-10-20T20:50:45.342Z",
+          "provider": "openai-capi",
+          "eventId": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "response-lost: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 1
+      }
+    },
+    {
+      "name": "response-lost: GA respects analytics purpose",
+      "pass": true,
+      "evidence": {
+        "count": 1
+      }
+    },
+    {
+      "name": "response-lost: fixture provider delivers one logical email",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:44.568Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:45.313Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": true,
+          "idempotencyKey": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "response-lost: conversion retry preserves event ID",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:44.595Z",
+          "provider": "openai-capi",
+          "eventId": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        },
+        {
+          "at": "2026-10-20T20:50:45.342Z",
+          "provider": "openai-capi",
+          "eventId": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "response-lost: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "response-lost: privacy choice resets only after success",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "response-lost: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T20:50:44.354Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:44.568Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:44.595Z",
+          "provider": "openai-capi",
+          "eventId": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        },
+        {
+          "at": "2026-10-20T20:50:45.099Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:45.313Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": true,
+          "idempotencyKey": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:45.342Z",
+          "provider": "openai-capi",
+          "eventId": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "response-lost: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario": "success",
+      "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T20:50:28.489Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:28.712Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:28.731Z",
+          "provider": "openai-capi",
+          "eventId": "contact-53c29f16d0d010ac6ea31b431d8cdc5f043eac606a6ea5b56f5c15701b18f86a",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "scenario": "email-error",
+      "status": "Non è stato possibile inviare il modulo.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T20:50:30.253Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:30.463Z",
+          "provider": "resend",
+          "accepted": false,
+          "duplicate": false,
+          "idempotencyKey": "contact-6c173787fb276a3df5b9f1ddfb715c29afc2c4c7e6652929d8579f5ffea5e455",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "scenario": "security-error",
+      "status": "Verifica di sicurezza non riuscita. Ricarica la pagina e riprova.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T20:50:31.983Z",
+          "provider": "turnstile",
+          "success": false
+        }
+      ]
+    },
+    {
+      "scenario": "invalid-email",
+      "status": "Inserisci un indirizzo email valido.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T20:50:33.608Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "scenario": "consent-denied",
+      "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T20:50:35.047Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:35.259Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-97bf79939103514c34198c3a377399968b4b9ee2c370761a72fa0554709b112a",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "scenario": "measurement-only",
+      "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T20:50:37.420Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:37.626Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-1aa65c04dba9749bcbb869a792c4d51a28da4afbef91dc5d9e2759173add090e",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "scenario": "capi-error",
+      "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T20:50:39.260Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:39.475Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:39.499Z",
+          "provider": "openai-capi",
+          "eventId": "contact-1f88583b04a0b2c4b474d199758bfb51de618a5983addff00d0b5ce7e3969574",
+          "type": "lead_created",
+          "accepted": false,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "scenario": "repeated",
+      "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T20:50:41.691Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:41.923Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:41.967Z",
+          "provider": "openai-capi",
+          "eventId": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        },
+        {
+          "at": "2026-10-20T20:50:42.358Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:42.570Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": true,
+          "idempotencyKey": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:42.626Z",
+          "provider": "openai-capi",
+          "eventId": "contact-60596a6d8c62c7adb1528ebadec0acca08a9dc5a433a9aee3b2a6a6415c9db55",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "scenario": "response-lost",
+      "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo.",
+      "localActions": 2,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T20:50:44.354Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:44.568Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": false,
+          "idempotencyKey": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:44.595Z",
+          "provider": "openai-capi",
+          "eventId": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        },
+        {
+          "at": "2026-10-20T20:50:45.099Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T20:50:45.313Z",
+          "provider": "resend",
+          "accepted": true,
+          "duplicate": true,
+          "idempotencyKey": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T20:50:45.342Z",
+          "provider": "openai-capi",
+          "eventId": "contact-a65d49ef71702a6020e12bd6604576ef566fc323bee2e34a45aa09ff87aae973",
+          "type": "lead_created",
+          "accepted": true,
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    }
+  ]
+}

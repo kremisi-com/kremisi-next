@@ -16,7 +16,7 @@ const child = spawn(process.execPath, ['node_modules/next/dist/bin/next', 'dev',
     CONTACT_EMAIL_TO: 'inbox@example.invalid',
     OPENAI_ADS_CONVERSIONS_API_KEY: 'qa-local-not-a-real-key',
     OPENAI_ADS_VALIDATE_ONLY: 'true',
-    KREMISI_QA_LOG_FILE: path.resolve('docs/landing-automation/audit-evidence/mobile-release/contact-provider.jsonl'),
+    KREMISI_QA_LOG_FILE: path.resolve(process.env.KREMISI_QA_OUTPUT || 'docs/landing-automation/audit-evidence/mobile-release', 'contact-provider.jsonl'),
   },
 });
 for (const signal of ['SIGINT', 'SIGTERM']) process.on(signal, () => child.kill(signal));

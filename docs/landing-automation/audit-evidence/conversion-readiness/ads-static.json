@@ -1,0 +1,227 @@
+{
+  "checks": [
+    {
+      "hits": [
+        {
+          "line": 4,
+          "path": "src\\lib\\openai-ads-config.mjs"
+        }
+      ],
+      "message": "Found expected Pixel ID or OpenAI Ads Pixel marker.",
+      "name": "pixel_marker",
+      "passed": true
+    },
+    {
+      "hits": [
+        {
+          "line": 14,
+          "path": ".env.example"
+        },
+        {
+          "line": 11,
+          "path": "docs\\landing-automation\\audit-evidence\\conversion-readiness\\environment.json"
+        },
+        {
+          "line": 5,
+          "path": "docs\\landing-automation\\audit-evidence\\conversion-readiness\\secret-scan.json"
+        },
+        {
+          "line": 15,
+          "path": "scripts\\qa\\contact-provider-fixture.mjs"
+        },
+        {
+          "line": 17,
+          "path": "scripts\\qa\\start-contact-qa.mjs"
+        },
+        {
+          "line": 57,
+          "path": "src\\server\\openai-ads-capi.mjs"
+        },
+        {
+          "line": 4,
+          "path": "src\\server\\openai-ads.js"
+        },
+        {
+          "line": 15,
+          "path": ".env.example"
+        },
+        {
+          "line": 11,
+          "path": "docs\\landing-automation\\audit-evidence\\conversion-readiness\\environment.json"
+        },
+        {
+          "line": 15,
+          "path": "scripts\\qa\\contact-provider-fixture.mjs"
+        },
+        {
+          "line": 17,
+          "path": "scripts\\qa\\start-contact-qa.mjs"
+        },
+        {
+          "line": 57,
+          "path": "src\\server\\openai-ads-capi.mjs"
+        },
+        {
+          "line": 22,
+          "path": "src\\server\\openai-ads.js"
+        }
+      ],
+      "message": "Found CAPI marker or expected server-only secret reference.",
+      "name": "capi_marker",
+      "passed": true
+    },
+    {
+      "hits": [
+        {
+          "line": 48,
+          "path": "docs\\landing-automation\\audit-evidence\\after\\mock-form.json"
+        },
+        {
+          "line": 58,
+          "path": "docs\\landing-automation\\audit-evidence\\conversion-readiness\\contact-e2e.json"
+        },
+        {
+          "line": 51,
+          "path": "docs\\landing-automation\\audit-evidence\\mobile-release\\contact-e2e.json"
+        },
+        {
+          "line": 97,
+          "path": "scripts\\audit-automation-contact-e2e.mjs"
+        },
+        {
+          "line": 36,
+          "path": "scripts\\audit-automation-form.mjs"
+        },
+        {
+          "line": 45,
+          "path": "scripts\\qa\\contact-provider-fixture.mjs"
+        },
+        {
+          "line": 182,
+          "path": "src\\components\\contact-form\\actions.js"
+        },
+        {
+          "line": 101,
+          "path": "src\\components\\contact-form\\contact-form.js"
+        },
+        {
+          "line": 117,
+          "path": "src\\lib\\openai-ads-browser.mjs"
+        },
+        {
+          "line": 30,
+          "path": "src\\server\\openai-ads-capi.mjs"
+        },
+        {
+          "line": 7,
+          "path": "src\\server\\openai-ads.js"
+        }
+      ],
+      "message": "Found event_id/deduplication/idempotency marker.",
+      "name": "dedupe_marker",
+      "passed": true
+    },
+    {
+      "hits": [],
+      "message": "No browser-visible CAPI/API secret env references found.",
+      "name": "no_public_capi_env",
+      "passed": true
+    },
+    {
+      "hits": [
+        {
+          "line": 5,
+          "path": "src\\lib\\openai-ads-browser.mjs"
+        },
+        {
+          "line": 4,
+          "path": "src\\lib\\openai-ads-config.mjs"
+        },
+        {
+          "line": 4,
+          "path": "src\\server\\openai-ads-capi.mjs"
+        },
+        {
+          "line": 86,
+          "path": "README.md"
+        }
+      ],
+      "message": "If browser and server Pixel ID config names both exist, docs/code explain they are the same logical Pixel ID.",
+      "name": "shared_pixel_id_guidance",
+      "passed": true
+    },
+    {
+      "hits": [],
+      "message": "No unsupported OpenAI Ads Pixel event names found in measure calls.",
+      "name": "supported_event_names",
+      "passed": true
+    },
+    {
+      "hits": [
+        {
+          "line": 34,
+          "path": "src\\server\\openai-ads-capi.mjs"
+        }
+      ],
+      "message": "Found oppref or __oppref marker for CAPI attribution context.",
+      "name": "oppref_marker",
+      "passed": true
+    },
+    {
+      "hits": [
+        {
+          "line": 63,
+          "path": "docs\\landing-automation\\audit-evidence\\conversion-readiness\\contact-e2e.json"
+        },
+        {
+          "line": 55,
+          "path": "docs\\landing-automation\\audit-evidence\\mobile-release\\contact-e2e.json"
+        },
+        {
+          "line": 101,
+          "path": "scripts\\audit-automation-contact-e2e.mjs"
+        },
+        {
+          "line": 60,
+          "path": "scripts\\qa\\contact-provider-fixture.mjs"
+        },
+        {
+          "line": 19,
+          "path": "src\\server\\openai-ads-capi.mjs"
+        },
+        {
+          "line": 16,
+          "path": "src\\server\\openai-ads.js"
+        }
+      ],
+      "message": "Found source_url/sourceUrl marker for CAPI web source context.",
+      "name": "source_url_marker",
+      "passed": true
+    },
+    {
+      "hits": [],
+      "message": "No removed legacy CAPI request field names found in OpenAI Ads CAPI files.",
+      "name": "no_legacy_capi_fields",
+      "passed": true
+    },
+    {
+      "hits": [],
+      "message": "Checked-in env templates do not default OpenAI Ads CAPI validate_only mode to true.",
+      "name": "no_validate_only_default",
+      "passed": true
+    }
+  ],
+  "failed_correctness": [],
+  "failed_required": [],
+  "failed_security": [],
+  "passed": true,
+  "required": [
+    "pixel",
+    "capi",
+    "dedupe",
+    "shared-pixel-id",
+    "oppref",
+    "source-url"
+  ],
+  "root": "D:\\Projects\\github\\kremisi-next"
+}

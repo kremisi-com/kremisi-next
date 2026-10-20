@@ -2,6 +2,7 @@
 import { memo, useState, useRef, useEffect } from 'react';
 import { animate } from 'framer-motion';
 import { useTranslations } from "next-intl";
+import AnimatedLink from "@/components/animated-link/animated-link";
 import styles from './services.module.css';
 
 function Services({ titleAs = "h2" }) {
@@ -159,7 +160,21 @@ function Services({ titleAs = "h2" }) {
                                 </div>
                             </div>
                             
-                            <p className={styles.serviceDescription}>{service.description}</p>
+                            <p className={styles.serviceDescription}>
+                                {service.description}
+                                {service.automationLink && (
+                                    <>
+                                        {" "}
+                                        <AnimatedLink
+                                            href="/automazioni-aziendali"
+                                            className={styles.serviceLink}
+                                            onClick={(event) => event.stopPropagation()}
+                                        >
+                                            {service.automationLink}
+                                        </AnimatedLink>
+                                    </>
+                                )}
+                            </p>
 
                             <div className={`${styles.expandedContent} ${activeIndex === index ? styles.expanded : ''}`}>
                                 <div className={styles.expandedInner}>
