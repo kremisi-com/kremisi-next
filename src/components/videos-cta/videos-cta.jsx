@@ -72,7 +72,7 @@ function VideosCta({ variant, cta }) {
             <div className={styles.bracketsContainer}>
                 {/* Fisheye Video Gallery */}
 
-                <div className={styles.galleryWrapper}>
+                <div className={styles.galleryWrapper} data-reveal={isCampaign ? '' : undefined}>
                     <div className={styles.gallery} aria-hidden={isCampaign ? true : undefined}>
                         {videos.map((src, index) => (
                             <div key={index} className={styles.videoCard}>

@@ -1,4 +1,5 @@
 .page {
+    --landing-ease: cubic-bezier(0.22, 1, 0.36, 1);
     width: 100%;
     padding-bottom: 100px;
     color: var(--foreground);
@@ -84,6 +85,7 @@
     display: inline-flex;
     padding: 8px 40px 8px 0;
     border-radius: 40px;
+    transition: transform 220ms var(--landing-ease);
 }
 
 .textLink {
@@ -98,11 +100,13 @@
     text-decoration-line: underline;
     text-underline-offset: 6px;
     text-decoration-thickness: 1px;
+    transition: color 200ms ease, text-underline-offset 220ms var(--landing-ease);
 }
 
 .textLink span {
     font-size: 23px;
     text-decoration: none;
+    transition: transform 220ms var(--landing-ease);
 }
 
 .textLink:hover {
@@ -159,6 +163,13 @@
     gap: 35px;
     border-top: 1px solid var(--box-bg);
     padding: 45px 0;
+    transition: border-color 250ms ease, background-color 250ms ease;
+}
+
+.problem,
+.number,
+.methodList h3 {
+    transition: transform 250ms var(--landing-ease);
 }
 
 .solutionRow:last-child {
@@ -259,12 +270,14 @@
 .imageFrame {
     overflow: hidden;
     border: 1px solid var(--box-bg);
+    transition: border-color 300ms ease;
 }
 
 .caseImage {
     display: block;
     width: 100%;
     height: auto;
+    transition: transform 450ms var(--landing-ease);
 }
 
 .caseFigure figcaption {
@@ -287,6 +300,7 @@
 .methodList li {
     padding-top: 20px;
     border-top: 1px solid var(--box-bg);
+    transition: border-color 250ms ease;
 }
 
 .methodList h3 {
@@ -513,5 +527,63 @@
         animation: none !important;
         transition: none !important;
         scroll-behavior: auto !important;
+    }
+}
+
+@media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .primaryLink:hover {
+        transform: translateY(-2px);
+    }
+
+    .textLink:hover {
+        text-underline-offset: 8px;
+    }
+
+    .textLink:hover span {
+        transform: translate(3px, -3px);
+    }
+
+    .heroActions .textLink:hover span {
+        transform: translate(3px, 3px);
+    }
+
+    .solutionRow:hover {
+        border-color: color-mix(in srgb, var(--primary) 45%, var(--box-bg));
+        background-color: color-mix(in srgb, var(--box-bg) 35%, transparent);
+    }
+
+    .solutionRow:hover .problem,
+    .solutionRow:hover .number {
+        transform: translateX(3px);
+    }
+
+    .methodList li:hover {
+        border-color: color-mix(in srgb, var(--primary) 45%, var(--box-bg));
+    }
+
+    .methodList li:hover h3 {
+        transform: translateY(-2px);
+    }
+
+    .caseFigure:hover .imageFrame {
+        border-color: color-mix(in srgb, var(--foreground) 30%, transparent);
+    }
+
+    .caseFigure:hover .caseImage {
+        transform: scale(1.018);
+    }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .primaryLink:focus-visible {
+        transform: translateY(-2px);
+    }
+
+    .primaryLink:active {
+        transform: translateY(0) scale(0.985);
+    }
+
+    .textLink:focus-visible span {
+        transform: translate(3px, -3px);
     }
 }

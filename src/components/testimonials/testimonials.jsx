@@ -88,12 +88,12 @@ function Testimonials({ featuredProjectId }) {
         return (
             <section id="client-review" className={`${styles.testimonialsSection} ${styles.featured}`} aria-labelledby="featured-review-title">
                 <div className={styles.featuredContainer}>
-                    <h2 id="featured-review-title" className={styles.subtitle}>
+                    <h2 id="featured-review-title" className={styles.subtitle} data-reveal>
                         <span className={styles.subtitleLine} aria-hidden="true" />
                         {t('eyebrow')}
                     </h2>
                     <figure className={styles.featuredReview}>
-                        <figcaption className={styles.featuredAuthor}>
+                        <figcaption className={styles.featuredAuthor} data-reveal>
                             <Image src={featured.image} alt="" width={120} height={120} sizes="(max-width: 768px) 72px, 120px" className={styles.featuredAvatar} />
                             <div>
                                 <p className={styles.featuredName}>{featured.name}</p>
@@ -103,7 +103,7 @@ function Testimonials({ featuredProjectId }) {
                                 </Link>
                             </div>
                         </figcaption>
-                        <div>
+                        <div data-reveal data-reveal-delay="60">
                             <blockquote className={styles.featuredQuote}>
                                 <span className={styles.firstLetter}>{featured.text.charAt(0)}</span>
                                 {featured.text.slice(1)}

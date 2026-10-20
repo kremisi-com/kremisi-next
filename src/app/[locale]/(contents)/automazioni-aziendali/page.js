@@ -9,6 +9,7 @@ import Testimonials from "@/components/testimonials/testimonials";
 import VideosCta from "@/components/videos-cta/videos-cta";
 import projects from "@/lib/projects.json";
 import CampaignLink from "./campaign-link";
+import LandingMotion from "./landing-motion";
 import styles from "./page.module.css";
 
 const SLUG = "automazioni-aziendali";
@@ -56,16 +57,17 @@ export default async function AutomationPage({ params }) {
     const closing = await getTranslations({ locale, namespace: "cta" });
 
     return (
-        <main className={styles.page}>
+        <main id="automation-landing" className={styles.page}>
+            <LandingMotion />
             <a href="#contatto" className={styles.skipLink}>{t("skipToContact")}</a>
             <Overview variant="campaign" id="inizio" aria-labelledby="automation-title">
-                <p className={styles.eyebrow}>{t("hero.eyebrow")}</p>
-                <h1 id="automation-title" className={styles.heroTitle}>
+                <p className={styles.eyebrow} data-reveal>{t("hero.eyebrow")}</p>
+                <h1 id="automation-title" className={styles.heroTitle} data-reveal="hero">
                     {t("hero.line1")}<br />
                     <span>{t("hero.line2")}</span>
                 </h1>
-                <p className={styles.heroDescription}>{t("hero.description")}</p>
-                <div className={styles.heroActions}>
+                <p className={styles.heroDescription} data-reveal data-reveal-delay="60">{t("hero.description")}</p>
+                <div className={styles.heroActions} data-reveal data-reveal-delay="100">
                     <CampaignLink href="#contatto" placement="hero_contact" className={styles.primaryLink}>
                         <GitButton text={t("cta")} isLinkContent className={styles.heroButton} />
                     </CampaignLink>
@@ -73,18 +75,18 @@ export default async function AutomationPage({ params }) {
                         {t("hero.caseLink")} <span aria-hidden="true">↘</span>
                     </CampaignLink>
                 </div>
-                <p className={styles.heroNote}>{t("hero.note")}</p>
+                <p className={styles.heroNote} data-reveal data-reveal-delay="120">{t("hero.note")}</p>
             </Overview>
 
             <section className={styles.section} aria-labelledby="solutions-title" id="soluzioni">
-                <div className={styles.sectionHeader}>
+                <div className={styles.sectionHeader} data-reveal>
                     <p className={styles.eyebrow}>{t("solutions.eyebrow")}</p>
                     <h2 id="solutions-title" className={styles.sectionTitle}>{t("solutions.title")}</h2>
                     <p className={styles.intro}>{t("solutions.intro")}</p>
                 </div>
                 <ol className={styles.solutionList}>
                     {["connections", "custom", "ai"].map((key, index) => (
-                        <li key={key} className={styles.solutionRow}>
+                        <li key={key} className={styles.solutionRow} data-reveal data-reveal-delay={index * 45}>
                             <span className={styles.number} aria-hidden="true">0{index + 1}</span>
                             <div className={styles.problem}>
                                 <p className={styles.label}>{t("solutions.problemLabel")}</p>
@@ -100,12 +102,12 @@ export default async function AutomationPage({ params }) {
             </section>
 
             <section className={`${styles.section} ${styles.caseSection}`} id="progetto" aria-labelledby="case-title">
-                <div className={styles.caseHeader}>
+                <div className={styles.caseHeader} data-reveal>
                     <p className={styles.eyebrow}>{t("case.eyebrow")}</p>
                     <p className={styles.projectMeta}>{caseStudy.title} <span aria-hidden="true">/</span> {caseStudy.year}</p>
                 </div>
                 <div className={styles.caseGrid}>
-                    <div className={styles.caseCopy}>
+                    <div className={styles.caseCopy} data-reveal>
                         <h2 id="case-title" className={styles.sectionTitle}>{t("case.title")}</h2>
                         <p className={styles.intro}>{t("case.description")}</p>
                         <p className={styles.caseContext}>{t("case.context")}</p>
@@ -113,7 +115,7 @@ export default async function AutomationPage({ params }) {
                             {t("case.link")} <span aria-hidden="true">↗</span>
                         </Link>
                     </div>
-                    <figure className={styles.caseFigure}>
+                    <figure className={styles.caseFigure} data-reveal data-reveal-delay="80">
                         <div className={styles.imageFrame}>
                             <Image
                                 src={`/projects/bpmn2petrinet/${caseStudy.headerImage}`}
@@ -130,13 +132,13 @@ export default async function AutomationPage({ params }) {
             </section>
 
             <section className={styles.section} aria-labelledby="method-title">
-                <div className={styles.sectionHeader}>
+                <div className={styles.sectionHeader} data-reveal>
                     <p className={styles.eyebrow}>{t("method.eyebrow")}</p>
                     <h2 id="method-title" className={styles.sectionTitle}>{t("method.title")}</h2>
                 </div>
                 <ol className={styles.methodList}>
                     {["understand", "define", "build"].map((key, index) => (
-                        <li key={key}>
+                        <li key={key} data-reveal data-reveal-delay={index * 45}>
                             <span className={styles.number} aria-hidden="true">0{index + 1}</span>
                             <h3>{t(`method.${key}.title`)}</h3>
                             <p>{t(`method.${key}.description`)}</p>
@@ -156,7 +158,7 @@ export default async function AutomationPage({ params }) {
             <Testimonials featuredProjectId="casa-palmi" />
 
             <section className={`${styles.section} ${styles.contactSection}`} id="contatto" aria-labelledby="contact-title">
-                <div className={styles.sectionHeader}>
+                <div className={styles.sectionHeader} data-reveal>
                     <p className={styles.eyebrow}>{t("contact.eyebrow")}</p>
                     <h2 id="contact-title" className={styles.contactTitle}>{t("contact.title")}</h2>
                     <div className={styles.contactIntro}>
@@ -167,7 +169,7 @@ export default async function AutomationPage({ params }) {
                         </p>
                     </div>
                 </div>
-                <div className={styles.formWrap}>
+                <div className={styles.formWrap} data-reveal>
                     <ContactForm locale={locale} variant="automation" />
                 </div>
             </section>

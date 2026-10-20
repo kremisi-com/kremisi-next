@@ -136,7 +136,7 @@ const LogoCard = ({ className, initialIndex, shouldAnimate, staticLogo }) => {
     }, [initialIndex, shouldAnimate, startDelay]);
 
     return (
-        <div className={`${styles.placeholder} ${className}`}>
+        <div className={`${styles.placeholder} ${className}`} data-reveal={staticLogo ? '' : undefined}>
             {staticLogo ? (
                 <Image
                     src={`/projects-logos/${staticLogo.file}`}
@@ -183,7 +183,7 @@ function SocialProof({ isActive, variant, cta }) {
     return (
         <section className={`${styles.socialProofSection} ${isCampaign ? styles.campaign : ''}`} id="social-proof" aria-labelledby={isCampaign ? 'clients-title' : undefined}>
             <div className={styles.container}>
-                <div className={styles.badge}>{t("badge")}</div>
+                <div className={styles.badge} data-reveal={isCampaign ? '' : undefined}>{t("badge")}</div>
                 
                 {isActive && (
                     <div className={styles.galleryTop}>
@@ -198,7 +198,7 @@ function SocialProof({ isActive, variant, cta }) {
                     </div>
                 )}
 
-                <h2 className={styles.title} id={isCampaign ? 'clients-title' : undefined}>
+                <h2 className={styles.title} id={isCampaign ? 'clients-title' : undefined} data-reveal={isCampaign ? '' : undefined}>
                     {t("title")}<br/>
                     <span className={styles.titleLight}>{t("titleLight")}</span>
                 </h2>
@@ -213,11 +213,11 @@ function SocialProof({ isActive, variant, cta }) {
                     </div>
                 )}
                 
-                <p className={styles.description}>
+                <p className={styles.description} data-reveal={isCampaign ? '' : undefined}>
                     {t("description")}
                 </p>
                 
-                {cta ? <div className={styles.buttonWrapper}>{cta}</div> : <Link href="/contacts" className={styles.buttonWrapper}>
+                {cta ? <div className={styles.buttonWrapper} data-reveal={isCampaign ? '' : undefined}>{cta}</div> : <Link href="/contacts" className={styles.buttonWrapper}>
                     <GitButton text={t("cta")} className={styles.socialProofGitButton} leftShift="-20px" />
                 </Link>}
             </div>
