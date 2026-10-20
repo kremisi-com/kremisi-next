@@ -1,0 +1,1592 @@
+{
+  "name": "mobile",
+  "width": 390,
+  "height": 844,
+  "pathname": "/it/automazioni-aziendali",
+  "theme": "dark",
+  "reducedMotion": "no-preference",
+  "errors": [
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    },
+    {
+      "type": "console",
+      "message": "Failed to load resource: net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    }
+  ],
+  "failedRequests": [
+    {
+      "url": "http://127.0.0.1:3101/it?_rsc=31ukg",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    },
+    {
+      "url": "https://cpl.iubenda.com/big_data/consent?apikey=8VArog2s728ynvMznMmHN3SQj4dCTIx0",
+      "error": "net::ERR_BLOCKED_BY_CLIENT.Inspector"
+    },
+    {
+      "url": "http://127.0.0.1:3101/it/projects/bpmn2petrinet?_rsc=31ukg",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3101/it/projects/casa-palmi?_rsc=1ee7s",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3101/it/projects/casa-palmi?_rsc=31ukg",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3101/projects/allavelli/carousel/Opening.mp4",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3101/projects/gamelia/sensibilizzazione.mp4",
+      "error": "net::ERR_ABORTED"
+    },
+    {
+      "url": "http://127.0.0.1:3101/projects/makuda/carousel/Home.mp4",
+      "error": "net::ERR_ABORTED"
+    }
+  ],
+  "badResponses": [],
+  "blockedWrites": [
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://cpl.iubenda.com/big_data/consent?apikey=8VArog2s728ynvMznMmHN3SQj4dCTIx0",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    }
+  ],
+  "status": 200,
+  "cookieBanner": true,
+  "consentAction": "reject",
+  "hero": {
+    "heading": "Meno lavoro manuale.\nPiù tempo per la tua azienda.",
+    "cta": [
+      {
+        "text": "Vai al modulo di contatto",
+        "top": -150,
+        "bottom": -100
+      },
+      {
+        "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+        "top": 533,
+        "bottom": 591
+      },
+      {
+        "text": "Parliamo del tuo processo\n↗",
+        "top": 4324.484375,
+        "bottom": 4372.671875
+      },
+      {
+        "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+        "top": 5112.828125,
+        "bottom": 5170.828125
+      },
+      {
+        "text": "Parliamone\nParliamone",
+        "top": 7676.3125,
+        "bottom": 7734.3125
+      }
+    ]
+  },
+  "closing": [
+    {
+      "src": "/projects/allavelli/carousel/Opening.mp4",
+      "paused": false,
+      "readyState": 4
+    },
+    {
+      "src": "/projects/gamelia/sensibilizzazione.mp4",
+      "paused": false,
+      "readyState": 4
+    },
+    {
+      "src": "/projects/makuda/carousel/Home.mp4",
+      "paused": false,
+      "readyState": 4
+    }
+  ],
+  "dom": {
+    "title": "Automazioni aziendali e software su misura | Kremisi",
+    "lang": "it",
+    "description": "Software su misura, integrazioni e AI per semplificare i processi delle PMI. Racconta a Kremisi quali attività vuoi migliorare.",
+    "canonical": "https://kremisi.com/it/automazioni-aziendali",
+    "alternates": [
+      {
+        "lang": "it",
+        "href": "https://kremisi.com/it/automazioni-aziendali"
+      },
+      {
+        "lang": "en",
+        "href": "https://kremisi.com/en/automazioni-aziendali"
+      },
+      {
+        "lang": "x-default",
+        "href": "https://kremisi.com/en/automazioni-aziendali"
+      }
+    ],
+    "robots": "default index,follow",
+    "h1Count": 1,
+    "documentWidth": 390,
+    "scrollWidth": 390,
+    "bodyWidth": 390,
+    "height": 8231,
+    "overflow": [],
+    "images": [
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fimages%2Flogo%2Flogo-dark.png&w=256&q=75",
+        "alt": "Kremisi logo",
+        "complete": true,
+        "naturalWidth": 256,
+        "width": 172
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fimages%2Ficons%2Flanguages%2Funited-kingdom.png&w=32&q=75",
+        "alt": "English",
+        "complete": true,
+        "naturalWidth": 32,
+        "width": 20
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fimages%2Ficons%2Flanguages%2Funited-kingdom.png&w=32&q=75",
+        "alt": "English",
+        "complete": true,
+        "naturalWidth": 32,
+        "width": 20
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fimages%2Flogo%2Ficona-dark.png&w=48&q=75",
+        "alt": "Kremisi logo",
+        "complete": true,
+        "naturalWidth": 48,
+        "width": 40
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fprojects%2Fbpmn2petrinet%2Fconversion-2.webp&w=384&q=75",
+        "alt": "Interfaccia reale di BPMN2Petri: un diagramma BPMN e la corrispondente rete di Petri",
+        "complete": true,
+        "naturalWidth": 350,
+        "width": 349
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fvecchi360.png&w=128&q=75",
+        "alt": "Vecchi360",
+        "complete": true,
+        "naturalWidth": 110,
+        "width": 85
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fchora-full.png&w=128&q=75",
+        "alt": "Residenza Chora",
+        "complete": true,
+        "naturalWidth": 110,
+        "width": 85
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fe2l.png&w=128&q=75",
+        "alt": "Easy2Learn",
+        "complete": true,
+        "naturalWidth": 110,
+        "width": 85
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fgamelia.png&w=128&q=75",
+        "alt": "Gamelia",
+        "complete": true,
+        "naturalWidth": 110,
+        "width": 85
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fims.png&w=128&q=75",
+        "alt": "IMS Agency",
+        "complete": true,
+        "naturalWidth": 110,
+        "width": 85
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fjester.png&w=128&q=75",
+        "alt": "Jester",
+        "complete": true,
+        "naturalWidth": 110,
+        "width": 85
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fnarai.png&w=128&q=75",
+        "alt": "Narai Thai Massage",
+        "complete": true,
+        "naturalWidth": 110,
+        "width": 85
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fbeyond-reiki.png&w=128&q=75",
+        "alt": "Beyond Reiki",
+        "complete": true,
+        "naturalWidth": 110,
+        "width": 85
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fstudylux.png&w=128&q=75",
+        "alt": "StudyLux",
+        "complete": true,
+        "naturalWidth": 110,
+        "width": 85
+      },
+      {
+        "src": "http://127.0.0.1:3101/_next/image?url=%2Fimages%2Ftestimonials%2Fpalmi.jpg&w=96&q=75",
+        "alt": "",
+        "complete": true,
+        "naturalWidth": 72,
+        "width": 68
+      }
+    ],
+    "links": [
+      {
+        "text": "Progetti",
+        "href": "/it"
+      },
+      {
+        "text": "HomeHome",
+        "href": "/it"
+      },
+      {
+        "text": "Chi siamoChi siamo",
+        "href": "/it/about"
+      },
+      {
+        "text": "ProgettiProgetti",
+        "href": "/it/projects"
+      },
+      {
+        "text": "Kremisi logo",
+        "href": "/it"
+      },
+      {
+        "text": "ServiziServizi",
+        "href": "/it/services"
+      },
+      {
+        "text": "ContattiContatti",
+        "href": "/it/contacts"
+      },
+      {
+        "text": "Kremisi logo",
+        "href": "/it"
+      },
+      {
+        "href": "/it"
+      },
+      {
+        "href": "/it/about"
+      },
+      {
+        "href": "/it/projects"
+      },
+      {
+        "href": "/it/services"
+      },
+      {
+        "href": "/it/contacts"
+      },
+      {
+        "text": "Vai al modulo di contatto",
+        "href": "#contatto"
+      },
+      {
+        "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+        "href": "#contatto"
+      },
+      {
+        "text": "Guarda un progetto concreto\n↘",
+        "href": "#progetto"
+      },
+      {
+        "text": "Esplora BPMN2Petri\n↗",
+        "href": "/it/projects/bpmn2petrinet"
+      },
+      {
+        "text": "Parliamo del tuo processo\n↗",
+        "href": "#contatto"
+      },
+      {
+        "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+        "href": "#contatto"
+      },
+      {
+        "text": "Casa Palmi\n↗",
+        "href": "/it/projects/casa-palmi"
+      },
+      {
+        "text": "info@kremisi.com\n↗",
+        "href": "mailto:info@kremisi.com"
+      },
+      {
+        "text": "Privacy Policy",
+        "href": "https://www.iubenda.com/privacy-policy/87027585"
+      },
+      {
+        "text": "Parliamone\nParliamone",
+        "href": "#contatto"
+      },
+      {
+        "text": "info@kremisi.com",
+        "href": "mailto:info@kremisi.com"
+      },
+      {
+        "text": "info@kremisi.com",
+        "href": "mailto:info@kremisi.com"
+      },
+      {
+        "text": "WhatsApp",
+        "href": "https://wa.me/393517444749?text=Posso%20avere%20maggiori%20informazioni%3F"
+      }
+    ],
+    "form": {
+      "submitDisabled": true,
+      "fields": [
+        {
+          "name": "locale",
+          "type": "hidden",
+          "required": false,
+          "minLength": -1,
+          "disabled": false
+        },
+        {
+          "name": "source",
+          "type": "hidden",
+          "required": false,
+          "minLength": -1,
+          "disabled": false
+        },
+        {
+          "name": "cf-turnstile-response",
+          "type": "hidden",
+          "required": false,
+          "minLength": -1,
+          "disabled": false
+        },
+        {
+          "name": "krs_x9q4",
+          "type": "text",
+          "required": false,
+          "minLength": -1,
+          "disabled": false
+        },
+        {
+          "name": "service",
+          "type": "hidden",
+          "required": false,
+          "minLength": -1,
+          "disabled": false
+        },
+        {
+          "name": "details",
+          "type": "textarea",
+          "required": true,
+          "minLength": 5,
+          "disabled": false
+        },
+        {
+          "name": "name",
+          "type": "text",
+          "required": true,
+          "minLength": 2,
+          "disabled": false
+        },
+        {
+          "name": "company",
+          "type": "text",
+          "required": false,
+          "minLength": -1,
+          "disabled": false
+        },
+        {
+          "name": "email",
+          "type": "email",
+          "required": true,
+          "minLength": -1,
+          "disabled": false
+        },
+        {
+          "name": "phone",
+          "type": "tel",
+          "required": false,
+          "minLength": -1,
+          "disabled": false
+        },
+        {
+          "name": "privacy",
+          "type": "checkbox",
+          "required": true,
+          "minLength": -1,
+          "disabled": false
+        },
+        {
+          "name": "",
+          "type": "submit",
+          "disabled": true
+        }
+      ],
+      "alerts": [
+        "Il modulo non è al momento disponibile. Puoi scriverci a info@kremisi.com."
+      ]
+    },
+    "animations": 0,
+    "vitals": {
+      "lcp": [
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 156,
+          "duration": 0,
+          "paintTime": 141.70000004768372,
+          "presentationTime": 156,
+          "size": 1600,
+          "renderTime": 156,
+          "loadTime": 88.5,
+          "id": "",
+          "url": "http://127.0.0.1:3101/_next/image?url=%2Fimages%2Flogo%2Ficona-dark.png&w=48&q=75"
+        },
+        {
+          "name": "",
+          "entryType": "largest-contentful-paint",
+          "startTime": 216,
+          "duration": 0,
+          "paintTime": 203.4000000357628,
+          "presentationTime": 216,
+          "size": 58344,
+          "renderTime": 216,
+          "loadTime": 0,
+          "id": "automation-title",
+          "url": ""
+        }
+      ],
+      "shifts": [
+        {
+          "name": "",
+          "entryType": "layout-shift",
+          "startTime": 203.4000000357628,
+          "duration": 0,
+          "value": 0.0008745062831196341,
+          "hadRecentInput": true,
+          "lastInputTime": 67,
+          "sources": [
+            {
+              "previousRect": {
+                "x": 62.5,
+                "y": 533,
+                "width": 264.984375,
+                "height": 58,
+                "top": 533,
+                "right": 327.484375,
+                "bottom": 591,
+                "left": 62.5
+              },
+              "currentRect": {
+                "x": 56.890625,
+                "y": 533,
+                "width": 276.203125,
+                "height": 58,
+                "top": 533,
+                "right": 333.09375,
+                "bottom": 591,
+                "left": 56.890625
+              }
+            },
+            {
+              "previousRect": {
+                "x": 92.0625,
+                "y": 606,
+                "width": 205.875,
+                "height": 48.1875,
+                "top": 606,
+                "right": 297.9375,
+                "bottom": 654.1875,
+                "left": 92.0625
+              },
+              "currentRect": {
+                "x": 82,
+                "y": 606,
+                "width": 225,
+                "height": 48.1875,
+                "top": 606,
+                "right": 307,
+                "bottom": 654.1875,
+                "left": 82
+              }
+            }
+          ]
+        },
+        {
+          "name": "",
+          "entryType": "layout-shift",
+          "startTime": 286.5,
+          "duration": 0,
+          "value": 0.00029395520062845595,
+          "hadRecentInput": true,
+          "lastInputTime": 67,
+          "sources": [
+            {
+              "previousRect": {
+                "x": 30,
+                "y": 25,
+                "width": 32,
+                "height": 29,
+                "top": 25,
+                "right": 62,
+                "bottom": 54,
+                "left": 30
+              },
+              "currentRect": {
+                "x": 74,
+                "y": 25,
+                "width": 32,
+                "height": 29,
+                "top": 25,
+                "right": 106,
+                "bottom": 54,
+                "left": 74
+              }
+            }
+          ]
+        }
+      ],
+      "longtasks": [
+        {
+          "name": "unknown",
+          "entryType": "longtask",
+          "startTime": 78.10000002384186,
+          "duration": 65,
+          "attribution": [
+            {
+              "name": "unknown",
+              "entryType": "taskattribution",
+              "startTime": 0,
+              "duration": 0,
+              "containerType": "window",
+              "containerSrc": "",
+              "containerId": "",
+              "containerName": ""
+            }
+          ]
+        }
+      ],
+      "events": [
+        {
+          "name": "pointerover",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2881.800000011921,
+          "processingEnd": 2882.400000035763,
+          "cancelable": true
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.400000035763,
+          "processingEnd": 2882.400000035763,
+          "cancelable": false
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.400000035763,
+          "processingEnd": 2882.400000035763,
+          "cancelable": false
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.400000035763,
+          "processingEnd": 2882.400000035763,
+          "cancelable": false
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.400000035763,
+          "processingEnd": 2882.400000035763,
+          "cancelable": false
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.400000035763,
+          "processingEnd": 2882.400000035763,
+          "cancelable": false
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.400000035763,
+          "processingEnd": 2882.400000035763,
+          "cancelable": false
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.400000035763,
+          "processingEnd": 2882.400000035763,
+          "cancelable": false
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.400000035763,
+          "processingEnd": 2882.400000035763,
+          "cancelable": false
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.400000035763,
+          "processingEnd": 2882.400000035763,
+          "cancelable": false
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.400000035763,
+          "processingEnd": 2882.400000035763,
+          "cancelable": false
+        },
+        {
+          "name": "mouseover",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.400000035763,
+          "processingEnd": 2882.5,
+          "cancelable": true
+        },
+        {
+          "name": "mouseenter",
+          "entryType": "event",
+          "startTime": 2881.600000023842,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2882.5,
+          "processingEnd": 2882.5,
+          "cancelable": false
+        },
+        {
+          "name": "pointerdown",
+          "entryType": "event",
+          "startTime": 2881.7000000476837,
+          "duration": 16,
+          "interactionId": 7654,
+          "processingStart": 2883,
+          "processingEnd": 2883.400000035763,
+          "cancelable": true
+        },
+        {
+          "name": "mousedown",
+          "entryType": "event",
+          "startTime": 2881.7000000476837,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2883.400000035763,
+          "processingEnd": 2883.600000023842,
+          "cancelable": true
+        },
+        {
+          "name": "pointerup",
+          "entryType": "event",
+          "startTime": 2881.7000000476837,
+          "duration": 16,
+          "interactionId": 7654,
+          "processingStart": 2883.900000035763,
+          "processingEnd": 2884,
+          "cancelable": true
+        },
+        {
+          "name": "mouseup",
+          "entryType": "event",
+          "startTime": 2881.7000000476837,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 2884,
+          "processingEnd": 2884.100000023842,
+          "cancelable": true
+        },
+        {
+          "name": "click",
+          "entryType": "event",
+          "startTime": 2881.7000000476837,
+          "duration": 16,
+          "interactionId": 7654,
+          "processingStart": 2884.100000023842,
+          "processingEnd": 2884.2000000476837,
+          "cancelable": true
+        },
+        {
+          "name": "pointerout",
+          "entryType": "event",
+          "startTime": 4627.200000047684,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 4627.600000023842,
+          "processingEnd": 4627.600000023842,
+          "cancelable": true
+        },
+        {
+          "name": "pointerleave",
+          "entryType": "event",
+          "startTime": 4627.200000047684,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 4627.600000023842,
+          "processingEnd": 4627.700000047684,
+          "cancelable": false
+        },
+        {
+          "name": "pointerleave",
+          "entryType": "event",
+          "startTime": 4627.200000047684,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 4627.700000047684,
+          "processingEnd": 4627.700000047684,
+          "cancelable": false
+        },
+        {
+          "name": "pointerover",
+          "entryType": "event",
+          "startTime": 4627.200000047684,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 4627.700000047684,
+          "processingEnd": 4627.700000047684,
+          "cancelable": true
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 4627.200000047684,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 4627.700000047684,
+          "processingEnd": 4627.700000047684,
+          "cancelable": false
+        },
+        {
+          "name": "mouseout",
+          "entryType": "event",
+          "startTime": 4627.200000047684,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 4627.700000047684,
+          "processingEnd": 4627.800000011921,
+          "cancelable": true
+        },
+        {
+          "name": "mouseover",
+          "entryType": "event",
+          "startTime": 4627.200000047684,
+          "duration": 16,
+          "interactionId": 0,
+          "processingStart": 4627.800000011921,
+          "processingEnd": 4627.800000011921,
+          "cancelable": true
+        },
+        {
+          "name": "pointerout",
+          "entryType": "event",
+          "startTime": 5544.700000047684,
+          "duration": 24,
+          "interactionId": 0,
+          "processingStart": 5545,
+          "processingEnd": 5545.200000047684,
+          "cancelable": true
+        },
+        {
+          "name": "pointerleave",
+          "entryType": "event",
+          "startTime": 5544.700000047684,
+          "duration": 24,
+          "interactionId": 0,
+          "processingStart": 5545.200000047684,
+          "processingEnd": 5545.200000047684,
+          "cancelable": false
+        },
+        {
+          "name": "pointerover",
+          "entryType": "event",
+          "startTime": 5544.700000047684,
+          "duration": 24,
+          "interactionId": 0,
+          "processingStart": 5545.200000047684,
+          "processingEnd": 5545.200000047684,
+          "cancelable": true
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 5544.700000047684,
+          "duration": 24,
+          "interactionId": 0,
+          "processingStart": 5545.200000047684,
+          "processingEnd": 5545.200000047684,
+          "cancelable": false
+        },
+        {
+          "name": "pointerenter",
+          "entryType": "event",
+          "startTime": 5544.700000047684,
+          "duration": 24,
+          "interactionId": 0,
+          "processingStart": 5545.200000047684,
+          "processingEnd": 5545.200000047684,
+          "cancelable": false
+        },
+        {
+          "name": "mouseout",
+          "entryType": "event",
+          "startTime": 5544.700000047684,
+          "duration": 24,
+          "interactionId": 0,
+          "processingStart": 5545.200000047684,
+          "processingEnd": 5545.200000047684,
+          "cancelable": true
+        },
+        {
+          "name": "mouseover",
+          "entryType": "event",
+          "startTime": 5544.700000047684,
+          "duration": 24,
+          "interactionId": 0,
+          "processingStart": 5545.200000047684,
+          "processingEnd": 5545.200000047684,
+          "cancelable": true
+        }
+      ]
+    },
+    "navigation": [
+      {
+        "name": "http://127.0.0.1:3101/it/automazioni-aziendali",
+        "entryType": "navigation",
+        "startTime": 0,
+        "duration": 221.4000000357628,
+        "initiatorType": "navigation",
+        "deliveryType": "",
+        "nextHopProtocol": "http/1.1",
+        "renderBlockingStatus": "non-blocking",
+        "contentEncoding": "gzip",
+        "workerStart": 0,
+        "workerRouterEvaluationStart": 0,
+        "workerCacheLookupStart": 0,
+        "workerMatchedSourceType": "",
+        "workerFinalSourceType": "",
+        "redirectStart": 0,
+        "redirectEnd": 0,
+        "fetchStart": 0.10000002384185791,
+        "domainLookupStart": 2,
+        "domainLookupEnd": 2,
+        "connectStart": 2,
+        "secureConnectionStart": 0,
+        "connectEnd": 2.5,
+        "requestStart": 2.5,
+        "responseStart": 15.600000023841858,
+        "firstInterimResponseStart": 0,
+        "finalResponseHeadersStart": 15.600000023841858,
+        "responseEnd": 82.5,
+        "transferSize": 20687,
+        "encodedBodySize": 20387,
+        "decodedBodySize": 88764,
+        "responseStatus": 200,
+        "serverTiming": [],
+        "unloadEventStart": 0,
+        "unloadEventEnd": 0,
+        "domInteractive": 144.80000001192093,
+        "domContentLoadedEventStart": 144.80000001192093,
+        "domContentLoadedEventEnd": 144.80000001192093,
+        "domComplete": 221.4000000357628,
+        "loadEventStart": 221.4000000357628,
+        "loadEventEnd": 221.4000000357628,
+        "type": "navigate",
+        "redirectCount": 0,
+        "activationStart": 0,
+        "criticalCHRestart": 0,
+        "notRestoredReasons": null,
+        "confidence": {
+          "randomizedTriggerRate": 0.4994798,
+          "value": "high"
+        }
+      }
+    ],
+    "resources": [
+      {
+        "name": "http://127.0.0.1:3101/_next/static/media/31a9145ccb84606d-s.p.10_fo~wllb4ek.woff2",
+        "transferSize": 47164,
+        "decodedBodySize": 46864,
+        "duration": 14.600000023841858,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/0-_48a_~k_ec8.css",
+        "transferSize": 3320,
+        "decodedBodySize": 15849,
+        "duration": 35.89999997615814,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fimages%2Flogo%2Flogo-dark.png&w=256&q=75",
+        "transferSize": 4090,
+        "decodedBodySize": 3790,
+        "duration": 36.39999997615814,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fimages%2Flogo%2Ficona-dark.png&w=48&q=75",
+        "transferSize": 1608,
+        "decodedBodySize": 1308,
+        "duration": 38,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/0c0a6d3kutz~9.css",
+        "transferSize": 17947,
+        "decodedBodySize": 108407,
+        "duration": 41.39999997615814,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/06gvmz1qfo1_x.css",
+        "transferSize": 5319,
+        "decodedBodySize": 25934,
+        "duration": 36.700000047683716,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/0cidn69dy9did.js",
+        "transferSize": 8107,
+        "decodedBodySize": 25009,
+        "duration": 51.200000047683716,
+        "initiatorType": "link"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/0w~8ym2m7v-~x.js",
+        "transferSize": 9534,
+        "decodedBodySize": 44404,
+        "duration": 52.09999996423721,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/115kz6n.ddkje.js",
+        "transferSize": 40509,
+        "decodedBodySize": 149550,
+        "duration": 63.89999997615814,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/turbopack-0m1aa6q0rk-f4.js",
+        "transferSize": 4450,
+        "decodedBodySize": 10580,
+        "duration": 54.60000002384186,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/08_5l.z_9hoat.js",
+        "transferSize": 1751,
+        "decodedBodySize": 3376,
+        "duration": 65.90000003576279,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/0asz9-6hi5hxk.js",
+        "transferSize": 71025,
+        "decodedBodySize": 226352,
+        "duration": 74.5,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/03zn18qcqefmb.js",
+        "transferSize": 13182,
+        "decodedBodySize": 54634,
+        "duration": 75.69999998807907,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/0ufkld_z3hz72.js",
+        "transferSize": 11294,
+        "decodedBodySize": 35060,
+        "duration": 72.39999997615814,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/02l~.9x5ohz-c.js",
+        "transferSize": 12354,
+        "decodedBodySize": 39812,
+        "duration": 82.19999998807907,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/0u.8eq0_3koip.js",
+        "transferSize": 18760,
+        "decodedBodySize": 52507,
+        "duration": 83.90000003576279,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/0l_-b0-u0nk5m.js",
+        "transferSize": 11348,
+        "decodedBodySize": 36726,
+        "duration": 84.30000001192093,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/0c42tszl5t7u6.js",
+        "transferSize": 24650,
+        "decodedBodySize": 76378,
+        "duration": 91.10000002384186,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/0~5s6r._51q5..js",
+        "transferSize": 48914,
+        "decodedBodySize": 126790,
+        "duration": 91.80000001192093,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/static/chunks/0k_mrsu63rvwz.js",
+        "transferSize": 24825,
+        "decodedBodySize": 71358,
+        "duration": 92,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/fonts/FKGrotesk/FKGroteskTrial-Regular.otf",
+        "transferSize": 24926,
+        "decodedBodySize": 45772,
+        "duration": 78.60000002384186,
+        "initiatorType": "css"
+      },
+      {
+        "name": "http://127.0.0.1:3101/fonts/FKGrotesk/FKGroteskTrial-Bold.otf",
+        "transferSize": 24885,
+        "decodedBodySize": 45332,
+        "duration": 80.5,
+        "initiatorType": "css"
+      },
+      {
+        "name": "http://127.0.0.1:3101/fonts/FKGrotesk/FKGroteskTrial-BoldItalic.otf",
+        "transferSize": 25579,
+        "decodedBodySize": 46076,
+        "duration": 80.60000002384186,
+        "initiatorType": "css"
+      },
+      {
+        "name": "http://127.0.0.1:3101/fonts/FKGrotesk/FKGroteskTrial-Medium.otf",
+        "transferSize": 24997,
+        "decodedBodySize": 45780,
+        "duration": 80.80000001192093,
+        "initiatorType": "css"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fimages%2Ficons%2Flanguages%2Funited-kingdom.png&w=32&q=75",
+        "transferSize": 846,
+        "decodedBodySize": 546,
+        "duration": 24,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fprojects%2Fbpmn2petrinet%2Fconversion-2.webp&w=384&q=75",
+        "transferSize": 4418,
+        "decodedBodySize": 4118,
+        "duration": 25.399999976158142,
+        "initiatorType": "img"
+      },
+      {
+        "name": "https://cdn.iubenda.com/cs/iubenda_cs.js",
+        "transferSize": 0,
+        "decodedBodySize": 0,
+        "duration": 51.89999997615814,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/it?_rsc=1ee7s",
+        "transferSize": 460,
+        "decodedBodySize": 201,
+        "duration": 6.699999988079071,
+        "initiatorType": "fetch"
+      },
+      {
+        "name": "https://cdn.iubenda.com/iubenda.js",
+        "transferSize": 0,
+        "decodedBodySize": 0,
+        "duration": 33,
+        "initiatorType": "script"
+      },
+      {
+        "name": "http://127.0.0.1:3101/it?_rsc=31ukg",
+        "transferSize": 1343,
+        "decodedBodySize": 2539,
+        "duration": 8,
+        "initiatorType": "fetch"
+      },
+      {
+        "name": "https://cdn.iubenda.com/iubenda_i_badge.js",
+        "transferSize": 0,
+        "decodedBodySize": 0,
+        "duration": 43.60000002384186,
+        "initiatorType": "script"
+      },
+      {
+        "name": "https://cdn.iubenda.com/iubenda_badge.css",
+        "transferSize": 0,
+        "decodedBodySize": 0,
+        "duration": 42.10000002384186,
+        "initiatorType": "link"
+      },
+      {
+        "name": "https://cdn.iubenda.com/cookie_solution/iubenda_cs/1.109.0/core-en-GB.js",
+        "transferSize": 0,
+        "decodedBodySize": 0,
+        "duration": 39,
+        "initiatorType": "script"
+      },
+      {
+        "name": "https://cs.iubenda.com/cookie-solution/confs/js/87027585.js",
+        "transferSize": 0,
+        "decodedBodySize": 0,
+        "duration": 39.89999997615814,
+        "initiatorType": "script"
+      },
+      {
+        "name": "https://idb.iubenda.com/csdata?db=hits1",
+        "transferSize": 0,
+        "decodedBodySize": 0,
+        "duration": 1.300000011920929,
+        "initiatorType": "xmlhttprequest"
+      },
+      {
+        "name": "https://cpl.iubenda.com/big_data/consent?apikey=8VArog2s728ynvMznMmHN3SQj4dCTIx0",
+        "transferSize": 0,
+        "decodedBodySize": 0,
+        "duration": 4.600000023841858,
+        "initiatorType": "fetch"
+      },
+      {
+        "name": "https://idb.iubenda.com/csdata?db=hits1",
+        "transferSize": 0,
+        "decodedBodySize": 0,
+        "duration": 2.899999976158142,
+        "initiatorType": "xmlhttprequest"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fvecchi360.png&w=128&q=75",
+        "transferSize": 1226,
+        "decodedBodySize": 926,
+        "duration": 23.80000001192093,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fchora-full.png&w=128&q=75",
+        "transferSize": 1120,
+        "decodedBodySize": 820,
+        "duration": 26.899999976158142,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fe2l.png&w=128&q=75",
+        "transferSize": 1250,
+        "decodedBodySize": 950,
+        "duration": 27.799999952316284,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fgamelia.png&w=128&q=75",
+        "transferSize": 1248,
+        "decodedBodySize": 948,
+        "duration": 30.099999964237213,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fims.png&w=128&q=75",
+        "transferSize": 892,
+        "decodedBodySize": 592,
+        "duration": 30.600000023841858,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fjester.png&w=128&q=75",
+        "transferSize": 1168,
+        "decodedBodySize": 868,
+        "duration": 30.69999998807907,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fnarai.png&w=128&q=75",
+        "transferSize": 1250,
+        "decodedBodySize": 950,
+        "duration": 37.5,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fbeyond-reiki.png&w=128&q=75",
+        "transferSize": 1834,
+        "decodedBodySize": 1534,
+        "duration": 37.40000003576279,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fprojects-logos%2Fstudylux.png&w=128&q=75",
+        "transferSize": 1246,
+        "decodedBodySize": 946,
+        "duration": 37.69999998807907,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:3101/_next/image?url=%2Fimages%2Ftestimonials%2Fpalmi.jpg&w=96&q=75",
+        "transferSize": 1438,
+        "decodedBodySize": 1138,
+        "duration": 7.5,
+        "initiatorType": "img"
+      },
+      {
+        "name": "http://127.0.0.1:3101/it/projects/bpmn2petrinet?_rsc=1ee7s",
+        "transferSize": 499,
+        "decodedBodySize": 302,
+        "duration": 6.299999952316284,
+        "initiatorType": "fetch"
+      },
+      {
+        "name": "http://127.0.0.1:3101/it/projects/bpmn2petrinet?_rsc=31ukg",
+        "transferSize": 1501,
+        "decodedBodySize": 3196,
+        "duration": 7.600000023841858,
+        "initiatorType": "fetch"
+      },
+      {
+        "name": "http://127.0.0.1:3101/it/projects/casa-palmi?_rsc=1ee7s",
+        "transferSize": 498,
+        "decodedBodySize": 299,
+        "duration": 9.300000011920929,
+        "initiatorType": "fetch"
+      },
+      {
+        "name": "http://127.0.0.1:3101/it/projects/casa-palmi?_rsc=31ukg",
+        "transferSize": 1516,
+        "decodedBodySize": 3175,
+        "duration": 8.200000047683716,
+        "initiatorType": "fetch"
+      },
+      {
+        "name": "http://127.0.0.1:3101/projects/allavelli/main.webp",
+        "transferSize": 65186,
+        "decodedBodySize": 64886,
+        "duration": 9,
+        "initiatorType": "video"
+      },
+      {
+        "name": "http://127.0.0.1:3101/projects/gamelia/carousel-2.webp",
+        "transferSize": 147406,
+        "decodedBodySize": 147106,
+        "duration": 8.900000035762787,
+        "initiatorType": "video"
+      },
+      {
+        "name": "http://127.0.0.1:3101/projects/makuda/main.webp",
+        "transferSize": 107726,
+        "decodedBodySize": 107426,
+        "duration": 9.300000011920929,
+        "initiatorType": "video"
+      },
+      {
+        "name": "http://127.0.0.1:3101/projects/allavelli/carousel/Opening.mp4",
+        "transferSize": 300,
+        "decodedBodySize": 0,
+        "duration": 13.299999952316284,
+        "initiatorType": "video"
+      },
+      {
+        "name": "http://127.0.0.1:3101/projects/gamelia/sensibilizzazione.mp4",
+        "transferSize": 300,
+        "decodedBodySize": 0,
+        "duration": 15.200000047683716,
+        "initiatorType": "video"
+      },
+      {
+        "name": "http://127.0.0.1:3101/projects/makuda/carousel/Home.mp4",
+        "transferSize": 300,
+        "decodedBodySize": 0,
+        "duration": 37.89999997615814,
+        "initiatorType": "video"
+      },
+      {
+        "name": "http://127.0.0.1:3101/projects/allavelli/carousel/Opening.mp4",
+        "transferSize": 45303,
+        "decodedBodySize": 45003,
+        "duration": 14,
+        "initiatorType": "video"
+      },
+      {
+        "name": "http://127.0.0.1:3101/projects/gamelia/sensibilizzazione.mp4",
+        "transferSize": 28035,
+        "decodedBodySize": 27735,
+        "duration": 27.100000023841858,
+        "initiatorType": "video"
+      },
+      {
+        "name": "http://127.0.0.1:3101/projects/makuda/carousel/Home.mp4",
+        "transferSize": 23301,
+        "decodedBodySize": 23001,
+        "duration": 5.5,
+        "initiatorType": "video"
+      },
+      {
+        "name": "http://127.0.0.1:3101/projects/gamelia/sensibilizzazione.mp4",
+        "transferSize": 3206531,
+        "decodedBodySize": 3206231,
+        "duration": 20.69999998807907,
+        "initiatorType": "video"
+      },
+      {
+        "name": "http://127.0.0.1:3101/projects/allavelli/carousel/Opening.mp4",
+        "transferSize": 2830583,
+        "decodedBodySize": 2830283,
+        "duration": 27.799999952316284,
+        "initiatorType": "video"
+      }
+    ]
+  },
+  "ctaTarget": {
+    "hash": "#contatto",
+    "top": 99.640625,
+    "title": "Quale attività vorresti semplificare?"
+  },
+  "nativeValidation": {
+    "valid": false,
+    "invalid": [
+      {
+        "name": "details",
+        "valueMissing": true,
+        "typeMismatch": false
+      },
+      {
+        "name": "name",
+        "valueMissing": true,
+        "typeMismatch": false
+      },
+      {
+        "name": "email",
+        "valueMissing": true,
+        "typeMismatch": false
+      },
+      {
+        "name": "privacy",
+        "valueMissing": true,
+        "typeMismatch": false
+      }
+    ]
+  },
+  "axe": {
+    "violations": [],
+    "incomplete": [
+      {
+        "id": "color-contrast",
+        "nodes": 7
+      }
+    ],
+    "passes": 29
+  },
+  "keyboard": [
+    {
+      "tag": "A",
+      "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+      "ariaLabel": null,
+      "href": "#contatto",
+      "name": "",
+      "top": 533,
+      "bottom": 591
+    },
+    {
+      "tag": "A",
+      "text": "Guarda un progetto concreto\n↘",
+      "ariaLabel": null,
+      "href": "#progetto",
+      "name": "",
+      "top": 606,
+      "bottom": 654.1875
+    },
+    {
+      "tag": "A",
+      "text": "Esplora BPMN2Petri\n↗",
+      "ariaLabel": null,
+      "href": "/it/projects/bpmn2petrinet",
+      "name": "",
+      "top": 398.09375,
+      "bottom": 446.28125
+    },
+    {
+      "tag": "A",
+      "text": "Parliamo del tuo processo\n↗",
+      "ariaLabel": null,
+      "href": "#contatto",
+      "name": "",
+      "top": 397.484375,
+      "bottom": 445.671875
+    },
+    {
+      "tag": "A",
+      "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+      "ariaLabel": null,
+      "href": "#contatto",
+      "name": "",
+      "top": 392.828125,
+      "bottom": 450.828125
+    },
+    {
+      "tag": "A",
+      "text": "Casa Palmi\n↗",
+      "ariaLabel": null,
+      "href": "/it/projects/casa-palmi",
+      "name": "",
+      "top": 688.59375,
+      "bottom": 732.59375
+    },
+    {
+      "tag": "A",
+      "text": "info@kremisi.com\n↗",
+      "ariaLabel": null,
+      "href": "mailto:info@kremisi.com",
+      "name": "",
+      "top": 397.734375,
+      "bottom": 445.921875
+    },
+    {
+      "tag": "TEXTAREA",
+      "text": "",
+      "ariaLabel": "Il processo e gli strumenti che usi",
+      "href": null,
+      "name": "details",
+      "top": 569.484375,
+      "bottom": 709.484375
+    },
+    {
+      "tag": "INPUT",
+      "text": "",
+      "ariaLabel": "Nome e cognome*",
+      "href": null,
+      "name": "name",
+      "top": 808.15625,
+      "bottom": 844.15625
+    },
+    {
+      "tag": "INPUT",
+      "text": "",
+      "ariaLabel": "Azienda",
+      "href": null,
+      "name": "company",
+      "top": 403.546875,
+      "bottom": 439.546875
+    },
+    {
+      "tag": "INPUT",
+      "text": "",
+      "ariaLabel": "Email",
+      "href": null,
+      "name": "email",
+      "top": 515.9375,
+      "bottom": 551.9375
+    },
+    {
+      "tag": "INPUT",
+      "text": "",
+      "ariaLabel": "Telefono",
+      "href": null,
+      "name": "phone",
+      "top": 628.328125,
+      "bottom": 664.328125
+    },
+    {
+      "tag": "INPUT",
+      "text": "",
+      "ariaLabel": null,
+      "href": null,
+      "name": "privacy",
+      "top": 704.515625,
+      "bottom": 724.515625
+    },
+    {
+      "tag": "A",
+      "text": "Privacy Policy",
+      "ariaLabel": null,
+      "href": "https://www.iubenda.com/privacy-policy/87027585",
+      "name": "",
+      "top": 703.640625,
+      "bottom": 725.390625
+    },
+    {
+      "tag": "A",
+      "text": "Parliamone\nParliamone",
+      "ariaLabel": null,
+      "href": "#contatto",
+      "name": "",
+      "top": 393.3125,
+      "bottom": 451.3125
+    },
+    {
+      "tag": "BUTTON",
+      "text": "Metti in pausa i video",
+      "ariaLabel": null,
+      "href": null,
+      "name": "",
+      "top": 615.3125,
+      "bottom": 659.3125
+    }
+  ]
+}

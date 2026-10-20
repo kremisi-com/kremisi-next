@@ -3,7 +3,10 @@ import fs from 'node:fs/promises';
 const require=createRequire(import.meta.url);
 const {chromium}=require(process.env.AUDIT_PLAYWRIGHT||'playwright');
 const browser=await chromium.launch({headless:true,...(process.env.AUDIT_CHROMIUM?{executablePath:process.env.AUDIT_CHROMIUM}:{})});
-const output='docs/landing-automation/audit-evidence/after/performance.json';
+const phase=process.env.AUDIT_PHASE||'after';
+const directory=`docs/landing-automation/audit-evidence/${phase}`;
+await fs.mkdir(directory,{recursive:true});
+const output=`${directory}/performance.json`;
 const results={note:'Local production, cold contexts. Mobile: 4x CPU, 150ms RTT, 1.6Mbps down/750Kbps up. First visit includes real CMP; writes blocked. Lab measurements, no field CWV or representative INP.',runs:[]};
 try{
  for(const profile of ['desktop','mobile'])for(let run=1;run<=3;run++){

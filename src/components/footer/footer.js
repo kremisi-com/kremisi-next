@@ -12,6 +12,7 @@ const CONTACT_EMAIL_HREF = `mailto:${CONTACT_EMAIL}`;
 
 export default function Footer() {
     const pathname = usePathname();
+    const isAutomation = pathname === "/automazioni-aziendali";
     const t = useTranslations("footer");
     const [isHomeSliderActive, setIsHomeSliderActive] = useState(pathname === "/");
 
@@ -66,7 +67,7 @@ export default function Footer() {
                     <span className="color-primary">Kremisi</span>
                 </span>
             </footer>
-            <footer className={`${styles.footer} onlyMobile`}>
+            <footer className={`${styles.footer} onlyMobile ${isAutomation ? styles.campaign : ""}`}>
                 <address className={styles.info}>
                     <a href={CONTACT_EMAIL_HREF} onClick={handleEmailClick}>
                         {CONTACT_EMAIL}

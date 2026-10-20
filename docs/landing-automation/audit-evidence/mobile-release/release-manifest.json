@@ -1,0 +1,72 @@
+{
+  "baseCommit": "f71e8c0d4ea8d8b86d9e0a2e59fba4e398561350",
+  "buildId": "kkCCn61qZiS5ZU8oc8OOl",
+  "workingTreeCandidate": true,
+  "deployed": false,
+  "compiledQaScan": {
+    "files": 165,
+    "hits": []
+  },
+  "files": [
+    {
+      "file": "messages/automation/en.json",
+      "sha256": "5102a593d6de81676a15089144d80ecf9b8e85b8dc62e3ba6a45f60240211967"
+    },
+    {
+      "file": "messages/automation/it.json",
+      "sha256": "8c39b89681c0260e035bb60980e8119258427deafb6b4260d38084975584c907"
+    },
+    {
+      "file": "scripts/audit-automation-contact-e2e.mjs",
+      "sha256": "139d0aae167f438ace38fc725d7a55319a42a4afbcb9f930bd999621ba98f560"
+    },
+    {
+      "file": "scripts/audit-automation-mobile.mjs",
+      "sha256": "e32d77b6c6a7e2660ac26a7e0dca96aca541d1da8f05ae4558aebf2ceb2deac5"
+    },
+    {
+      "file": "scripts/audit-automation-performance.mjs",
+      "sha256": "b30bf3843a130474e3fb91d74a4e1082ddcf13c325489eca010ae4a4f7fc4b3c"
+    },
+    {
+      "file": "scripts/qa/contact-provider-fixture.mjs",
+      "sha256": "82f17f18c47772f70a79b1f80e18d02d06aa45592a679753263eca83cbc6201a"
+    },
+    {
+      "file": "scripts/qa/start-contact-qa.mjs",
+      "sha256": "4a4a15a23768b25fa59328313b9b42c461b386886f33ca39fe35a7e97533c91e"
+    },
+    {
+      "file": "src/app/[locale]/(contents)/automazioni-aziendali/page.module.css",
+      "sha256": "14d5f92f60dc00187a72db5a196e4a024dbdda2961fbee2bd70543762c63b531"
+    },
+    {
+      "file": "src/components/footer/footer.js",
+      "sha256": "f75fc088b1876ab04a220238b6d6636f74295b141538a11c263e34e9f48f5e2d"
+    },
+    {
+      "file": "src/components/footer/footer.module.css",
+      "sha256": "524973899f61cdd066c53fca77ecd8229531d7e938013b00c8928939a07f1992"
+    },
+    {
+      "file": "src/components/git-button/git-button.module.css",
+      "sha256": "9ec97a8518d22e66bfe5be6740bce66b24d266dc12f102d0d288cd4becaf9188"
+    },
+    {
+      "file": "src/components/scripts/scripts.js",
+      "sha256": "932c86fe5688e3359d9e09a52eb3063176c854e81c6f1d60eb194d0f5bb6c1fd"
+    },
+    {
+      "file": "src/components/scripts/scripts.module.css",
+      "sha256": "9666e38bf5a6ade547ec6784bd0daf9ab5e65c9056dbb1f6657f3f2babba0635"
+    },
+    {
+      "file": "src/components/social-proof/social-proof.module.css",
+      "sha256": "7a7e635259e25a0df5989fb8e6cbe0987e58e93a50ad11dd57b3c3b6a1005749"
+    },
+    {
+      "file": "src/components/videos-cta/videos-cta.jsx",
+      "sha256": "76d44a382e57d20459bfadbc9a5d10d44919301019d285727de37a2a4f210f77"
+    }
+  ]
+}

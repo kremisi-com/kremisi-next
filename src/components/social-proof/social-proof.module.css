@@ -335,6 +335,7 @@
 }
 
 .campaign .badge {
+    color: color-mix(in srgb, var(--primary) 80%, var(--foreground));
     font-size: 12px;
     margin-bottom: 24px;
 }

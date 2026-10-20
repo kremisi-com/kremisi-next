@@ -11,6 +11,7 @@ function VideosCta({ variant, cta }) {
     const sectionRef = useRef(null);
     const videoRefs = useRef([]);
     const [hasEntered, setHasEntered] = useState(false);
+    const [hasApproached, setHasApproached] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [reducedMotion, setReducedMotion] = useState(true);
     const [paused, setPaused] = useState(false);
@@ -36,6 +37,13 @@ function VideosCta({ variant, cta }) {
             setIsVisible(entry.isIntersecting);
             if (entry.isIntersecting) setHasEntered(true);
         }, { threshold: 0.05 });
+        const posterObserver = typeof IntersectionObserver === 'undefined' ? null : new IntersectionObserver(([entry]) => {
+            if (!entry.isIntersecting) return;
+            setHasApproached(true);
+            posterObserver.disconnect();
+        }, { rootMargin: '200px' });
+        if (posterObserver) posterObserver.observe(sectionRef.current);
+        else setHasApproached(true);
         if (observer) observer.observe(sectionRef.current);
         else {
             setIsVisible(true);
@@ -44,6 +52,7 @@ function VideosCta({ variant, cta }) {
 
         return () => {
             observer?.disconnect();
+            posterObserver?.disconnect();
             preference.removeEventListener('change', syncPreference);
         };
     }, [isCampaign]);
@@ -70,7 +79,7 @@ function VideosCta({ variant, cta }) {
                                 <video 
                                     ref={(video) => { videoRefs.current[index] = video; }}
                                     src={isCampaign ? hasEntered && !reducedMotion ? src : undefined : src}
-                                    poster={isCampaign ? posters[index] : undefined}
+                                    poster={isCampaign && hasApproached ? posters[index] : undefined}
                                     preload={isCampaign ? 'none' : undefined}
                                     className={styles.video} 
                                     suppressHydrationWarning

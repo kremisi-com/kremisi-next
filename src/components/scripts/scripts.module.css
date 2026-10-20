@@ -87,6 +87,24 @@ button.nativePreferences:global(#kremisi-cookie-preferences):focus-visible {
 }
 
 @media (max-width: 768px) {
+  .preferences.campaignPreferences {
+    position: absolute;
+  }
+  .campaignPreferences .button {
+    width: 44px;
+    padding: 0;
+  }
+  .campaignPreferences .caption,
+  button.campaignPreferences.nativePreferences::after {
+    display: none;
+  }
+  button.campaignPreferences.nativePreferences:global(#kremisi-cookie-preferences) {
+    position: absolute !important;
+    width: 44px !important;
+    height: 44px !important;
+    padding: 0 !important;
+    background-position: center !important;
+  }
   .preferences {
     left: max(25px, env(safe-area-inset-left));
     bottom: calc(16px + env(safe-area-inset-bottom));

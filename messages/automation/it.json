@@ -36,9 +36,9 @@
     },
     "case": {
         "eyebrow": "Un progetto reale",
-        "title": "Dai processi a uno strumento concreto.",
-        "description": "BPMN2Petri è un’applicazione web che converte diagrammi BPMN in reti di Petri, collegando la rappresentazione dei processi alla loro analisi formale.",
-        "context": "Un esempio concreto di progettazione e sviluppo di uno strumento dedicato ai processi, con un’interfaccia costruita intorno a una funzione precisa.",
+        "title": "Da un disegno del processo a un modello da analizzare.",
+        "description": "Un processo può essere descritto con un diagramma di attività e passaggi. BPMN2Petri è l’applicazione web che abbiamo progettato e sviluppato per convertire questi diagrammi in un modello utilizzabile per l’analisi del processo.",
+        "context": "In termini tecnici, converte diagrammi BPMN in reti di Petri. È un esempio di software su misura dedicato a un compito preciso: trasformare una rappresentazione del processo in un’altra, adatta alla sua verifica.",
         "link": "Esplora BPMN2Petri",
         "imageAlt": "Interfaccia reale di BPMN2Petri: un diagramma BPMN e la corrispondente rete di Petri",
         "caption": "BPMN2Petri · Interfaccia di conversione del progetto"

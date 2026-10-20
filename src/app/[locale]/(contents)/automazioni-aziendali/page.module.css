@@ -169,7 +169,7 @@
     font-size: 14px;
     font-weight: 500;
     line-height: 1.6;
-    color: var(--primary);
+    color: color-mix(in srgb, var(--primary) 80%, var(--foreground));
     font-variant-numeric: tabular-nums;
 }
 
@@ -487,6 +487,22 @@
 @media (max-width: 360px) {
     .heroButton span {
         font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) and (max-height: 650px) {
+    .page section:first-of-type {
+        padding-top: 100px;
+        padding-bottom: 60px;
+    }
+
+    .heroTitle {
+        font-size: 38px;
+        margin-bottom: 22px;
+    }
+
+    .heroActions {
+        margin-top: 22px;
     }
 }
 

@@ -1,5 +1,7 @@
 # Consegna — landing automazioni aziendali
 
+Stato più recente dopo audit e correzioni mobile: [preparazione rilascio](release-readiness.md). Le sezioni sotto conservano lo storico delle consegne precedenti.
+
 Implementata e pronta per revisione locale. Nessun deploy, nuova dipendenza, modifica di segreti o invio reale di email/conversioni.
 
 ## URL e struttura

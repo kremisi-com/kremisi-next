@@ -1,0 +1,529 @@
+{
+  "base": "http://127.0.0.1:3102",
+  "safety": "Explicitly authorized isolated localhost. Real server actions; Node provider transport intercepted with dummy credentials. No external mail or conversions.",
+  "checks": [
+    {
+      "name": "success: real local action reached once",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "success: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo."
+      }
+    },
+    {
+      "name": "success: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:01.502Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "success: email accepted only after validation",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:01.511Z",
+          "provider": "resend",
+          "accepted": true,
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "success: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:01.556Z",
+          "provider": "openai-capi",
+          "eventId": "contact-1792522321480-38d29c1c",
+          "type": "lead_created",
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "success: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 1
+      }
+    },
+    {
+      "name": "success: Pixel/CAPI share actual server event ID",
+      "pass": true,
+      "evidence": {
+        "serverId": "contact-1792522321480-38d29c1c",
+        "pixelId": "contact-1792522321480-38d29c1c"
+      }
+    },
+    {
+      "name": "success: CAPI hashes email and uses validate-only",
+      "pass": true,
+      "evidence": {
+        "at": "2026-10-20T18:52:01.556Z",
+        "provider": "openai-capi",
+        "eventId": "contact-1792522321480-38d29c1c",
+        "type": "lead_created",
+        "validateOnly": true,
+        "hashedEmail": true,
+        "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+      }
+    },
+    {
+      "name": "success: source and simple form contract reach mail adapter",
+      "pass": true,
+      "evidence": {
+        "at": "2026-10-20T18:52:01.511Z",
+        "provider": "resend",
+        "accepted": true,
+        "sourcePreserved": true,
+        "budgetOmitted": true,
+        "replyToSynthetic": true
+      }
+    },
+    {
+      "name": "success: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "success: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:01.502Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T18:52:01.511Z",
+          "provider": "resend",
+          "accepted": true,
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T18:52:01.556Z",
+          "provider": "openai-capi",
+          "eventId": "contact-1792522321480-38d29c1c",
+          "type": "lead_created",
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "name": "success: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "email-error: real local action reached once",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "email-error: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Non è stato possibile inviare il modulo."
+      }
+    },
+    {
+      "name": "email-error: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:02.974Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "email-error: email accepted only after validation",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:02.977Z",
+          "provider": "resend",
+          "accepted": false,
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "email-error: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "email-error: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "email-error: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": false
+      }
+    },
+    {
+      "name": "email-error: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:02.974Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T18:52:02.977Z",
+          "provider": "resend",
+          "accepted": false,
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "email-error: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "security-error: real local action reached once",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "security-error: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Verifica di sicurezza non riuscita. Ricarica la pagina e riprova."
+      }
+    },
+    {
+      "name": "security-error: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:04.830Z",
+          "provider": "turnstile",
+          "success": false
+        }
+      ]
+    },
+    {
+      "name": "security-error: email accepted only after validation",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "security-error: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "security-error: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "security-error: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": false
+      }
+    },
+    {
+      "name": "security-error: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:04.830Z",
+          "provider": "turnstile",
+          "success": false
+        }
+      ]
+    },
+    {
+      "name": "security-error: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "invalid-email: real local action reached once",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "invalid-email: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Inserisci un indirizzo email valido."
+      }
+    },
+    {
+      "name": "invalid-email: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:06.084Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "invalid-email: email accepted only after validation",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "invalid-email: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "invalid-email: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "invalid-email: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": false
+      }
+    },
+    {
+      "name": "invalid-email: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:06.084Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "invalid-email: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "consent-denied: real local action reached once",
+      "pass": true,
+      "evidence": {
+        "localActions": 1
+      }
+    },
+    {
+      "name": "consent-denied: correct response rendered",
+      "pass": true,
+      "evidence": {
+        "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo."
+      }
+    },
+    {
+      "name": "consent-denied: Turnstile helper executed",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:07.418Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "name": "consent-denied: email accepted only after validation",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:07.420Z",
+          "provider": "resend",
+          "accepted": true,
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "consent-denied: CAPI only after accepted consented email",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "consent-denied: Pixel only after accepted consented email",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "consent-denied: fields reset on success or preserved on error",
+      "pass": true,
+      "evidence": {
+        "success": true
+      }
+    },
+    {
+      "name": "consent-denied: no unexpected external write",
+      "pass": true,
+      "evidence": [
+        {
+          "at": "2026-10-20T18:52:07.418Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T18:52:07.420Z",
+          "provider": "resend",
+          "accepted": true,
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "name": "consent-denied: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    }
+  ],
+  "scenarios": [
+    {
+      "scenario": "success",
+      "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T18:52:01.502Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T18:52:01.511Z",
+          "provider": "resend",
+          "accepted": true,
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        },
+        {
+          "at": "2026-10-20T18:52:01.556Z",
+          "provider": "openai-capi",
+          "eventId": "contact-1792522321480-38d29c1c",
+          "type": "lead_created",
+          "validateOnly": true,
+          "hashedEmail": true,
+          "sourceUrl": "http://127.0.0.1:3102/it/automazioni-aziendali"
+        }
+      ]
+    },
+    {
+      "scenario": "email-error",
+      "status": "Non è stato possibile inviare il modulo.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T18:52:02.974Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T18:52:02.977Z",
+          "provider": "resend",
+          "accepted": false,
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    },
+    {
+      "scenario": "security-error",
+      "status": "Verifica di sicurezza non riuscita. Ricarica la pagina e riprova.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T18:52:04.830Z",
+          "provider": "turnstile",
+          "success": false
+        }
+      ]
+    },
+    {
+      "scenario": "invalid-email",
+      "status": "Inserisci un indirizzo email valido.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T18:52:06.084Z",
+          "provider": "turnstile",
+          "success": true
+        }
+      ]
+    },
+    {
+      "scenario": "consent-denied",
+      "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo.",
+      "localActions": 1,
+      "providerCalls": [
+        {
+          "at": "2026-10-20T18:52:07.418Z",
+          "provider": "turnstile",
+          "success": true
+        },
+        {
+          "at": "2026-10-20T18:52:07.420Z",
+          "provider": "resend",
+          "accepted": true,
+          "sourcePreserved": true,
+          "budgetOmitted": true,
+          "replyToSynthetic": true
+        }
+      ]
+    }
+  ]
+}

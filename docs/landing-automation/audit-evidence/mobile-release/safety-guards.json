@@ -1,0 +1,12 @@
+[
+  {
+    "name": "requires-explicit-qa-config",
+    "pass": true,
+    "exitCode": 1
+  },
+  {
+    "name": "rejects-production",
+    "pass": true,
+    "exitCode": 1
+  }
+]

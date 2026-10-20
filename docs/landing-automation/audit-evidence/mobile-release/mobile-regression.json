@@ -1,0 +1,656 @@
+{
+  "checks": [
+    {
+      "name": "320-it: campaign mobile footer in document flow",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 34.15625,
+          "y": 471.1875,
+          "width": 251.671875,
+          "height": 58,
+          "top": 471.1875,
+          "right": 285.828125,
+          "bottom": 529.1875,
+          "left": 34.15625
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8510.265625,
+          "width": 44,
+          "height": 44,
+          "top": 8510.265625,
+          "right": 69,
+          "bottom": 8554.265625,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Preferenze cookie"
+      }
+    },
+    {
+      "name": "320-it: cookie control compact and named",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 34.15625,
+          "y": 471.1875,
+          "width": 251.671875,
+          "height": 58,
+          "top": 471.1875,
+          "right": 285.828125,
+          "bottom": 529.1875,
+          "left": 34.15625
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8510.265625,
+          "width": 44,
+          "height": 44,
+          "top": 8510.265625,
+          "right": 69,
+          "bottom": 8554.265625,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Preferenze cookie"
+      }
+    },
+    {
+      "name": "320-it: primary CTA fully visible",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 34.15625,
+          "y": 471.1875,
+          "width": 251.671875,
+          "height": 58,
+          "top": 471.1875,
+          "right": 285.828125,
+          "bottom": 529.1875,
+          "left": 34.15625
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8510.265625,
+          "width": 44,
+          "height": 44,
+          "top": 8510.265625,
+          "right": 69,
+          "bottom": 8554.265625,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Preferenze cookie"
+      }
+    },
+    {
+      "name": "320-it: cookie control does not overlap primary CTA",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 34.15625,
+          "y": 471.1875,
+          "width": 251.671875,
+          "height": 58,
+          "top": 471.1875,
+          "right": 285.828125,
+          "bottom": 529.1875,
+          "left": 34.15625
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8510.265625,
+          "width": 44,
+          "height": 44,
+          "top": 8510.265625,
+          "right": 69,
+          "bottom": 8554.265625,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Preferenze cookie"
+      }
+    },
+    {
+      "name": "320-it: touch hover cannot move arrows outside screen",
+      "pass": true,
+      "evidence": {
+        "hoverCapable": false,
+        "background": "rgb(220, 20, 60)",
+        "arrows": [
+          {
+            "x": 118.8125,
+            "y": 479.1875,
+            "width": 42,
+            "height": 42,
+            "top": 479.1875,
+            "right": 160.8125,
+            "bottom": 521.1875,
+            "left": 118.8125
+          },
+          {
+            "x": 238.828125,
+            "y": 479.1875,
+            "width": 42,
+            "height": 42,
+            "top": 479.1875,
+            "right": 280.828125,
+            "bottom": 521.1875,
+            "left": 238.828125
+          }
+        ]
+      }
+    },
+    {
+      "name": "320-it: no closing poster or video fetched above fold",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "320-it: posters appear near closing section",
+      "pass": true,
+      "evidence": "Poster prefetch distance: 200px; video starts at viewport intersection."
+    },
+    {
+      "name": "320-it: homepage keeps existing fixed footer and cookie caption",
+      "pass": true,
+      "evidence": {
+        "footer": "fixed",
+        "cookie": {
+          "x": 25,
+          "y": 508,
+          "width": 176.28125,
+          "height": 44,
+          "top": 508,
+          "right": 201.28125,
+          "bottom": 552,
+          "left": 25
+        }
+      }
+    },
+    {
+      "name": "390-it: campaign mobile footer in document flow",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 56.890625,
+          "y": 533,
+          "width": 276.203125,
+          "height": 58,
+          "top": 533,
+          "right": 333.09375,
+          "bottom": 591,
+          "left": 56.890625
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8109.3125,
+          "width": 44,
+          "height": 44,
+          "top": 8109.3125,
+          "right": 69,
+          "bottom": 8153.3125,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Preferenze cookie"
+      }
+    },
+    {
+      "name": "390-it: cookie control compact and named",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 56.890625,
+          "y": 533,
+          "width": 276.203125,
+          "height": 58,
+          "top": 533,
+          "right": 333.09375,
+          "bottom": 591,
+          "left": 56.890625
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8109.3125,
+          "width": 44,
+          "height": 44,
+          "top": 8109.3125,
+          "right": 69,
+          "bottom": 8153.3125,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Preferenze cookie"
+      }
+    },
+    {
+      "name": "390-it: primary CTA fully visible",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 56.890625,
+          "y": 533,
+          "width": 276.203125,
+          "height": 58,
+          "top": 533,
+          "right": 333.09375,
+          "bottom": 591,
+          "left": 56.890625
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8109.3125,
+          "width": 44,
+          "height": 44,
+          "top": 8109.3125,
+          "right": 69,
+          "bottom": 8153.3125,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Preferenze cookie"
+      }
+    },
+    {
+      "name": "390-it: cookie control does not overlap primary CTA",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 56.890625,
+          "y": 533,
+          "width": 276.203125,
+          "height": 58,
+          "top": 533,
+          "right": 333.09375,
+          "bottom": 591,
+          "left": 56.890625
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8109.3125,
+          "width": 44,
+          "height": 44,
+          "top": 8109.3125,
+          "right": 69,
+          "bottom": 8153.3125,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Preferenze cookie"
+      }
+    },
+    {
+      "name": "390-it: touch hover cannot move arrows outside screen",
+      "pass": true,
+      "evidence": {
+        "hoverCapable": false,
+        "background": "rgb(220, 20, 60)",
+        "arrows": [
+          {
+            "x": 151.359375,
+            "y": 541,
+            "width": 42,
+            "height": 42,
+            "top": 541,
+            "right": 193.359375,
+            "bottom": 583,
+            "left": 151.359375
+          },
+          {
+            "x": 286.09375,
+            "y": 541,
+            "width": 42,
+            "height": 42,
+            "top": 541,
+            "right": 328.09375,
+            "bottom": 583,
+            "left": 286.09375
+          }
+        ]
+      }
+    },
+    {
+      "name": "390-it: no closing poster or video fetched above fold",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "390-it: posters appear near closing section",
+      "pass": true,
+      "evidence": "Poster prefetch distance: 200px; video starts at viewport intersection."
+    },
+    {
+      "name": "390-it: homepage keeps existing fixed footer and cookie caption",
+      "pass": true,
+      "evidence": {
+        "footer": "fixed",
+        "cookie": {
+          "x": 25,
+          "y": 784,
+          "width": 176.28125,
+          "height": 44,
+          "top": 784,
+          "right": 201.28125,
+          "bottom": 828,
+          "left": 25
+        }
+      }
+    },
+    {
+      "name": "320-en: campaign mobile footer in document flow",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 24.109375,
+          "y": 499.234375,
+          "width": 271.765625,
+          "height": 58,
+          "top": 499.234375,
+          "right": 295.875,
+          "bottom": 557.234375,
+          "left": 24.109375
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8398.21875,
+          "width": 44,
+          "height": 44,
+          "top": 8398.21875,
+          "right": 69,
+          "bottom": 8442.21875,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Cookie preferences"
+      }
+    },
+    {
+      "name": "320-en: cookie control compact and named",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 24.109375,
+          "y": 499.234375,
+          "width": 271.765625,
+          "height": 58,
+          "top": 499.234375,
+          "right": 295.875,
+          "bottom": 557.234375,
+          "left": 24.109375
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8398.21875,
+          "width": 44,
+          "height": 44,
+          "top": 8398.21875,
+          "right": 69,
+          "bottom": 8442.21875,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Cookie preferences"
+      }
+    },
+    {
+      "name": "320-en: primary CTA fully visible",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 24.109375,
+          "y": 499.234375,
+          "width": 271.765625,
+          "height": 58,
+          "top": 499.234375,
+          "right": 295.875,
+          "bottom": 557.234375,
+          "left": 24.109375
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8398.21875,
+          "width": 44,
+          "height": 44,
+          "top": 8398.21875,
+          "right": 69,
+          "bottom": 8442.21875,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Cookie preferences"
+      }
+    },
+    {
+      "name": "320-en: cookie control does not overlap primary CTA",
+      "pass": true,
+      "evidence": {
+        "cta": {
+          "x": 24.109375,
+          "y": 499.234375,
+          "width": 271.765625,
+          "height": 58,
+          "top": 499.234375,
+          "right": 295.875,
+          "bottom": 557.234375,
+          "left": 24.109375
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8398.21875,
+          "width": 44,
+          "height": 44,
+          "top": 8398.21875,
+          "right": 69,
+          "bottom": 8442.21875,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Cookie preferences"
+      }
+    },
+    {
+      "name": "320-en: touch hover cannot move arrows outside screen",
+      "pass": true,
+      "evidence": {
+        "hoverCapable": false,
+        "background": "rgb(220, 20, 60)",
+        "arrows": [
+          {
+            "x": 116.8125,
+            "y": 507.234375,
+            "width": 42,
+            "height": 42,
+            "top": 507.234375,
+            "right": 158.8125,
+            "bottom": 549.234375,
+            "left": 116.8125
+          },
+          {
+            "x": 248.875,
+            "y": 507.234375,
+            "width": 42,
+            "height": 42,
+            "top": 507.234375,
+            "right": 290.875,
+            "bottom": 549.234375,
+            "left": 248.875
+          }
+        ]
+      }
+    },
+    {
+      "name": "320-en: no closing poster or video fetched above fold",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "320-en: posters appear near closing section",
+      "pass": true,
+      "evidence": "Poster prefetch distance: 200px; video starts at viewport intersection."
+    },
+    {
+      "name": "320-en: homepage keeps existing fixed footer and cookie caption",
+      "pass": true,
+      "evidence": {
+        "footer": "fixed",
+        "cookie": {
+          "x": 25,
+          "y": 508,
+          "width": 186.203125,
+          "height": 44,
+          "top": 508,
+          "right": 211.203125,
+          "bottom": 552,
+          "left": 25
+        }
+      }
+    },
+    {
+      "name": "desktop: existing CTA hover retained",
+      "pass": true,
+      "evidence": {
+        "enabled": true,
+        "background": "rgb(255, 255, 255)"
+      }
+    }
+  ],
+  "observations": [
+    {
+      "name": "320-it",
+      "aboveFold": {
+        "cta": {
+          "x": 34.15625,
+          "y": 471.1875,
+          "width": 251.671875,
+          "height": 58,
+          "top": 471.1875,
+          "right": 285.828125,
+          "bottom": 529.1875,
+          "left": 34.15625
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8510.265625,
+          "width": 44,
+          "height": 44,
+          "top": 8510.265625,
+          "right": 69,
+          "bottom": 8554.265625,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Preferenze cookie"
+      },
+      "home": {
+        "footer": "fixed",
+        "cookie": {
+          "x": 25,
+          "y": 508,
+          "width": 176.28125,
+          "height": 44,
+          "top": 508,
+          "right": 201.28125,
+          "bottom": 552,
+          "left": 25
+        }
+      }
+    },
+    {
+      "name": "390-it",
+      "aboveFold": {
+        "cta": {
+          "x": 56.890625,
+          "y": 533,
+          "width": 276.203125,
+          "height": 58,
+          "top": 533,
+          "right": 333.09375,
+          "bottom": 591,
+          "left": 56.890625
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8109.3125,
+          "width": 44,
+          "height": 44,
+          "top": 8109.3125,
+          "right": 69,
+          "bottom": 8153.3125,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Preferenze cookie"
+      },
+      "home": {
+        "footer": "fixed",
+        "cookie": {
+          "x": 25,
+          "y": 784,
+          "width": 176.28125,
+          "height": 44,
+          "top": 784,
+          "right": 201.28125,
+          "bottom": 828,
+          "left": 25
+        }
+      }
+    },
+    {
+      "name": "320-en",
+      "aboveFold": {
+        "cta": {
+          "x": 24.109375,
+          "y": 499.234375,
+          "width": 271.765625,
+          "height": 58,
+          "top": 499.234375,
+          "right": 295.875,
+          "bottom": 557.234375,
+          "left": 24.109375
+        },
+        "cookie": {
+          "x": 25,
+          "y": 8398.21875,
+          "width": 44,
+          "height": 44,
+          "top": 8398.21875,
+          "right": 69,
+          "bottom": 8442.21875,
+          "left": 25
+        },
+        "overlap": 0,
+        "footer": "relative",
+        "cookieName": "Cookie preferences"
+      },
+      "home": {
+        "footer": "fixed",
+        "cookie": {
+          "x": 25,
+          "y": 508,
+          "width": 186.203125,
+          "height": 44,
+          "top": 508,
+          "right": 211.203125,
+          "bottom": 552,
+          "left": 25
+        }
+      }
+    }
+  ]
+}

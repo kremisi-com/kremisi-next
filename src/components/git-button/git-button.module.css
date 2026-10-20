@@ -18,9 +18,6 @@
   z-index: 10;
 }
 
-.button:hover .text {
-  color: var(--white);
-}
 
 .button {
   position: relative;
@@ -49,14 +46,6 @@
   opacity: 0;
 }
 
-.button:hover .text.top {
-  transform: translateY(-200%);
-}
-
-.button:hover .text.bottom {
-  transform: translateY(0);
-  opacity: 1;
-}
 
 .container {
   display: flex;
@@ -96,23 +85,6 @@
     background-color 0.3s ease;
 }
 
-.container:hover .right.arrow {
-  right: 40%;
-  background-color: var(--foreground);
-  color: var(--background);
-}
-.container:hover .left.arrow {
-  left: -35px;
-  background-color: var(--foreground);
-  color: var(--background);
-}
-.container:hover .button {
-  background-color: var(--foreground);
-}
-
-.container:hover .button .text {
-  color: var(--background);
-}
 
 .disabled {
   pointer-events: none;
@@ -130,11 +102,36 @@
 .revert .arrow {
   color: var(--background);
 }
-.revert .container:hover .button,
-.revert .container:hover .arrow {
-  background-color: var(--primary);
-}
-.revert .container:hover .text,
-.revert .container:hover .arrow {
-  color: var(--white);
+@media (hover: hover) {
+  .button:hover .text.top {
+    transform: translateY(-200%);
+  }
+  .button:hover .text.bottom {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  .container:hover .right.arrow {
+    right: 40%;
+    background-color: var(--foreground);
+    color: var(--background);
+  }
+  .container:hover .left.arrow {
+    left: -35px;
+    background-color: var(--foreground);
+    color: var(--background);
+  }
+  .container:hover .button {
+    background-color: var(--foreground);
+  }
+  .container:hover .button .text {
+    color: var(--background);
+  }
+  .revert .container:hover .button,
+  .revert .container:hover .arrow {
+    background-color: var(--primary);
+  }
+  .revert .container:hover .text,
+  .revert .container:hover .arrow {
+    color: var(--white);
+  }
 }

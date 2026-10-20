@@ -84,6 +84,25 @@
 }
 
 @media screen and (max-width: 768px) {
+    :global(body):has(.footer.campaign) {
+        position: relative;
+    }
+    .footer.campaign:global(.onlyMobile) {
+        position: relative;
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        gap: 20px;
+        width: 100%;
+        padding: 24px 25px calc(90px + env(safe-area-inset-bottom));
+    }
+    .footer.campaign::before {
+        display: none;
+    }
+    .footer.campaign:global(.onlyMobile) address,
+    .footer.campaign .buttons {
+        position: static;
+    }
     .footer:global(.onlyMobile) address {
         bottom: calc(76px + env(safe-area-inset-bottom));
     }

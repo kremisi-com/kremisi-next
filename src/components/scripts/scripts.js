@@ -9,11 +9,14 @@ import { COOKIE_CONSENT_EVENT, hasCookiePurpose, MEASUREMENT_PURPOSE, MARKETING_
 import { createIubendaConfiguration, getIubendaLanguage } from "@/lib/iubenda-config.mjs";
 import { GOOGLE_ANALYTICS_ID, notifyCookieConsent, syncGoogleConsent } from "@/lib/cookie-consent-browser.mjs";
 import styles from "./scripts.module.css";
+import { usePathname } from "@/i18n/navigation";
 
 const SCRIPT_ID = "iubenda-cookie-solution";
 
 export default function Scripts({ locale }) {
   const italian = locale === "it";
+  const pathname = usePathname();
+  const isAutomation = pathname === "/automazioni-aziendali";
   const [permissions, setPermissions] = useState({ analytics: false, marketing: false });
   const [status, setStatus] = useState("loading");
   const [nativeAvailable, setNativeAvailable] = useState(false);
@@ -86,6 +89,7 @@ export default function Scripts({ locale }) {
         const caption = italian ? "Preferenze cookie" : "Cookie preferences";
         button.id = "kremisi-cookie-preferences";
         button.classList.add(styles.button, styles.nativePreferences);
+        button.classList.toggle(styles.campaignPreferences, isAutomation);
         button.setAttribute("data-cookie-caption", caption);
         button.setAttribute("aria-label", caption);
         button.setAttribute("aria-haspopup", "dialog");
@@ -98,7 +102,7 @@ export default function Scripts({ locale }) {
     const observer = new MutationObserver(decorate);
     observer.observe(document.body, { childList: true, subtree: true });
     return () => observer.disconnect();
-  }, [italian]);
+  }, [italian, isAutomation]);
 
   function openPreferences() {
     const api = window._iub?.cs?.api;
@@ -111,11 +115,13 @@ export default function Scripts({ locale }) {
 
   return (
     <>
-      <div className={styles.preferences}>
+      <div className={`${styles.preferences} ${isAutomation ? styles.campaignPreferences : ""}`}>
         {!nativeAvailable && <button type="button" className={styles.button} onClick={openPreferences}
+          aria-label={italian ? "Preferenze cookie" : "Cookie preferences"}
+          title={italian ? "Preferenze cookie" : "Cookie preferences"}
           aria-haspopup="dialog" aria-describedby={status !== "ready" ? "cookie-preferences-status" : undefined}>
           <Cookie size={16} aria-hidden="true" />
-          {italian ? "Preferenze cookie" : "Cookie preferences"}
+          <span className={styles.caption}>{italian ? "Preferenze cookie" : "Cookie preferences"}</span>
         </button>}
         {status !== "ready" && (
           <span id="cookie-preferences-status" role="status" className={styles.status}>

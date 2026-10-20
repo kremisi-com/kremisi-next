@@ -2,6 +2,8 @@
 
 Data: 20 ottobre 2026, Europe/Rome. Pagina: <https://kremisi.com/it/automazioni-aziendali>.
 
+> Questo documento conserva le evidenze dell’audit iniziale. Le successive correzioni P2, il collaudo della vera Server Action in locale isolato e lo stato attuale del candidato sono documentati in [release-readiness.md](release-readiness.md).
+
 ## Esito
 
 La landing è una buona base per un pilota ChatGPT Ads: offerta comprensibile, continuità con l’annuncio, identità Kremisi riconoscibile e form pertinente. L’audit ha rilevato tre gruppi di problemi P1 nella navigazione/accessibilità, corretti localmente e verificati nuovamente. Nessun P0 osservato. Restano miglioramenti P2/P3 e limiti di verifica infrastrutturale descritti sotto.

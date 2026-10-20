@@ -1,0 +1,48 @@
+
+> kremisi@0.1.0 test
+> node --test
+
+✔ one shared observer watches every registered slide after activation (6.4123ms)
+✔ late slides reuse the active observer and reset on deactivation (0.3365ms)
+✔ only Resend-accepted contacts schedule conversion and return the same server event ID to Pixel (16.8731ms)
+✔ spam, failed security, invalid forms, and rejected emails never schedule a conversion (3.5126ms)
+✔ automation landing uses the simple contact contract and preserves its source and conversion context (1.1235ms)
+✔ simple landing contacts still require privacy, valid details, name, email and optional phone (7.2968ms)
+✔ CAPI dispatch is deferred, with a shared event ID and consent checked on the server (4.2619ms)
+✔ headers, hashing, form-context, and scheduler failures cannot fail an accepted contact (6.1693ms)
+✔ CAPI requires explicit iubenda marketing consent and ignores the old separate choice (1.1425ms)
+✔ raw cookie attribution preserves encoded characters and equals signs (0.6469ms)
+✔ native iubenda site cookie and US opt-outs are used by the server (0.1825ms)
+✔ source URL trusts canonical/request origins, strips query and fragment, and rejects other schemes (0.3334ms)
+✔ confirmed contact conversion pairs Pixel ID/event ID, hashes email, and uses current documented CAPI fields (1.8857ms)
+✔ missing, unvalidated, or failed CMP cannot authorize browser measurement (0.8183ms)
+✔ measurement-only consent permits statistics while keeping OpenAI Ads blocked (0.6596ms)
+✔ marketing consent still respects iubenda US targeted-advertising opt-out (0.5788ms)
+✔ Pixel stays unloaded before consent and initializes once across SPA navigation (0.7026ms)
+✔ lead matching uses a late init, opt-out, and one event per server event ID (0.7243ms)
+✔ revocation purges queued events and user data, blocks future calls, and allows later consent (0.4331ms)
+✔ form context sends only sanitized current page and raw browser reference after consent (14.4854ms)
+✔ browser tracking failures cannot throw into the contact flow (0.519ms)
+✔ CAPI is disabled without its server secret and suppresses network/serialization failures (11.7139ms)
+✔ OpenRouter defaults stay on the free router (0.6817ms)
+✔ OpenRouter payment and missing-model responses trigger model fallback (0.2003ms)
+✔ OpenRouter authentication errors never trigger model fallback (0.1439ms)
+✔ model fallback runs once only when the fallback differs (0.0994ms)
+✔ normalizeLoopIndex wraps indexes in both directions (0.823ms)
+✔ viewport coverage includes every projected slide on phones, tablets and wide desktops (4.2108ms)
+✔ buffered windows keep identities and coverage through forward, backward and large jumps (2.2034ms)
+✔ normalizeLoopIndex safely handles invalid loop sizes (0.1073ms)
+✔ getVirtualPoolSize stays small and adapts to tall viewports (0.1713ms)
+✔ getVirtualPoolRange follows positive and negative scroll (1.2346ms)
+✔ reconcileVirtualPool only changes slots that leave the window (0.3631ms)
+✔ reconcileVirtualPool handles large jumps without duplicating indexes (0.1722ms)
+✔ logical indexes preserve the deterministic project order forever (0.1296ms)
+✔ slide transforms place logical items along the original diagonal (0.1959ms)
+ℹ tests 36
+ℹ suites 0
+ℹ pass 36
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 339.3115
