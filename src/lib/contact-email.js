@@ -35,9 +35,11 @@ function buildContactEmailText({
   company,
   email,
   phone,
+  source,
 }) {
   return [
     "Nuova richiesta di contatto da kremisi.com",
+    ...(source === "automation_landing" ? ["Origine: Landing automazioni aziendali"] : []),
     "",
     `Servizio: ${service}`,
     ...(service === "information" ? [] : [

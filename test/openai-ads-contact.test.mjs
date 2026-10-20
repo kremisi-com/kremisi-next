@@ -77,6 +77,54 @@ test("spam, failed security, invalid forms, and rejected emails never schedule a
   }
 });
 
+test("automation landing uses the simple contact contract and preserves its source and conversion context", async () => {
+  let received;
+  let measuredSource;
+  const submit = action({
+    sendContactEmail: async (payload) => { received = payload; return "accepted-email"; },
+    scheduleOpenAIAdsLead: async ({ formData, eventId }) => {
+      measuredSource = formData.get("openaiAdsSourceUrl");
+      return { eventId };
+    },
+  });
+  const form = contactForm();
+  form.set("source", "automation_landing");
+  form.set("company", "Example company");
+  form.set("openaiAdsSourceUrl", "https://kremisi.com/it/automazioni-aziendali");
+  const result = await submit(null, form);
+  assert.equal(result.success, true);
+  assert.equal(received.source, "automation_landing");
+  assert.equal(received.company, "Example company");
+  assert.equal(received.budget, "");
+  assert.equal(received.delivery, "");
+  assert.equal(measuredSource, "https://kremisi.com/it/automazioni-aziendali");
+  form.set("source", "untrusted-source");
+  await submit(null, form);
+  assert.equal(received.source, "");
+});
+
+test("simple landing contacts still require privacy, valid details, name, email and optional phone", async () => {
+  for (const [field, value] of [
+    ["privacy", ""], ["details", "abc"], ["name", "A"],
+    ["email", "invalid"], ["phone", "invalid-phone"],
+  ]) {
+    let emails = 0;
+    let conversions = 0;
+    const submit = action({
+      sendContactEmail: async () => { emails += 1; return "accepted-email"; },
+      scheduleOpenAIAdsLead: async () => { conversions += 1; },
+    });
+    const form = contactForm();
+    form.set("source", "automation_landing");
+    form.set(field, value);
+    const result = await submit(null, form);
+    assert.equal(result.success, false, field);
+    assert.equal(emails, 0, field);
+    assert.equal(conversions, 0, field);
+    assert.ok(result.error, field);
+  }
+});
+
 function scheduler(dependencies) {
   return loadModule("../src/server/openai-ads.js", {
     headers: async () => new Headers({

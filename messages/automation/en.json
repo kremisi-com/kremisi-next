@@ -1,0 +1,68 @@
+{
+    "meta": {
+        "title": "Business automation and custom software",
+        "description": "Custom software, integrations and AI to simplify how your business works. Tell Kremisi which processes you want to improve."
+    },
+    "skipToContact": "Skip to the contact form",
+    "cta": "Let’s talk about your process",
+    "hero": {
+        "eyebrow": "Custom software · Automation · AI for SMEs",
+        "line1": "Less manual work.",
+        "line2": "More time for your business.",
+        "description": "We build custom software, connect tools and integrate AI into the way small and medium businesses work. We start with what you do every day.",
+        "caseLink": "See a real project",
+        "note": "From repetitive tasks to disconnected information: let’s start with what you want to simplify."
+    },
+    "solutions": {
+        "eyebrow": "Work, without the friction",
+        "title": "Where work gets stuck, we can begin.",
+        "intro": "You don’t need to start with a technology. Start with a task that takes more attention than it should.",
+        "problemLabel": "Sound familiar?",
+        "connections": {
+            "problem": "The same data. Entered again, and again.",
+            "name": "Integrations and automation",
+            "description": "We connect your tools and design workflows to move information, update data and handle repetitive steps. We assess what can work with the systems you already use."
+        },
+        "custom": {
+            "problem": "Your process doesn’t fit off-the-shelf software.",
+            "name": "Custom software",
+            "description": "We design tools around how you work: operational interfaces, platforms and business logic built around your team’s needs."
+        },
+        "ai": {
+            "problem": "Plenty of information. Little time to use it.",
+            "name": "AI and data, with a purpose",
+            "description": "We assess how AI and data analysis can help process information and support repetitive tasks. Together, we define limits, checks and the steps that need a person."
+        }
+    },
+    "case": {
+        "eyebrow": "A real project",
+        "title": "From processes to a working tool.",
+        "description": "BPMN2Petri is a web application that converts BPMN diagrams into Petri nets, connecting process representation with formal analysis.",
+        "context": "A concrete example of designing and developing a tool for processes, with an interface built around a specific function.",
+        "link": "Explore BPMN2Petri",
+        "imageAlt": "Actual BPMN2Petri interface showing a BPMN diagram and its corresponding Petri net",
+        "caption": "BPMN2Petri · The project’s conversion interface"
+    },
+    "method": {
+        "eyebrow": "How we work together",
+        "title": "Understand the work first. Choose the technology next.",
+        "understand": {
+            "title": "Understand the process",
+            "description": "Tell us about your tasks, tools and points of friction. We clarify the problem and who deals with it every day."
+        },
+        "define": {
+            "title": "Define the priorities",
+            "description": "We assess feasibility, integrations and constraints. We share a proposal with a clear scope and next steps."
+        },
+        "build": {
+            "title": "Build and verify",
+            "description": "We design and develop the solution, reviewing real workflows and checking how it works with your team."
+        }
+    },
+    "contact": {
+        "eyebrow": "Let’s start here",
+        "title": "What would you like to simplify?",
+        "description": "Tell us how you work today, which tools you use and where you lose time. It will help us understand where to begin.",
+        "emailLabel": "Prefer to email us directly?"
+    }
+}

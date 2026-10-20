@@ -1,0 +1,501 @@
+.page {
+    width: 100%;
+    padding-bottom: 100px;
+    color: var(--foreground);
+    background: var(--background);
+}
+
+.page :is(a, button, input, textarea):focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 7px;
+}
+
+.skipLink {
+    position: fixed;
+    left: 20px;
+    top: -150px;
+    padding: 15px 20px;
+    background: var(--background);
+    color: var(--foreground);
+    font-size: 16px;
+    z-index: 200;
+}
+
+.skipLink:focus {
+    top: 20px;
+}
+
+.eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    font-size: 12px;
+    line-height: 1.6;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin: 0 0 28px;
+}
+
+.eyebrow::before {
+    content: "";
+    flex: 0 0 25px;
+    height: 2px;
+    background: var(--primary);
+}
+
+.heroTitle {
+    max-width: 1450px;
+    margin: 0 auto 30px;
+    font-size: clamp(48px, 6.9vw, 116px);
+    font-weight: 400;
+    letter-spacing: -0.065em;
+    line-height: 0.98;
+    text-wrap: balance;
+}
+
+.heroTitle span {
+    font-style: italic;
+    font-weight: 600;
+}
+
+.page section:first-of-type .eyebrow {
+    justify-content: center;
+}
+
+.heroDescription {
+    max-width: 690px;
+    margin: 0 auto;
+    font-size: clamp(17px, 1.3vw, 21px);
+    line-height: 1.65;
+    text-wrap: pretty;
+}
+
+.heroActions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 26px 45px;
+    margin-top: 35px;
+}
+
+.primaryLink {
+    display: inline-flex;
+    padding: 8px 40px 8px 0;
+    border-radius: 40px;
+}
+
+.textLink {
+    display: inline-flex;
+    gap: 16px;
+    align-items: center;
+    min-height: 44px;
+    padding-block: 8px;
+    font-size: 16px;
+    font-weight: 500;
+    line-height: 1.4;
+    text-decoration-line: underline;
+    text-underline-offset: 6px;
+    text-decoration-thickness: 1px;
+}
+
+.textLink span {
+    font-size: 23px;
+    text-decoration: none;
+}
+
+.textLink:hover {
+    color: var(--primary);
+}
+
+.heroNote {
+    max-width: 590px;
+    margin: 25px auto 0;
+    font-size: 13px;
+    line-height: 1.6;
+    opacity: 0.72;
+    text-wrap: pretty;
+}
+
+.section {
+    padding: 110px 8vw;
+    scroll-margin-top: 110px;
+}
+
+.sectionHeader {
+    max-width: 1400px;
+    margin: 0 auto 60px;
+}
+
+.sectionTitle {
+    max-width: 1000px;
+    font-size: clamp(38px, 4.8vw, 80px);
+    line-height: 1.06;
+    font-weight: 400;
+    letter-spacing: -0.05em;
+    margin: 0 0 28px;
+    text-wrap: balance;
+}
+
+.intro {
+    max-width: 640px;
+    font-size: 18px;
+    line-height: 1.7;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+.solutionList {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+}
+
+.solutionRow {
+    display: grid;
+    grid-template-columns: 70px minmax(0, 1fr) minmax(0, 0.85fr);
+    gap: 35px;
+    border-top: 1px solid var(--box-bg);
+    padding: 45px 0;
+}
+
+.solutionRow:last-child {
+    border-bottom: 1px solid var(--box-bg);
+}
+
+.number {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: var(--primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    line-height: 1.6;
+    margin-bottom: 15px;
+}
+
+.problem h3 {
+    max-width: 500px;
+    font-size: clamp(26px, 2.4vw, 39px);
+    letter-spacing: -0.035em;
+    line-height: 1.16;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+.solution > p:last-child,
+.methodList p {
+    font-size: 16px;
+    line-height: 1.75;
+    opacity: 0.85;
+    margin: 0;
+    text-wrap: pretty;
+}
+
+.caseSection {
+    background: var(--box-bg);
+}
+
+.caseHeader,
+.caseGrid {
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.caseHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 24px;
+    margin-bottom: 40px;
+}
+
+.caseHeader .eyebrow {
+    margin: 0;
+}
+
+.projectMeta {
+    font-size: 13px;
+    line-height: 1.6;
+    white-space: nowrap;
+}
+
+.projectMeta span {
+    opacity: 0.4;
+    padding-inline: 12px;
+}
+
+.caseGrid {
+    display: grid;
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: center;
+    gap: 5vw;
+}
+
+.caseCopy .sectionTitle {
+    font-size: clamp(38px, 3.8vw, 64px);
+}
+
+.caseContext {
+    margin: 24px 0;
+    font-size: 14px;
+    line-height: 1.7;
+    opacity: 0.75;
+}
+
+.caseFigure {
+    min-width: 0;
+    margin: 0;
+}
+
+.imageFrame {
+    overflow: hidden;
+    border: 1px solid var(--box-bg);
+}
+
+.caseImage {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.caseFigure figcaption {
+    margin-top: 14px;
+    font-size: 12px;
+    line-height: 1.6;
+    opacity: 0.75;
+}
+
+.methodList {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 45px;
+    padding: 0;
+    margin: 0 auto 35px;
+    max-width: 1400px;
+    list-style: none;
+}
+
+.methodList li {
+    padding-top: 20px;
+    border-top: 1px solid var(--box-bg);
+}
+
+.methodList h3 {
+    font-size: clamp(25px, 2.1vw, 34px);
+    line-height: 1.2;
+    letter-spacing: -0.035em;
+    margin: 25px 0 18px;
+}
+
+.section > .textLink {
+    margin-left: max(0px, calc((100% - 1400px) / 2));
+}
+
+.contactSection {
+    border-top: 1px solid var(--box-bg);
+    padding-bottom: 120px;
+}
+
+.contactTitle {
+    max-width: 1100px;
+    font-size: clamp(44px, 6vw, 100px);
+    line-height: 1.02;
+    font-weight: 400;
+    letter-spacing: -0.055em;
+    text-wrap: balance;
+    margin-bottom: 35px;
+}
+
+.contactIntro {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 35px;
+}
+
+.emailFallback {
+    flex-shrink: 0;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.formWrap {
+    max-width: 1400px;
+    margin-inline: auto;
+}
+
+@media (min-width: 1800px) {
+    .section {
+        padding-inline: max(8vw, calc((100vw - 1400px) / 2));
+    }
+}
+
+@media (max-width: 1100px) {
+    .section {
+        padding: 90px 6vw;
+    }
+
+    .solutionRow {
+        grid-template-columns: 40px minmax(0, 1fr) minmax(0, 1fr);
+        gap: 25px;
+    }
+
+    .methodList {
+        gap: 25px;
+    }
+
+    .contactIntro {
+        flex-direction: column;
+        gap: 25px;
+    }
+}
+
+@media (max-width: 900px) {
+    .caseGrid {
+        grid-template-columns: 1fr;
+        gap: 36px;
+    }
+
+    .caseCopy {
+        max-width: 650px;
+    }
+}
+
+@media (max-width: 768px) {
+    .page {
+        padding-bottom: 80px;
+    }
+
+    .eyebrow {
+        font-size: 10px;
+        letter-spacing: 0.07em;
+        gap: 9px;
+    }
+
+    .eyebrow::before {
+        flex-basis: 18px;
+    }
+
+    .heroTitle {
+        font-size: clamp(43px, 8.2vw, 65px);
+        letter-spacing: -0.055em;
+        line-height: 1.02;
+    }
+
+    .heroDescription {
+        font-size: 17px;
+        max-width: 520px;
+    }
+
+    .heroActions {
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 28px;
+    }
+
+    .primaryLink {
+        padding-left: 0;
+    }
+
+    .heroButton span {
+        font-size: 16px;
+    }
+
+    .heroActions .textLink {
+        font-size: 14px;
+        gap: 10px;
+    }
+
+    .heroNote {
+        max-width: 420px;
+        margin-top: 20px;
+        font-size: 12px;
+    }
+
+    .section {
+        padding: 75px 5vw;
+        scroll-margin-top: 100px;
+    }
+
+    .sectionHeader {
+        margin-bottom: 40px;
+    }
+
+    .intro {
+        font-size: 17px;
+    }
+
+    .solutionRow {
+        grid-template-columns: 24px minmax(0, 1fr);
+        gap: 18px;
+        padding: 32px 0;
+    }
+
+    .solution {
+        grid-column: 2;
+    }
+
+    .solution .label {
+        margin-bottom: 10px;
+    }
+
+    .problem h3 {
+        font-size: 27px;
+    }
+
+    .caseHeader {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 15px;
+        margin-bottom: 28px;
+    }
+
+    .methodList {
+        grid-template-columns: 1fr;
+        gap: 30px;
+    }
+
+    .methodList li {
+        display: grid;
+        grid-template-columns: 24px minmax(0, 1fr);
+        gap: 14px 18px;
+    }
+
+    .methodList h3 {
+        margin: 0;
+        font-size: 27px;
+    }
+
+    .methodList p {
+        grid-column: 2;
+    }
+
+    .contactSection {
+        padding-bottom: 130px;
+    }
+}
+
+@media (max-width: 360px) {
+    .heroButton span {
+        font-size: 14px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .page *,
+    .page *::before,
+    .page *::after {
+        animation: none !important;
+        transition: none !important;
+        scroll-behavior: auto !important;
+    }
+}

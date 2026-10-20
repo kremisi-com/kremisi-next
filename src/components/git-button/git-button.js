@@ -28,7 +28,7 @@ export default function GitButton({
         </div>
         <ButtonElement
           className={`${styles.button}`}
-          {...(!isLinkContent && { type: isSubmit ? "submit" : "button" })}
+          {...(!isLinkContent && { type: isSubmit ? "submit" : "button", disabled })}
         >
           <span className={`${styles.text} ${styles.top}`}>
             {isSubmit ? submitText : text}

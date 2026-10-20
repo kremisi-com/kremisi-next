@@ -1,0 +1,68 @@
+{
+    "meta": {
+        "title": "Automazioni aziendali e software su misura",
+        "description": "Software su misura, integrazioni e AI per semplificare i processi delle PMI. Racconta a Kremisi quali attività vuoi migliorare."
+    },
+    "skipToContact": "Vai al modulo di contatto",
+    "cta": "Parliamo del tuo processo",
+    "hero": {
+        "eyebrow": "Software su misura · Automazioni · AI per PMI",
+        "line1": "Meno lavoro manuale.",
+        "line2": "Più tempo per la tua azienda.",
+        "description": "Progettiamo software su misura, colleghiamo strumenti e integriamo AI nei processi delle PMI. Partiamo dal lavoro che fai ogni giorno.",
+        "caseLink": "Guarda un progetto concreto",
+        "note": "Dai passaggi ripetitivi alle informazioni che non comunicano: iniziamo da ciò che vuoi semplificare."
+    },
+    "solutions": {
+        "eyebrow": "Il lavoro, senza gli ostacoli",
+        "title": "Dove si ferma il lavoro, possiamo iniziare.",
+        "intro": "Non serve partire da una tecnologia. Basta riconoscere un passaggio che oggi richiede più attenzione del necessario.",
+        "problemLabel": "Ti riconosci?",
+        "connections": {
+            "problem": "Gli stessi dati. Inseriti ancora, e ancora.",
+            "name": "Integrazioni e automazioni",
+            "description": "Colleghiamo i tuoi strumenti e progettiamo flussi per trasferire informazioni, aggiornare dati e gestire i passaggi ripetitivi. Valutiamo cosa può funzionare con i sistemi che usi già."
+        },
+        "custom": {
+            "problem": "Il tuo processo non entra in un software standard.",
+            "name": "Software su misura",
+            "description": "Progettiamo strumenti intorno al tuo modo di lavorare: interfacce operative, piattaforme e logiche di business costruite sulle esigenze del tuo team."
+        },
+        "ai": {
+            "problem": "Tante informazioni. Poco tempo per usarle.",
+            "name": "AI e dati, dove servono",
+            "description": "Valutiamo come integrare AI e analisi dei dati per elaborare informazioni e supportare attività ripetitive. Definiamo insieme limiti, controlli e passaggi che richiedono una persona."
+        }
+    },
+    "case": {
+        "eyebrow": "Un progetto reale",
+        "title": "Dai processi a uno strumento concreto.",
+        "description": "BPMN2Petri è un’applicazione web che converte diagrammi BPMN in reti di Petri, collegando la rappresentazione dei processi alla loro analisi formale.",
+        "context": "Un esempio concreto di progettazione e sviluppo di uno strumento dedicato ai processi, con un’interfaccia costruita intorno a una funzione precisa.",
+        "link": "Esplora BPMN2Petri",
+        "imageAlt": "Interfaccia reale di BPMN2Petri: un diagramma BPMN e la corrispondente rete di Petri",
+        "caption": "BPMN2Petri · Interfaccia di conversione del progetto"
+    },
+    "method": {
+        "eyebrow": "Come lavoriamo insieme",
+        "title": "Prima capiamo il lavoro. Poi scegliamo la tecnologia.",
+        "understand": {
+            "title": "Capiamo il processo",
+            "description": "Ci racconti attività, strumenti e punti di attrito. Mettiamo a fuoco il problema e chi lo vive ogni giorno."
+        },
+        "define": {
+            "title": "Definiamo le priorità",
+            "description": "Valutiamo fattibilità, integrazioni e vincoli. Condividiamo una proposta con perimetro e prossimi passi chiari."
+        },
+        "build": {
+            "title": "Costruiamo e verifichiamo",
+            "description": "Progettiamo e sviluppiamo la soluzione, confrontandoci sui flussi reali e verificando il funzionamento con il tuo team."
+        }
+    },
+    "contact": {
+        "eyebrow": "Partiamo da qui",
+        "title": "Quale attività vorresti semplificare?",
+        "description": "Raccontaci come lavori oggi, quali strumenti usi e dove perdi tempo. Ci aiuterà a capire da dove iniziare.",
+        "emailLabel": "Preferisci scriverci direttamente?"
+    }
+}

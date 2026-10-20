@@ -12,6 +12,7 @@ export default function sitemap() {
         "/services",
         "/projects",
         "/contacts",
+        "/automazioni-aziendali",
     ];
     const localize = (path) =>
         LOCALES.map((locale) => ({

@@ -107,6 +107,18 @@
     align-items: center;
 }
 
+/* Campaign content is passed by the server; essential text never waits for GSAP. */
+.campaign {
+    padding: 150px 6vw 100px;
+}
+
+.campaignContent {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 1600px;
+}
+
 /* --- OVERVIEW TYPOGRAPHY (Super Impattante) --- */
 .content p {
     font-weight: 300 !important;
@@ -168,6 +180,10 @@
 }
 
 @media (max-width: 768px) {
+    .campaign {
+        padding: 135px 5vw 95px;
+    }
+
     .overview {
         padding-inline: clamp(1rem, 5vw, 1.5rem);
     }
@@ -296,6 +312,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+    .overview {
+        transition: none;
+    }
+
     .blob1, .blob2, .blob3 {
         animation: none;
         filter: blur(40px);

@@ -48,7 +48,7 @@ function loadTurnstileScript() {
 }
 
 const Turnstile = forwardRef(function Turnstile(
-  { className, onTokenChange, theme = "auto", size = "normal" },
+  { className, onTokenChange, theme = "auto", size = "normal", unavailableMessage },
   ref,
 ) {
   const siteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY?.trim();
@@ -118,7 +118,7 @@ const Turnstile = forwardRef(function Turnstile(
   if (!siteKey) {
     return (
       <p className={className} role="alert">
-        Turnstile site key missing.
+        {unavailableMessage || "Turnstile site key missing."}
       </p>
     );
   }
@@ -128,7 +128,7 @@ const Turnstile = forwardRef(function Turnstile(
       <div ref={containerRef} />
       {loadError ? (
         <p role="alert" style={{ marginTop: "10px", fontSize: "1.2rem" }}>
-          {loadError}
+          {unavailableMessage || loadError}
         </p>
       ) : null}
     </div>

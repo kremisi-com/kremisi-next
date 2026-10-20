@@ -64,6 +64,7 @@ export async function submitContact(prevState, formData) {
         const company = getVal("company");
         const email = getVal("email");
         const phone = getVal("phone");
+        const source = getVal("source") === "automation_landing" ? "automation_landing" : "";
         const privacy = getVal("privacy") === "on";
         const honeypotValue = getVal("krs_x9q4");
         const turnstileToken = getVal("cf-turnstile-response");
@@ -160,6 +161,7 @@ export async function submitContact(prevState, formData) {
             company,
             email,
             phone,
+            source,
         };
 
         stage = "resend-send";

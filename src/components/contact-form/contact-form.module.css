@@ -2,6 +2,99 @@
     text-transform: uppercase;
 }
 
+.automation {
+    width: 100%;
+    min-width: 0;
+}
+
+.automation :global(.row) {
+    margin: 0;
+    gap: 0 24px;
+}
+
+.automation :global(.col) {
+    padding: 0;
+    flex: 1 1 calc(50% - 24px);
+    max-width: none;
+    margin-bottom: 24px;
+    min-width: 0;
+}
+
+.automation :global(.col):empty {
+    display: none;
+}
+
+.automation .contactFields > :global(.col):first-child {
+    flex-basis: 100%;
+}
+
+.automation h3 {
+    font-size: clamp(18px, 2.5rem, 26px);
+    line-height: 1.3;
+    text-transform: none;
+}
+
+.automation textarea {
+    min-height: 140px;
+    line-height: 1.6;
+}
+
+.automation textarea::placeholder {
+    color: var(--foreground);
+    opacity: 0.65;
+}
+
+.automation input,
+.automation textarea {
+    font-size: 16px;
+}
+
+.automation label {
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.automation :is(input, textarea, button, a):focus-visible {
+    outline: 2px solid var(--foreground);
+    outline-offset: 5px;
+}
+
+.automation .privacyConsent {
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 14px !important;
+    line-height: 1.6;
+}
+
+.automation .privacyConsent input {
+    min-width: 20px;
+    min-height: 20px;
+}
+
+.automation .privacyConsent span {
+    margin: 0 !important;
+}
+
+.automation .submitWrapper {
+    padding: 0 36px 0 0;
+}
+
+.automation .submitWrapper button {
+    font-size: 16px;
+}
+
+.status {
+    min-height: 1.6em;
+    font-size: 16px;
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .automation :global(.col) {
+        flex-basis: 100%;
+    }
+}
+
 .projectOptions {
     display: grid;
     grid-template-rows: 0fr;

@@ -3,7 +3,7 @@
 import RadioOptions from "@/components/radio-options/radio-options";
 import styles from "./contact-form.module.css";
 import { submitContact } from "@/components/contact-form/actions";
-import { useActionState, useEffect, useRef, useState } from "react";
+import { useActionState, useEffect, useId, useRef, useState } from "react";
 import GitButton from "../git-button/git-button";
 import toast from "react-hot-toast";
 import Script from "next/script";
@@ -42,6 +42,12 @@ const COPY = {
     submit: "Request Proposal",
     sending: "Sending...",
     reply: "Usually reply within 24h.",
+    automationTitle: "Your process and the tools you use",
+    optional: "optional",
+    automationPlaceholder: "Tell us about a repetitive task, the tools you use and where things get stuck.",
+    automationSubmit: "Send your request",
+    automationSuccess: "Thank you. Your request has been sent. We'll contact you to discuss your process.",
+    securityUnavailable: "The form is currently unavailable. You can write to info@kremisi.com.",
   },
   it: {
     success: "Richiesta inviata con successo!",
@@ -64,6 +70,12 @@ const COPY = {
     submit: "Invia la richiesta",
     sending: "Invio in corso...",
     reply: "Rispondiamo solitamente entro 24 ore lavorative.",
+    automationTitle: "Il processo e gli strumenti che usi",
+    optional: "opzionale",
+    automationPlaceholder: "Raccontaci un'attività ripetitiva, gli strumenti che usi e dove il lavoro si blocca.",
+    automationSubmit: "Invia la richiesta",
+    automationSuccess: "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo.",
+    securityUnavailable: "Il modulo non è al momento disponibile. Puoi scriverci a info@kremisi.com.",
   },
 };
 
@@ -72,8 +84,12 @@ async function submitContactWithAds(prevState, formData) {
   return submitContact(prevState, formData);
 }
 
-export default function ContactForm({ locale = "en" }) {
+export default function ContactForm({ locale = "en", variant = "default" }) {
   const copy = COPY[locale] || COPY.en;
+  const isAutomation = variant === "automation";
+  const formRef = useRef(null);
+  const formStarted = useRef(false);
+  const statusId = useId();
   const [state, formAction, pending] = useActionState(submitContactWithAds, {
     success: null,
     error: null,
@@ -95,27 +111,41 @@ export default function ContactForm({ locale = "en" }) {
   const turnstileRef = useRef(null);
 
   useEffect(() => {
-    trackViewContactForm();
-  }, []);
+    if (!isAutomation || !window.IntersectionObserver) {
+      trackViewContactForm();
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        trackViewContactForm();
+        observer.disconnect();
+      }
+    });
+    observer.observe(formRef.current);
+    return () => observer.disconnect();
+  }, [isAutomation]);
 
   useEffect(() => {
     if (state?.success) {
       toast.success(copy.success);
+      const submittedService = isAutomation ? "information" : serviceRef.current?.getValue?.() || "unknown";
       if (!state?.silentDrop) {
         trackLead({
-          service: serviceRef.current?.getValue?.() || "unknown",
-          budget: serviceRef.current?.getValue?.() === "information"
+          service: submittedService,
+          budget: submittedService === "information"
             ? "not-applicable"
             : budgetRef.current?.getValue?.() || "unknown",
-          delivery: serviceRef.current?.getValue?.() === "information"
+          delivery: submittedService === "information"
             ? "not-applicable"
             : deliveryRef.current?.getValue?.() || "unknown",
+          form_location: isAutomation ? "automation_landing" : "contacts",
         }, state.openaiAds);
       }
       // reset radio options
-      serviceRef.current.reset();
-      budgetRef.current.reset();
-      deliveryRef.current.reset();
+      serviceRef.current?.reset();
+      budgetRef.current?.reset();
+      deliveryRef.current?.reset();
+      formStarted.current = false;
       // reset campi testuali
       setName("");
       setCompany("");
@@ -134,11 +164,24 @@ export default function ContactForm({ locale = "en" }) {
     if (state?.message) {
       console.log(state.message);
     }
-  }, [copy.success, state]);
+  }, [copy.success, isAutomation, state]);
 
   return (
-    <form className={styles.form} action={formAction}>
+    <form
+      ref={formRef}
+      className={`${styles.form} ${isAutomation ? styles.automation : ""}`}
+      action={formAction}
+      aria-busy={pending}
+      aria-describedby={isAutomation ? statusId : undefined}
+      onFocusCapture={isAutomation ? () => {
+        if (!formStarted.current) {
+          trackContactFormStart();
+          formStarted.current = true;
+        }
+      } : undefined}
+    >
       <input type="hidden" name="locale" value={locale} />
+      {isAutomation && <input type="hidden" name="source" value="automation_landing" />}
       <input
         type="hidden"
         name="cf-turnstile-response"
@@ -163,7 +206,7 @@ export default function ContactForm({ locale = "en" }) {
           pointerEvents: "none",
         }}
       />
-      <div className="row">
+      {isAutomation ? <input type="hidden" name="service" value="information" /> : <div className="row">
         <div className="col">
           <h3>{copy.serviceTitle}</h3>
           <RadioOptions
@@ -190,7 +233,8 @@ export default function ContactForm({ locale = "en" }) {
             required
           />
         </div>
-      </div>
+      </div>}
+      {!isAutomation && <>
       <div
         className={`${styles.projectOptions} ${!isInformation ? styles.projectOptionsVisible : ""}`}
         aria-hidden={isInformation}
@@ -228,17 +272,19 @@ export default function ContactForm({ locale = "en" }) {
           </div>
         </fieldset>
       </div>
+      </>}
       <div className="row">
         <div className="col">
           <h3>
             <span key={isInformation ? "message" : "project"} className={styles.detailsTitle}>
-              {isInformation ? copy.messageTitle : copy.detailsTitle}
+              {isAutomation ? copy.automationTitle : isInformation ? copy.messageTitle : copy.detailsTitle}
             </span>
           </h3>
           <textarea
             name="details"
+            aria-label={isAutomation ? copy.automationTitle : isInformation ? copy.messageTitle : copy.detailsTitle}
             rows="5"
-            placeholder={isInformation ? copy.messagePlaceholder : copy.detailsPlaceholder}
+            placeholder={isAutomation ? copy.automationPlaceholder : isInformation ? copy.messagePlaceholder : copy.detailsPlaceholder}
             value={details}
             onChange={(e) => setDetails(e.target.value)}
             minLength={5}
@@ -246,46 +292,63 @@ export default function ContactForm({ locale = "en" }) {
           ></textarea>
         </div>
       </div>
-      <div className="row">
+      <div className={`row ${isAutomation ? styles.contactFields : ""}`}>
         <div className="col">
           <h3>{copy.contactsTitle}</h3>
         </div>
         <div className="col"></div>
         <div className="col">
+          {isAutomation && <label htmlFor={`${statusId}-name`}>{copy.name}</label>}
           <input
             type="text"
-            placeholder={copy.name}
+            id={`${statusId}-name`}
+            placeholder={isAutomation ? undefined : copy.name}
             name="name"
+            aria-label={copy.name}
+            autoComplete="name"
+            minLength={2}
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
           />
         </div>
         <div className="col">
+          {isAutomation && <label htmlFor={`${statusId}-company`}>{copy.company} ({copy.optional})</label>}
           <input
             type="text"
-            placeholder={copy.company}
+            id={`${statusId}-company`}
+            placeholder={isAutomation ? undefined : copy.company}
             name="company"
+            aria-label={copy.company}
+            autoComplete="organization"
             value={company}
             onChange={(e) => setCompany(e.target.value)}
           />
         </div>
         <div className="col">
+          {isAutomation && <label htmlFor={`${statusId}-email`}>Email*</label>}
           <input
             type="email"
-            placeholder="Email*"
+            id={`${statusId}-email`}
+            placeholder={isAutomation ? undefined : "Email*"}
             name="email"
+            aria-label="Email"
+            autoComplete="email"
             value={email}
-            onFocus={() => trackContactFormStart()}
+            onFocus={isAutomation ? undefined : () => trackContactFormStart()}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
         </div>
         <div className="col">
+          {isAutomation && <label htmlFor={`${statusId}-phone`}>{copy.phone} ({copy.optional})</label>}
           <input
             type="tel"
-            placeholder={copy.phone}
+            id={`${statusId}-phone`}
+            placeholder={isAutomation ? undefined : copy.phone}
             name="phone"
+            aria-label={copy.phone}
+            autoComplete="tel"
             value={phone}
             onChange={(e) => setPhone(e.target.value)}
           />
@@ -325,6 +388,8 @@ export default function ContactForm({ locale = "en" }) {
             ref={turnstileRef}
             className={styles.turnstile}
             onTokenChange={setTurnstileToken}
+            unavailableMessage={isAutomation ? copy.securityUnavailable : undefined}
+            size={isAutomation ? "compact" : "normal"}
           />
         </div>
       </div>
@@ -333,13 +398,16 @@ export default function ContactForm({ locale = "en" }) {
           <div className={styles.submitWrapper}>
             <GitButton
               isSubmit={true}
-              submitText={pending ? copy.sending : copy.submit}
+              submitText={pending ? copy.sending : isAutomation ? copy.automationSubmit : copy.submit}
               disabled={pending || !turnstileToken}
             />
-            <span className={styles.replyNote}>{copy.reply}</span>
+            {!isAutomation && <span className={styles.replyNote}>{copy.reply}</span>}
           </div>
         </div>
       </div>
+      {isAutomation && <p id={statusId} role="status" aria-live="polite" className={styles.status}>
+        {state?.error || (state?.success ? copy.automationSuccess : "")}
+      </p>}
     </form>
   );
 }
