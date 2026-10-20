@@ -1,0 +1,171 @@
+{
+  "base": "http://127.0.0.1:3100",
+  "safety": "Captcha and every action response fulfilled inside Playwright. No request forwarded to backend. Fake example.invalid data only.",
+  "checks": [
+    {
+      "name": "success: mock captcha enables submit",
+      "pass": true,
+      "evidence": "Mock token, no Cloudflare verification."
+    },
+    {
+      "name": "success: empty form does not dispatch action",
+      "pass": true,
+      "evidence": {
+        "mockedActions": 0
+      }
+    },
+    {
+      "name": "success: expired captcha disables submit",
+      "pass": true,
+      "evidence": "expired-callback"
+    },
+    {
+      "name": "success: pending state disables duplicate submission",
+      "pass": true,
+      "evidence": {
+        "text": "Invio in corso...\nInvio in corso..."
+      }
+    },
+    {
+      "name": "success: confirmation and input reset",
+      "pass": true,
+      "evidence": {
+        "status": "Grazie, la tua richiesta è stata inviata. Ti ricontatteremo per approfondire il tuo processo."
+      }
+    },
+    {
+      "name": "success: exactly one mocked action",
+      "pass": true,
+      "evidence": {
+        "scenarioActions": 1
+      }
+    },
+    {
+      "name": "success: conversion only for accepted mock response",
+      "pass": true,
+      "evidence": {
+        "leadCount": 1,
+        "eventId": "audit-browser-lead"
+      }
+    },
+    {
+      "name": "success: CTA click and form-start funnel events",
+      "pass": true,
+      "evidence": [
+        {
+          "event": "automation_cta_click",
+          "params": {
+            "placement": "hero_contact",
+            "destination": "#contatto"
+          }
+        },
+        {
+          "event": "view_contact_form"
+        },
+        {
+          "event": "contact_form_start"
+        },
+        {
+          "event": "generate_lead",
+          "params": {
+            "service": "information",
+            "budget": "not-applicable",
+            "delivery": "not-applicable",
+            "form_location": "automation_landing"
+          }
+        }
+      ]
+    },
+    {
+      "name": "success: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "error: mock captcha enables submit",
+      "pass": true,
+      "evidence": "Mock token, no Cloudflare verification."
+    },
+    {
+      "name": "error: empty form does not dispatch action",
+      "pass": true,
+      "evidence": {
+        "mockedActions": 0
+      }
+    },
+    {
+      "name": "error: expired captcha disables submit",
+      "pass": true,
+      "evidence": "expired-callback"
+    },
+    {
+      "name": "error: pending state disables duplicate submission",
+      "pass": true,
+      "evidence": {
+        "text": "Invio in corso...\nInvio in corso..."
+      }
+    },
+    {
+      "name": "error: inline error preserves entered data",
+      "pass": true,
+      "evidence": {
+        "status": "Non è stato possibile inviare il modulo. [Risposta simulata QA]"
+      }
+    },
+    {
+      "name": "error: fresh captcha required to retry",
+      "pass": true,
+      "evidence": "Token reset after rejected response."
+    },
+    {
+      "name": "error: exactly one mocked action",
+      "pass": true,
+      "evidence": {
+        "scenarioActions": 1
+      }
+    },
+    {
+      "name": "error: conversion only for accepted mock response",
+      "pass": true,
+      "evidence": {
+        "leadCount": 0
+      }
+    },
+    {
+      "name": "error: CTA click and form-start funnel events",
+      "pass": true,
+      "evidence": [
+        {
+          "event": "automation_cta_click",
+          "params": {
+            "placement": "hero_contact",
+            "destination": "#contatto"
+          }
+        },
+        {
+          "event": "view_contact_form"
+        },
+        {
+          "event": "contact_form_start"
+        }
+      ]
+    },
+    {
+      "name": "error: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    },
+    {
+      "name": "security outage: disabled submit with readable fallback",
+      "pass": true,
+      "evidence": "Il modulo non è al momento disponibile. Puoi scriverci a info@kremisi.com."
+    },
+    {
+      "name": "security-unavailable: no unhandled browser errors",
+      "pass": true,
+      "evidence": []
+    }
+  ],
+  "mockedActions": 2,
+  "blockedWrites": []
+}

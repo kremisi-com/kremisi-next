@@ -144,7 +144,7 @@ export async function submitContact(prevState, formData) {
         // Telefono opzionale ma, se presente, deve essere plausibile
         if (phone) {
             const phoneRe = /^[+\d\s().-]{6,30}$/;
-            if (!phoneRe.test(phone)) {
+            if (!phoneRe.test(phone) || phone.replace(/\D/g, "").length < 6) {
                 return validationFailure(requestId, "phone", errors.phone);
             }
         }

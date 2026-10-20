@@ -277,10 +277,11 @@ export default function ContactForm({ locale = "en", variant = "default" }) {
         <div className="col">
           <h3>
             <span key={isInformation ? "message" : "project"} className={styles.detailsTitle}>
-              {isAutomation ? copy.automationTitle : isInformation ? copy.messageTitle : copy.detailsTitle}
+              {isAutomation ? <label htmlFor={`${statusId}-details`}>{copy.automationTitle}*</label> : isInformation ? copy.messageTitle : copy.detailsTitle}
             </span>
           </h3>
           <textarea
+            id={`${statusId}-details`}
             name="details"
             aria-label={isAutomation ? copy.automationTitle : isInformation ? copy.messageTitle : copy.detailsTitle}
             rows="5"

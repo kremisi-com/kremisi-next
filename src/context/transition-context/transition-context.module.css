@@ -1,4 +1,5 @@
 .transitionOverlay {
+    visibility: hidden;
     position: fixed;
     bottom: 0;
     left: 0;
@@ -6,12 +7,14 @@
     height: 100%;
     background-color: var(--primary);
     pointer-events: none;
-    transition: all 0.5s ease;
+    transition: transform 0.5s ease, visibility 0s linear 0.5s;
     z-index: 9999;
     transform: translateY(100%);
 }
 
 .active {
+    visibility: visible;
+    transition-delay: 0s;
     opacity: 1;
     transform: translateY(0);
 }

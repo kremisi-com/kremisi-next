@@ -1,0 +1,47 @@
+{
+  "blockedWrites": [
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/1739170748:1792515619:DJyLRdWeqIWSOjmVeIWFay8tE8P905_XMFJ16OnngYs/a4d9bfe2a8c8c630/Ev9hppVMK.9aC_lHDO6fV9XRMZMmi_EOqCdLqRCb9lY-1792517417-1.2.1.1-_EVLwr0A9ceTOWbJBH9farjS13QpGj5f2u7D4h_vLAFPDg6A00P2rpacFNCxWnIY",
+      "method": "POST"
+    },
+    {
+      "url": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/1739170748:1792515619:DJyLRdWeqIWSOjmVeIWFay8tE8P905_XMFJ16OnngYs/a4d9bfe2a8c8c630/Ev9hppVMK.9aC_lHDO6fV9XRMZMmi_EOqCdLqRCb9lY-1792517417-1.2.1.1-_EVLwr0A9ceTOWbJBH9farjS13QpGj5f2u7D4h_vLAFPDg6A00P2rpacFNCxWnIY",
+      "method": "POST"
+    },
+    {
+      "url": "https://challenges.cloudflare.com/cdn-cgi/challenge-platform/h/b/fo/1739170748:1792515619:DJyLRdWeqIWSOjmVeIWFay8tE8P905_XMFJ16OnngYs/a4d9bfe2a8c8c630/Ev9hppVMK.9aC_lHDO6fV9XRMZMmi_EOqCdLqRCb9lY-1792517417-1.2.1.1-_EVLwr0A9ceTOWbJBH9farjS13QpGj5f2u7D4h_vLAFPDg6A00P2rpacFNCxWnIY",
+      "method": "POST"
+    },
+    {
+      "url": "https://cpl.iubenda.com/big_data/consent?apikey=8VArog2s728ynvMznMmHN3SQj4dCTIx0",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    }
+  ],
+  "badResponses": [],
+  "errors": [],
+  "pixelRequests": [],
+  "status": 200,
+  "cmpVisible": true,
+  "dom": {
+    "title": "Automazioni aziendali e software su misura | Kremisi",
+    "canonical": "https://kremisi.com/it/automazioni-aziendali",
+    "description": "Software su misura, integrazioni e AI per semplificare i processi delle PMI. Racconta a Kremisi quali attività vuoi migliorare.",
+    "lang": "it",
+    "submitDisabled": true,
+    "formAlerts": [
+      "Il modulo non è al momento disponibile. Puoi scriverci a info@kremisi.com."
+    ],
+    "turnstileScriptPresent": true,
+    "turnstileFrames": 0,
+    "brokenImages": [],
+    "cmpLanguage": "en-GB"
+  }
+}

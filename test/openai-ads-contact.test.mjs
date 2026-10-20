@@ -106,7 +106,7 @@ test("automation landing uses the simple contact contract and preserves its sour
 test("simple landing contacts still require privacy, valid details, name, email and optional phone", async () => {
   for (const [field, value] of [
     ["privacy", ""], ["details", "abc"], ["name", "A"],
-    ["email", "invalid"], ["phone", "invalid-phone"],
+    ["email", "invalid"], ["phone", "invalid-phone"], ["phone", "++++++"],
   ]) {
     let emails = 0;
     let conversions = 0;

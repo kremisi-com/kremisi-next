@@ -34,6 +34,10 @@
     text-transform: none;
 }
 
+.automation h3 label {
+    font: inherit;
+}
+
 .automation textarea {
     min-height: 140px;
     line-height: 1.6;

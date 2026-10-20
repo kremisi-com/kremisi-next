@@ -13,6 +13,8 @@ import { Link, usePathname } from "@/i18n/navigation";
 
 export default function Navbar() {
     const [menuOpen, setMenuOpen] = React.useState(false);
+    const menuButtonRef = React.useRef(null);
+    const menuId = React.useId();
     const animationDelay = 300;
     const pathname = usePathname();
     const t = useTranslations("navigation");
@@ -21,6 +23,18 @@ export default function Navbar() {
         window.dispatchEvent(new CustomEvent("mobile-menu-visibility", {
             detail: { isMenuOpen: menuOpen }
         }));
+    }, [menuOpen]);
+
+    React.useEffect(() => {
+        if (!menuOpen) return;
+        function closeWithEscape(event) {
+            if (event.key === "Escape") {
+                setMenuOpen(false);
+                menuButtonRef.current?.focus();
+            }
+        }
+        document.addEventListener("keydown", closeWithEscape);
+        return () => document.removeEventListener("keydown", closeWithEscape);
     }, [menuOpen]);
 
     const reopenHomeSlider = React.useCallback(() => {
@@ -43,6 +57,7 @@ export default function Navbar() {
                     <Button
                         className={styles.icon}
                         animation={false}
+                        aria-label={t("projects")}
                         onClick={handleSliderButtonClick}
                         href={pathname === "/" ? "" : "/"}
                     >
@@ -103,15 +118,20 @@ export default function Navbar() {
                 </AnimatedLink>
                 <div
                     className={`${styles.buttons} ${styles.right}`}
-                    onClick={() => setMenuOpen(!menuOpen)}
                 >
-                    <button className={styles.menuIcon}>
+                    <button className={styles.menuIcon} type="button" ref={menuButtonRef}
+                        onClick={() => setMenuOpen(!menuOpen)}
+                        aria-label={t(menuOpen ? "closeMenu" : "openMenu")}
+                        aria-expanded={menuOpen} aria-controls={menuId}>
                         <div className={styles.bar}></div>
                         <div className={styles.bar}></div>
                     </button>
                 </div>
             </nav>
             <div
+                id={menuId}
+                inert={!menuOpen}
+                aria-hidden={!menuOpen}
                 className={`${styles.mobileMenu} onlyMobileFlex ${
                     menuOpen ? styles.open : ""
                 }`}

@@ -3,9 +3,11 @@ import { useTheme } from "next-themes";
 import Button from "@/components/button/button";
 import { Moon, Sun } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function ThemeToggle({ styles }) {
-  const { theme, resolvedTheme, setTheme } = useTheme();
+  const { resolvedTheme, setTheme } = useTheme();
+  const t = useTranslations("navigation");
   // console.log("Current theme:", theme);
   // console.log("Resolved theme:", resolvedTheme);
 
@@ -22,7 +24,8 @@ export default function ThemeToggle({ styles }) {
   };
 
   return (
-    <Button className={styles.icon} animation={false} onClick={toggleTheme}>
+    <Button className={styles.icon} animation={false} onClick={toggleTheme}
+      aria-label={t(resolvedTheme === "dark" ? "lightTheme" : "darkTheme")}>
       {resolvedTheme === "dark" ? <Sun size={20} /> : <Moon size={20} />}
     </Button>
   );

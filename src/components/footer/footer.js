@@ -79,6 +79,8 @@ export default function Footer() {
                         }`}
                         href={`https://wa.me/393517444749?text=${encodeURIComponent(t("whatsapp"))}`}
                         target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label="WhatsApp"
                     >
                         <MessageCircleMore />
                     </a>

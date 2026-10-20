@@ -1,0 +1,1026 @@
+{
+  "phase": "after",
+  "base": "http://127.0.0.1:3101",
+  "checks": [
+    {
+      "name": "1440: navigation has no nested interactive controls",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "1440: closed mobile menu excluded from keyboard",
+      "pass": true,
+      "evidence": [
+        {
+          "tag": "A",
+          "label": "Progetti",
+          "text": "",
+          "href": "/it",
+          "inMobileMenu": false,
+          "top": 30,
+          "bottom": 61
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Home\nHome",
+          "href": "/it",
+          "inMobileMenu": false,
+          "top": 30,
+          "bottom": 62
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Chi siamo\nChi siamo",
+          "href": "/it/about",
+          "inMobileMenu": false,
+          "top": 30,
+          "bottom": 62
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Progetti\nProgetti",
+          "href": "/it/projects",
+          "inMobileMenu": false,
+          "top": 30,
+          "bottom": 62
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "",
+          "href": "/it",
+          "inMobileMenu": false,
+          "top": 30,
+          "bottom": 61
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Servizi\nServizi",
+          "href": "/it/services",
+          "inMobileMenu": false,
+          "top": 30,
+          "bottom": 62
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Contatti\nContatti",
+          "href": "/it/contacts",
+          "inMobileMenu": false,
+          "top": 30,
+          "bottom": 62
+        },
+        {
+          "tag": "BUTTON",
+          "label": "Attiva il tema chiaro",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 30,
+          "bottom": 61
+        },
+        {
+          "tag": "BUTTON",
+          "label": "Passa all'inglese",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 30,
+          "bottom": 59
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Vai al modulo di contatto",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 20,
+          "bottom": 70
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 597.03125,
+          "bottom": 655.03125
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Guarda un progetto concreto\n↘",
+          "href": "#progetto",
+          "inMobileMenu": false,
+          "top": 601.9375,
+          "bottom": 650.125
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Esplora BPMN2Petri\n↗",
+          "href": "/it/projects/bpmn2petrinet",
+          "inMobileMenu": false,
+          "top": 425.734375,
+          "bottom": 473.921875
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Parliamo del tuo processo\n↗",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 425.609375,
+          "bottom": 473.796875
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 420.78125,
+          "bottom": 478.78125
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Casa Palmi\n↗",
+          "href": "/it/projects/casa-palmi",
+          "inMobileMenu": false,
+          "top": 427.515625,
+          "bottom": 471.515625
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "info@kremisi.com\n↗",
+          "href": "mailto:info@kremisi.com",
+          "inMobileMenu": false,
+          "top": 426.09375,
+          "bottom": 474.28125
+        },
+        {
+          "tag": "TEXTAREA",
+          "label": "Il processo e gli strumenti che usi",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 587.828125,
+          "bottom": 727.828125
+        }
+      ]
+    },
+    {
+      "name": "1440: empty required fields invalid",
+      "pass": true,
+      "evidence": {
+        "valid": false,
+        "fields": [
+          "details",
+          "name",
+          "email",
+          "privacy"
+        ]
+      }
+    },
+    {
+      "name": "1440: invalid email rejected",
+      "pass": true,
+      "evidence": {
+        "valid": false,
+        "typeMismatch": true
+      }
+    },
+    {
+      "name": "1440: optional company/phone can be empty",
+      "pass": true,
+      "evidence": "Only checkValidity called; no submission."
+    },
+    {
+      "name": "1440: all campaign anchors reach their targets",
+      "pass": true,
+      "evidence": [
+        {
+          "href": "#contatto",
+          "top": 109.859375,
+          "bottom": 1405.140625,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#contatto",
+          "top": 109.859375,
+          "bottom": 1405.140625,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#progetto",
+          "top": 109.6875,
+          "bottom": 862.21875,
+          "hash": "#progetto"
+        },
+        {
+          "href": "#contatto",
+          "top": 109.859375,
+          "bottom": 1405.140625,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#contatto",
+          "top": 109.859375,
+          "bottom": 1405.140625,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#contatto",
+          "top": 109.859375,
+          "bottom": 1405.140625,
+          "hash": "#contatto"
+        }
+      ]
+    },
+    {
+      "name": "1440: solutions visible in normal scrolled viewport",
+      "pass": true,
+      "evidence": {
+        "title": "Dove si ferma il lavoro, possiamo iniziare.",
+        "hit": "H2",
+        "hitClass": "page-module__5SmVPq__sectionTitle",
+        "hitText": "Dove si ferma il lavoro, possiamo iniziare."
+      }
+    },
+    {
+      "name": "1440: closing videos pause together",
+      "pass": true,
+      "evidence": "Pause control"
+    },
+    {
+      "name": "1440: closing videos resume together",
+      "pass": true,
+      "evidence": "Resume control"
+    },
+    {
+      "name": "1440: videos stop outside viewport",
+      "pass": true,
+      "evidence": "IntersectionObserver pauses media"
+    },
+    {
+      "name": "1440: light theme toggle",
+      "pass": true,
+      "evidence": "html.light"
+    },
+    {
+      "name": "1440: language toggle retains landing",
+      "pass": true,
+      "evidence": {
+        "url": "http://127.0.0.1:3101/en/automazioni-aziendali",
+        "heading": "Less manual work.\nMore time for your business."
+      }
+    },
+    {
+      "name": "390: navigation has no nested interactive controls",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "390: closed mobile menu excluded from keyboard",
+      "pass": true,
+      "evidence": [
+        {
+          "tag": "BUTTON",
+          "label": "Attiva il tema chiaro",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 25,
+          "bottom": 56
+        },
+        {
+          "tag": "BUTTON",
+          "label": "Passa all'inglese",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 25,
+          "bottom": 54
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "",
+          "href": "/it",
+          "inMobileMenu": false,
+          "top": 20,
+          "bottom": 60
+        },
+        {
+          "tag": "BUTTON",
+          "label": "Apri il menu",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 25,
+          "bottom": 55
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Vai al modulo di contatto",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 20,
+          "bottom": 70
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 533,
+          "bottom": 591
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Guarda un progetto concreto\n↘",
+          "href": "#progetto",
+          "inMobileMenu": false,
+          "top": 606,
+          "bottom": 654.1875
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Esplora BPMN2Petri\n↗",
+          "href": "/it/projects/bpmn2petrinet",
+          "inMobileMenu": false,
+          "top": 397.984375,
+          "bottom": 446.171875
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Parliamo del tuo processo\n↗",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 398.375,
+          "bottom": 446.5625
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 392.71875,
+          "bottom": 450.71875
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Casa Palmi\n↗",
+          "href": "/it/projects/casa-palmi",
+          "inMobileMenu": false,
+          "top": 688.484375,
+          "bottom": 732.484375
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "info@kremisi.com\n↗",
+          "href": "mailto:info@kremisi.com",
+          "inMobileMenu": false,
+          "top": 397.625,
+          "bottom": 445.8125
+        },
+        {
+          "tag": "TEXTAREA",
+          "label": "Il processo e gli strumenti che usi",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 569.375,
+          "bottom": 709.375
+        },
+        {
+          "tag": "INPUT",
+          "label": "Nome e cognome*",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 808.046875,
+          "bottom": 844.046875
+        },
+        {
+          "tag": "INPUT",
+          "label": "Azienda",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 404.4375,
+          "bottom": 440.4375
+        },
+        {
+          "tag": "INPUT",
+          "label": "Email",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 516.828125,
+          "bottom": 552.828125
+        },
+        {
+          "tag": "INPUT",
+          "label": "Telefono",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 629.21875,
+          "bottom": 665.21875
+        },
+        {
+          "tag": "INPUT",
+          "label": null,
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 705.40625,
+          "bottom": 725.40625
+        }
+      ]
+    },
+    {
+      "name": "390: empty required fields invalid",
+      "pass": true,
+      "evidence": {
+        "valid": false,
+        "fields": [
+          "details",
+          "name",
+          "email",
+          "privacy"
+        ]
+      }
+    },
+    {
+      "name": "390: invalid email rejected",
+      "pass": true,
+      "evidence": {
+        "valid": false,
+        "typeMismatch": true
+      }
+    },
+    {
+      "name": "390: optional company/phone can be empty",
+      "pass": true,
+      "evidence": "Only checkValidity called; no submission."
+    },
+    {
+      "name": "390: all campaign anchors reach their targets",
+      "pass": true,
+      "evidence": [
+        {
+          "href": "#contatto",
+          "top": 99.53125,
+          "bottom": 1672.203125,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#contatto",
+          "top": 99.53125,
+          "bottom": 1672.203125,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#progetto",
+          "top": 99.90625,
+          "bottom": 1049.015625,
+          "hash": "#progetto"
+        },
+        {
+          "href": "#contatto",
+          "top": 99.53125,
+          "bottom": 1672.203125,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#contatto",
+          "top": 99.53125,
+          "bottom": 1672.203125,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#contatto",
+          "top": 99.53125,
+          "bottom": 1672.203125,
+          "hash": "#contatto"
+        }
+      ]
+    },
+    {
+      "name": "390: solutions visible in normal scrolled viewport",
+      "pass": true,
+      "evidence": {
+        "title": "Dove si ferma il lavoro, possiamo iniziare.",
+        "hit": "H2",
+        "hitClass": "page-module__5SmVPq__sectionTitle",
+        "hitText": "Dove si ferma il lavoro, possiamo iniziare."
+      }
+    },
+    {
+      "name": "390: menu opens with Enter and closes with Escape",
+      "pass": true,
+      "evidence": {
+        "expanded": "true",
+        "closed": "false",
+        "focusReturned": true
+      }
+    },
+    {
+      "name": "390: closing videos pause together",
+      "pass": true,
+      "evidence": "Pause control"
+    },
+    {
+      "name": "390: closing videos resume together",
+      "pass": true,
+      "evidence": "Resume control"
+    },
+    {
+      "name": "390: videos stop outside viewport",
+      "pass": true,
+      "evidence": "IntersectionObserver pauses media"
+    },
+    {
+      "name": "390: light theme toggle",
+      "pass": true,
+      "evidence": "html.light"
+    },
+    {
+      "name": "390: language toggle retains landing",
+      "pass": true,
+      "evidence": {
+        "url": "http://127.0.0.1:3101/en/automazioni-aziendali",
+        "heading": "Less manual work.\nMore time for your business."
+      }
+    },
+    {
+      "name": "320: navigation has no nested interactive controls",
+      "pass": true,
+      "evidence": {
+        "count": 0
+      }
+    },
+    {
+      "name": "320: closed mobile menu excluded from keyboard",
+      "pass": true,
+      "evidence": [
+        {
+          "tag": "BUTTON",
+          "label": "Attiva il tema chiaro",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 25,
+          "bottom": 56
+        },
+        {
+          "tag": "BUTTON",
+          "label": "Passa all'inglese",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 25,
+          "bottom": 54
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "",
+          "href": "/it",
+          "inMobileMenu": false,
+          "top": 20,
+          "bottom": 60
+        },
+        {
+          "tag": "BUTTON",
+          "label": "Apri il menu",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 25,
+          "bottom": 55
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Vai al modulo di contatto",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 20,
+          "bottom": 70
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 509.625,
+          "bottom": 567.625
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Guarda un progetto concreto\n↘",
+          "href": "#progetto",
+          "inMobileMenu": false,
+          "top": 259.625,
+          "bottom": 307.8125
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Esplora BPMN2Petri\n↗",
+          "href": "/it/projects/bpmn2petrinet",
+          "inMobileMenu": false,
+          "top": 260.15625,
+          "bottom": 308.34375
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Parliamo del tuo processo\n↗",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 260,
+          "bottom": 308.1875
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Parliamo del tuo processo\nParliamo del tuo processo",
+          "href": "#contatto",
+          "inMobileMenu": false,
+          "top": 254.625,
+          "bottom": 312.625
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "Casa Palmi\n↗",
+          "href": "/it/projects/casa-palmi",
+          "inMobileMenu": false,
+          "top": 524.390625,
+          "bottom": 568.390625
+        },
+        {
+          "tag": "A",
+          "label": null,
+          "text": "info@kremisi.com\n↗",
+          "href": "mailto:info@kremisi.com",
+          "inMobileMenu": false,
+          "top": 260.375,
+          "bottom": 308.5625
+        },
+        {
+          "tag": "TEXTAREA",
+          "label": "Il processo e gli strumenti che usi",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 430.9375,
+          "bottom": 570.9375
+        },
+        {
+          "tag": "INPUT",
+          "label": "Nome e cognome*",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 266.015625,
+          "bottom": 302.015625
+        },
+        {
+          "tag": "INPUT",
+          "label": "Azienda",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 378.40625,
+          "bottom": 414.40625
+        },
+        {
+          "tag": "INPUT",
+          "label": "Email",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 490.796875,
+          "bottom": 526.796875
+        },
+        {
+          "tag": "INPUT",
+          "label": "Telefono",
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 266.1875,
+          "bottom": 302.1875
+        },
+        {
+          "tag": "INPUT",
+          "label": null,
+          "text": "",
+          "href": null,
+          "inMobileMenu": false,
+          "top": 342.375,
+          "bottom": 362.375
+        }
+      ]
+    },
+    {
+      "name": "320: empty required fields invalid",
+      "pass": true,
+      "evidence": {
+        "valid": false,
+        "fields": [
+          "details",
+          "name",
+          "email",
+          "privacy"
+        ]
+      }
+    },
+    {
+      "name": "320: invalid email rejected",
+      "pass": true,
+      "evidence": {
+        "valid": false,
+        "typeMismatch": true
+      }
+    },
+    {
+      "name": "320: optional company/phone can be empty",
+      "pass": true,
+      "evidence": "Only checkValidity called; no submission."
+    },
+    {
+      "name": "320: all campaign anchors reach their targets",
+      "pass": true,
+      "evidence": [
+        {
+          "href": "#contatto",
+          "top": 100.28125,
+          "bottom": 1671.171875,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#contatto",
+          "top": 100.28125,
+          "bottom": 1671.171875,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#progetto",
+          "top": 99.921875,
+          "bottom": 1095.375,
+          "hash": "#progetto"
+        },
+        {
+          "href": "#contatto",
+          "top": 100.28125,
+          "bottom": 1671.171875,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#contatto",
+          "top": 100.28125,
+          "bottom": 1671.171875,
+          "hash": "#contatto"
+        },
+        {
+          "href": "#contatto",
+          "top": 100.28125,
+          "bottom": 1671.171875,
+          "hash": "#contatto"
+        }
+      ]
+    },
+    {
+      "name": "320: solutions visible in normal scrolled viewport",
+      "pass": true,
+      "evidence": {
+        "title": "Dove si ferma il lavoro, possiamo iniziare.",
+        "hit": "H2",
+        "hitClass": "page-module__5SmVPq__sectionTitle",
+        "hitText": "Dove si ferma il lavoro, possiamo iniziare."
+      }
+    },
+    {
+      "name": "320: menu opens with Enter and closes with Escape",
+      "pass": true,
+      "evidence": {
+        "expanded": "true",
+        "closed": "false",
+        "focusReturned": true
+      }
+    },
+    {
+      "name": "320: closing videos pause together",
+      "pass": true,
+      "evidence": "Pause control"
+    },
+    {
+      "name": "320: closing videos resume together",
+      "pass": true,
+      "evidence": "Resume control"
+    },
+    {
+      "name": "320: videos stop outside viewport",
+      "pass": true,
+      "evidence": "IntersectionObserver pauses media"
+    },
+    {
+      "name": "320: light theme toggle",
+      "pass": true,
+      "evidence": "html.light"
+    },
+    {
+      "name": "320: language toggle retains landing",
+      "pass": true,
+      "evidence": {
+        "url": "http://127.0.0.1:3101/en/automazioni-aziendali",
+        "heading": "Less manual work.\nMore time for your business."
+      }
+    },
+    {
+      "name": "internal link /it",
+      "pass": true,
+      "evidence": {
+        "status": 200,
+        "url": "http://127.0.0.1:3101/it"
+      }
+    },
+    {
+      "name": "internal link /it/about",
+      "pass": true,
+      "evidence": {
+        "status": 200,
+        "url": "http://127.0.0.1:3101/it/about"
+      }
+    },
+    {
+      "name": "internal link /it/projects",
+      "pass": true,
+      "evidence": {
+        "status": 200,
+        "url": "http://127.0.0.1:3101/it/projects"
+      }
+    },
+    {
+      "name": "internal link /it/services",
+      "pass": true,
+      "evidence": {
+        "status": 200,
+        "url": "http://127.0.0.1:3101/it/services"
+      }
+    },
+    {
+      "name": "internal link /it/contacts",
+      "pass": true,
+      "evidence": {
+        "status": 200,
+        "url": "http://127.0.0.1:3101/it/contacts"
+      }
+    },
+    {
+      "name": "internal link /it/projects/bpmn2petrinet",
+      "pass": true,
+      "evidence": {
+        "status": 200,
+        "url": "http://127.0.0.1:3101/it/projects/bpmn2petrinet"
+      }
+    },
+    {
+      "name": "internal link /it/projects/casa-palmi",
+      "pass": true,
+      "evidence": {
+        "status": 200,
+        "url": "http://127.0.0.1:3101/it/projects/casa-palmi"
+      }
+    },
+    {
+      "name": "resource /sitemap.xml",
+      "pass": true,
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "name": "resource /robots.txt",
+      "pass": true,
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "name": "resource /og-image.jpg",
+      "pass": true,
+      "evidence": {
+        "status": 200
+      }
+    },
+    {
+      "name": "navbar navigation completes and transition overlay hides",
+      "pass": true,
+      "evidence": {
+        "url": "http://127.0.0.1:3101/it/about",
+        "title": "Chi siamo | Kremisi"
+      }
+    }
+  ],
+  "blockedWrites": [
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://cpl.iubenda.com/big_data/consent?apikey=8VArog2s728ynvMznMmHN3SQj4dCTIx0",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://cpl.iubenda.com/big_data/consent?apikey=8VArog2s728ynvMznMmHN3SQj4dCTIx0",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://cpl.iubenda.com/big_data/consent?apikey=8VArog2s728ynvMznMmHN3SQj4dCTIx0",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://cpl.iubenda.com/big_data/consent?apikey=8VArog2s728ynvMznMmHN3SQj4dCTIx0",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://cpl.iubenda.com/big_data/consent?apikey=8VArog2s728ynvMznMmHN3SQj4dCTIx0",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://cpl.iubenda.com/big_data/consent?apikey=8VArog2s728ynvMznMmHN3SQj4dCTIx0",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    },
+    {
+      "url": "https://cpl.iubenda.com/big_data/consent?apikey=8VArog2s728ynvMznMmHN3SQj4dCTIx0",
+      "method": "POST"
+    },
+    {
+      "url": "https://idb.iubenda.com/csdata?db=hits1",
+      "method": "POST"
+    }
+  ]
+}

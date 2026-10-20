@@ -11,7 +11,11 @@
     "services": "Servizi",
     "projects": "Progetti",
     "contacts": "Contatti",
-    "switchTo": "Passa all'inglese"
+    "switchTo": "Passa all'inglese",
+    "lightTheme": "Attiva il tema chiaro",
+    "darkTheme": "Attiva il tema scuro",
+    "openMenu": "Apri il menu",
+    "closeMenu": "Chiudi il menu"
   },
   "projects": {
     "kicker": "Progetti recenti",
