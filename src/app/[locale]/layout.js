@@ -4,12 +4,9 @@ import { Schibsted_Grotesk } from "next/font/google";
 import Navbar from "@/components/navbar/navbar";
 import Footer from "@/components/footer/footer";
 import { ThemeProvider } from "next-themes";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 import { Toaster } from "react-hot-toast";
 import Scripts from "@/components/scripts/scripts";
 import { TransitionProvider } from "@/context/transition-context/transition-context";
-import { Analytics } from "@vercel/analytics/next";
-import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
@@ -136,16 +133,12 @@ export default async function RootLayout({ children, params }) {
               {children}
               <Footer />
               <Toaster position="bottom-center" reverseOrder={false} />
-              <Scripts />
-              <OpenAIAds locale={locale} />
+              <Scripts locale={locale} />
+              <OpenAIAds />
             </TransitionProvider>
           </NextIntlClientProvider>
         </ThemeProvider>
 
-        <Analytics />
-        <SpeedInsights />
-        <GoogleTagManager gtmId="GTM-5LL6LJR" />
-        <GoogleAnalytics gaId="G-TK345YVSSJ" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{

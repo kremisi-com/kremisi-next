@@ -152,6 +152,7 @@
 @media (max-width: 768px) {
     .scrollIndicator {
         right: 30px;
+        bottom: calc(126px + env(safe-area-inset-bottom));
         font-size: 16pt;
     }
 }

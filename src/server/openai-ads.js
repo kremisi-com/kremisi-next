@@ -11,7 +11,7 @@ export async function scheduleOpenAIAdsLead({ formData, email, eventId, locale }
     const requestHeaders = await headers();
     const conversion = createContactConversion({
       cookieHeader: requestHeaders.get("cookie") || "",
-      measurementConsent: formData.get("openaiAdsConsent") === ADS_CONSENT_GRANTED,
+      measurementConsent: formData.get("openaiAdsConsent") === ADS_CONSENT_GRANTED && requestHeaders.get("sec-gpc") !== "1",
       requestOrigin: requestHeaders.get("origin"),
       sourceUrl: formData.get("openaiAdsSourceUrl"),
       browserObref: formData.get("openaiAdsObref"),

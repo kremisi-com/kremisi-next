@@ -3,7 +3,8 @@ import { readFileSync } from "node:fs";
 import { runInNewContext } from "node:vm";
 import test from "node:test";
 import { createContactConversion } from "../src/server/openai-ads-capi.mjs";
-import { ADS_CONSENT_COOKIE, ADS_CONSENT_GRANTED } from "../src/lib/openai-ads-config.mjs";
+import { ADS_CONSENT_GRANTED } from "../src/lib/openai-ads-config.mjs";
+import { IUBENDA_CONSENT_COOKIE } from "../src/lib/cookie-consent.mjs";
 
 // Execute the actual server action/helper with framework and provider adapters
 // replaced. No Turnstile challenges, emails, or conversion pings leave the tests.
@@ -79,7 +80,7 @@ test("spam, failed security, invalid forms, and rejected emails never schedule a
 function scheduler(dependencies) {
   return loadModule("../src/server/openai-ads.js", {
     headers: async () => new Headers({
-      cookie: `${ADS_CONSENT_COOKIE}=${ADS_CONSENT_GRANTED}; __oppref=raw%2F=+`,
+      cookie: `${IUBENDA_CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify({ purposes: { 5: true } }))}; __oppref=raw%2F=+`,
       origin: "https://kremisi.com",
       "user-agent": "Test browser",
     }),
@@ -105,6 +106,11 @@ test("CAPI dispatch is deferred, with a shared event ID and consent checked on t
   assert.equal(events[0].oppref, "raw%2F=+");
   const denied = scheduler({ headers: async () => new Headers() });
   assert.equal(await denied({ formData: contactForm(), email: "user@example.com", eventId: "lead-2" }), undefined);
+  const gpc = scheduler({ headers: async () => new Headers({
+    cookie: `${IUBENDA_CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify({ purposes: { 5: true } }))}`,
+    "sec-gpc": "1",
+  }) });
+  assert.equal(await gpc({ formData: contactForm(), email: "user@example.com", eventId: "lead-3" }), undefined);
 });
 
 test("headers, hashing, form-context, and scheduler failures cannot fail an accepted contact", async () => {

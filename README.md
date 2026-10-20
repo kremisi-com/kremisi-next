@@ -131,22 +131,47 @@ not confirmed leads. No new arbitrary-event API endpoint was added.
 
 ### Consent, identity, and attribution
 
-The repository's Iubenda widget/consent code was commented out. The new UI
-therefore starts denied and loads no OpenAI SDK until an explicit acceptance.
-It stores `kremisi_ads_consent=v1-granted` or `v1-denied` for 180 days, scoped to
-`/`, SameSite=Lax, Secure on HTTPS. The always-available Ad preferences button
-allows revocation. Revocation sets SDK consent false, removes queued measurement
-and matching calls from an unloaded SDK stub, and blocks future application events.
-Past events are not replayed after a later grant. CAPI requires both the consent
-cookie and the browser's consented submission context. The form's required Privacy
-Policy checkbox is separate from optional ad measurement consent.
+iubenda is the single consent manager, using the existing site `4256004` and
+policy `87027585`. `src/lib/iubenda-config.mjs` enables purposes 1 (necessary),
+4 (measurement), and 5 (marketing). OpenAI Ads starts denied and loads only after
+iubenda validates an explicit marketing grant. The old `kremisi_ads_consent`
+cookie is ignored; there is no separate banner or consent persistence. CAPI
+checks iubenda's native `_iub_cs-s4256004` cookie as well as the consented form
+context, and respects US opt-outs and the `Sec-GPC` request header. Malformed
+or missing preferences fail closed. The required contact Privacy Policy checkbox
+remains separate from optional marketing consent.
+
+The localized Cookie preferences control reopens iubenda's own panel. When the
+account requires its native widget, that same button is labeled and positioned
+to match the site, preserving iubenda's icon and branding. It has a 44px target
+and mobile safe-area spacing; mobile email, WhatsApp and the home CTA occupy
+separate positions. If the CMP cannot load, measurement stays disabled and the
+button reports the failure and offers a reload to retry.
+
+Revocation sets OpenAI SDK consent false, removes queued measurement and matching
+calls from an unloaded stub, and blocks subsequent application events. If Google
+or Vercel tools were already mounted, withdrawal reloads the document to unload
+their runtime. GA and Vercel tools require purpose 4; the externally managed GTM
+container conservatively requires both 4 and 5. Google Consent Mode defaults to
+denied before any Google script, and follows iubenda's choices. Application GA
+events are gated too. No past events are replayed after a later grant.
+
+The existing remote iubenda account currently advertises **en-GB only** and no
+full banner customization. Unsupported languages disable its banner. Therefore
+`NEXT_PUBLIC_IUBENDA_LANGUAGES` defaults to `en-GB`; add `it,en-GB` only after
+enabling these languages in the dashboard. The site's preferences button is
+localized independently. The SDK currently overrides custom banner text,
+captions and colors with its account defaults; the local configuration includes
+the intended short notice and expandable OpenAI/email-hash disclosure for when
+the account permits it. Update the hosted policy's services and disclosures in
+the dashboard; local consent wiring does not edit that hosted document.
 
 The Pixel loads `https://bzrcdn.openai.com/sdk/oaiq.min.js`, sets consent false
 before its first `init({ pixelId })`, then enables measurement. One initializer
 and SDK tag are shared across route changes. Production debug is not enabled.
 All Pixel options and CAPI events explicitly use `opt_out: true` to exclude future
-user-level personalization. This implementation affects OpenAI Ads measurement;
-existing GA/GTM consent behavior remains outside this patch.
+user-level personalization. Existing page, project and accepted-contact events,
+matching fields, CAPI credentials and deduplication are unchanged by CMP wiring.
 
 After a consented contact succeeds, the server normalizes the email by trimming
 and lowercasing, hashes UTF-8 with SHA-256, and returns only the hash and shared
@@ -187,12 +212,13 @@ infrastructure. Redacted warnings contain no identifiers, attribution, payloads,
 credentials, or response bodies. Reporting failures cannot fail an accepted
 contact. Dispatch is best effort: transient failures can lose the server copy.
 
-Local checks: `pnpm test` (30 passing tests), targeted ESLint, `pnpm build`,
+Local checks: `pnpm test` (34 passing tests), targeted ESLint, `pnpm build`,
 `git diff --check`, both installed skill verification scripts, and production
 client-bundle scan for CAPI secret references/endpoint. Browser inspection of
-`/it/contacts` confirmed initial consent UI, no SDK before consent, persistent
-decline across reload, and an available preferences control. No browser console
-errors were observed. Tests stub providers and exercise deferred dispatch,
+`/it` confirmed the real iubenda banner, marketing-only loading of OpenAI Ads,
+loading of Google tools only after both required categories, and no measurement
+scripts following withdrawal and reload. Responsive checks cover the home CTA,
+email and the single native preferences widget. Tests stub providers and exercise deferred dispatch,
 deduplication, raw attribution, trusted URLs, hashing, revocation, and successful
 versus rejected contact submissions without sending emails or conversion pings.
 
@@ -216,11 +242,13 @@ Deferred execution follows [Next.js after](https://nextjs.org/docs/app/api-refer
    contact, inspect Ads Manager validation, then restore false for live delivery.
    Confirm browser/server deduplication in Ads Manager and SDK operation with the
    actual Pixel configuration. Page/content events use Pixel only.
-4. Update the linked privacy/cookie disclosures for these cookies, email-hash
-   matching, retention, and purposes. If re-enabling an external CMP, reconcile
-   it with this single consent gate rather than creating independent choices.
-   Review any externally configured automatic advanced matching and GTM tags
-   to avoid unintended matching fields or duplicate OpenAI initialization.
+4. In iubenda, add the actual services to the hosted privacy/cookie disclosures,
+   including OpenAI Ads cookies, email-hash matching, retention and purposes.
+   The remote account currently lists only two providers and purposes 1 and 2;
+   this integration explicitly exposes 1, 4 and 5 locally. Enable Italian and
+   banner customization in the account if desired, then set the corresponding
+   public language configuration. Review externally configured GTM tags and
+   automatic matching to avoid duplicate OpenAI initialization or extra fields.
 5. If a CSP is introduced, allow the documented OpenAI script/connect/image
    sources. Confirm the hosting adapter supports Next.js `after`.
 

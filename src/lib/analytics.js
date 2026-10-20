@@ -1,10 +1,11 @@
 import { trackOpenAIAdsLead } from "./openai-ads-browser.mjs";
+import { hasCookiePurpose, MEASUREMENT_PURPOSE } from "./cookie-consent.mjs";
 
 export const GA_TRACKING_ID = "G-TK345YVSSJ";
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
 export const trackEvent = (action, params) => {
-    if (typeof window !== "undefined" && window.gtag) {
+    if (typeof window !== "undefined" && hasCookiePurpose(MEASUREMENT_PURPOSE) && window.gtag) {
         window.gtag("event", action, params);
     }
 };

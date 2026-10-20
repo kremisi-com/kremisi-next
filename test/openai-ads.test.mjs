@@ -2,19 +2,29 @@ import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import test from "node:test";
 import {
-  ADS_CONSENT_COOKIE, ADS_CONSENT_GRANTED, ADS_CONSENT_DENIED,
+  ADS_CONSENT_GRANTED,
   hasAdsConsent, OPENAI_ADS_PIXEL_ID, readRawCookie,
 } from "../src/lib/openai-ads-config.mjs";
 import { createContactConversion, getAdsSourceUrl, sendContactConversion } from "../src/server/openai-ads-capi.mjs";
 import {
-  appendOpenAIAdsContext, setAdsConsent, trackOpenAIAdsPage,
+  appendOpenAIAdsContext, syncOpenAIAdsConsent, trackOpenAIAdsPage,
   trackOpenAIAdsContent, trackOpenAIAdsLead,
 } from "../src/lib/openai-ads-browser.mjs";
+import { IUBENDA_CONSENT_COOKIE, readIubendaPreferences, getCookiePreferences, hasCookiePurpose } from "../src/lib/cookie-consent.mjs";
+import { syncGoogleConsent } from "../src/lib/cookie-consent-browser.mjs";
 
-const grantedCookie = `${ADS_CONSENT_COOKIE}=${ADS_CONSENT_GRANTED}`;
+const grantedCookie = `${IUBENDA_CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify({ purposes: { 1: true, 4: true, 5: true } }))}`;
 
-test("consent is denied unless an explicit current-version choice exists", () => {
-  for (const cookie of ["", `${ADS_CONSENT_COOKIE}=true`, `${ADS_CONSENT_COOKIE}=${ADS_CONSENT_DENIED}`]) {
+function setAdsConsent(granted) {
+  window._iub.cs.api.getPreferences = () => ({ purposes: { 5: granted } });
+  window._iub.cs.api.isPreferenceExpressed = () => true;
+  syncOpenAIAdsConsent();
+}
+
+test("CAPI requires explicit iubenda marketing consent and ignores the old separate choice", () => {
+  for (const cookie of ["", "kremisi_ads_consent=v1-granted", `${IUBENDA_CONSENT_COOKIE}=%invalid`,
+    `${IUBENDA_CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify({ purposes: { 4: true, 5: false } }))}`,
+    `${IUBENDA_CONSENT_COOKIE}=${encodeURIComponent(JSON.stringify({ purposes: { 5: "true" } }))}`]) {
     assert.equal(hasAdsConsent(cookie), false);
     assert.equal(createContactConversion({ cookieHeader: cookie, measurementConsent: true }), undefined);
   }
@@ -25,6 +35,13 @@ test("consent is denied unless an explicit current-version choice exists", () =>
 test("raw cookie attribution preserves encoded characters and equals signs", () => {
   assert.equal(readRawCookie("a=b; __oppref=A%2FB%3D=+; c=d", "__oppref"), "A%2FB%3D=+");
   assert.equal(readRawCookie("not__oppref=x", "__oppref"), undefined);
+});
+
+test("native iubenda site cookie and US opt-outs are used by the server", () => {
+  assert.equal(IUBENDA_CONSENT_COOKIE, "_iub_cs-s4256004");
+  const uspr = `${IUBENDA_CONSENT_COOKIE}-uspr=${encodeURIComponent(JSON.stringify({ adv: false }))}`;
+  assert.equal(hasAdsConsent(`${grantedCookie}; ${uspr}`), false);
+  assert.equal(hasAdsConsent(`${grantedCookie}; ${IUBENDA_CONSENT_COOKIE}-uspr=bad`), false);
 });
 
 test("source URL trusts canonical/request origins, strips query and fragment, and rejects other schemes", () => {
@@ -74,6 +91,10 @@ function installBrowser(t, cookie = "") {
     cookieJar.set(part.slice(0, index).trim(), part.slice(index + 1));
   }
   const browser = new EventTarget();
+  browser._iub = { cs: { api: {
+    isPreferenceExpressed: () => !!readIubendaPreferences(document.cookie),
+    getPreferences: () => readIubendaPreferences(document.cookie),
+  } } };
   browser.location = new URL("https://kremisi.com/it/contacts?private=1#form");
   const document = {
     get cookie() { return Array.from(cookieJar, ([key, value]) => `${key}=${value}`).join("; "); },
@@ -96,6 +117,48 @@ function installBrowser(t, cookie = "") {
   });
   return { browser, scripts, cookieJar };
 }
+
+test("missing, unvalidated, or failed CMP cannot authorize browser measurement", (t) => {
+  const { browser, scripts } = installBrowser(t, grantedCookie);
+  browser._iub.cs.api.isPreferenceExpressed = () => false;
+  assert.equal(getCookiePreferences(), undefined);
+  trackOpenAIAdsPage("/it");
+  assert.equal(scripts.size, 0);
+  browser._iub.cs.api.isPreferenceExpressed = () => true;
+  browser.__kremisiCmpFailed = true;
+  assert.equal(hasCookiePurpose("5"), false);
+  trackOpenAIAdsPage("/it");
+  assert.equal(scripts.size, 0);
+  delete browser._iub;
+  assert.equal(hasCookiePurpose("5"), false);
+});
+
+test("measurement-only consent permits statistics while keeping OpenAI Ads blocked", (t) => {
+  const { browser, scripts } = installBrowser(t);
+  browser._iub.cs.api.isPreferenceExpressed = () => true;
+  browser._iub.cs.api.getPreferences = () => ({ purposes: { 4: true, 5: false } });
+  assert.deepEqual(syncGoogleConsent(), { analytics: true, marketing: false });
+  assert.equal(browser["ga-disable-G-TK345YVSSJ"], false);
+  const commands = browser.dataLayer.map((args) => Array.from(args));
+  assert.equal(commands[0][1], "default");
+  assert.equal(commands[0][2].analytics_storage, "denied");
+  assert.equal(commands[1][2].analytics_storage, "granted");
+  assert.equal(commands[1][2].ad_storage, "denied");
+  trackOpenAIAdsPage("/it");
+  assert.equal(scripts.size, 0);
+  browser._iub.cs.api.getPreferences = () => ({ purposes: { 4: false, 5: false } });
+  syncGoogleConsent();
+  assert.equal(browser["ga-disable-G-TK345YVSSJ"], true);
+  assert.equal(browser.dataLayer.filter((args) => args[1] === "default").length, 1);
+});
+
+test("marketing consent still respects iubenda US targeted-advertising opt-out", (t) => {
+  const { browser, scripts } = installBrowser(t, grantedCookie);
+  browser._iub.cs.api.getPreferences = () => ({ purposes: { 5: true }, uspr: { adv: false } });
+  assert.equal(hasCookiePurpose("5"), false);
+  trackOpenAIAdsPage("/it");
+  assert.equal(scripts.size, 0);
+});
 
 test("Pixel stays unloaded before consent and initializes once across SPA navigation", (t) => {
   const { browser, scripts } = installBrowser(t);

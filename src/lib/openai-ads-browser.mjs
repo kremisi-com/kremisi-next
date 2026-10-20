@@ -1,18 +1,17 @@
 import {
-  ADS_CONSENT_COOKIE,
   ADS_CONSENT_DENIED,
   ADS_CONSENT_EVENT,
   ADS_CONSENT_GRANTED,
   OPENAI_ADS_PIXEL_ID,
   readRawCookie,
 } from "./openai-ads-config.mjs";
+import { hasCookiePurpose, MARKETING_PURPOSE } from "./cookie-consent.mjs";
 
 const SCRIPT_ID = "openai-ads-pixel";
 
 export function getAdsConsent() {
   try {
-    if (window.__kremisiOpenAIAds?.consent === false) return ADS_CONSENT_DENIED;
-    return readRawCookie(document.cookie, ADS_CONSENT_COOKIE);
+    return hasCookiePurpose(MARKETING_PURPOSE) ? ADS_CONSENT_GRANTED : ADS_CONSENT_DENIED;
   } catch {
     return undefined;
   }
@@ -52,11 +51,13 @@ function ensurePixel() {
   return true;
 }
 
-export function setAdsConsent(granted) {
+// Called by iubenda; no independent consent choice or cookie is persisted.
+export function syncOpenAIAdsConsent() {
   try {
-    pixelState().consent = granted;
-    const value = granted ? ADS_CONSENT_GRANTED : ADS_CONSENT_DENIED;
-    document.cookie = `${ADS_CONSENT_COOKIE}=${value}; Path=/; Max-Age=15552000; SameSite=Lax${window.location.protocol === "https:" ? "; Secure" : ""}`;
+    const granted = getAdsConsent() === ADS_CONSENT_GRANTED;
+    const state = pixelState();
+    if (state.consent === granted) return;
+    state.consent = granted;
     if (!granted && window.oaiq) {
       // Discard any undelivered stub events before loading the SDK.
       if (Array.isArray(window.oaiq.q)) {

@@ -84,7 +84,13 @@
 }
 
 @media screen and (max-width: 768px) {
+    .footer:global(.onlyMobile) address {
+        bottom: calc(76px + env(safe-area-inset-bottom));
+    }
+    .buttons {
+        bottom: calc(16px + env(safe-area-inset-bottom));
+    }
     .footer::before {
-        height: 100px;
+        height: 150px;
     }
 }
