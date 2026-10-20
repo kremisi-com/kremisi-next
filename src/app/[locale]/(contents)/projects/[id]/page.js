@@ -6,6 +6,7 @@ import style from "./page.module.css";
 import GitButton from "@/components/git-button/git-button";
 import AnimatedLink from "@/components/animated-link/animated-link";
 import LucreziaCurtoBrandIdentity from "@/components/case-studies/lucrezia-curto-brand-identity";
+import { OpenAIAdsContentView } from "@/components/openai-ads/openai-ads";
 
 const BASE_URL = "https://kremisi.com";
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
@@ -172,6 +173,7 @@ export default async function ProjectPage({ params }) {
 
     return (
         <>
+            <OpenAIAdsContentView id={projectData.path} name={projectData.title} />
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{

@@ -8,6 +8,7 @@ import GitButton from "../git-button/git-button";
 import toast from "react-hot-toast";
 import Script from "next/script";
 import Turnstile from "@/components/turnstile/turnstile";
+import { appendOpenAIAdsContext } from "@/lib/openai-ads-browser.mjs";
 import {
   trackViewContactForm,
   trackContactFormStart,
@@ -18,6 +19,7 @@ const COPY = {
   en: {
     success: "Message sent successfully!",
     serviceTitle: "What you need",
+    information: "Information",
     services: [
       "Development",
       "Design & Development",
@@ -28,6 +30,8 @@ const COPY = {
     timelineTitle: "Preferred Timeline",
     timelines: ["1-2 months", "2-4 months", "4-6 months"],
     detailsTitle: "Details About The Project",
+    messageTitle: "Enter your message",
+    messagePlaceholder: "How can we help you?",
     detailsPlaceholder:
       "What are you building? Goals, timeline, current problems, references...",
     contactsTitle: "Your Contact Details",
@@ -42,11 +46,14 @@ const COPY = {
   it: {
     success: "Richiesta inviata con successo!",
     serviceTitle: "Di cosa hai bisogno",
+    information: "Informazioni",
     services: ["Sviluppo", "Design e sviluppo", "AI e Data", "Altro"],
     budgetTitle: "Budget del progetto",
     timelineTitle: "Tempistiche",
     timelines: ["1–2 mesi", "2–4 mesi", "4–6 mesi"],
     detailsTitle: "Dettagli del progetto",
+    messageTitle: "Inserisci il Messaggio",
+    messagePlaceholder: "Come possiamo aiutarti?",
     detailsPlaceholder:
       "Cosa vuoi realizzare? Obiettivi, tempistiche, esigenze attuali, riferimenti...",
     contactsTitle: "I tuoi contatti",
@@ -60,9 +67,14 @@ const COPY = {
   },
 };
 
+async function submitContactWithAds(prevState, formData) {
+  appendOpenAIAdsContext(formData);
+  return submitContact(prevState, formData);
+}
+
 export default function ContactForm({ locale = "en" }) {
   const copy = COPY[locale] || COPY.en;
-  const [state, formAction, pending] = useActionState(submitContact, {
+  const [state, formAction, pending] = useActionState(submitContactWithAds, {
     success: null,
     error: null,
   });
@@ -73,6 +85,8 @@ export default function ContactForm({ locale = "en" }) {
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [details, setDetails] = useState("");
+  const [service, setService] = useState("information");
+  const isInformation = service === "information";
   const [turnstileToken, setTurnstileToken] = useState("");
 
   const serviceRef = useRef();
@@ -90,9 +104,13 @@ export default function ContactForm({ locale = "en" }) {
       if (!state?.silentDrop) {
         trackLead({
           service: serviceRef.current?.getValue?.() || "unknown",
-          budget: budgetRef.current?.getValue?.() || "unknown",
-          delivery: deliveryRef.current?.getValue?.() || "unknown",
-        });
+          budget: serviceRef.current?.getValue?.() === "information"
+            ? "not-applicable"
+            : budgetRef.current?.getValue?.() || "unknown",
+          delivery: serviceRef.current?.getValue?.() === "information"
+            ? "not-applicable"
+            : deliveryRef.current?.getValue?.() || "unknown",
+        }, state.openaiAds);
       }
       // reset radio options
       serviceRef.current.reset();
@@ -151,6 +169,7 @@ export default function ContactForm({ locale = "en" }) {
           <RadioOptions
             ref={serviceRef}
             options={[
+              { value: "information", label: copy.information },
               { value: "development", label: copy.services[0] },
               {
                 value: "design-development",
@@ -166,46 +185,60 @@ export default function ContactForm({ locale = "en" }) {
               },
             ]}
             name="service"
+            defaultValue="information"
+            onChange={setService}
             required
           />
         </div>
       </div>
-      <div className="row">
-        <div className="col">
-          <h3>{copy.budgetTitle}</h3>
-          <RadioOptions
-            ref={budgetRef}
-            options={[
-              { value: "low", label: "< €2k" },
-              { value: "medium", label: "€2k – 6k" },
-              { value: "high", label: "€6k – 12k" },
-              { value: "very-high", label: "€12k+" },
-            ]}
-            name="budget"
-            required
-          />
-        </div>
-        <div className="col">
-          <h3>{copy.timelineTitle}</h3>
-          <RadioOptions
-            ref={deliveryRef}
-            options={[
-              { value: "1-2", label: copy.timelines[0] },
-              { value: "2-4", label: copy.timelines[1] },
-              { value: "4-6", label: copy.timelines[2] },
-            ]}
-            name="delivery"
-            required
-          />
-        </div>
+      <div
+        className={`${styles.projectOptions} ${!isInformation ? styles.projectOptionsVisible : ""}`}
+        aria-hidden={isInformation}
+        inert={isInformation}
+      >
+        <fieldset className={styles.projectFields} disabled={isInformation}>
+          <div className="row">
+            <div className="col">
+              <h3>{copy.budgetTitle}</h3>
+              <RadioOptions
+                ref={budgetRef}
+                options={[
+                  { value: "low", label: "< €2k" },
+                  { value: "medium", label: "€2k – 6k" },
+                  { value: "high", label: "€6k – 12k" },
+                  { value: "very-high", label: "€12k+" },
+                ]}
+                name="budget"
+                required={!isInformation}
+              />
+            </div>
+            <div className="col">
+              <h3>{copy.timelineTitle}</h3>
+              <RadioOptions
+                ref={deliveryRef}
+                options={[
+                  { value: "1-2", label: copy.timelines[0] },
+                  { value: "2-4", label: copy.timelines[1] },
+                  { value: "4-6", label: copy.timelines[2] },
+                ]}
+                name="delivery"
+                required={!isInformation}
+              />
+            </div>
+          </div>
+        </fieldset>
       </div>
       <div className="row">
         <div className="col">
-          <h3>{copy.detailsTitle}</h3>
+          <h3>
+            <span key={isInformation ? "message" : "project"} className={styles.detailsTitle}>
+              {isInformation ? copy.messageTitle : copy.detailsTitle}
+            </span>
+          </h3>
           <textarea
             name="details"
             rows="5"
-            placeholder={copy.detailsPlaceholder}
+            placeholder={isInformation ? copy.messagePlaceholder : copy.detailsPlaceholder}
             value={details}
             onChange={(e) => setDetails(e.target.value)}
             minLength={5}

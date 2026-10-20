@@ -3,6 +3,7 @@
 import { randomUUID } from "node:crypto";
 import { verifyTurnstileToken } from "@/lib/turnstile";
 import { sendContactEmail } from "@/lib/contact-email";
+import { scheduleOpenAIAdsLead } from "@/server/openai-ads";
 
 const FORM_ERRORS = {
     it: {
@@ -55,8 +56,9 @@ export async function submitContact(prevState, formData) {
         const errors = FORM_ERRORS[locale];
 
         const service = getVal("service");
-        const budget = getVal("budget");
-        const delivery = getVal("delivery");
+        const isInformation = service === "information";
+        const budget = isInformation ? "" : getVal("budget");
+        const delivery = isInformation ? "" : getVal("delivery");
         const details = getVal("details");
         const name = getVal("name");
         const company = getVal("company");
@@ -113,11 +115,11 @@ export async function submitContact(prevState, formData) {
             return validationFailure(requestId, "service", errors.service);
         }
 
-        if (!budget) {
+        if (!isInformation && !budget) {
             return validationFailure(requestId, "budget", errors.budget);
         }
 
-        if (!delivery) {
+        if (!isInformation && !delivery) {
             return validationFailure(requestId, "delivery", errors.delivery);
         }
 
@@ -166,7 +168,10 @@ export async function submitContact(prevState, formData) {
             requestId,
             emailId,
         });
-        return { success: true };
+        const openaiAds = await scheduleOpenAIAdsLead({
+            formData, email, eventId: requestId, locale,
+        });
+        return { success: true, openaiAds };
     } catch (error) {
         console.error("[ContactEmail] Unexpected error:", {
             requestId,

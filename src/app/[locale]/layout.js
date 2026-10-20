@@ -13,6 +13,7 @@ import { GoogleAnalytics, GoogleTagManager } from "@next/third-parties/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
+import OpenAIAds from "@/components/openai-ads/openai-ads";
 
 const BASE_URL = "https://kremisi.com";
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
@@ -136,6 +137,7 @@ export default async function RootLayout({ children, params }) {
               <Footer />
               <Toaster position="bottom-center" reverseOrder={false} />
               <Scripts />
+              <OpenAIAds locale={locale} />
             </TransitionProvider>
           </NextIntlClientProvider>
         </ThemeProvider>

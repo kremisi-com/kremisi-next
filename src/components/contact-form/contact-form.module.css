@@ -2,6 +2,56 @@
     text-transform: uppercase;
 }
 
+.projectOptions {
+    display: grid;
+    grid-template-rows: 0fr;
+    opacity: 0;
+    transform: translateY(-6px);
+    transition: grid-template-rows 240ms ease, opacity 180ms ease, transform 240ms ease;
+}
+
+.projectOptionsVisible {
+    grid-template-rows: 1fr;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.projectFields {
+    min-height: 0;
+    min-width: 0;
+    overflow: hidden;
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+.detailsTitle {
+    display: inline-block;
+    animation: detailsAppear 180ms ease both;
+}
+
+@keyframes detailsAppear {
+    from {
+        opacity: 0;
+        transform: translateY(4px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .projectOptions {
+        transition: none;
+        transform: none;
+    }
+
+    .detailsTitle {
+        animation: none;
+    }
+}
+
 .turnstile {
     margin-top: 5px;
 }

@@ -1,3 +1,5 @@
+import { trackOpenAIAdsLead } from "./openai-ads-browser.mjs";
+
 export const GA_TRACKING_ID = "G-TK345YVSSJ";
 
 // https://developers.google.com/analytics/devguides/collection/gtagjs/events
@@ -8,7 +10,8 @@ export const trackEvent = (action, params) => {
 };
 
 // Common funnel events
-export const trackLead = (params) => {
+export const trackLead = (params, openaiAds) => {
+    trackOpenAIAdsLead(openaiAds);
     trackEvent("generate_lead", params);
 };
 
