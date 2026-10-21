@@ -68,11 +68,6 @@ export default function Footer() {
                 </span>
             </footer>
             <footer className={`${styles.footer} onlyMobile ${isAutomation ? styles.campaign : ""}`}>
-                <address className={styles.info}>
-                    <a href={CONTACT_EMAIL_HREF} onClick={handleEmailClick}>
-                        {CONTACT_EMAIL}
-                    </a>
-                </address>
                 <div className={`${styles.buttons} ${styles.right} whatsapp-floating-button`}>
                     <a
                         className={`${styles.whatsappButton} ${

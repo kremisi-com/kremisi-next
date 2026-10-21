@@ -87,7 +87,7 @@
         position: relative;
         display: flex !important;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         gap: 20px;
         width: 100%;
         padding: 24px 25px calc(90px + env(safe-area-inset-bottom));
@@ -95,20 +95,32 @@
     .footer.campaign::before {
         display: none;
     }
-    .footer.campaign:global(.onlyMobile) address,
     .footer.campaign .buttons {
         position: static;
-    }
-    .footer:global(.onlyMobile) address {
-        left: 25px;
-        right: 25px;
-        bottom: calc(76px + env(safe-area-inset-bottom));
-        text-align: center;
     }
     .buttons {
         bottom: calc(16px + env(safe-area-inset-bottom));
     }
     .footer::before {
         height: 150px;
+    }
+}
+
+@media screen and (min-width: 769px) and (max-width: 1200px),
+    screen and (max-width: 768px) and (hover: hover) and (pointer: fine) {
+    .footer:global(.onlyDesktop) {
+        display: block !important;
+    }
+    .footer:global(.onlyMobile) {
+        display: none !important;
+    }
+    .footer address.info {
+        left: auto;
+        right: 25px;
+        bottom: calc(16px + env(safe-area-inset-bottom));
+    }
+    .footer .vatInfo {
+        right: 25px;
+        bottom: calc(44px + env(safe-area-inset-bottom));
     }
 }
