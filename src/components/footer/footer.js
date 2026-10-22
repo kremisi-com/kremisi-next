@@ -34,7 +34,10 @@ export default function Footer() {
             return;
         }
 
-        setIsHomeSliderActive(true);
+        // The initial home event may fire before this footer subscribes.
+        setIsHomeSliderActive(
+            new URLSearchParams(window.location.search).get("view") !== "overview"
+        );
 
         function handleSliderVisibility(event) {
             setIsHomeSliderActive(Boolean(event.detail?.isSliderActive));
