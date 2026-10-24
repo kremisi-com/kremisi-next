@@ -14,7 +14,6 @@ function VideosCta({ variant, cta }) {
     const [hasApproached, setHasApproached] = useState(false);
     const [isVisible, setIsVisible] = useState(false);
     const [reducedMotion, setReducedMotion] = useState(true);
-    const [paused, setPaused] = useState(false);
     const videos = [
         "/projects/allavelli/carousel/Opening.mp4",
         "/projects/gamelia/sensibilizzazione.mp4",
@@ -61,10 +60,10 @@ function VideosCta({ variant, cta }) {
         if (!isCampaign) return;
         videoRefs.current.forEach((video) => {
             if (!video) return;
-            if (hasEntered && isVisible && !reducedMotion && !paused) video.play()?.catch(() => {});
+            if (hasEntered && isVisible && !reducedMotion ) video.play()?.catch(() => {});
             else video.pause();
         });
-    }, [isCampaign, hasEntered, isVisible, reducedMotion, paused]);
+    }, [isCampaign, hasEntered, isVisible, reducedMotion]);
 
     return (
         <section ref={sectionRef} className={`${styles.videosCtaSection} ${isCampaign ? styles.campaign : ''}`} id="videos-cta" aria-label={isCampaign ? t('closingLabel') : undefined}>
@@ -104,11 +103,6 @@ function VideosCta({ variant, cta }) {
                     </div>
                 </div>
             </div>
-            {isCampaign && hasEntered && !reducedMotion && (
-                <button type="button" className={styles.playbackToggle} onClick={() => setPaused((value) => !value)}>
-                    {paused ? t('playVideos') : t('pauseVideos')}
-                </button>
-            )}
         </section>
     );
 }
