@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { motion, useReducedMotion, AnimatePresence } from "framer-motion";
+import { useTranslations } from "next-intl";
 import styles from "./competitive-position.module.css";
 
 const COMPETITIVE_AXES = [
@@ -18,23 +19,6 @@ const FALLBACK_DATA = {
   your_site: [76, 71, 84, 55, 42, 61],
   top_competitor: [83, 80, 76, 79, 74, 77],
   category_average: [62, 59, 64, 58, 56, 54],
-  axis_explanations: {
-    Trust:
-      "The opening area does not show named proof, quantified outcomes, or authority badges near the first action.",
-    UX:
-      "Primary actions are not consistently repeated through sections, so users must scan to find the next step.",
-    SEO:
-      "Headings and service copy include explicit intent terms, but the page still needs more specific wording to fully own its search intent.",
-    Offer:
-      "Service intent is visible, but scope and deliverables are not summarized early in one compact block.",
-    Branding:
-      "Visual style is coherent, yet the unique promise is not repeated consistently across headline, proof, and CTA copy.",
-    Conversion:
-      "CTA priority softens after the hero and the contact path lacks urgency cues near the action point.",
-  },
-  insight: "The page has a strong structural base, but the remaining gap is sharper differentiation.",
-  method_note:
-    "Synthetic preview. Final chart is generated from the submitted site.",
 };
 
 function isValidSeries(series) {
@@ -47,9 +31,9 @@ function isValidSeries(series) {
   );
 }
 
-function normalizeCompetitiveData(data) {
+function normalizeCompetitiveData(data, fallback) {
   if (!data || typeof data !== "object") {
-    return FALLBACK_DATA;
+    return fallback;
   }
 
   const axes =
@@ -82,17 +66,17 @@ function normalizeCompetitiveData(data) {
         typeof axisExplanations[axis] === "string" &&
         axisExplanations[axis].trim()
           ? axisExplanations[axis].trim()
-          : FALLBACK_DATA.axis_explanations[axis],
+          : fallback.axis_explanations[axis],
       ]),
     ),
     insight:
       typeof data.insight === "string" && data.insight.trim()
         ? data.insight.trim()
-        : FALLBACK_DATA.insight,
+        : fallback.insight,
     method_note:
       typeof data.method_note === "string" && data.method_note.trim()
         ? data.method_note
-        : FALLBACK_DATA.method_note,
+        : fallback.method_note,
   };
 }
 
@@ -115,43 +99,50 @@ export default function CompetitivePosition({
   data = null,
   locked = false,
 }) {
+  const t = useTranslations("roaster.competitive");
   const reduceMotion = useReducedMotion();
   const [hoveredAxisIndex, setHoveredAxisIndex] = useState(null);
   const [selectedAxisIndex, setSelectedAxisIndex] = useState(null);
-  const position = normalizeCompetitiveData(data);
+  const position = normalizeCompetitiveData(data, {
+    ...FALLBACK_DATA,
+    axis_explanations: t.raw("explanations"),
+    insight: t("insight"),
+    method_note: t("methodNote"),
+  });
+  const axisLabels = t.raw("axes");
   const centerX = 210;
   const centerY = 176;
   const radius = 114;
   const rings = [0.25, 0.5, 0.75, 1];
 
-  const axes = position.axes.map((label, index) => {
+  const axes = position.axes.map((key, index) => {
     const angle = -Math.PI / 2 + (Math.PI * 2 * index) / position.axes.length;
     const x = centerX + Math.cos(angle) * radius;
     const y = centerY + Math.sin(angle) * radius;
     const labelX = centerX + Math.cos(angle) * (radius + 28);
     const labelY = centerY + Math.sin(angle) * (radius + 28);
 
-    return { label, x, y, labelX, labelY, angle };
+    return { key, label: axisLabels[key], x, y, labelX, labelY, angle };
   });
 
   const chartSets = [
     {
       id: "category-average",
-      label: "Category Average",
+      label: t("average"),
       series: position.category_average,
       className: styles.averageShape,
       dotClassName: styles.averageDot,
     },
     {
       id: "top-competitor",
-      label: "Top Competitor",
+      label: t("competitor"),
       series: position.top_competitor,
       className: styles.competitorShape,
       dotClassName: styles.competitorDot,
     },
     {
       id: "your-site",
-      label: "Your Site",
+      label: t("yourSite"),
       series: position.your_site,
       className: styles.siteShape,
       dotClassName: styles.siteDot,
@@ -210,11 +201,11 @@ export default function CompetitivePosition({
       viewport={{ once: true, amount: 0.3 }}
       transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
-      <p className={styles.eyebrow}>Strategic Intelligence</p>
+      <p className={styles.eyebrow}>{t("eyebrow")}</p>
       <div className={styles.titleBlock}>
         <div>
-          <p className={styles.title}>Competitive Position</p>
-          <p className={styles.subtitle}>Execution gap across the category</p>
+          <p className={styles.title}>{t("title")}</p>
+          <p className={styles.subtitle}>{t("subtitle")}</p>
         </div>
       </div>
 
@@ -225,7 +216,7 @@ export default function CompetitivePosition({
         <svg
           viewBox="0 0 420 360"
           className={styles.chart}
-          aria-label="Competitive position radar chart comparing your site, top competitor, and category average"
+          aria-label={t("chartLabel")}
           role="img"
           onClick={clearActiveAxis}
         >
@@ -321,7 +312,7 @@ export default function CompetitivePosition({
                       cy={y}
                       r="22"
                       tabIndex={0}
-                      aria-label={`${position.axes[index]}: ${value}/100`}
+                      aria-label={`${axes[index].label}: ${value}/100`}
                     />
                     <motion.circle
                       className={`${set.dotClassName} ${
@@ -389,7 +380,7 @@ export default function CompetitivePosition({
                   role={set.id === "your-site" ? "button" : undefined}
                   aria-label={
                     set.id === "your-site"
-                      ? `${position.axes[index]}: ${value}/100`
+                      ? `${axes[index].label}: ${value}/100`
                       : undefined
                   }
                   onClick={(e) => {
@@ -419,7 +410,7 @@ export default function CompetitivePosition({
 
             return (
               <text
-                key={`label-${axis.label}`}
+                key={`label-${axis.key}`}
                 className={`${styles.axisLabel} ${
                   activeAxisIndex === index ? styles.axisLabelActive : ""
                 } ${activeAxisIndex !== null && activeAxisIndex !== index ? styles.axisLabelDimmed : ""}`}
@@ -457,7 +448,7 @@ export default function CompetitivePosition({
                 {activeAxis.label} · {activeValue}/100
               </p>
               <p className={styles.axisTooltipText}>
-                {position.axis_explanations[activeAxis.label]}
+                {position.axis_explanations[activeAxis.key]}
               </p>
             </motion.div>
           )}
@@ -466,23 +457,23 @@ export default function CompetitivePosition({
         <div className={styles.legend} aria-hidden="true">
           <span className={styles.legendItem}>
             <span className={`${styles.legendSwatch} ${styles.siteSwatch}`} />
-            Your Site
+            {t("yourSite")}
           </span>
           <span className={styles.legendItem}>
             <span className={`${styles.legendSwatch} ${styles.competitorSwatch}`} />
-            Top Competitor
+            {t("competitor")}
           </span>
           <span className={styles.legendItem}>
             <span className={`${styles.legendSwatch} ${styles.averageSwatch}`} />
-            Category Average
+            {t("average")}
           </span>
         </div>
 
         {locked && (
           <div className={styles.lockedOverlay}>
-            <p className={styles.lockedTitle}>Unlock the execution gap</p>
+            <p className={styles.lockedTitle}>{t("lockedTitle")}</p>
             <p className={styles.lockedText}>
-              Submit a website to replace this preview with an AI-estimated competitive position read.
+              {t("lockedText")}
             </p>
           </div>
         )}
@@ -501,7 +492,7 @@ export default function CompetitivePosition({
                 {activeAxis.label} · {activeValue}/100
               </p>
               <p className={styles.axisTooltipText}>
-                {position.axis_explanations[activeAxis.label]}
+                {position.axis_explanations[activeAxis.key]}
               </p>
             </div>
           </motion.div>

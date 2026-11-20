@@ -13,6 +13,7 @@ export default getRequestConfig(async ({ requestLocale }) => {
     messages: {
       ...(await import(`../../messages/${locale}.json`)).default,
       automation: (await import(`../../messages/automation/${locale}.json`)).default,
+      roaster: (await import(`../../messages/roaster/${locale}.json`)).default,
     },
   };
 });

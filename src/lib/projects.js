@@ -43,23 +43,35 @@ function resolveProjectKey(projectIdentifier) {
     return match?.[0] || null;
 }
 
-function getProjectHeaderImageAlt(projectData) {
+function getProjectHeaderImageAlt(projectData, locale = "en") {
     if (projectData?.headerImageAlt) return projectData.headerImageAlt;
 
     const subtitle = projectData?.subtitle ? ` ${projectData.subtitle}` : "";
+    if (locale === "it") {
+        return `Immagine di copertina di ${projectData?.title || "Progetto"}${subtitle}`;
+    }
+
     return `${projectData?.title || "Project"}${subtitle} hero image`;
 }
 
-function getProjectCarouselImageAlt(projectData, filename, index) {
+function getProjectCarouselImageAlt(projectData, filename, index, locale = "en") {
     if (projectData?.carouselImageAlts?.[filename]) {
         return projectData.carouselImageAlts[filename];
+    }
+
+    if (locale === "it") {
+        return `Immagine ${index + 1} della galleria di ${projectData?.title || "Progetto"}`;
     }
 
     return `${projectData?.title || "Project"} showcase image ${index + 1}`;
 }
 
-function getProjectPreviewImageAlt(projectData) {
+function getProjectPreviewImageAlt(projectData, locale = "en") {
     if (projectData?.previewImageAlt) return projectData.previewImageAlt;
+
+    if (locale === "it") {
+        return `Anteprima del progetto ${projectData?.title || "Progetto"}`;
+    }
 
     return `${projectData?.title || "Project"} project preview`;
 }
@@ -78,29 +90,30 @@ function getLocalizedProject(projectData, locale = "en") {
     };
 }
 
-function withProjectSeoData(projectId, projectData) {
+function withProjectSeoData(projectId, projectData, locale) {
     if (!projectData) return null;
 
     const images = projectData.images ? projectData.images : ["main.webp"];
     const slug = getProjectSlug(projectId, projectData);
     const path = getProjectPath(projectId, projectData);
+    const localizedProject = getLocalizedProject(projectData, locale);
 
     return {
-        ...projectData,
+        ...localizedProject,
         id: projectId,
         assetFolder: projectData.assetFolder || projectId,
         slug,
         path,
         color: projectData.color || "#FFFFFF",
         images,
-        previewImageAlt: getProjectPreviewImageAlt(projectData),
-        headerImageAlt: getProjectHeaderImageAlt(projectData),
+        previewImageAlt: getProjectPreviewImageAlt(localizedProject, locale),
+        headerImageAlt: getProjectHeaderImageAlt(localizedProject, locale),
     };
 }
 
 function getProjectsArray(locale = "en") {
     return getEnabledProjectEntries().map(([projectId, project]) => ({
-        ...getLocalizedProject(withProjectSeoData(projectId, project), locale),
+        ...withProjectSeoData(projectId, project, locale),
         externalLink: project.link,
         link: getProjectPath(projectId, project),
     }));
@@ -168,15 +181,12 @@ function getProjectData(projectIdentifier, locale = "en") {
     const nextProjectEntry =
         nextProjectIndex >= 0 ? enabledProjects[nextProjectIndex] : null;
 
-    return getLocalizedProject({
-        ...withProjectSeoData(projectId, project),
+    return {
+        ...withProjectSeoData(projectId, project, locale),
         nextProject: nextProjectEntry
-            ? getLocalizedProject(
-                  withProjectSeoData(nextProjectEntry[0], nextProjectEntry[1]),
-                  locale
-              )
+            ? withProjectSeoData(nextProjectEntry[0], nextProjectEntry[1], locale)
             : null,
-    }, locale);
+    };
 }
 
 export {

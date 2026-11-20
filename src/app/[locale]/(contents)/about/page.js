@@ -202,7 +202,7 @@ export default async function AboutPage({ params }) {
             {isItalian ? (
               <>
                 <span className={styles.subtitleHighlight}>Kremisi</span> è una
-                software company nata in Italia, con{" "}
+                software company distribuita, nata in Italia, con{" "}
                 <span className={`${styles.subtitleHighlight} ${styles.nowrap}`}>
                   oltre 8 anni di esperienza
                 </span>{" "}
@@ -236,7 +236,7 @@ export default async function AboutPage({ params }) {
               <span className={"highlight"}>coinvolgenti e funzionali</span>,
               curando <span className={"highlight"}>frontend</span> e{" "}
               <span className={"highlight"}>backend</span> con particolare
-              attenzione a estetica, usabilità e performance.
+              attenzione a estetica e usabilità.
               <br />
               <br />
               Kremisi nasce con l&apos;obiettivo di{" "}
@@ -259,9 +259,11 @@ export default async function AboutPage({ params }) {
               <span className={"highlight"}>backend</span>, with a strong focus
               on aesthetics and usability.
               <br />
-              <br /> Kremisi was created with the goal of developing{" "}
-              <span className={"highlight"}>limitless</span> solutions, giving
-              space to ideas and complex projects in every direction.
+              <br /> Kremisi was founded to{" "}
+              <span className={"highlight"}>
+                go beyond the limits of standard solutions
+              </span>
+              , making room for ideas and the complexity of each project.
             </>
           )}
         </RevelatingText>

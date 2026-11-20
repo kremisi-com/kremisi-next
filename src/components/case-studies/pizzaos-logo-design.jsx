@@ -7,7 +7,7 @@ const assetPath = "/projects/pizzaos-logo-design";
 
 const copy = {
     it: {
-        subtitle: "Studio del logo",
+        subtitle: "Progettazione del logo",
         intro: "La forma della pizza diventa il segno di una piattaforma digitale per pizzerie.",
         openPdf: "Apri la presentazione (PDF)",
         contextTitle: "Dalla pizza al pittogramma",

@@ -29,8 +29,6 @@ const FALLBACK_FUNNEL_STEPS = [
   { id: "submitted-lead", range_min: 4, range_max: 9 },
 ];
 
-const EXPLANATION_MICROCOPY =
-  "Estimated from CTA placement, visual hierarchy, trust signals, readability and friction patterns.";
 const STEP_INSIGHT_EXPLANATION_MAX_CHARS = 190;
 const STEP_INSIGHT_QUICK_FIX_MAX_CHARS = 90;
 
@@ -39,6 +37,8 @@ const LOCALE_COPY = {
     eyebrow: "Strategic Intelligence",
     title: "AI Funnel Simulation",
     subtitle: "Estimated conversion flow from landing to lead",
+    methodNote:
+      "Estimated from CTA placement, visual hierarchy, trust signals, readability and friction patterns.",
     badge: "Opportunity Score",
     funnelHeading: "Estimated Funnel",
     analysisHeading: "AI Readout",
@@ -122,32 +122,34 @@ const LOCALE_COPY = {
     eyebrow: "Intelligence Strategica",
     title: "Simulazione Funnel AI",
     subtitle: "Flusso di conversione stimato da landing a lead",
-    badge: "Opportunity Score",
+    methodNote:
+      "Stima basata sulla posizione delle CTA, sulla gerarchia visiva, sui segnali di fiducia, sulla leggibilità e sugli ostacoli alla conversione.",
+    badge: "Punteggio di opportunità",
     funnelHeading: "Funnel Stimato",
     analysisHeading: "Lettura AI",
     strengths: "Punti di Forza",
     weaknesses: "Debolezze",
     biggestLeak: "Perdita Maggiore",
-    quickestWin: "Win Più Rapido",
+    quickestWin: "Intervento più rapido",
     readAiAdvice: "Leggi i consigli dell'AI",
     hideAiAdvice: "Mostra meno",
     stepInsightHeading: "Insight Dinamico",
     stepRatingLabel: "Valutazione",
-    quickFixLabel: "Quick Fix",
+    quickFixLabel: "Intervento rapido",
     noFixLabel: "Nessuna Correzione",
     noFixText: "Questo step è già performante al massimo livello.",
     dropOff: "Perdita",
     steps: {
-      visits: "Visits",
-      "understood-offer": "Understood Offer",
-      "trusted-brand": "Trusted Brand",
-      "clicked-cta": "Clicked CTA",
-      "submitted-lead": "Submitted Lead",
+      visits: "Visite",
+      "understood-offer": "Offerta compresa",
+      "trusted-brand": "Fiducia nel brand",
+      "clicked-cta": "Clic sulla CTA",
+      "submitted-lead": "Richiesta inviata",
     },
     insightByStep: {
       visits: {
         explanation:
-          "Il 100% in Visits rappresenta il pubblico iniziale che entra nel funnel: sono gli step successivi a determinare la conversione.",
+          "Gli utenti arrivano, ma escono presto se la prima schermata è affollata, il titolo ha poco contrasto o il testo è generico e la promessa poco chiara.",
         quickFixes: [
           "Sostituisci il titolo hero con una promessa concreta già nella prima riga.",
           "Rimuovi un elemento visivo sopra la piega per ridurre distrazioni.",
@@ -155,7 +157,7 @@ const LOCALE_COPY = {
       },
       "understood-offer": {
         explanation:
-          "Gli utenti scorrono ma non capiscono cosa vendi quando pacchetti, deliverable e target sono nascosti dietro branding astratto e sezioni introduttive troppo lunghe.",
+          "Gli utenti scorrono senza capire cosa vendi se la logica dei prezzi, ciò che offri e a chi ti rivolgi sono nascosti dietro branding astratto e lunghe introduzioni.",
         quickFixes: [
           "Inserisci sotto la hero una riga chiara con risultato, scope e tempi.",
           "Mostra sintesi servizi/pacchetti prima delle sezioni narrative estese.",
@@ -694,7 +696,7 @@ export default function RevenueOpportunity({
           </aside>
         </div>
 
-        <p className={styles.methodNote}>{EXPLANATION_MICROCOPY}</p>
+        <p className={styles.methodNote}>{copy.methodNote}</p>
 
         {showLockedOverlay && (
           <div className={styles.lockedOverlay}>

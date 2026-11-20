@@ -1,5 +1,6 @@
 "use client";
 
+import { useLocale } from "next-intl";
 import styles from "./page.module.css";
 import MainSlider from "@/components/main-slider/main-slider";
 import Overview from "@/components/overview/overview";
@@ -59,7 +60,8 @@ const OverviewContent = memo(function OverviewContent({ isOverviewVisible }) {
 });
 
 export default function Home({ initialOverviewVisible = false }) {
-  const projectsDataArray = useMemo(() => getProjectsArray(), []);
+  const locale = useLocale();
+  const projectsDataArray = useMemo(() => getProjectsArray(locale), [locale]);
   const organizedProjects = useMemo(
     () => getOrganizedProjects(projectsDataArray),
     [projectsDataArray],

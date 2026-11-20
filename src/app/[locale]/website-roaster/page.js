@@ -2,7 +2,8 @@
 
 import { AnimatePresence, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import GitButton from "@/components/git-button/git-button";
 import styles from "./page.module.css";
 import MarketMomentum from "@/components/market-momentum/market-momentum";
@@ -87,6 +88,8 @@ function clearFunnelCache(normalizedUrl, language) {
 }
 
 export default function WebsiteRoaster() {
+  const locale = useLocale();
+  const t = useTranslations("roaster");
   const [url, setUrl] = useState("");
   const [language, setLanguage] = useState("it");
   const [loading, setLoading] = useState(false);
@@ -200,12 +203,12 @@ export default function WebsiteRoaster() {
     try {
       normalizedUrl = normalizeWebsiteUrl(url);
     } catch {
-      setError("The URL you entered does not look valid.");
+      setError(t("invalidUrl"));
       return;
     }
 
     if (!turnstileToken) {
-      setError("Complete the security check before starting the review.");
+      setError(t("securityRequired"));
       return;
     }
 
@@ -232,7 +235,16 @@ export default function WebsiteRoaster() {
 
       const data = await res.json();
 
-      if (!res.ok) throw new Error(data.error || "Unknown error");
+      if (!res.ok) {
+        if (res.status === 422) {
+          setError(t("unreadableSite"));
+        } else if (data.error === "Security check failed. Refresh the page and try again.") {
+          setError(t("securityFailed"));
+        } else {
+          setError(locale === "en" ? data.error || t("unknownError") : t("reviewFailed"));
+        }
+        return;
+      }
       setReviewBase(data.review || null);
       setReviewContext({
         normalizedUrl,
@@ -257,12 +269,10 @@ export default function WebsiteRoaster() {
           expiresAt,
         });
       } else {
-        setFunnelMessage(
-          "Funnel cache is not available for this review. Run Start Review again.",
-        );
+        setFunnelMessage(t("noFunnelCache"));
       }
     } catch (err) {
-      setError(err.message);
+      setError(locale === "en" ? err.message : t("reviewFailed"));
     } finally {
       setTurnstileToken("");
       turnstileRef.current?.reset?.();
@@ -272,9 +282,7 @@ export default function WebsiteRoaster() {
 
   const handleRunFunnel = async () => {
     if (!reviewContext) {
-      setFunnelMessage(
-        "Run Start Review first to prepare the cached page snapshot.",
-      );
+      setFunnelMessage(t("prepareSnapshot"));
       return;
     }
 
@@ -303,9 +311,7 @@ export default function WebsiteRoaster() {
 
       if (!artifactToUse) {
         clearFunnelCache(reviewContext.normalizedUrl, reviewContext.language);
-        setFunnelMessage(
-          "Cached snapshot missing or expired. Run Start Review again.",
-        );
+        setFunnelMessage(t("snapshotMissing"));
         return;
       }
 
@@ -319,7 +325,7 @@ export default function WebsiteRoaster() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Unknown error");
+      if (!res.ok) throw new Error(data.error || t("unknownError"));
 
       setRevenueData(data.revenue_opportunity || null);
       setFunnelMessage("");
@@ -328,9 +334,9 @@ export default function WebsiteRoaster() {
         clearFunnelCache(reviewContext.normalizedUrl, reviewContext.language);
         setFunnelArtifact("");
         setFunnelExpiresAt("");
-        setFunnelMessage("Cached snapshot expired. Run Start Review again.");
+        setFunnelMessage(t("snapshotExpired"));
       } else {
-        setError(err.message);
+        setError(locale === "en" ? err.message : t("funnelFailed"));
       }
     } finally {
       setFunnelLoading(false);
@@ -338,16 +344,14 @@ export default function WebsiteRoaster() {
   };
 
   const showFullReview = Boolean(reviewBase);
-  const uiLocale = reviewContext?.language || (reviewBase ? language : "en");
+  const outputLocale = reviewContext?.language || language;
+  const categories = t.raw("categories");
   const topStrengths = reviewBase?.top_strengths || [];
   const mobileReadMoreEnabled = isMobileViewport && Boolean(reviewBase);
   const shouldCollapseReview = mobileReadMoreEnabled && !readMoreExpanded;
   const reviewBodyId = "website-roaster-review-body";
   const readMoreIssuesId = "review-read-more-issues";
   const readMoreActionsId = "review-read-more-actions";
-  const readMorePrompt =
-    uiLocale === "it" ? "Leggi l'analisi completa" : "Read full analysis";
-  const showLessPrompt = uiLocale === "it" ? "Mostra meno" : "Show less";
   const reviewBodyFrameStyle =
     shouldCollapseReview && mobileCollapsedReviewHeight
       ? {
@@ -361,30 +365,29 @@ export default function WebsiteRoaster() {
       }`}
     >
       <div className={styles.infoBlock}>
-        <p className={styles.eyebrow}>How it works</p>
+        <p className={styles.eyebrow}>{t("howItWorks")}</p>
         <p className={styles.leadText}>
-          The AI analyzes your website structure, messaging and user experience,
-          then returns a concise strategic review.
+          {t("howItWorksText")}
         </p>
       </div>
 
       <dl className={styles.metaList}>
         <div className={styles.metaItem}>
-          <dt className={styles.metaLabel}>Input</dt>
+          <dt className={styles.metaLabel}>{t("inputLabel")}</dt>
           <dd className={styles.metaValue}>
-            Use a public URL for the most accurate review.
+            {t("inputText")}
           </dd>
         </div>
         <div className={styles.metaItem}>
-          <dt className={styles.metaLabel}>Tone</dt>
+          <dt className={styles.metaLabel}>{t("toneLabel")}</dt>
           <dd className={styles.metaValue}>
-            Direct, ironic, annoyingly precise. It is not a joke. It is worse.
+            {t("toneText")}
           </dd>
         </div>
         <div className={styles.metaItem}>
-          <dt className={styles.metaLabel}>Note</dt>
+          <dt className={styles.metaLabel}>{t("noteLabel")}</dt>
           <dd className={styles.metaValue}>
-            The roast is free. Fixing the site is the part we do together.
+            {t("noteText")}
           </dd>
         </div>
       </dl>
@@ -451,7 +454,7 @@ export default function WebsiteRoaster() {
         )}
 
         <div className={styles.actionsIntro}>
-          <p className={styles.listLabel}>AI Funnel Simulation</p>
+          <p className={styles.listLabel}>{t("simulation")}</p>
           <div className={styles.triggerHeaderRight}>
             {funnelLoading && (
               <motion.span
@@ -459,39 +462,23 @@ export default function WebsiteRoaster() {
                 animate={{ opacity: [1, 0.5, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity }}
               >
-                PROCESSING
+                {t("processing")}
               </motion.span>
             )}
             <span className={styles.actionsCaption}>
-              {uiLocale === "it"
-                ? "Analisi comportamentale"
-                : "Behavioral analysis"}
+              {t("behavioralAnalysis")}
             </span>
           </div>
         </div>
 
         <div className={styles.triggerContent}>
           <p className={styles.triggerText}>
-            {uiLocale === "it" ? (
-              <>
-                I tuoi utenti abbandonano il sito?
-                <br />
-                Clicca per scoprire esattamente dove e perché.
-              </>
-            ) : (
-              "Are users leaving your site? Click to discover exactly where and why."
-            )}
+            {t("simulationDescription")}
           </p>
 
           <div className={styles.triggerActionRow}>
             <span className={styles.triggerAction}>
-              {funnelLoading
-                ? uiLocale === "it"
-                  ? "Simulazione in corso..."
-                  : "Simulation in progress..."
-                : uiLocale === "it"
-                  ? "Avvia Simulazione →"
-                  : "Start Simulation →"}
+              {t(funnelLoading ? "simulationProgress" : "simulationStart")}
             </span>
 
             {funnelLoading && (
@@ -515,15 +502,16 @@ export default function WebsiteRoaster() {
     <main className={`page-content-simple ${styles.page}`}>
       <section className={styles.hero}>
         <div className={styles.heroContent}>
-          <p className={styles.kicker}>AI Tool by Kremisi</p>
+          <p className={styles.kicker}>{t("kicker")}</p>
           <h1 className={styles.pageTitle}>
-            Find out why your website is not converting.
+            {t("heading")}
             <br />
-            Get a <span className={styles.accent}>sharp review 🔥</span>
+            {t.rich("headingAccent", {
+              accent: (chunks) => <span className={styles.accent}>{chunks}</span>,
+            })}
           </h1>
           <p className={styles.subtitle}>
-            Paste your URL and receive a focused review on clarity, trust,
-            positioning and conversion friction.
+            {t("subtitle")}
           </p>
         </div>
       </section>
@@ -536,13 +524,13 @@ export default function WebsiteRoaster() {
               className={styles.momentumWrap}
               data={reviewBase?.market_momentum}
               locked={!reviewBase}
-              locale={uiLocale}
+              locale={locale}
             />
             {!reviewBase && (
               <RevenueOpportunity
                 className={styles.revenuePreviewWrap}
                 locked
-                locale={uiLocale}
+                locale={locale}
               />
             )}
             {reviewBase && (
@@ -558,9 +546,9 @@ export default function WebsiteRoaster() {
             <div className={styles.panel}>
               <div className={styles.panelHeader}>
                 <span className={styles.panelTag}>
-                  Paste the website to roast
+                  {t("panelTag")}
                 </span>
-                <span className={styles.panelCaption}>Brutal honesty mode</span>
+                <span className={styles.panelCaption}>{t("panelCaption")}</span>
               </div>
 
               <div className={styles.inputRow}>
@@ -568,7 +556,8 @@ export default function WebsiteRoaster() {
                   id="website-roaster-url"
                   className={styles.urlInput}
                   type="url"
-                  placeholder="https://yourwebsite.com"
+                  aria-label={t("urlLabel")}
+                  placeholder={t("urlPlaceholder")}
                   value={url}
                   onChange={(e) => setUrl(e.target.value)}
                   onKeyDown={(e) =>
@@ -580,7 +569,7 @@ export default function WebsiteRoaster() {
                   className={styles.languageField}
                   htmlFor="website-roaster-language"
                 >
-                  <span className={styles.languageLabel}>Output</span>
+                  <span className={styles.languageLabel}>{t("outputLabel")}</span>
                   <select
                     id="website-roaster-language"
                     className={styles.languageSelect}
@@ -600,7 +589,7 @@ export default function WebsiteRoaster() {
                       loading || funnelLoading || !url.trim() || !turnstileToken
                     }
                   >
-                    {loading ? "Analyzing..." : "Start Review"}
+                    {t(loading ? "analyzing" : "startReview")}
                   </button>
                 </div>
               </div>
@@ -609,6 +598,7 @@ export default function WebsiteRoaster() {
                 ref={turnstileRef}
                 className={styles.turnstileWrap}
                 onTokenChange={setTurnstileToken}
+                unavailableMessage={locale === "it" ? t("securityUnavailable") : undefined}
               />
 
               <AnimatePresence>
@@ -651,7 +641,7 @@ export default function WebsiteRoaster() {
                     <div className={styles.statusContent}>
                       <div className={styles.statusHeaderRow}>
                         <p className={styles.statusTitle}>
-                          Analysis in progress
+                          {t("analyzingTitle")}
                         </p>
                         <div className={styles.progressBadge}>
                           <span className={styles.progressCount}>
@@ -661,14 +651,13 @@ export default function WebsiteRoaster() {
                         </div>
                       </div>
                       <p className={styles.statusText}>
-                        We are reading the site and preparing a strategic
-                        assessment.
+                        {t("analyzingText")}
                         <br />
-                        It can take from 30 to 90 seconds.
+                        {t("analyzingTime")}
                       </p>
                       {showSlowServerMessage && (
                         <p className={styles.slowServerWarning}>
-                          I server sono pieni, quindi ci sono rallentamenti.
+                          {t("slowServer")}
                         </p>
                       )}
                     </div>
@@ -713,13 +702,12 @@ export default function WebsiteRoaster() {
                     <div className={styles.statusContent}>
                       <div className={styles.statusHeaderRow}>
                         <p className={styles.statusTitle}>
-                          Funnel simulation in progress
+                          {t("funnelRunning")}
                         </p>
-                        <span className={styles.liveTag}>LIVE SIMULATION</span>
+                        <span className={styles.liveTag}>{t("liveSimulation")}</span>
                       </div>
                       <p className={styles.statusText}>
-                        Reusing cached snapshot to estimate conversion leaks and
-                        behavioral patterns.
+                        {t("funnelRunningText")}
                       </p>
                       <div className={styles.funnelMiniBar}>
                         <motion.div
@@ -741,7 +729,7 @@ export default function WebsiteRoaster() {
 
               {error && (
                 <div className={styles.errorPanel} aria-live="polite">
-                  <p className={styles.statusTitle}>Something is off</p>
+                  <p className={styles.statusTitle}>{t("errorTitle")}</p>
                   <p className={styles.statusText}>{error}</p>
                 </div>
               )}
@@ -758,13 +746,13 @@ export default function WebsiteRoaster() {
               <div className={`${styles.panel} ${styles.resultPanel}`}>
                 <div className={styles.resultHeader}>
                   <div>
-                    <p className={styles.eyebrow}>Review</p>
-                    <h2 className={styles.resultTitle}>Strategic scorecard</h2>
+                    <p className={styles.eyebrow}>{t("review")}</p>
+                    <h2 className={styles.resultTitle}>{t("scorecard")}</h2>
                   </div>
 
                   {showFullReview && (
                     <div className={styles.scoreWrap}>
-                      <span className={styles.scoreLabel}>Overall Score</span>
+                      <span className={styles.scoreLabel}>{t("overallScore")}</span>
                       <div className={styles.scoreValueRow}>
                         <span className={styles.scoreValue}>
                           {reviewBase.overall_score}
@@ -789,8 +777,7 @@ export default function WebsiteRoaster() {
 
                 {!reviewBase && !loading && !funnelLoading && !error && (
                   <p className={styles.emptyState}>
-                    The strategic review will appear here, structured and ready
-                    for action.
+                    {t("emptyReview")}
                   </p>
                 )}
 
@@ -806,10 +793,10 @@ export default function WebsiteRoaster() {
                         className={styles.reviewBody}
                       >
                         <section className={styles.summaryBlock}>
-                          <p className={styles.summaryText}>
+                          <p className={styles.summaryText} lang={outputLocale}>
                             {reviewBase.summary}
                           </p>
-                          <p className={styles.verdictText}>
+                          <p className={styles.verdictText} lang={outputLocale}>
                             {reviewBase.verdict}
                           </p>
                         </section>
@@ -827,13 +814,13 @@ export default function WebsiteRoaster() {
                             >
                               <div className={styles.categoryHeader}>
                                 <h3 className={styles.categoryTitle}>
-                                  {category.name}
+                                  {categories[category.name] || category.name}
                                 </h3>
                                 <span className={styles.categoryScore}>
                                   {category.score}/5
                                 </span>
                               </div>
-                              <p className={styles.categoryComment}>
+                              <p className={styles.categoryComment} lang={outputLocale}>
                                 {category.comment}
                               </p>
                             </article>
@@ -842,10 +829,10 @@ export default function WebsiteRoaster() {
 
                         <section className={styles.listGrid}>
                           <div className={styles.listCard}>
-                            <p className={styles.listLabel}>Top Strengths</p>
+                            <p className={styles.listLabel}>{t("topStrengths")}</p>
                             <ul className={styles.reviewList}>
                               {topStrengths.map((item, index) => (
-                                <li key={`${item}-${index}`}>{item}</li>
+                                <li key={`${item}-${index}`} lang={outputLocale}>{item}</li>
                               ))}
                             </ul>
                           </div>
@@ -854,10 +841,10 @@ export default function WebsiteRoaster() {
                             id={readMoreIssuesId}
                             className={styles.listCard}
                           >
-                            <p className={styles.listLabel}>Top Issues</p>
+                            <p className={styles.listLabel}>{t("topIssues")}</p>
                             <ul className={styles.reviewList}>
                               {reviewBase.top_issues.map((item) => (
-                                <li key={item}>{item}</li>
+                                <li key={item} lang={outputLocale}>{item}</li>
                               ))}
                             </ul>
                           </div>
@@ -869,10 +856,10 @@ export default function WebsiteRoaster() {
                         >
                           <div className={styles.actionsIntro}>
                             <p className={styles.listLabel}>
-                              Priority Actions
+                              {t("priorityActions")}
                             </p>
                             <span className={styles.actionsCaption}>
-                              What to fix first
+                              {t("fixFirst")}
                             </span>
                           </div>
                           <div className={styles.priorityList}>
@@ -884,7 +871,7 @@ export default function WebsiteRoaster() {
                                 <span className={styles.priorityBadge}>
                                   {item.priority}
                                 </span>
-                                <p className={styles.priorityText}>
+                                <p className={styles.priorityText} lang={outputLocale}>
                                   {item.action}
                                 </p>
                               </div>
@@ -907,7 +894,7 @@ export default function WebsiteRoaster() {
                             setReadMoreExpanded((expanded) => !expanded)
                           }
                         >
-                          {readMoreExpanded ? showLessPrompt : readMorePrompt}
+                          {t(readMoreExpanded ? "showLess" : "readMore")}
                         </button>
                       </div>
                     )}
@@ -933,7 +920,7 @@ export default function WebsiteRoaster() {
             className={styles.revenueWrap}
             data={revenueData}
             locked={false}
-            locale={uiLocale}
+            locale={locale}
           />
         )}
       </section>
@@ -945,39 +932,37 @@ export default function WebsiteRoaster() {
           <div className={styles.ctaBlob} aria-hidden="true" />
 
           <div className={styles.ctaLeft}>
-            <p className={styles.eyebrow}>Clear enough?</p>
+            <p className={styles.eyebrow}>{t("ctaEyebrow")}</p>
             <h2 className={styles.ctaTitle}>
-              If the review is right
+              {t("ctaHeading")}
               <br />
-              <span className={styles.accent}>it can be improved.</span>
+              <span className={styles.accent}>{t("ctaAccent")}</span>
             </h2>
           </div>
 
           <div className={styles.ctaRight}>
             <p className={styles.ctaText}>
-              Find out what actually works on your website and what is slowing
-              down your results. Kremisi gives you direct feedback on design,
-              development, and structure.
+              {t("ctaText")}
             </p>
 
             <ul className={styles.ctaBenefits}>
               <li>
                 <span className={styles.benefitIcon}>🎨</span>
-                <span>Design that respects the audience</span>
+                <span>{t("ctaDesign")}</span>
               </li>
               <li>
                 <span className={styles.benefitIcon}>⚙️</span>
-                <span>Solid development, zero shortcuts</span>
+                <span>{t("ctaDevelopment")}</span>
               </li>
               <li>
                 <span className={styles.benefitIcon}>🎯</span>
-                <span>Structure built to convert</span>
+                <span>{t("ctaStructure")}</span>
               </li>
             </ul>
 
             <Link href="/contacts" className={styles.ctaGitButtonLink}>
               <GitButton
-                text="Let's talk"
+                text={t("ctaButton")}
                 revertColor
                 className={styles.ctaGitButton}
                 leftShift={10}

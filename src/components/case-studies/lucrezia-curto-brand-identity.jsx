@@ -109,7 +109,7 @@ const copy = {
         kicker: "Brand identity",
         title: "Lucrezia Curto",
         subtitle: "Identità visiva per uno studio commercialista",
-        heroText: "Un sistema visivo costruito per comunicare precisione, ascolto e autorevolezza, trasformando il carattere dello studio in un'identità riconoscibile.",
+        heroText: "Un sistema visivo costruito per comunicare precisione, empatia e autorevolezza, trasformando il carattere dello studio in un'identità riconoscibile.",
         context: "Contesto",
         contextTitle: "Rigore professionale, con una presenza più umana.",
         contextText: "Il progetto nasce dall'esigenza di rendere più chiara e distintiva la presenza dello studio. La ricerca ha unito il linguaggio istituzionale della consulenza a un tono più accogliente, capace di esprimere precisione tecnica e attenzione alle persone.",

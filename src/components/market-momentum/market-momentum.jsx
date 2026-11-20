@@ -46,7 +46,7 @@ const LOCALE_COPY = {
     eyebrow: "Intelligence Strategica",
     title: "Momentum di Mercato",
     subtitleTemplate: "Trend di settore {sector} vs slancio del brand",
-    defaultSector: "Settore",
+    defaultSector: "Generale",
     industryTrend: "Trend di Settore",
     brandMomentum: "Slancio del Brand",
     badge: {
@@ -63,7 +63,7 @@ const LOCALE_COPY = {
     ariaLabel:
       "Grafico strategico quinquennale che confronta trend di settore e slancio del brand",
     fallbackInsight:
-      "Lo slancio dipende da chiarezza della proposta di valore, prove di fiducia e percorso CTA: l'esecuzione puo rafforzare, stabilizzare o indebolire la traiettoria.",
+      "Lo slancio dipende dalla chiarezza della proposta di valore, dai segnali di fiducia e dalla coerenza delle CTA. Il modo in cui questi elementi sono realizzati può rafforzare, arrestare o indebolire lo slancio del brand.",
     fallbackMethod:
       "Anteprima illustrativa. Le curve finali di settore e brand sono stime AI basate sul sito inviato.",
   },

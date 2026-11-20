@@ -102,7 +102,7 @@ const copy = {
         heroText: "Un marchio pensato per raccontare la rapidità degli interventi e il rapporto di fiducia che una squadra a conduzione familiare costruisce sul territorio.",
         context: "Contesto",
         contextTitle: "Un mestiere che passa di mano in mano.",
-        contextText: "Capizzi Servizi nasce dall'esperienza nell'edilizia del padre, che nel 2020 porta le sue competenze nel settore degli spurghi. Da questa storia familiare parte la ricerca di un'identità capace di raccontare un modo concreto di lavorare, fatto di prontezza, ascolto e chiarezza.",
+        contextText: "Capizzi Servizi nasce dall'esperienza del fondatore nell'edilizia. Nel 2020 ha portato queste competenze nel settore degli spurghi. Da questa storia familiare ha preso forma un'identità che racconta un modo di lavorare concreto, fatto di interventi rapidi e comunicazione chiara.",
         goalLabel: "Obiettivi",
         goalTitle: "Un'identità all'altezza di chi interviene.",
         identityLabel: "Sistema visivo",

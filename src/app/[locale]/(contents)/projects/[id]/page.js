@@ -224,7 +224,7 @@ export default async function ProjectPage({ params }) {
                                         ) : (
                                             projectOwner.name
                                         )}{" "}
-                                        for{" "}
+                                        {isItalian ? "per" : "for"}{" "}
                                     </>
                                 )}
                                 {projectData.title}
@@ -249,7 +249,7 @@ export default async function ProjectPage({ params }) {
                             href={projectData.link}
                             target="_blank"
                         >
-                            <GitButton text={isItalian ? "Visita il sito" : "Live Demo"} />
+                            <GitButton text={isItalian ? "Visita il sito" : "Visit the website"} />
                         </AnimatedLink>
                     </div>
                     <div className="col-2-3">
@@ -273,7 +273,7 @@ export default async function ProjectPage({ params }) {
                                 target="_blank"
                             >
                                 <GitButton
-                                    text={isItalian ? "Visita il sito" : "Live Demo"}
+                                    text={isItalian ? "Visita il sito" : "Visit the website"}
                                 />
                             </AnimatedLink>
                         </div>
@@ -309,7 +309,8 @@ export default async function ProjectPage({ params }) {
                                   alt={getProjectCarouselImageAlt(
                                       projectData,
                                       image,
-                                      index
+                                      index,
+                                      locale
                                   )}
                                   width={360}
                                   height={764}

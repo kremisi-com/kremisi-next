@@ -10,7 +10,7 @@ const WEBSITE_ID = `${BASE_URL}/#website`;
 const EN_DESCRIPTION =
   "Contact Kremisi to discuss web development, product design, AI, or data analytics projects. We work internationally and reply within 24 business hours.";
 const IT_DESCRIPTION =
-  "Contatta Kremisi per parlare del tuo progetto di sviluppo, design, AI o Data. Lavoriamo in Italia e all'estero e rispondiamo entro 24 ore lavorative.";
+  "Contatta Kremisi per parlare del tuo progetto di sviluppo web, design di prodotto, AI o analisi dei dati. Lavoriamo a livello internazionale e rispondiamo entro 24 ore lavorative.";
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
@@ -111,8 +111,8 @@ export default async function ContactsPage({ params }) {
                 </>
               ) : (
                 <>
-                  Let&apos;s Build Something That{" "}
-                  <span className={styles.accent}>Performs</span>
+                  Let&apos;s Build Something{" "}
+                  <span className={styles.accent}>Concrete</span> Together
                 </>
               )}
             </h1>
@@ -177,7 +177,7 @@ export default async function ContactsPage({ params }) {
                 </dt>
                 <dd className={styles.metaValue}>
                   {isItalian
-                    ? "Team distribuito, lavoriamo con clienti in Italia e all'estero"
+                    ? "Team distribuito, lavoriamo a livello internazionale"
                     : "Distributed team, working internationally"}
                 </dd>
               </div>
@@ -199,9 +199,9 @@ export default async function ContactsPage({ params }) {
                 </>
               ) : (
                 <>
-                  Share the scope, budget, and preferred timeline.
+                  Share your goals, budget, and timeline.
                   <br />
-                  We&apos;ll use it to reply with a clear next step.
+                  This will help us understand your project and suggest next steps.
                 </>
               )}
             </p>

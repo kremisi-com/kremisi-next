@@ -2,7 +2,7 @@
   "metadata": {
     "home": {
       "title": "Kremisi | Agenzia di Web Design, Sviluppo e Data Analytics",
-      "description": "Kremisi è un'agenzia distribuita che realizza siti veloci e scalabili, prodotti digitali e soluzioni data & analytics per PMI e aziende consolidate."
+      "description": "Kremisi è un'agenzia distribuita che realizza siti veloci e scalabili, prodotti digitali e soluzioni data & analytics per PMI e aziende consolidate in tutto il mondo."
     }
   },
   "navigation": {
@@ -40,10 +40,10 @@
     }
   },
   "overview": {
-    "line1": "progettiamo e sviluppiamo",
+    "line1": "progettiamo, sviluppiamo e facciamo crescere",
     "highlight": "prodotti digitali",
     "line3": "che generano",
-    "emphasis": "risultati misurabili"
+    "emphasis": "risultati concreti."
   },
   "services": {
     "eyebrow": "I nostri servizi",
@@ -144,7 +144,7 @@
         "tasks": ["Sistema di prenotazione", "Pagamenti online", "Design UI/UX"]
       },
       {
-        "role": "CEO di franchising per assistenza familiare",
+        "role": "CEO di un franchising di servizi di assistenza",
         "date": "24 ago 2024",
         "text": "Li consiglio vivamente per precisione, puntualità e professionalità. Hanno offerto un grande supporto, sempre disponibili ad ascoltare le nostre richieste e risolvere ogni situazione. Grazie di cuore!",
         "tasks": ["SaaS", "Gestione database", "1000+ utenti"]
@@ -152,7 +152,7 @@
       {
         "role": "Fondatori di corsi Flight Dispatch",
         "date": "15 ott 2025",
-        "text": "Cordiali, professionali e qualificati! La loro velocità e competenza ci hanno colpito. Il sito riflette perfettamente le esigenze della nostra azienda e trasforma ogni richiesta in una soluzione efficace e su misura.",
+        "text": "Cordiali, professionali e qualificati! La loro velocità e competenza ci hanno colpito. Il sito riflette perfettamente le esigenze della nostra azienda. Hanno trasformato con abilità ogni richiesta in una soluzione efficace, efficiente e su misura.",
         "tasks": ["SaaS", "Logica complessa", "Piattaforma formativa"]
       }
     ]
