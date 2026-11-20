@@ -20,7 +20,7 @@
   "projects": {
     "kicker": "Progetti recenti",
     "titleStart": "Una selezione dei nostri",
-    "titleHighlight": "lavori",
+    "titleHighlight": "progetti",
     "subtitle": "Piattaforme, siti web e applicazioni progettati per essere efficaci, chiari e performanti."
   },
   "ecosystem": {
@@ -157,7 +157,7 @@
       }
     ]
   },
-  "cta": { "connect": "Parliamone", "discover": "Scopri di più", "closingLabel": "Altri progetti Kremisi: parliamo del tuo processo", "pauseVideos": "Metti in pausa i video", "playVideos": "Riprendi i video" },
+  "cta": { "connect": "Parliamone", "viewProjects": "Dai un'occhiata ai nostri progetti.", "discover": "Scopri di più", "closingLabel": "Altri progetti Kremisi: parliamo del tuo processo", "pauseVideos": "Metti in pausa i video", "playVideos": "Riprendi i video" },
   "footer": {
     "copied": "Email copiata negli appunti",
     "copyFailed": "Impossibile copiare l'email",

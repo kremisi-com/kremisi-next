@@ -224,6 +224,12 @@
     .gallery {
         height: 350px;
     }
+    .ctaGitButton {
+        transform: none;
+    }
+    .ctaGitButton span {
+        font-size: 15px;
+    }
 }
 
 .campaign {

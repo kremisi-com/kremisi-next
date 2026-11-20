@@ -93,9 +93,9 @@ function VideosCta({ variant, cta }) {
                     
                     {/* Centered CTA Button */}
                     <div className={styles.ctaCenter}>
-                        {cta || <LocalizedLink href="/contacts" className={styles.buttonWrapper}>
+                        {cta || <LocalizedLink href="/projects" className={styles.buttonWrapper}>
                             <GitButton
-                                text={t("connect")}
+                                text={t("viewProjects")}
                                 className={styles.ctaGitButton}
                                 isLinkContent
                             />
