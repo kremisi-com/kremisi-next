@@ -20,12 +20,9 @@
 }
 
 .overview.ecosystemOverview {
-    padding: 150px 0 100px;
-    min-height: 100svh;
-}
-
-@media (min-width: 768px) and (max-height: 800px) {
-    .overview.ecosystemOverview { padding: 112px 0 140px; }
+    padding: 0 0 60px;
+    min-height: 0;
+    align-items: flex-start;
 }
 
 .ecosystemContent {
@@ -48,7 +45,7 @@
 
 @media (max-width: 767px) {
     .overview.ecosystemOverview {
-        padding: 120px 0 90px;
+        padding: 0 0 50px;
         min-height: 0;
     }
 }

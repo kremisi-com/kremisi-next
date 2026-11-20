@@ -2,7 +2,6 @@
 
 import { useEffect, useId, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
-import { Pause, Play } from "lucide-react";
 import styles from "./digital-ecosystem.module.css";
 
 const TOP_AREAS = ["development", "automation", "design", "marketing", "strategy"];
@@ -88,7 +87,6 @@ export default function DigitalEcosystem({ isActive = true, play = true }) {
     const claim = useTranslations("overview");
     const rootRef = useRef(null);
     const [inView, setInView] = useState(false);
-    const [paused, setPaused] = useState(false);
 
     useEffect(() => {
         const observer = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.05 });
@@ -97,19 +95,18 @@ export default function DigitalEcosystem({ isActive = true, play = true }) {
     }, []);
 
     return (
-        <div ref={rootRef} className={`${styles.ecosystem} ${isActive && inView && !paused ? styles.running : ""}`}>
-            <CapabilityBand areas={TOP_AREAS} t={t} />
-            <h1 className={`${styles.claim} ${play ? styles.claimReady : ""}`} id="ecosystem-claim">
-                <span className={styles.claimIntro}>{claim("line1")}</span>{" "}
-                <em className={styles.claimHighlight}>{claim("highlight")}</em>{" "}
-                <span className={styles.claimEnd}>{claim("line3")}</span>{" "}
-                <em className={styles.claimEmphasis}>{claim("emphasis")}</em>
-            </h1>
-            <CapabilityBand areas={BOTTOM_AREAS} reverse t={t} />
-            <div className={styles.controls}>
-                <button type="button" className={styles.motionButton} onClick={() => setPaused((value) => !value)} aria-label={paused ? t("resume") : t("pause")} aria-pressed={paused}>
-                    {paused ? <Play size={14} aria-hidden="true" /> : <Pause size={14} aria-hidden="true" />}
-                </button>
+        <div ref={rootRef} className={`${styles.ecosystem} ${isActive && inView ? styles.running : ""}`}>
+            <div className={styles.intro}>
+                <h1 className={`${styles.claim} ${play ? styles.claimReady : ""}`} id="ecosystem-claim">
+                    <span className={styles.claimIntro}>{claim("line1")}</span>{" "}
+                    <em className={styles.claimHighlight}>{claim("highlight")}</em>{" "}
+                    <span className={styles.claimEnd}>{claim("line3")}</span>{" "}
+                    <em className={styles.claimEmphasis}>{claim("emphasis")}</em>
+                </h1>
+            </div>
+            <div className={styles.separator}>
+                <CapabilityBand areas={TOP_AREAS} t={t} />
+                <CapabilityBand areas={BOTTOM_AREAS} reverse t={t} />
             </div>
         </div>
     );

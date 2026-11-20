@@ -3,8 +3,6 @@
   "navigation": {"home": "Home", "about": "About", "services": "Services", "projects": "Projects", "contacts": "Contact", "switchTo": "Switch to Italian", "lightTheme": "Switch to light theme", "darkTheme": "Switch to dark theme", "openMenu": "Open menu", "closeMenu": "Close menu"},
   "projects": {"kicker": "Recent Work", "titleStart": "Selected", "titleHighlight": "Projects", "subtitle": "A selection of platforms, websites and applications built for performance and clarity."},
   "ecosystem": {
-    "pause": "Pause the capabilities marquee",
-    "resume": "Resume the capabilities marquee",
     "topBand": "Strategy, development and growth capabilities",
     "bottomBand": "Data, security and operations capabilities",
     "areas": {
