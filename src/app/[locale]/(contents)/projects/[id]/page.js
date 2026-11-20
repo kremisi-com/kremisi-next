@@ -5,11 +5,18 @@ import { notFound } from "next/navigation";
 import style from "./page.module.css";
 import GitButton from "@/components/git-button/git-button";
 import AnimatedLink from "@/components/animated-link/animated-link";
+import CapizziServiziBrandIdentity from "@/components/case-studies/capizzi-servizi-brand-identity";
 import LucreziaCurtoBrandIdentity from "@/components/case-studies/lucrezia-curto-brand-identity";
+import PizzaOSLogoDesign from "@/components/case-studies/pizzaos-logo-design";
 import { OpenAIAdsContentView } from "@/components/openai-ads/openai-ads";
 
 const BASE_URL = "https://kremisi.com";
 const ORGANIZATION_ID = `${BASE_URL}/#organization`;
+const caseStudies = {
+    "capizzi-servizi-brand-identity": CapizziServiziBrandIdentity,
+    "lucrezia-curto-brand-identity": LucreziaCurtoBrandIdentity,
+    "pizzaos-logo-design": PizzaOSLogoDesign,
+};
 
 function stripHtml(text = "") {
     return text.replace(/<[^>]*>/g, " ").replace(/\s+/g, " ").trim();
@@ -167,8 +174,7 @@ export default async function ProjectPage({ params }) {
 
     const projectStructuredData = getProjectStructuredData(projectData, locale);
     const isItalian = locale === "it";
-    const isLucreziaBrandIdentity =
-        projectData.caseStudy === "lucrezia-curto-brand-identity";
+    const CaseStudy = caseStudies[projectData.caseStudy];
     const projectOwner = getCustomerProfile(projectData.customer);
 
     return (
@@ -180,7 +186,7 @@ export default async function ProjectPage({ params }) {
                     __html: JSON.stringify(projectStructuredData),
                 }}
             />
-            {!isLucreziaBrandIdentity && (
+            {!CaseStudy && (
                 <>
                     <div className={style.header}>
                         <Image
@@ -276,8 +282,8 @@ export default async function ProjectPage({ params }) {
                     </div>
                 </>
             )}
-            {isLucreziaBrandIdentity ? (
-                <LucreziaCurtoBrandIdentity locale={locale} />
+            {CaseStudy ? (
+                <CaseStudy locale={locale} />
             ) : (
                 <div
                     className={`${style.carousel} ${

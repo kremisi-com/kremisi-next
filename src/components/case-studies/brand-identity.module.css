@@ -22,20 +22,55 @@
     isolation: isolate;
 }
 
-.hero::before {
+.heroIntro {
+    display: contents;
+}
+
+.illustratedHero .heroIntro::before,
+.heroPhoto {
     content: "";
     position: absolute;
     top: 0;
     bottom: 0;
     left: 50%;
     width: 100vw;
-    background: url("/projects/lucrezia-curto/bg.webp") center / cover no-repeat;
-    opacity: 0.35;
     transform: translateX(-50%);
     z-index: -1;
 }
 
-.hero > * {
+.illustratedHero .heroIntro::before {
+    background: url("/projects/lucrezia-curto/bg.webp") center / cover no-repeat;
+    opacity: 0.35;
+}
+
+.heroPhoto {
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, #000 78%, transparent);
+    pointer-events: none;
+}
+
+.heroPhoto img {
+    object-fit: cover;
+    object-position: 58% 64%;
+    transform: translateX(-17%);
+}
+
+.heroPhoto::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        var(--background),
+        color-mix(in srgb, var(--background) 83%, transparent) 33%,
+        color-mix(in srgb, var(--background) 50%, transparent) 49%,
+        color-mix(in srgb, var(--background) 62%, transparent) 63%,
+        var(--background) 82%
+    );
+}
+
+.heroCopy,
+.heroVisual {
     position: relative;
 }
 
@@ -188,12 +223,19 @@
     transform: rotate(6deg);
 }
 
+.photoHero .previewCard:nth-child(3) {
+    left: 22%;
+    bottom: 8%;
+    width: 58%;
+    aspect-ratio: 1.414 / 1;
+}
+
 .documentCard:hover {
     transform: translateY(-4px);
     border-color: color-mix(in srgb, var(--foreground) 28%, transparent);
 }
 
-.previewCard:hover {
+.previewCard:is(:hover, :focus-visible) {
     z-index: 8;
     border-color: color-mix(in srgb, var(--foreground) 22%, transparent);
     transform: translateY(-10px) rotate(0deg) scale(1.02);
@@ -558,6 +600,23 @@
         transform: none;
     }
 
+    .heroPhoto {
+        bottom: auto;
+        height: 42rem;
+    }
+
+    .heroPhoto img {
+        object-position: 58% 53%;
+        transform: none;
+    }
+
+    .heroPhoto::after {
+        background: linear-gradient(
+            var(--background),
+            color-mix(in srgb, var(--background) 58%, transparent)
+        );
+    }
+
     .documentsGrid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -587,7 +646,8 @@
 }
 
 @media (max-width: 768px) {
-    .page {
+    .page:global(.page-content-simple) {
+        padding-top: 0;
         padding-bottom: 130px;
     }
 
@@ -597,7 +657,21 @@
 
     .hero {
         gap: 44px;
-        padding: clamp(40px, 10vw, 72px) 0 clamp(56px, 12vw, 88px);
+        padding: 0 0 clamp(56px, 12vw, 88px);
+    }
+
+    .heroIntro {
+        position: relative;
+        display: grid;
+        align-items: center;
+        min-height: 100dvh;
+        padding-block: 80px;
+    }
+
+    .illustratedHero .heroIntro::before,
+    .heroPhoto img {
+        filter: blur(5px);
+        opacity: 0.4;
     }
 
     .kicker,
@@ -645,12 +719,28 @@
     .previewCard:nth-child(1),
     .previewCard:nth-child(2),
     .previewCard:nth-child(3),
-    .previewCard:nth-child(4) {
+    .previewCard:nth-child(4),
+    .photoHero .previewCard:nth-child(3) {
         position: relative;
         inset: auto;
         width: 100%;
         aspect-ratio: 16 / 9;
         transform: none;
+    }
+
+    .photoHero .previewCard:nth-child(1),
+    .photoHero .previewCard:nth-child(3) {
+        aspect-ratio: 1.414 / 1;
+    }
+
+    .heroPhoto {
+        bottom: 0;
+        height: auto;
+        mask-image: none;
+    }
+
+    .heroPhoto::after {
+        display: none;
     }
 
     .previewCard:hover,

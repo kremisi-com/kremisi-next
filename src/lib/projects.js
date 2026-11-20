@@ -74,6 +74,7 @@ function getLocalizedProject(projectData, locale = "en") {
         slogan: projectData.sloganIt || projectData.slogan,
         previewImageAlt: projectData.previewImageAltIt || projectData.previewImageAlt,
         headerImageAlt: projectData.headerImageAltIt || projectData.headerImageAlt,
+        carouselImageAlts: projectData.carouselImageAltsIt || projectData.carouselImageAlts,
     };
 }
 
