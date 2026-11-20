@@ -3,6 +3,7 @@
 import styles from "./page.module.css";
 import MainSlider from "@/components/main-slider/main-slider";
 import Overview from "@/components/overview/overview";
+import FeaturedProjects from "@/components/featured-projects/featured-projects";
 import Services from "@/components/services/services";
 import SocialProof from "@/components/social-proof/social-proof";
 import Testimonials from "@/components/testimonials/testimonials";
@@ -50,6 +51,7 @@ const OverviewContent = memo(function OverviewContent({ isOverviewVisible }) {
           "opacity 1.4s cubic-bezier(0.22, 1, 0.36, 1), transform 1.4s cubic-bezier(0.22, 1, 0.36, 1)",
       }}
     >
+      <FeaturedProjects />
       <Services />
       <SocialProof isActive={isOverviewVisible} />
       <Testimonials />
@@ -241,6 +243,7 @@ export default function Home({ initialOverviewVisible = false }) {
         className={`${styles.overviewWrapper} ${
           isOverviewVisible ? styles.overviewWrapperVisible : ""
         }`}
+        inert={!isOverviewVisible}
         style={{
           pointerEvents: isOverviewVisible ? "auto" : "none",
         }}

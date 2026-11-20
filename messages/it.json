@@ -29,6 +29,23 @@
     "line3": "che generano",
     "emphasis": "risultati misurabili"
   },
+  "featuredProjects": {
+    "title": "Progetti in evidenza",
+    "exploreProject": "Esplora {name}",
+    "allProjects": "Tutti i progetti",
+    "casa-palmi": {
+      "category": "Ospitalità",
+      "imageAlt": "Sito di Casa Palmi con il selettore delle date e degli ospiti in primo piano",
+      "headline": "Dalla scoperta della villa alla prenotazione diretta.",
+      "description": "Abbiamo progettato il sito e la prenotazione come un unico percorso. Gli ospiti possono verificare le date e pagare online, tutto sul canale di Casa Palmi."
+    },
+    "gamelia": {
+      "category": "Assistenza familiare · per Makuda",
+      "imageAlt": "Pannello Gamelia per le agenzie, con ricerca di collaboratori e clienti",
+      "headline": "Un pannello per chi seleziona gli assistenti.",
+      "description": "Abbiamo sviluppato una piattaforma che riunisce le schede delle famiglie e i profili degli assistenti. Chi lavora in agenzia può partire dai bisogni della persona da assistere per orientare la ricerca."
+    }
+  },
   "services": {
     "eyebrow": "I nostri servizi",
     "titleStart": "Costruiamo la tecnologia",
