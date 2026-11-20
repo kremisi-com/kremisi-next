@@ -69,11 +69,32 @@ function CapabilityCard({ area, label }) {
 }
 
 function CapabilityBand({ areas, reverse = false, t }) {
+    const bandRef = useRef(null);
+    const groupRef = useRef(null);
+    const [copies, setCopies] = useState(2);
+
+    useEffect(() => {
+        const band = bandRef.current;
+        const group = groupRef.current;
+        const updateCopies = () => {
+            const groupWidth = group.getBoundingClientRect().width;
+            if (!groupWidth) return;
+
+            // One group moves out during the loop; the remaining copies must fill the viewport.
+            setCopies(Math.max(2, Math.ceil(band.clientWidth / groupWidth) + 1));
+        };
+        updateCopies();
+        const observer = new ResizeObserver(updateCopies);
+        observer.observe(band);
+        observer.observe(group);
+        return () => observer.disconnect();
+    }, []);
+
     return (
-        <div className={`${styles.band} ${reverse ? styles.reverse : ""}`} tabIndex={0} role="group" aria-label={t(reverse ? "bottomBand" : "topBand")}>
-            <div className={styles.track}>
-                {[false, true].map((duplicate) => (
-                    <ul className={styles.group} key={String(duplicate)} aria-hidden={duplicate || undefined}>
+        <div ref={bandRef} className={`${styles.band} ${reverse ? styles.reverse : ""}`} tabIndex={0} role="group" aria-label={t(reverse ? "bottomBand" : "topBand")}>
+            <div className={styles.track} style={{ "--marquee-copies": copies }}>
+                {Array.from({ length: copies }, (_, index) => (
+                    <ul ref={index === 0 ? groupRef : undefined} className={styles.group} key={index} aria-hidden={index > 0 || undefined}>
                         {areas.map((area) => <CapabilityCard key={area} area={area} label={t(`areas.${area}`)} />)}
                     </ul>
                 ))}

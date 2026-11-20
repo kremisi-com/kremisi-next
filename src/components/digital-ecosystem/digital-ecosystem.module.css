@@ -30,7 +30,6 @@
 
 .running .track { animation-play-state: running; }
 .running .band:hover .track { animation-play-state: paused; }
-.running .band:focus-within .track { animation-play-state: paused; }
 .band:focus-visible { outline: 1px solid var(--primary); outline-offset: -1px; }
 .reverse .track {
     animation-direction: reverse;
@@ -94,7 +93,7 @@
 }
 
 .intro {
-    min-height: 100svh;
+    min-height: calc(100svh - 88px);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -133,7 +132,7 @@
 }
 .claimReady { animation: claim-reveal .85s cubic-bezier(.22, 1, .36, 1) both; }
 
-@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes marquee { to { transform: translateX(calc(-100% / var(--marquee-copies, 2))); } }
 @keyframes claim-reveal {
     from { transform: translateY(18px); }
     to { transform: translateY(0); }
@@ -157,7 +156,7 @@
     .icon { width: 32px; height: 32px; }
     .cardLabel { font-size: 16px; }
     /* Keep the first screen full height without shifting content as browser chrome moves. */
-    .intro { min-height: 100lvh; padding: 100px 6vw; }
+    .intro { min-height: calc(100lvh - 72px); padding: 100px 6vw; }
     .claim { letter-spacing: -.04em; }
     .claimIntro { font-size: clamp(17px, 5.1vw, 31px); }
     .claimHighlight { font-size: clamp(26px, 7.8vw, 48px); line-height: .97; margin: 10px 0 12px; }
