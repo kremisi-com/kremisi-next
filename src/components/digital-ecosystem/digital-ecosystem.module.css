@@ -1,0 +1,188 @@
+.ecosystem {
+    --card-width: clamp(240px, 22vw, 310px);
+    --card-gap: clamp(14px, 1.5vw, 22px);
+    position: relative;
+    z-index: 1;
+    width: 100%;
+}
+
+.band {
+    width: 100%;
+    overflow: hidden;
+    mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 8%, #000 92%, transparent);
+}
+
+.track {
+    display: flex;
+    width: max-content;
+    animation: marquee 72s linear infinite;
+    animation-delay: -8s;
+    animation-play-state: paused;
+    will-change: transform;
+}
+
+.running .track { animation-play-state: running; }
+.running .band:hover .track { animation-play-state: paused; }
+.running .band:focus-within .track { animation-play-state: paused; }
+.band:focus-visible { outline: 1px solid var(--primary); outline-offset: -1px; }
+.reverse .track {
+    animation-direction: reverse;
+    animation-duration: 80s;
+    animation-delay: -26s;
+}
+
+.group {
+    display: flex;
+    flex-shrink: 0;
+    gap: var(--card-gap);
+    list-style: none;
+    padding: 0 var(--card-gap) 0 0;
+    margin: 0;
+}
+
+.card {
+    position: relative;
+    isolation: isolate;
+    flex: 0 0 var(--card-width);
+    width: var(--card-width);
+    height: clamp(126px, 9.5vw, 148px);
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 22px 24px;
+    overflow: hidden;
+    border: 1px solid color-mix(in srgb, var(--foreground) 19%, transparent);
+    border-radius: 18px;
+    background: linear-gradient(120deg, color-mix(in srgb, var(--background) 96%, var(--foreground)), color-mix(in srgb, var(--background) 98%, var(--foreground)));
+    color: var(--foreground);
+    text-align: left;
+    transition: border-color .3s ease, background .3s ease;
+}
+
+.card:hover { border-color: color-mix(in srgb, var(--primary) 60%, transparent); }
+.artwork {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    opacity: .8;
+    pointer-events: none;
+}
+
+.icon {
+    width: 38px;
+    height: 38px;
+    flex-shrink: 0;
+}
+
+.cardLabel {
+    position: relative;
+    font-size: clamp(17px, 1.32vw, 20px);
+    font-weight: 500;
+    letter-spacing: -.035em;
+    line-height: 1.15;
+    white-space: nowrap;
+}
+
+.claim {
+    margin: clamp(52px, 5.2vw, 80px) auto clamp(56px, 5.8vw, 88px);
+    padding: 0 5vw;
+    width: 100%;
+    color: var(--foreground);
+    text-align: center;
+    text-transform: uppercase;
+    letter-spacing: -.045em;
+    font-weight: 300;
+    line-height: 1.04;
+}
+
+.claimIntro, .claimEnd, .claimHighlight, .claimEmphasis { display: block; }
+.claimIntro { font-size: clamp(32px, 3.8vw, 64px); }
+.claimHighlight {
+    margin: 8px 0 10px;
+    font-size: clamp(40px, 5.65vw, 100px);
+    font-weight: 700;
+    font-style: italic;
+    color: var(--primary);
+    letter-spacing: -.055em;
+}
+.claimEnd { font-size: clamp(32px, 3.8vw, 64px); }
+.claimEmphasis {
+    margin-top: 5px;
+    font-size: clamp(38px, 4.5vw, 76px);
+    font-weight: 700;
+    font-style: italic;
+}
+.claimReady { animation: claim-reveal .85s cubic-bezier(.22, 1, .36, 1) both; }
+
+.controls {
+    position: absolute;
+    bottom: -46px;
+    right: 0;
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    padding: 14px max(5vw, 24px) 0;
+}
+.motionButton {
+    display: grid;
+    place-items: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+    color: color-mix(in srgb, var(--foreground) 65%, transparent);
+    background: color-mix(in srgb, var(--background) 90%, transparent);
+    cursor: pointer;
+    transition: color .2s, border-color .2s;
+}
+.motionButton:hover { color: var(--foreground); border-color: var(--primary); }
+.motionButton:focus-visible { outline: 2px solid var(--primary); outline-offset: 4px; }
+
+@keyframes marquee { to { transform: translateX(-50%); } }
+@keyframes claim-reveal {
+    from { transform: translateY(18px); }
+    to { transform: translateY(0); }
+}
+
+@media (min-width: 1800px) {
+    .claimHighlight { font-size: 100px; }
+}
+
+@media (min-width: 768px) and (max-height: 800px) {
+    .card { height: 108px; padding: 17px 22px; }
+    .icon { width: 31px; height: 31px; }
+    .claim { margin: 22px auto 26px; }
+    .claimIntro, .claimEnd { font-size: min(3.8vw, 5vh); }
+    .claimHighlight { font-size: min(5.65vw, 7.5vh); margin: 7px 0; }
+    .claimEmphasis { font-size: min(4.5vw, 6.5vh); }
+}
+
+@media (max-width: 767px) {
+    .ecosystem { --card-width: 222px; --card-gap: 12px; }
+    .card { height: 116px; border-radius: 14px; padding: 17px 19px; }
+    .icon { width: 32px; height: 32px; }
+    .cardLabel { font-size: 16px; }
+    .claim { padding: 0 6vw; margin: 48px auto 52px; letter-spacing: -.04em; }
+    .claimIntro { font-size: clamp(17px, 5.1vw, 31px); }
+    .claimHighlight { font-size: clamp(26px, 7.8vw, 48px); line-height: .97; margin: 10px 0 12px; }
+    .claimEnd { max-width: 500px; margin: auto; font-size: clamp(25px, 7vw, 42px); line-height: 1.05; }
+    .claimEmphasis { font-size: clamp(23px, 6.7vw, 42px); margin-top: 6px; }
+    .track { animation-duration: 65s; }
+    .reverse .track { animation-duration: 73s; }
+    .band { mask-image: linear-gradient(to right, transparent, #000 6%, #000 94%, transparent); }
+    .controls { padding-top: 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .band { overflow-x: auto; scrollbar-width: thin; mask-image: none; -webkit-mask-image: none; }
+    .track, .reverse .track { animation: none; transform: none; will-change: auto; }
+    .group { padding-left: 20px; }
+    .group[aria-hidden="true"] { display: none; }
+    .claimReady { animation: none; }
+    .controls { display: none; }
+    .card { transition: none; }
+}

@@ -1,8 +1,7 @@
 "use client";
 
-import RevelatingText from "@/components/revelating-text/revelating-text";
+import DigitalEcosystem from "@/components/digital-ecosystem/digital-ecosystem";
 import styles from "./overview.module.css";
-import { useTranslations } from "next-intl";
 
 export default function Overview({
     isVisible = true,
@@ -13,7 +12,6 @@ export default function Overview({
     id = "overview",
     "aria-labelledby": ariaLabelledby,
 }) {
-    const t = useTranslations("overview");
     function handleTransitionEnd(event) {
         if (
             !isVisible ||
@@ -28,9 +26,9 @@ export default function Overview({
 
     return (
         <section
-            className={`${styles.overview} ${isVisible ? styles.visible : styles.hidden} ${variant === "campaign" ? styles.campaign : ""}`}
+            className={`${styles.overview} ${isVisible ? styles.visible : styles.hidden} ${variant === "campaign" ? styles.campaign : ""} ${!children ? styles.ecosystemOverview : ""}`}
             id={id}
-            aria-labelledby={ariaLabelledby}
+            aria-labelledby={ariaLabelledby || (!children ? "ecosystem-claim" : undefined)}
             onTransitionEnd={handleTransitionEnd}
         >
             <div
@@ -45,13 +43,8 @@ export default function Overview({
                 <div className={styles.noise}></div>
             </div>
             
-            <div className={children ? styles.campaignContent : styles.content}>
-                {children || <RevelatingText play={textShouldAnimate}>
-                    <span className={styles.line1}>{t("line1")}</span><br/>
-                    <span className={`highlight ${styles.line2}`}>{t("highlight")}</span><br/>
-                    <span className={styles.line3}>{t("line3")}</span><br/>
-                    <span className={styles.line3Emph}>{t("emphasis")}</span>
-                </RevelatingText>}
+            <div className={children ? styles.campaignContent : styles.ecosystemContent}>
+                {children || <DigitalEcosystem isActive={isVisible} play={textShouldAnimate} />}
             </div>
         </section>
     );

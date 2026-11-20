@@ -23,6 +23,24 @@
     "titleHighlight": "lavori",
     "subtitle": "Piattaforme, siti web e applicazioni progettati per essere efficaci, chiari e performanti."
   },
+  "ecosystem": {
+    "pause": "Metti in pausa lo scorrimento delle competenze",
+    "resume": "Riprendi lo scorrimento delle competenze",
+    "topBand": "Competenze di strategia, sviluppo e crescita",
+    "bottomBand": "Competenze di dati, sicurezza e gestione",
+    "areas": {
+      "development": "Sviluppo",
+      "automation": "AI & Automazioni",
+      "design": "Design",
+      "marketing": "Marketing Digitale",
+      "strategy": "Strategia & consulenza",
+      "intelligence": "Business Intelligence",
+      "security": "Cyber Security",
+      "compliance": "Normativa",
+      "cloud": "Cloud & Infrastruttura",
+      "operations": "Operations & supporto"
+    }
+  },
   "overview": {
     "line1": "progettiamo e sviluppiamo",
     "highlight": "prodotti digitali",

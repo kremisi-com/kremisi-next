@@ -19,6 +19,40 @@
     transform: translateY(40px);
 }
 
+.overview.ecosystemOverview {
+    padding: 150px 0 100px;
+    min-height: 100svh;
+}
+
+@media (min-width: 768px) and (max-height: 800px) {
+    .overview.ecosystemOverview { padding: 112px 0 140px; }
+}
+
+.ecosystemContent {
+    width: 100%;
+    position: relative;
+    z-index: 1;
+}
+
+.ecosystemOverview .blob1 {
+    top: 5%;
+    left: -10%;
+    opacity: .5;
+}
+
+.ecosystemOverview .blob2 {
+    bottom: -20%;
+    right: -16%;
+    opacity: .3;
+}
+
+@media (max-width: 767px) {
+    .overview.ecosystemOverview {
+        padding: 120px 0 90px;
+        min-height: 0;
+    }
+}
+
 .visible {
     opacity: 1;
     transform: translateY(0);
