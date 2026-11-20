@@ -179,6 +179,8 @@
 }
 
 .ctaGitButton {
+    --git-button-arrow-overhang: 35px;
+    padding-right: var(--git-button-arrow-overhang);
     transform: scale(1.1);
 }
 

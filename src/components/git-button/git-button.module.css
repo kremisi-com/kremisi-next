@@ -73,7 +73,7 @@
   color: var(--white);
 }
 .right.arrow {
-  right: -35px;
+  right: calc(-1 * var(--git-button-arrow-overhang, 35px));
   left: unset;
   transition: right 0.5s cubic-bezier(0.6, -0.28, 0.735, 0.045),
     background-color 0.2s ease;
@@ -116,7 +116,7 @@
     color: var(--background);
   }
   .container:hover .left.arrow {
-    left: -35px;
+    left: calc(-1 * var(--git-button-arrow-overhang, 35px));
     background-color: var(--foreground);
     color: var(--background);
   }
