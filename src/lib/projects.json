@@ -1,4 +1,43 @@
 {
+    "casa-palmi": {
+        "title": "Casa Palmi",
+        "subtitle": "Web Design & Development",
+        "subtitleIt": "Design e sviluppo web",
+        "image": "hero.webp",
+        "headerImage": "bg-1.webp",
+        "headerImageAlt": "Casa Palmi villa booking experience hero section",
+        "headerImageAltIt": "Sezione hero dell’esperienza di prenotazione della villa Casa Palmi",
+        "link": "https://casapalmi.it/",
+        "customer": "",
+        "tags": [
+            "benessere",
+            "immobiliare",
+            "sito"
+        ],
+        "tasks": [
+            "DEV",
+            "DESIGN"
+        ],
+        "images": [
+            "hero.webp",
+            "spazi.webp",
+            "location.webp",
+            "booking-1.webp",
+            "services.webp",
+            "payment.webp",
+            "contacts.webp"
+        ],
+        "carousel": [
+            "booking-start.mp4",
+            "email-ver.mp4",
+            "booking-end.mp4"
+        ],
+        "year": 2026,
+        "description": "Designing a slower, more refined way to book a seaside escape.<br />Casa Palmi pairs a premium villa experience with a clear digital journey, showcasing a private pool, outdoor living, curated amenities, and the atmosphere of Triscina di Selinunte.<br /><br />From discovery to reservation, every page is shaped to turn hospitality into confidence, guiding guests through the location, the stay, and a direct booking flow with clarity and ease.",
+        "descriptionIt": "Un modo più lento e raffinato di prenotare una fuga al mare.<br />Casa Palmi unisce l’esperienza di una villa esclusiva a un percorso digitale chiaro, valorizzando la piscina privata, gli spazi all’aperto, i servizi selezionati e l’atmosfera di Triscina di Selinunte.<br /><br />Dalla scoperta alla prenotazione, ogni pagina è pensata per trasformare l’ospitalità in fiducia, accompagnando gli ospiti alla scoperta del luogo, del soggiorno e di un percorso di prenotazione diretta semplice e intuitivo.",
+        "slogan": "Where time slows,<br>and every stay feels curated.",
+        "sloganIt": "Dove il tempo rallenta,<br>e ogni soggiorno è curato nei dettagli."
+    },
     "capizzi-servizi": {
         "title": "Capizzi Servizi",
         "subtitle": "Web Design & Development",
@@ -48,34 +87,51 @@
         "slogan": "A clear path<br>from problem to solution.",
         "sloganIt": "Dal problema<br>alla soluzione."
     },
-    "capizzi-servizi-brand-identity": {
-        "title": "Capizzi Servizi",
-        "subtitle": "Brand Identity",
-        "subtitleIt": "Brand identity",
-        "image": "brand/marchio.webp",
-        "headerImage": "bg.webp",
-        "previewImageAlt": "Capizzi Servizi lime green logo with a swirling symbol",
-        "previewImageAltIt": "Marchio verde lime di Capizzi Servizi con pittogramma a vortice",
-        "headerImageAlt": "Two members of the Capizzi Servizi team in front of their van",
-        "headerImageAltIt": "Due membri del team Capizzi Servizi davanti al furgone",
+    "website-roaster": {
+        "title": "Website Roaster",
+        "subtitle": "AI Integration",
+        "subtitleIt": "AI Integration",
+        "image": "main.webp",
         "images": [
-            "brand/marchio.webp"
+            "main.webp"
         ],
+        "previewImageAlt": "Website Roaster AI website review interface",
+        "previewImageAltIt": "Interfaccia AI di Website Roaster per l’analisi dei siti web",
+        "directPath": "/website-roaster",
+        "customer": "",
+        "year": 2026,
+        "slogan": "Sharp AI insight,<br>built to convert.",
+        "sloganIt": "Analisi AI precise,<br>pensate per convertire."
+    },
+    "lucrezia-curto": {
+        "title": "Lucrezia Curto - Commercialista",
+        "subtitle": "Web Design & Development",
+        "subtitleIt": "Web design e sviluppo",
+        "image": "hero-2.webp",
+        "headerImage": "bg.webp",
+        "headerImageAlt": "Lucrezia Curto accounting website hero background",
+        "headerImageAltIt": "Sfondo della sezione principale del sito dello studio di Lucrezia Curto",
+        "images": [
+            "hero.webp",
+            "why.webp"
+        ],
+        "link": "https://www.lucreziacurto.com/",
         "tags": [
             "comunicazione",
-            "brand identity"
+            "sito"
         ],
         "tasks": [
-            "BRAND",
+            "DEV",
             "DESIGN"
         ],
-        "color": "#00001E",
+        "carousel": [
+            "home-optimized.mp4"
+        ],
         "year": 2026,
-        "description": "Visual identity for Capizzi Servizi, a family-run drain services and maintenance company. The design pairs a swirling mark with electric blue and lime green.",
-        "descriptionIt": "Identità visiva per Capizzi Servizi, impresa di spurghi e manutenzione a conduzione familiare. Il marchio unisce un pittogramma a vortice, blu elettrico e verde lime.",
-        "slogan": "A visual identity<br>in motion.",
-        "sloganIt": "Un'identità visiva<br>in movimento.",
-        "caseStudy": "capizzi-servizi-brand-identity"
+        "description": "Brand identity and digital presence for a trusted accounting studio.<br />Lucrezia Curto offers tax, accounting and business consulting services, guiding individuals and companies with clarity, precision and reliable advice.<br /><br />From fiscal planning to day-to-day accounting support, every touchpoint is designed to communicate professionalism and trust.",
+        "descriptionIt": "Identità di marca e presenza digitale per uno studio professionale di fiducia.<br />Lucrezia Curto offre servizi fiscali, contabili e di consulenza aziendale, affiancando privati e imprese con chiarezza, precisione e competenza.<br /><br />Dalla pianificazione fiscale al supporto contabile quotidiano, ogni punto di contatto è pensato per comunicare professionalità e affidabilità.",
+        "slogan": "Accounting clarity,<br>professional trust.",
+        "sloganIt": "Chiarezza contabile,<br>fiducia professionale."
     },
     "pizzaos-logo-design": {
         "title": "PizzaOS",
@@ -105,22 +161,6 @@
         "slogan": "From pizza<br>to pictogram.",
         "sloganIt": "Dalla pizza<br>al pittogramma.",
         "caseStudy": "pizzaos-logo-design"
-    },
-    "website-roaster": {
-        "title": "Website Roaster",
-        "subtitle": "AI Integration",
-        "subtitleIt": "AI Integration",
-        "image": "main.webp",
-        "images": [
-            "main.webp"
-        ],
-        "previewImageAlt": "Website Roaster AI website review interface",
-        "previewImageAltIt": "Interfaccia AI di Website Roaster per l’analisi dei siti web",
-        "directPath": "/website-roaster",
-        "customer": "",
-        "year": 2026,
-        "slogan": "Sharp AI insight,<br>built to convert.",
-        "sloganIt": "Analisi AI precise,<br>pensate per convertire."
     },
     "allavelli": {
         "title": "Allavelli",
@@ -226,6 +266,35 @@
         "slogan": "Your health, delivered.<br>No lines, no wait.",
         "sloganIt": "La tua salute, a domicilio.<br>Niente code, niente attese."
     },
+    "capizzi-servizi-brand-identity": {
+        "title": "Capizzi Servizi",
+        "subtitle": "Brand Identity",
+        "subtitleIt": "Brand identity",
+        "image": "brand/marchio.webp",
+        "headerImage": "bg.webp",
+        "previewImageAlt": "Capizzi Servizi lime green logo with a swirling symbol",
+        "previewImageAltIt": "Marchio verde lime di Capizzi Servizi con pittogramma a vortice",
+        "headerImageAlt": "Two members of the Capizzi Servizi team in front of their van",
+        "headerImageAltIt": "Due membri del team Capizzi Servizi davanti al furgone",
+        "images": [
+            "brand/marchio.webp"
+        ],
+        "tags": [
+            "comunicazione",
+            "brand identity"
+        ],
+        "tasks": [
+            "BRAND",
+            "DESIGN"
+        ],
+        "color": "#00001E",
+        "year": 2026,
+        "description": "Visual identity for Capizzi Servizi, a family-run drain services and maintenance company. The design pairs a swirling mark with electric blue and lime green.",
+        "descriptionIt": "Identità visiva per Capizzi Servizi, impresa di spurghi e manutenzione a conduzione familiare. Il marchio unisce un pittogramma a vortice, blu elettrico e verde lime.",
+        "slogan": "A visual identity<br>in motion.",
+        "sloganIt": "Un'identità visiva<br>in movimento.",
+        "caseStudy": "capizzi-servizi-brand-identity"
+    },
     "glapix": {
         "title": "Glapix",
         "subtitle": "Web Development",
@@ -263,6 +332,35 @@
         "description": "Redefining surfaces through innovation and design.<br />Glapix merges art, technology, and sustainability to create next-generation materials that are unique, durable, and eco-friendly.<br /><br />From immersive interiors to limitless textures, every detail transforms imagination into tangible excellence.",
         "descriptionIt": "Ridefinire le superfici attraverso innovazione e design.<br />Glapix unisce arte, tecnologia e sostenibilità per creare materiali di nuova generazione: unici, resistenti ed ecosostenibili.<br /><br />Dagli interni immersivi alle texture senza confini, ogni dettaglio trasforma l’immaginazione in eccellenza concreta."
     },
+    "bpmn2petrinet": {
+        "title": "BPMN2Petri",
+        "subtitle": "Web Design & Development",
+        "subtitleIt": "Progettazione e sviluppo web",
+        "image": "home.webp",
+        "headerImage": "conversion-2.webp",
+        "images": [
+            "home.webp",
+            "conversion-2.webp"
+        ],
+        "carousel": [
+            "Usage.mp4"
+        ],
+        "link": "https://bpmn2petrinet.com",
+        "tags": [
+            "comunicazione",
+            "sito"
+        ],
+        "tasks": [
+            "DEV",
+            "DESIGN"
+        ],
+        "blackText": true,
+        "year": 2025,
+        "description": "Bridging the gap between business processes and formal analysis.<br />BPMN2Petri transforms BPMN diagrams into Petri nets, enabling precise modeling, verification, and optimization.<br /><br />From seamless conversion to insightful analysis, every feature empowers clarity and efficiency in process management.",
+        "descriptionIt": "Colmare il divario tra processi aziendali e analisi formale.<br />BPMN2Petri trasforma i diagrammi BPMN in reti di Petri, consentendo una modellazione, una verifica e un’ottimizzazione precise.<br /><br />Dalla conversione fluida all’analisi approfondita, ogni funzionalità offre maggiore chiarezza ed efficienza nella gestione dei processi.",
+        "slogan": "From process to precision,<br>model with confidence.",
+        "sloganIt": "Dal processo alla precisione,<br>modella con sicurezza."
+    },
     "vecchi360": {
         "title": "Vecchi360",
         "subtitle": "Web Design & Development",
@@ -296,45 +394,6 @@
         "sloganIt": "Trasformiamo le visioni in realtà,<br>dove l’eleganza incontra la casa.",
         "description": "Transforming the way you live and dream.<br />Every property is more than a place—it’s a story of elegance, trust, and possibility.<br /><br />From urban skylines to coastal horizons, we craft experiences that inspire and endure.",
         "descriptionIt": "Trasformiamo il tuo modo di vivere e sognare.<br />Ogni immobile è più di un luogo: è una storia di eleganza, fiducia e possibilità.<br /><br />Dagli skyline urbani agli orizzonti costieri, creiamo esperienze capaci di ispirare e durare nel tempo."
-    },
-    "casa-palmi": {
-        "title": "Casa Palmi",
-        "subtitle": "Web Design & Development",
-        "subtitleIt": "Design e sviluppo web",
-        "image": "hero.webp",
-        "headerImage": "bg-1.webp",
-        "headerImageAlt": "Casa Palmi villa booking experience hero section",
-        "headerImageAltIt": "Sezione hero dell’esperienza di prenotazione della villa Casa Palmi",
-        "link": "https://casapalmi.it/",
-        "customer": "",
-        "tags": [
-            "benessere",
-            "immobiliare",
-            "sito"
-        ],
-        "tasks": [
-            "DEV",
-            "DESIGN"
-        ],
-        "images": [
-            "hero.webp",
-            "spazi.webp",
-            "location.webp",
-            "booking-1.webp",
-            "services.webp",
-            "payment.webp",
-            "contacts.webp"
-        ],
-        "carousel": [
-            "booking-start.mp4",
-            "email-ver.mp4",
-            "booking-end.mp4"
-        ],
-        "year": 2026,
-        "description": "Designing a slower, more refined way to book a seaside escape.<br />Casa Palmi pairs a premium villa experience with a clear digital journey, showcasing a private pool, outdoor living, curated amenities, and the atmosphere of Triscina di Selinunte.<br /><br />From discovery to reservation, every page is shaped to turn hospitality into confidence, guiding guests through the location, the stay, and a direct booking flow with clarity and ease.",
-        "descriptionIt": "Un modo più lento e raffinato di prenotare una fuga al mare.<br />Casa Palmi unisce l’esperienza di una villa esclusiva a un percorso digitale chiaro, valorizzando la piscina privata, gli spazi all’aperto, i servizi selezionati e l’atmosfera di Triscina di Selinunte.<br /><br />Dalla scoperta alla prenotazione, ogni pagina è pensata per trasformare l’ospitalità in fiducia, accompagnando gli ospiti alla scoperta del luogo, del soggiorno e di un percorso di prenotazione diretta semplice e intuitivo.",
-        "slogan": "Where time slows,<br>and every stay feels curated.",
-        "sloganIt": "Dove il tempo rallenta,<br>e ogni soggiorno è curato nei dettagli."
     },
     "makuda": {
         "title": "Makuda",
@@ -482,35 +541,6 @@
         "slogan": "Fly beyond limits,<br>train for excellence.",
         "sloganIt": "Vola oltre ogni limite,<br>formati per l’eccellenza."
     },
-    "bpmn2petrinet": {
-        "title": "BPMN2Petri",
-        "subtitle": "Web Design & Development",
-        "subtitleIt": "Progettazione e sviluppo web",
-        "image": "home.webp",
-        "headerImage": "conversion-2.webp",
-        "images": [
-            "home.webp",
-            "conversion-2.webp"
-        ],
-        "carousel": [
-            "Usage.mp4"
-        ],
-        "link": "https://bpmn2petrinet.com",
-        "tags": [
-            "comunicazione",
-            "sito"
-        ],
-        "tasks": [
-            "DEV",
-            "DESIGN"
-        ],
-        "blackText": true,
-        "year": 2025,
-        "description": "Bridging the gap between business processes and formal analysis.<br />BPMN2Petri transforms BPMN diagrams into Petri nets, enabling precise modeling, verification, and optimization.<br /><br />From seamless conversion to insightful analysis, every feature empowers clarity and efficiency in process management.",
-        "descriptionIt": "Colmare il divario tra processi aziendali e analisi formale.<br />BPMN2Petri trasforma i diagrammi BPMN in reti di Petri, consentendo una modellazione, una verifica e un’ottimizzazione precise.<br /><br />Dalla conversione fluida all’analisi approfondita, ogni funzionalità offre maggiore chiarezza ed efficienza nella gestione dei processi.",
-        "slogan": "From process to precision,<br>model with confidence.",
-        "sloganIt": "Dal processo alla precisione,<br>modella con sicurezza."
-    },
     "progetto-commercio": {
         "title": "Progetto Commercio",
         "subtitle": "App Design & Development",
@@ -542,36 +572,6 @@
         "descriptionIt": "Rilanciare il commercio locale attraverso innovazione e coesione.<br />Progetto Commercio mette in rete i negozi e i professionisti di Limbiate con un’app dinamica che integra offerte, e-commerce e consegne a domicilio.<br /><br />Ogni funzionalità sostiene la crescita della comunità, avvicinando cittadini e attività locali.",
         "slogan": "Stronger together,<br>commerce reimagined.",
         "sloganIt": "Più forti insieme,<br>un nuovo modo di fare commercio."
-    },
-    "lucrezia-curto": {
-        "title": "Lucrezia Curto - Commercialista",
-        "subtitle": "Web Design & Development",
-        "subtitleIt": "Web design e sviluppo",
-        "image": "hero-2.webp",
-        "headerImage": "bg.webp",
-        "headerImageAlt": "Lucrezia Curto accounting website hero background",
-        "headerImageAltIt": "Sfondo della sezione principale del sito dello studio di Lucrezia Curto",
-        "images": [
-            "hero.webp",
-            "why.webp"
-        ],
-        "link": "https://www.lucreziacurto.com/",
-        "tags": [
-            "comunicazione",
-            "sito"
-        ],
-        "tasks": [
-            "DEV",
-            "DESIGN"
-        ],
-        "carousel": [
-            "home-optimized.mp4"
-        ],
-        "year": 2026,
-        "description": "Brand identity and digital presence for a trusted accounting studio.<br />Lucrezia Curto offers tax, accounting and business consulting services, guiding individuals and companies with clarity, precision and reliable advice.<br /><br />From fiscal planning to day-to-day accounting support, every touchpoint is designed to communicate professionalism and trust.",
-        "descriptionIt": "Identità di marca e presenza digitale per uno studio professionale di fiducia.<br />Lucrezia Curto offre servizi fiscali, contabili e di consulenza aziendale, affiancando privati e imprese con chiarezza, precisione e competenza.<br /><br />Dalla pianificazione fiscale al supporto contabile quotidiano, ogni punto di contatto è pensato per comunicare professionalità e affidabilità.",
-        "slogan": "Accounting clarity,<br>professional trust.",
-        "sloganIt": "Chiarezza contabile,<br>fiducia professionale."
     },
     "lucrezia-curto-brand-identity": {
         "title": "Lucrezia Curto - Commercialista",
